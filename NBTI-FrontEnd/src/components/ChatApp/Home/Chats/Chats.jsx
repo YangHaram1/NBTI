@@ -1,15 +1,17 @@
 import styles from './Chats.module.css';
-import { Route, Routes, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../../store/store';
+import { ChatsContext } from './../../../../Context/ChatsContext';
+
+import {useContext} from 'react';
 const Chats = () => {
     const { loginID } = useAuthStore();
-    const navi = useNavigate();
+    const {setChatNavi}=useContext(ChatsContext);
     const handleNavi = () => {
         if (loginID === null) {
-            navi("/");
+            setChatNavi('');
         }
         else{
-            navi('/chat');
+            setChatNavi('chat');
         }
      
     }

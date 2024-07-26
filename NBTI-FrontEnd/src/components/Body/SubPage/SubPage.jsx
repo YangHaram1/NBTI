@@ -1,3 +1,4 @@
+import { Approval } from "./Approval/Approval";
 import { Board } from "./Board/Board";
 import { Calendar } from "./Calendar/Calendar";
 import styles from "./SubPage.module.css";
@@ -13,7 +14,7 @@ export const SubPage = () => {
         <Route path="/calendar/*" element={<Calendar  />} />
         {/* <Route path="/reservation" element={<Reservation  />} /> */}
         {/* <Route path="/group" element={<Group  />} /> */}
-        {/* <Route path="/approval" element={<Approval  />} /> */}
+        <Route path="/approval/*" element={<Approval  />} />
         {/* <Route path="/approval" element={<Approval  />} /> */}
       </Routes>
     </div>

@@ -8,10 +8,9 @@ import { format } from 'date-fns';
 //import { last } from 'lodash';
 import React from 'react';
 import { useCheckList } from '../../../store/store.js';
-import Loading from './../../commons/Loading/Loading';
 import Emoticon from './Emoticon/Emoticon.jsx';
 import Search from './Search/Search.jsx';
-import { host } from '../../config/config.js'
+import { host } from '../../../config/config.js'
 axios.defaults.withCredentials = true;
 const Chat = () => {
 
@@ -23,10 +22,10 @@ const Chat = () => {
   const divRef = useRef(null);
   //const chatRef = useRef([]);
 
-  const navi = useNavigate();
-  const { chats, setChats, ws } = useContext(ChatsContext);
+
+  const { chats, setChats, ws ,setChatNavi} = useContext(ChatsContext);
   let lastDate = null;
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
   const { searchDisplay, setSearchDisplay } = useCheckList();
@@ -89,7 +88,7 @@ const Chat = () => {
     if (searchDisplay) {
       axios.get(`http://${host}/chat`).then(response => {
         setChats(response.data);
-        console.log("채팅기록가저오기");
+        console.log("채팅목록가저오기");
       })
     }
     else {
@@ -105,7 +104,7 @@ const Chat = () => {
 
 
   const handleCancel = () => {
-    navi("/");
+    setChatNavi("");
   }
   const handleSearch = () => {
     const Searchbar = searchRef.current;
@@ -193,15 +192,8 @@ const Chat = () => {
   },[handleChatsData])
 
 
-
-
-
-
-
-
-
   if (isLoading === true) {
-    return <Loading></Loading>;
+    //return <Loading></Loading>;
   }
   else {
     return (
