@@ -6,6 +6,7 @@ import { Body } from './components/Body/Body';
 import axios from 'axios';
 import { useAuthStore } from './store/store';
 import { useEffect } from 'react';
+import ChatApp from './components/ChatApp/ChatApp';
 axios.defaults.withCredentials=true;
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <div className="container">
           <Header />
           <Body />
+          <ChatApp></ChatApp>
         </div>
       </Router>
    

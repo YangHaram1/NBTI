@@ -1,16 +1,16 @@
 import styles from './Home.module.css';
-import member from '../../images/member.png';
-import chat from '../../images/chat.png';
-import alarm from '../../images/alarm.png';
+import member from '../../../images/member.png';
+import chat from '../../../images/chat.png';
+import alarm from '../../../images/alarm.png';
 import { useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import Members from './Members/Members';
 import Chats from './Chats/Chats';
 import Alarms from './Alarms/Alarms';
-import avatar from '../../images/다운로드.png';
+import avatar from '../../../images/user.jpg';
 import axios from 'axios';
 import { useAuthStore } from '../../../store/store';
-import { host } from '../../config/config'
+import { host } from '../../../config/config'
 axios.defaults.withCredentials=true;
 const Home = () => {
     //이미지는 <a href="/kr">Freeimages.com</a>에서 가져왔습니다.
