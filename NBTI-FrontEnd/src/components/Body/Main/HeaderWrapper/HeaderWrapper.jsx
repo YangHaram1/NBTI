@@ -29,7 +29,7 @@ export const HeaderWrapper = () => {
                 <div className={styles.circle_wrap} onClick={() => { handleNavi("board") }}>
                     <div className={styles.circle_menu}>
                         <div className={styles.icon}>
-                            <i class="fa-regular fa-clipboard fa-xl"></i>
+                            <i className="fa-regular fa-clipboard fa-xl"></i>
                         </div>
                     </div>
                     <div className={styles.circle_name}>
@@ -39,7 +39,7 @@ export const HeaderWrapper = () => {
                 <div className={styles.circle_wrap} onClick={() => { handleNavi("calendar") }}>
                     <div className={styles.circle_menu}>
                         <div className={styles.icon}>
-                            <i class="fa-regular fa-calendar-check fa-xl"></i>
+                            <i className="fa-regular fa-calendar-check fa-xl"></i>
                         </div>
                     </div>
                     <div className={styles.circle_name}>
@@ -49,7 +49,7 @@ export const HeaderWrapper = () => {
                 <div className={styles.circle_wrap} onClick={() => { handleNavi("reservation") }}>
                     <div className={styles.circle_menu}>
                         <div className={styles.icon}>
-                            <i class="fa-regular fa-clock fa-xl"></i>
+                            <i className="fa-regular fa-clock fa-xl"></i>
                         </div>
                     </div>
                     <div className={styles.circle_name}>
@@ -59,7 +59,7 @@ export const HeaderWrapper = () => {
                 <div className={styles.circle_wrap} onClick={() => { handleNavi("group") }}>
                     <div className={styles.circle_menu}>
                         <div className={styles.icon}>
-                            <i class="fa-solid fa-users-line fa-xl"></i>
+                            <i className="fa-solid fa-users-line fa-xl"></i>
                         </div>
                     </div>
                     <div className={styles.circle_name}>
@@ -69,7 +69,7 @@ export const HeaderWrapper = () => {
                 <div className={styles.circle_wrap} onClick={() => { handleNavi("approval") }}>
                     <div className={styles.circle_menu}>
                         <div className={styles.icon}>
-                            <i class="fa-solid fa-laptop-file fa-xl"></i>
+                            <i className="fa-solid fa-laptop-file fa-xl"></i>
                         </div>
                     </div>
                     <div className={styles.circle_name}>
@@ -79,7 +79,7 @@ export const HeaderWrapper = () => {
                 <div className={styles.circle_wrap} onClick={() => { handleNavi("application") }}>
                     <div className={styles.circle_menu}>
                         <div className={styles.icon}>
-                            <i class="fa-solid fa-map-location-dot fa-xl"></i>
+                            <i className="fa-solid fa-map-location-dot fa-xl"></i>
                         </div>
                     </div>
                     <div className={styles.circle_name}>
@@ -89,7 +89,7 @@ export const HeaderWrapper = () => {
                 <div className={styles.circle_wrap}>
                     <div className={styles.circle_menu}>
                         <div className={styles.icon}>
-                            <i class="fa-solid fa-briefcase fa-xl"></i>
+                            <i className="fa-solid fa-briefcase fa-xl"></i>
                         </div>
                     </div>
                     <div className={styles.circle_name} onClick={() => { handleNavi("workProcessing") }}>

@@ -8,10 +8,9 @@ import { format } from 'date-fns';
 //import { last } from 'lodash';
 import React from 'react';
 import { useCheckList } from '../../../store/store.js';
-import Loading from './../../commons/Loading/Loading';
 import Emoticon from './Emoticon/Emoticon.jsx';
 import Search from './Search/Search.jsx';
-import { host } from '../../config/config.js'
+import { host } from '../../../config/config.js'
 axios.defaults.withCredentials = true;
 const Chat = () => {
 
@@ -26,7 +25,7 @@ const Chat = () => {
   const navi = useNavigate();
   const { chats, setChats, ws } = useContext(ChatsContext);
   let lastDate = null;
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
   const { searchDisplay, setSearchDisplay } = useCheckList();
@@ -201,7 +200,7 @@ const Chat = () => {
 
 
   if (isLoading === true) {
-    return <Loading></Loading>;
+    //return <Loading></Loading>;
   }
   else {
     return (
