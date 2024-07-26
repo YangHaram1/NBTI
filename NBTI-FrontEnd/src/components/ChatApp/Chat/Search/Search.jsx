@@ -1,6 +1,6 @@
 import styles from './Search.module.css';
 import axios from 'axios';
-import {host} from '../../../config/config'
+import {host} from '../../../../config/config'
 
 const Search = ({ search, setSearch, searchRef,setSearchList,handleSearch}) => {
     const handleSearchDate = (e) => {

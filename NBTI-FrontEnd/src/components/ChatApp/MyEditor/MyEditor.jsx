@@ -6,8 +6,8 @@ import styles from './MyEditor.module.css';
 import './MyEditor.css';
 import axios from 'axios';
 import { useCheckList } from '../../../store/store';
-import { api } from '../../config/config'
-import { host } from '../../config/config'
+import { api } from '../../../config/config'
+import { host } from '../../../config/config'
 
 //import html2canvas from 'html2canvas';
 
