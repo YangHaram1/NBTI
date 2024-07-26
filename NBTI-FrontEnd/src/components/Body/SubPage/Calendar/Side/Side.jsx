@@ -48,7 +48,7 @@ export const Side = () => {
       <div className={styles.menus}>
         <ul>
           <li onClick={toggleFreeBoard}>
-            <i className="fa-solid fa-chevron-down fa-sm"></i>내 캘랜더 
+            <i className="fa-solid fa-user-large"></i>내 프로젝트 일정 
             <ul
               className={`${styles.submenu} ${FreeBoard ? styles.open : ""}`}
               onClick={preventPropagation}
@@ -76,7 +76,7 @@ export const Side = () => {
         </ul>
         <ul>
           <li onClick={toggleNoticeBoard}>
-            <i className="fa-solid fa-chevron-down fa-sm"></i>공유 캘린더
+            <i className="fa-solid fa-people-group"></i>공유 일정
             <ul
               className={`${styles.submenu} ${NoticeBoard ? styles.open : ""}`}
               onClick={preventPropagation}
