@@ -7,7 +7,7 @@ div {
   margin-left: 250px;
   overflow: auto;
   padding: 0px 20px;
-  background-color: beige;
+  /* background-color: beige; */
   min-height: 940px;
   /* float: right; */
   /* height: 100%; 100vh ? */
