@@ -1,5 +1,5 @@
 import {create} from 'zustand';
-/*하람*/ 
+/*공통*/
 export const useAuthStore= create((set)=>{
     return{
         loginID:null,
@@ -8,6 +8,8 @@ export const useAuthStore= create((set)=>{
         }
     }
 });
+
+/*하람*/ 
 export const useCheckList = create((set) => ({
     emoticonDisplay: true,
     searchDisplay: true,
