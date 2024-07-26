@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Chat">
+	<insert id="insert">
+		insert into chat
+		values(chat_seq.nextval,#{member_id},#{message},sysdate,${group_seq})
+		<selectKey resultType="int" order="AFTER" keyProperty="seq">
+			select chat_seq.currval from dual
+		</selectKey>
+	</insert>
+
+	<select id="list" resultType="com.nbti.dto.ChatDTO">
+		select *from chat order by seq
+	</select>
+
+	<select id="search" resultType="com.nbti.dto.ChatDTO">
+		select *from chat
+		where message like '%'||#{param}||'%'
+		order by seq
+	</select>
+
+
+	<select id="date" resultType="java.sql.Timestamp">
+		select write_date from chat where
+		seq= ${param}
+	</select>
+</mapper>

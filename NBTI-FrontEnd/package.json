@@ -6,10 +6,15 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@tinymce/tinymce-react": "^5.1.1",
+    "axios": "^1.7.2",
+    "date-fns": "^3.6.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "tinymce": "^7.2.1",
+    "web-vitals": "^2.1.4",
+    "zustand": "^4.5.4"
   },
   "scripts": {
     "start": "react-scripts start",
