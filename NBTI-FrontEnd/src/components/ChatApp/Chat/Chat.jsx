@@ -1,5 +1,5 @@
 import { useContext, useRef, useEffect, useCallback, useState } from 'react';
-import { ChatsContext } from '../../Context/ChatsContext';
+import { ChatsContext } from '../../../Context/ChatsContext.js';
 import styles from './Chat.module.css';
 import MyEditor from './../MyEditor/MyEditor';
 import axios from 'axios';
@@ -7,10 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 //import { last } from 'lodash';
 import React from 'react';
-import { useCheckList } from './../../store/store';
+import { useCheckList } from '../../../store/store.js';
 import Loading from './../../commons/Loading/Loading';
-import Emoticon from './Emoticon/Emoticon';
-import Search from './Search/Search';
+import Emoticon from './Emoticon/Emoticon.jsx';
+import Search from './Search/Search.jsx';
 import { host } from '../../config/config.js'
 axios.defaults.withCredentials = true;
 const Chat = () => {
