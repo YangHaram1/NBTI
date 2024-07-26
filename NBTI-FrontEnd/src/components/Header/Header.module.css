@@ -1,0 +1,119 @@
+@import url("https://fonts.googleapis.com/css2?family=Secular+One&display=swap");
+
+.container {
+  width: 100%;
+  height: 60px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0 20px;
+  background-color: #fefefe;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #dadce0;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.container .left {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  align-items: center;
+}
+.container .left .logo {
+  font-size: 2rem;
+  color: #6b9080;
+  cursor: pointer;
+  font-family: "Secular One", cursive;
+}
+
+.container .left .menu_dropdown {
+  margin: 0 15px;
+  display: flex;
+  cursor: pointer;
+  height: 35px;
+  width: 100px;
+  justify-content: center;
+}
+.container .left .menu_dropdown:hover {
+  border-radius: 5px;
+  background-color: #e5eded8a;
+}
+.container .left .menu_dropdown p {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+.container .left .menu_dropdown i {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  background-color: transparent; /* 기본 배경색을 투명으로 설정 */
+}
+
+.dropdownActive .menu_dropdown {
+  /* padding: 6px; */
+  border-radius: 5px;
+  background-color: #e5eded8a; /* 배경색을 회색으로 설정 */
+}
+
+.container .right {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.container .right .chat {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 15px;
+  transition-duration: 0.4s;
+  color: #6b9080;
+}
+.container .right .alarm {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 15px;
+  transition-duration: 0.4s;
+  color: #6b9080;
+}
+.container .right .alarm:hover {
+  color: #a1d3bc;
+}
+.container .right .chat:hover {
+  color: #a1d3bc;
+}
+
+.container .right .user_info {
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  margin-left: 15px;
+}
+.container .right .user_info .user_profile_img {
+  width: 100%;
+  height: 100%;
+  border-radius: 100px;
+  transition-duration: 0.5s;
+}
+.container .right .user_info .user_profile_img:hover {
+  cursor: pointer;
+  border: 1px solid #a1d3bc;
+}
+img {
+  width: 100%;
+  height: 100%;
+  border-radius: 100px;
+}

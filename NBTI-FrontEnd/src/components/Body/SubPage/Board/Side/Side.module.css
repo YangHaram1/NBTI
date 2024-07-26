@@ -1,0 +1,93 @@
+div {
+  /* border: 1px solid black; */
+}
+
+.container {
+  background-color: #cce3de;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 25px;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  bottom: 0;
+  box-shadow: 1px 0 8px rgba(0, 0, 0, 0.1); /* 왼쪽에 그림자 추가 */
+}
+
+.container .mainBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.container .mainBtn button {
+  background-color: #6b9080;
+  color: white;
+  font-size: medium;
+  width: 100%;
+  height: 40px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition-duration: 0.4s;
+}
+
+.container .mainBtn button:hover {
+  background-color: #6b9080cc;
+}
+
+.container .mainBtn button i {
+  margin-right: 10px;
+}
+
+.container .menus {
+  height: 400px;
+  padding: 0 15px;
+}
+
+.container .menus ul {
+  list-style: none;
+  cursor: pointer;
+  margin: 0 0 20px 0;
+  padding: 0;
+  font-size: 0.9rem;
+}
+.container .menus ul > li > i {
+  margin-bottom: 20px;
+}
+
+.container .menus ul > li > ul > li {
+  margin: 0 0 0 13px;
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+}
+.container .menus ul > li > ul > li span:nth-child(1) {
+  width: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container .menus ul > li > ul > li:hover {
+  background-color: #c0dcd6;
+}
+
+.container .menus ul > li i {
+  margin-right: 10px;
+}
+
+/* Submenu */
+.submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.submenu.open {
+  max-height: 300px; /* 충분히 큰 값으로 설정하여 모든 항목이 표시되도록 합니다. */
+}
