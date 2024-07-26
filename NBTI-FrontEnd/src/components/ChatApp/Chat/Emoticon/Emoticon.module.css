@@ -1,0 +1,23 @@
+.container {
+    position: fixed;
+    top: 10px;
+    width: 300px; /* 사이드바의 너비 */
+    height: 450px;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+    display: none;
+}
+.div1{
+    display: flex;
+    justify-content: flex-end;
+}
+.div1 button{
+    background-color: #333;
+    border: none;
+    cursor: pointer;
+}
+.div1 button:hover{
+    background-color: gray;
+}

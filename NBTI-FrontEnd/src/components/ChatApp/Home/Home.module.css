@@ -1,0 +1,94 @@
+.container{
+    width: 100%;
+    height: 100%;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+.div1{
+    display: flex;
+    flex: 1;
+    
+}
+.div1_1{
+    flex: 1;
+    
+}
+.div1_2{
+    display: flex;
+    flex-direction: column;
+    flex: 3;
+}
+.div1_3{
+    flex: 1;
+    justify-content: flex-end;
+    display: flex;
+}
+.div2{
+    display: flex;
+    flex: 0.8;
+    background-color: #ABC4FF;
+}
+.div2 div{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    
+}
+.div2 img{
+    width: 30px;
+    height: 40px;
+    cursor: pointer;
+    
+}
+
+.white{
+    background-color: #CCDBFD;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.none{
+    background-color: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.div3{
+    display: flex;
+    flex: 5;
+    background-color: #EDF2FB;
+}
+.avatar{
+    width: 100%;
+    height: 100%;
+}
+.name{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    font-family: 'Courier New', Courier, monospace;
+    
+}
+.status{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1 !important;
+    color:red;
+}
+.button{
+    width: 30px;
+    height: 30px;
+    background-color:white;
+    color: gray;
+    cursor: pointer;
+    border: none;
+}
+.button:hover{
+    background-color: gray;
+    color: red;
+   
+}
