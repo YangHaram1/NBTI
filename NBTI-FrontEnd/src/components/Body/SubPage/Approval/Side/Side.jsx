@@ -76,7 +76,7 @@ export const Side = () => {
         </ul>
         <ul>
           <li onClick={toggleNoticeBoard}>
-            <i className="fa-solid fa-chevron-down fa-sm">문서함</i>
+            <i className="fa-solid fa-chevron-down fa-sm"></i>문서함
             <ul
               className={`${styles.submenu} ${NoticeBoard ? styles.open : ""}`}
               onClick={preventPropagation}
@@ -129,6 +129,11 @@ export const Side = () => {
         <ul>
             <li>
                 임시 저장 문서함
+            </li>
+        </ul>
+        <ul>
+            <li>
+                전자결재 관리
             </li>
         </ul>
       </div>
