@@ -19,3 +19,27 @@ p {
   margin: 0px;
   padding: 0px;
 }
+
+
+/* 전체 스크롤바의 스타일을 설정합니다. */
+body::-webkit-scrollbar {
+  /* width: 10px; 스크롤바의 너비 */
+  height: 10px; /* 스크롤바의 높이 */
+}
+
+/* 스크롤바의 트랙(스크롤바가 움직이는 부분) 스타일을 설정합니다. */
+body::-webkit-scrollbar-track {
+  background-color: #F6FFF8; /* 배경색 */
+  border-radius: 10px; /* 모서리 둥글기 */
+}
+
+/* 스크롤바의 핸들(스크롤바의 이동 부분) 스타일을 설정합니다. */
+body::-webkit-scrollbar-thumb {
+  background-color: #CCE3DE; /* 핸들의 색상 */
+  border-radius: 10px; /* 핸들의 모서리 둥글기 */
+}
+
+/* 핸들에 마우스를 올렸을 때 스타일을 설정합니다. */
+body::-webkit-scrollbar-thumb:hover {
+  background-color: #A4C3B2; /* 핸들에 마우스를 올렸을 때 색상 */
+}

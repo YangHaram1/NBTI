@@ -45,3 +45,12 @@
     height: 100%;
     border: 0;
 }
+.updown{
+    display: flex;
+    
+}
+.updown button{
+    background-color: white;
+    
+}
+

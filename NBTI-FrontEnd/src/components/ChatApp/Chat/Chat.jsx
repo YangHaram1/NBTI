@@ -3,9 +3,7 @@ import { ChatsContext } from '../../../Context/ChatsContext.js';
 import styles from './Chat.module.css';
 import MyEditor from './../MyEditor/MyEditor';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
-//import { last } from 'lodash';
 import React from 'react';
 import { useCheckList } from '../../../store/store.js';
 import Emoticon from './Emoticon/Emoticon.jsx';
@@ -20,35 +18,41 @@ const Chat = () => {
   const containerRef = useRef(null);
   const searchRef = useRef(null);
   const divRef = useRef(null);
-  //const chatRef = useRef([]);
+  const chatRef = useRef([]);
 
+  
 
-  const { chats, setChats, ws ,setChatNavi} = useContext(ChatsContext);
+  const { chats, setChats, ws, setChatNavi } = useContext(ChatsContext);
   let lastDate = null;
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
   const { searchDisplay, setSearchDisplay } = useCheckList();
-  const [serchList, setSearchList] = useState([]);
+  const [searchList, setSearchList] = useState([]);
 
-  const scrollToBottom = useCallback(() => {
-    setIsLoading(false);
-    if (divRef.current) {
-      divRef.current.scrollTop = divRef.current.scrollHeight;
+
+
+  const handleChats = useCallback(() => {
+    // Initial positioning
+    if (!searchDisplay) {
+      updateSidebarPosition();
+      updateSearchPosition();
     }
-  }, [chats])
+  }, [searchDisplay])
 
   useEffect(() => {
-
-    scrollToBottom();
-  }, [scrollToBottom])
+    handleChats();
+  }, [searchDisplay])
 
   // WebSocket 연결을 설정하는 useEffect
   useEffect(() => {
     ws.current = new WebSocket(`ws://${host}/chatWebsocket`);
 
     ws.current.onopen = () => {
-
+      axios.get(`http://${host}/chat`).then(response => {
+        setChats(response.data);
+        console.log("채팅목록가저오기");
+      })
       console.log('Connected to WebSocket');
     }
     ws.current.onclose = () => {
@@ -83,24 +87,7 @@ const Chat = () => {
 
   }, []); // 빈 의존성 배열로 컴포넌트 마운트 시 한 번만 실행
 
-  const handleChats = useCallback(() => {
-    // Initial positioning
-    if (searchDisplay) {
-      axios.get(`http://${host}/chat`).then(response => {
-        setChats(response.data);
-        console.log("채팅목록가저오기");
-      })
-    }
-    else {
 
-      updateSidebarPosition();
-      updateSearchPosition();
-    }
-  }, [searchDisplay])
-
-  useEffect(() => {
-    handleChats();
-  }, [searchDisplay])
 
 
   const handleCancel = () => {
@@ -109,9 +96,12 @@ const Chat = () => {
   const handleSearch = () => {
     const Searchbar = searchRef.current;
     Searchbar.style.display = searchDisplay ? "flex" : "none";
+    if (!searchDisplay) {
+      setSearchList([]);
+      setSearch('');
+    }
     setSearchDisplay(!searchDisplay);
-    setSearch('');
-    setSearchList([]);
+
   }
 
   const updateSidebarPosition = () => {
@@ -136,9 +126,9 @@ const Chat = () => {
   const handleSearchData = useCallback((item) => {
     let result = '';
     if (!searchDisplay) {
-      if (serchList.length > 0) {
-        console.log("검색실행");
-        serchList.forEach((s_item) => {
+      if (searchList.length > 0) {
+       // console.log("검색");
+        searchList.forEach((s_item) => {
           if (item.seq === s_item.seq) {
             const temp = item.message.replace(search, `<span style="background-color: red !important;">${search}</span>`);
             result = temp;
@@ -147,15 +137,17 @@ const Chat = () => {
       }
     }
     return result;
-  }, [])
+  }, [searchList]);
 
 
   const [list, setList] = useState();
 
   const handleChatsData = useCallback(() => {
+    let count=0;
+   // console.log(searchList);
     setList(
       chats.map((item, index) => {
-        console.log("리랜더링");
+      //  console.log("리랜더링");
         const formattedTimestamp = format(new Date(item.write_date), 'a hh:mm').replace('AM', '오전').replace('PM', '오후');
         const currentDate = format(new Date(item.write_date), 'yyyy-MM-dd');
         const isDateChanged = currentDate !== lastDate;
@@ -164,9 +156,11 @@ const Chat = () => {
         }
         //---------------------------------------------//
         const temp = handleSearchData(item);
+        let check = false;
         if (temp !== '') {
-          item.message = temp;
+          check = true;
         }
+       
         //--------------------------------------------------//
         return (
           <React.Fragment key={index}>
@@ -176,7 +170,12 @@ const Chat = () => {
             <div className={styles.div1} >
               <div>{item.member_id}</div>
               <div className={styles.content}>
-                <div dangerouslySetInnerHTML={{ __html: item.message + '&nbsp' }} className={styles.mbox}></div>
+                {check && (
+                  <div dangerouslySetInnerHTML={{ __html: temp + '&nbsp' }} ref={el => chatRef.current[count++] = el} className={styles.mbox}></div>
+                )}
+                {!check && (
+                  <div dangerouslySetInnerHTML={{ __html: item.message + '&nbsp' }} className={styles.mbox}></div>
+                )}
                 <div className={styles.date}>{formattedTimestamp}</div>
               </div>
             </div>
@@ -184,12 +183,25 @@ const Chat = () => {
         );
       })
     );
+    console.log(chatRef.current);
+  }, [chats, handleSearchData])
 
-  }, [])
-
-  useEffect(()=>{
+  useEffect(() => {
     handleChatsData();
-  },[handleChatsData])
+  }, [handleChatsData])
+
+  const scrollBottom = useCallback(() => {
+    if (divRef.current) {
+      divRef.current.scrollTop = divRef.current.scrollHeight;
+    }
+
+  }, [list])
+  useEffect(() => {
+    scrollBottom();
+  }, [scrollBottom])
+
+
+
 
 
   if (isLoading === true) {
@@ -212,15 +224,12 @@ const Chat = () => {
             {
               list
             }
-
           </div>
           <div className={styles.div2}>
             <MyEditor sidebarRef={sidebarRef} editorRef={editorRef}></MyEditor>
           </div>
         </div>
-
-
-        <Search search={search} setSearch={setSearch} searchRef={searchRef} setSearchList={setSearchList} handleSearch={handleSearch}></Search>
+        <Search search={search} setSearch={setSearch} searchRef={searchRef} setSearchList={setSearchList} handleSearch={handleSearch} chatRef={chatRef} divRef={divRef}></Search>
         <Emoticon sidebarRef={sidebarRef} editorRef={editorRef} />
       </React.Fragment>
     );
