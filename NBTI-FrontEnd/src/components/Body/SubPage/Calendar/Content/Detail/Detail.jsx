@@ -50,25 +50,30 @@ export const Detail = ()=>{
                     <div className={styles.modalOverlay} onClick={closeModal}>
                     <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                         <h2>일정 추가</h2>
-                        <div>
-                            캘린더
-                            <select>
-                                <option>어쩌고</option>
-                                <option>저쩌고</option>
-                            </select>
-                        </div>
-                        <div> 시작
-                            <input type="date" />
-                        </div>
-                        <div> 종료
-                            <input type="date" />   
-                        </div>
-                        <div>내용
-                            <input type="text" />
-                        </div>
-                        <div>
-                            <button>저장</button>
-                            <button onClick={closeModal}>닫기</button>
+                        <div className={styles.modalInner}>
+                            <div>
+                                <p>캘린더</p>
+                                <select>
+                                    <option>어쩌고</option>
+                                    <option>저쩌고</option>
+                                </select>
+                            </div>
+                            <div> 
+                                <p>시작</p>
+                                <input type="date" />
+                            </div>
+                            <div> 
+                                <p>종료</p>
+                                <input type="date" />   
+                            </div>
+                            <div>
+                                <p>내용</p>
+                                <input type="text" />
+                            </div>
+                            <div>
+                                <button>저장</button>
+                                <button onClick={closeModal}>닫기</button>
+                            </div>
                         </div>
                     </div>
                     </div>
