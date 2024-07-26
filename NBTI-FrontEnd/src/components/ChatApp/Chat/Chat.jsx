@@ -22,8 +22,8 @@ const Chat = () => {
   const divRef = useRef(null);
   //const chatRef = useRef([]);
 
-  const navi = useNavigate();
-  const { chats, setChats, ws } = useContext(ChatsContext);
+
+  const { chats, setChats, ws ,setChatNavi} = useContext(ChatsContext);
   let lastDate = null;
   const [isLoading, setIsLoading] = useState(false);
 
@@ -88,7 +88,7 @@ const Chat = () => {
     if (searchDisplay) {
       axios.get(`http://${host}/chat`).then(response => {
         setChats(response.data);
-        console.log("채팅기록가저오기");
+        console.log("채팅목록가저오기");
       })
     }
     else {
@@ -104,7 +104,7 @@ const Chat = () => {
 
 
   const handleCancel = () => {
-    navi("/");
+    setChatNavi("");
   }
   const handleSearch = () => {
     const Searchbar = searchRef.current;
@@ -190,13 +190,6 @@ const Chat = () => {
   useEffect(()=>{
     handleChatsData();
   },[handleChatsData])
-
-
-
-
-
-
-
 
 
   if (isLoading === true) {

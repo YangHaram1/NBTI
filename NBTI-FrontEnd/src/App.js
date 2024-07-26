@@ -1,22 +1,25 @@
 import './App.css';
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route,Outlet } from 'react-router-dom';
 import { Header } from './components/Header/Header';
 import { Body } from './components/Body/Body';
 import axios from 'axios';
 import { useAuthStore } from './store/store';
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import ChatApp from './components/ChatApp/ChatApp';
-axios.defaults.withCredentials=true;
+import { ChatsProvider } from './Context/ChatsContext';
+axios.defaults.withCredentials = true;
 
 function App() {
-  const {setLoginID}=useAuthStore();
-  useEffect(()=>{
+  const { setLoginID } = useAuthStore();
+
+
+  useEffect(() => {
     setLoginID(sessionStorage.getItem("loginID"));
-  },[]) 
+  }, [])
 
   return (
- 
+    <ChatsProvider>
       <Router>
         <div className="container">
           <Header />
@@ -24,7 +27,8 @@ function App() {
           <ChatApp></ChatApp>
         </div>
       </Router>
-   
+      
+    </ChatsProvider>
   );
 }
 
