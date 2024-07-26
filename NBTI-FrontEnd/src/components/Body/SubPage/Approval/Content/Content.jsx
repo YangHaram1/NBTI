@@ -14,7 +14,7 @@ export const Content = ()=>{
                 <div className={styles.bubble}>
                 </div>
                 <div className={styles.bubble}>
-                </div>
+                </div>5
                 <div className={styles.bubble}>
                 </div>
                 <div className={styles.bubble}>
