@@ -73,7 +73,7 @@ export const Header = () => {
                     <i className="fa-regular fa-bell fa-xl"></i>
                 </div>
                 <div className={styles.user_info}>
-                    <div className={styles.user_profile_img}>
+                    <div className={styles.user_profile_img} onClick={()=>{ navi("/mypage")}}>
                         <img src={image} alt="" />
                     </div>
                 </div>
