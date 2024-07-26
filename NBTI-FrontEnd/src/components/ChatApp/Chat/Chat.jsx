@@ -9,6 +9,9 @@ import { useCheckList } from '../../../store/store.js';
 import Emoticon from './Emoticon/Emoticon.jsx';
 import Search from './Search/Search.jsx';
 import { host } from '../../../config/config.js'
+import { useAuthStore } from './../../../store/store';
+
+import avatar from '../../../images/user.jpg'
 axios.defaults.withCredentials = true;
 const Chat = () => {
 
@@ -19,7 +22,7 @@ const Chat = () => {
   const searchRef = useRef(null);
   const divRef = useRef(null);
   const chatRef = useRef([]);
-
+  const { loginID } = useAuthStore();
 
 
   const { chats, setChats, ws, setChatNavi } = useContext(ChatsContext);
@@ -132,6 +135,7 @@ const Chat = () => {
           if (item.seq === s_item.seq) {
             const temp = item.message.replace(search, `<span style="background-color: red !important;">${search}</span>`);
             result = temp;
+
           }
         })
       }
@@ -147,7 +151,7 @@ const Chat = () => {
     // console.log(searchList);
     setList(
       chats.map((item, index) => {
-         // console.log("리랜더링");
+        // console.log("리랜더링");
         const formattedTimestamp = format(new Date(item.write_date), 'a hh:mm').replace('AM', '오전').replace('PM', '오후');
         const currentDate = format(new Date(item.write_date), 'yyyy-MM-dd');
         const isDateChanged = currentDate !== lastDate;
@@ -162,22 +166,33 @@ const Chat = () => {
         }
 
         //--------------------------------------------------//
+        let idCheck = false;
+        if (item.member_id === loginID) {
+          idCheck = true;
+        }
+
+        //--------------------------------------------------//
         return (
           <React.Fragment key={index}>
             {isDateChanged && (
               <div className={styles.dateSeparator}>{currentDate}</div>
             )}
-            <div className={styles.div1} >
-              <div>{item.member_id}</div>
-              <div className={styles.content}>
-                <div dangerouslySetInnerHTML={{ __html: (check ? temp : item.message) + '&nbsp' }}
-                  ref={el => {
-                    if (el &&check) {
-                      chatRef.current[count++] = el;
-                     // console.log(check);
-                    }
-                  }} className={styles.mbox}></div>
-                <div className={styles.date}>{formattedTimestamp}</div>
+            <div className={idCheck ? styles.div1Left : styles.div1} >
+              {
+                !idCheck&&( <div className={styles.avatar}><img src={avatar} alt="" /></div>)
+              }
+              <div>
+                <div>{item.member_id}</div>
+                <div className={idCheck ? styles.contentsReverse : styles.content}>
+                  <div dangerouslySetInnerHTML={{ __html: (check ? temp : item.message) + '&nbsp' }}
+                    ref={el => {
+                      if (el && check) {
+                        chatRef.current[count++] = el;
+                        // console.log(check);
+                      }
+                    }} className={styles.mbox}></div>
+                  <div className={styles.date}>{formattedTimestamp}</div>
+                </div>
               </div>
             </div>
           </React.Fragment>
@@ -188,7 +203,7 @@ const Chat = () => {
   }, [chats, handleSearchData])
 
   useEffect(() => {
-    chatRef.current=[];
+    chatRef.current = [];
     handleChatsData();
   }, [handleChatsData])
 
@@ -218,6 +233,7 @@ const Chat = () => {
               방제목
             </div>
             <div className={styles.header2}>
+              <button >➕</button>
               <button onClick={handleSearch}>🔍 </button>
               <button onClick={handleCancel}>❌</button>
             </div>

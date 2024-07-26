@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 
 const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch, chatRef, divRef }) => {
     const [count, setCount] = useState();
+
     useEffect(() => {
         // console.log("셋팅")
         setCount(chatRef.current.length);
@@ -69,10 +70,10 @@ const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch, cha
             </div>
             <div className={styles.updown}>
                 <div>
-                    <button onClick={handleUp}>위로</button>
+                    <button onClick={handleUp}>⬆️</button>
                 </div>
                 <div>
-                    <button onClick={handleDown}>아래로</button>
+                    <button onClick={handleDown}>⬇️</button>
                 </div>
             </div>
             <div className={styles.div2}>

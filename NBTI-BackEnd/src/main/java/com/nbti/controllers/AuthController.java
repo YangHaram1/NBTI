@@ -27,9 +27,10 @@ public class AuthController {
 	
 	@PostMapping
 	public ResponseEntity<String> postMethodName(@RequestBody String entity) {
-		session.setAttribute("loginID","HARAM0704");
+		System.out.println(entity);
+		session.setAttribute("loginID",entity);
 		//System.out.println(session.getAttribute("loginID"));
-		return ResponseEntity.ok("HARAM0704");
+		return ResponseEntity.ok(entity);
 	}
 	
 	@GetMapping
