@@ -1,6 +1,5 @@
 import styles from "./Body.module.css";
 import { Main } from "./Main/Main";
-import { Board } from "./SubPage/Board/Board";
 import { SubPage } from "./SubPage/SubPage";
 import { Route } from "react-router-dom";
 import { Routes } from "react-router-dom";
