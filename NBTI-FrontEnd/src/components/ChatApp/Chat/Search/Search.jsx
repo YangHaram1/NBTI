@@ -1,8 +1,15 @@
 import styles from './Search.module.css';
 import axios from 'axios';
 import { host } from '../../../../config/config'
+import { useState, useEffect } from 'react';
 
-const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch ,chatRef,divRef}) => {
+const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch, chatRef, divRef }) => {
+    const [count, setCount] = useState();
+    useEffect(() => {
+        // console.log("셋팅")
+        setCount(chatRef.current.length);
+    }, [chatRef.current])
+
     const handleSearchDate = (e) => {
         setSearch(e.target.value);
     }
@@ -15,14 +22,43 @@ const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch ,cha
             setSearchList(resp.data);
         })
     }
-    
-    const handleUp=()=>{
-        if (divRef.current) {
-            divRef.current.scrollTop = chatRef.current[0].scrollHeight;
-          }
-    }
-    const handleDown=()=>{
 
+    const handleUp = () => {
+        if (divRef.current) {
+            setCount((prev) => {
+                if (prev-1>=0) {
+                    const temp = prev - 1;
+                    chatRef.current[temp].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    chatRef.current[temp].classList.add(styles.shake);
+                    setTimeout(() => {
+                        chatRef.current[temp].classList.remove(styles.shake);
+                      }, 500); // 애니메이션 지속 시간과 동일하게 설정
+                    return temp;
+                }
+                else{
+                    return prev;
+                }   
+            })
+        }
+    }
+    const handleDown = () => {
+        if (divRef.current) {
+            setCount((prev) => {
+                if (chatRef.current.length >= prev + 1) {
+                    const temp = prev + 1;
+                    chatRef.current[temp].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    chatRef.current[temp].classList.add(styles.shake);
+                    setTimeout(() => {
+                        chatRef.current[temp].classList.remove(styles.shake);
+                      }, 500); // 애니메이션 지속 시간과 동일하게 설정
+                    return temp;
+                }
+                else {
+                    return prev;
+                }
+
+            })
+        }
     }
 
 
@@ -33,8 +69,8 @@ const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch ,cha
             </div>
             <div className={styles.updown}>
                 <div>
-                    <button onClick={handleUp}>위로</button>  
-                </div> 
+                    <button onClick={handleUp}>위로</button>
+                </div>
                 <div>
                     <button onClick={handleDown}>아래로</button>
                 </div>

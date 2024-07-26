@@ -20,7 +20,7 @@ const Chat = () => {
   const divRef = useRef(null);
   const chatRef = useRef([]);
 
-  
+
 
   const { chats, setChats, ws, setChatNavi } = useContext(ChatsContext);
   let lastDate = null;
@@ -127,7 +127,7 @@ const Chat = () => {
     let result = '';
     if (!searchDisplay) {
       if (searchList.length > 0) {
-       // console.log("검색");
+        // console.log("검색");
         searchList.forEach((s_item) => {
           if (item.seq === s_item.seq) {
             const temp = item.message.replace(search, `<span style="background-color: red !important;">${search}</span>`);
@@ -143,11 +143,11 @@ const Chat = () => {
   const [list, setList] = useState();
 
   const handleChatsData = useCallback(() => {
-    let count=0;
-   // console.log(searchList);
+    let count = 0;
+    // console.log(searchList);
     setList(
       chats.map((item, index) => {
-      //  console.log("리랜더링");
+         // console.log("리랜더링");
         const formattedTimestamp = format(new Date(item.write_date), 'a hh:mm').replace('AM', '오전').replace('PM', '오후');
         const currentDate = format(new Date(item.write_date), 'yyyy-MM-dd');
         const isDateChanged = currentDate !== lastDate;
@@ -160,7 +160,7 @@ const Chat = () => {
         if (temp !== '') {
           check = true;
         }
-       
+
         //--------------------------------------------------//
         return (
           <React.Fragment key={index}>
@@ -170,12 +170,13 @@ const Chat = () => {
             <div className={styles.div1} >
               <div>{item.member_id}</div>
               <div className={styles.content}>
-                {check && (
-                  <div dangerouslySetInnerHTML={{ __html: temp + '&nbsp' }} ref={el => chatRef.current[count++] = el} className={styles.mbox}></div>
-                )}
-                {!check && (
-                  <div dangerouslySetInnerHTML={{ __html: item.message + '&nbsp' }} className={styles.mbox}></div>
-                )}
+                <div dangerouslySetInnerHTML={{ __html: (check ? temp : item.message) + '&nbsp' }}
+                  ref={el => {
+                    if (el &&check) {
+                      chatRef.current[count++] = el;
+                     // console.log(check);
+                    }
+                  }} className={styles.mbox}></div>
                 <div className={styles.date}>{formattedTimestamp}</div>
               </div>
             </div>
@@ -187,6 +188,7 @@ const Chat = () => {
   }, [chats, handleSearchData])
 
   useEffect(() => {
+    chatRef.current=[];
     handleChatsData();
   }, [handleChatsData])
 
