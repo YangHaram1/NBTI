@@ -31,24 +31,29 @@ const Chat = () => {
   const { searchDisplay, setSearchDisplay } = useCheckList();
   const [serchList, setSearchList] = useState([]);
 
-  const scrollToBottom = useCallback(() => {
-    setIsLoading(false);
-    if (divRef.current) {
-      divRef.current.scrollTop = divRef.current.scrollHeight;
+ 
+
+  const handleChats = useCallback(() => {
+    // Initial positioning
+    if (!searchDisplay) {
+      updateSidebarPosition();
+      updateSearchPosition();
     }
-  }, [chats])
-
+  }, [searchDisplay])
+ 
   useEffect(() => {
-
-    scrollToBottom();
-  }, [scrollToBottom])
+    handleChats();
+  }, [searchDisplay])
 
   // WebSocket 연결을 설정하는 useEffect
   useEffect(() => {
     ws.current = new WebSocket(`ws://${host}/chatWebsocket`);
 
     ws.current.onopen = () => {
-
+      axios.get(`http://${host}/chat`).then(response => {
+        setChats(response.data);
+        console.log("채팅목록가저오기");
+      })
       console.log('Connected to WebSocket');
     }
     ws.current.onclose = () => {
@@ -83,24 +88,7 @@ const Chat = () => {
 
   }, []); // 빈 의존성 배열로 컴포넌트 마운트 시 한 번만 실행
 
-  const handleChats = useCallback(() => {
-    // Initial positioning
-    if (searchDisplay) {
-      axios.get(`http://${host}/chat`).then(response => {
-        setChats(response.data);
-        console.log("채팅목록가저오기");
-      })
-    }
-    else {
-
-      updateSidebarPosition();
-      updateSearchPosition();
-    }
-  }, [searchDisplay])
-
-  useEffect(() => {
-    handleChats();
-  }, [searchDisplay])
+  
 
 
   const handleCancel = () => {
@@ -153,6 +141,9 @@ const Chat = () => {
   const [list, setList] = useState();
 
   const handleChatsData = useCallback(() => {
+
+   
+
     setList(
       chats.map((item, index) => {
         console.log("리랜더링");
@@ -185,11 +176,24 @@ const Chat = () => {
       })
     );
 
-  }, [])
+  }, [chats])
 
   useEffect(()=>{
     handleChatsData();
   },[handleChatsData])
+
+  const scrollBottom=useCallback(()=>{
+    if (divRef.current) {
+      divRef.current.scrollTop = divRef.current.scrollHeight;
+    }
+
+  },[list])
+  useEffect(()=>{
+    scrollBottom();
+  },[scrollBottom])
+
+ 
+
 
 
   if (isLoading === true) {
@@ -212,14 +216,11 @@ const Chat = () => {
             {
               list
             }
-
           </div>
           <div className={styles.div2}>
             <MyEditor sidebarRef={sidebarRef} editorRef={editorRef}></MyEditor>
           </div>
         </div>
-
-
         <Search search={search} setSearch={setSearch} searchRef={searchRef} setSearchList={setSearchList} handleSearch={handleSearch}></Search>
         <Emoticon sidebarRef={sidebarRef} editorRef={editorRef} />
       </React.Fragment>
