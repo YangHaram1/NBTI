@@ -1,3 +1,4 @@
+import { Mypage } from "../Mypage/Mypage";
 import styles from "./Body.module.css";
 import { Main } from "./Main/Main";
 import { SubPage } from "./SubPage/SubPage";
@@ -9,6 +10,7 @@ export const Body = () => {
     <div className={styles.container}>
       <Routes>
         <Route path="/" element={<Main />} />
+        <Route path="mypage" element={<Mypage/>} />
       </Routes>
       <SubPage />
     </div>

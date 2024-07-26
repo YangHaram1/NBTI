@@ -6,8 +6,8 @@ import styles from './MyEditor.module.css';
 import './MyEditor.css';
 import axios from 'axios';
 import { useCheckList } from '../../../store/store';
-import { api } from '../../config/config'
-import { host } from '../../config/config'
+import { api } from '../../../config/config'
+import { host } from '../../../config/config'
 
 //import html2canvas from 'html2canvas';
 
@@ -65,7 +65,7 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
         init={{
           height: 126,
           menubar: false,
-          plugins: 'wordcount anchor  code', //image
+          plugins: 'wordcount anchor  code image', //image
           toolbar: 'fileupload emoticon| forecolor backcolor  blocks fontfamily fontsize fontcolor | bold italic underline strikethrough | link image media table mergetags  | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat ',
           language: 'ko_KR',
           statusbar: false,

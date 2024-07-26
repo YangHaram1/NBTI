@@ -1,0 +1,57 @@
+.container {
+    width: 100%;
+    height: 100%;
+  }
+
+.title{
+    margin-top: 18px;
+    font-size: 22px;
+    text-indent: 10px;
+    width: 100%;
+    flex:0.5;
+    margin-bottom: 30px;
+}
+
+.content{
+    border: 1px solid black;
+    margin-left: 50px;
+    height: 600px;
+    width: 600px;
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+}
+
+.box{
+    flex:1;
+    display: flex;
+}
+
+.name{
+    text-indent: 30px;
+    flex:3;
+    display: flex;
+    align-items: center;
+}
+
+.value{
+    flex:7;
+    display: flex;
+    align-items: center;
+}
+
+.photo_box{
+    flex: 2;
+}
+
+.photo{
+    border: 1px solid black;
+    height: 120px;
+    width: 125px;    
+}
+
+.btns{
+    
+}

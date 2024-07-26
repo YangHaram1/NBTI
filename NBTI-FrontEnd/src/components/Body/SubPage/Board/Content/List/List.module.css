@@ -2,7 +2,7 @@ div {
   /* border: 1px solid black; */
 }
 .container {
-  background-color: cadetblue;
+  /* background-color: cadetblue; */
   width: 100%;
   height: 100%;
   display: flex;
@@ -15,52 +15,120 @@ div {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 500;
 }
 
 .container .searchBox {
-  height: 60px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  padding: 0 30px;
+}
+.container .searchBox .dropdown > select {
+  height: 30px;
+  width: 75px;
+  border-radius: 3px;
+  border: 1px solid #a4c3b2;
+  cursor: pointer;
+  padding: 3px;
+}
+
+.container .searchBox .dropdown > select > option {
+  cursor: pointer;
 }
 
 .container .searchBox > input {
-  height: 35px;
+  width: 170px;
+  height: 30px;
+  margin-left: 5px;
+  border-radius: 3px;
+  border: 1px solid #a4c3b2;
+  padding-left: 10px;
 }
+
 .container .searchBox > button {
-  height: 35px;
-  width: 60px;
+  height: 30px;
+  width: 55px;
   border: none;
   border-radius: 5px;
   margin-left: 5px;
+  background-color: #6b9080;
+  color: white;
+  cursor: pointer;
+  transition-duration: 0.4s;
 }
 
-.container .list {
-  height: 800px;
-}
-
-/* .container .header {
-  background-color: rgb(174, 206, 206);
-  height: 170px;
-}
-
-.container .header > h1 {
-  text-align: center;
-}
-
-.container .header .searchBox {
-  height: 100%;
-  display: flex;
-}
-
-.container .header .searchBox > div:nth-child(1) {
-  flex: 1;
-}
-.container .header .searchBox > div:nth-child(2) {
-  flex: 1;
+.container .searchBox > button:hover {
+  background-color: #6b9080cc;
 }
 
 .container .body {
-  background-color: #bccaca;
-  height: 100%;
-} */
+  height: 820px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.container .body .listTitle {
+  height: 30px;
+  display: flex;
+}
+.container .body .listTitle > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #6b9080;
+  color: white;
+  font-size: 0.8rem;
+}
+.container .body .listTitle > div:nth-child(1) {
+  flex: 1;
+}
+.container .body .listTitle > div:nth-child(2) {
+  flex: 7;
+}
+.container .body .listTitle > div:nth-child(3) {
+  flex: 2;
+}
+.container .body .listTitle > div:nth-child(4) {
+  flex: 2;
+}
+.container .body .listTitle > div:nth-child(5) {
+  flex: 1;
+}
+
+.container .body .list {
+  height: 40px;
+  display: flex;
+  border-bottom: 1px solid #6b908061;
+}
+
+.container .body .list > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: #; */
+  font-size: 0.8rem;
+  padding: 10px 0;
+}
+
+.container .body .list .seq {
+  flex: 1;
+}
+.container .body .list .title {
+  flex: 7;
+  cursor: pointer;
+}
+.container .body .list .title:hover {
+  color: #50635b;
+}
+.container .body .list .writer {
+  flex: 2;
+}
+.container .body .list .writeDate {
+  flex: 2;
+}
+.container .body .list .viewCount {
+  flex: 1;
+}

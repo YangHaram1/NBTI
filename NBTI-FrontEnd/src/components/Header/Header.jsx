@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import styles from "./Header.module.css";
 import image from "../../images/user.jpg";
 import { useNavigate } from 'react-router-dom';
 import { PopUp } from "./PopUp/PopUp";
+import { ChatsContext } from './../../Context/ChatsContext';
 
 export const Header = () => {
 
@@ -50,6 +51,11 @@ export const Header = () => {
 
     const navi = useNavigate();
 
+    const {setChatNavi} =useContext(ChatsContext);
+    const handleChat=()=>{
+        setChatNavi("home");
+    }
+
     return (
         <div className={styles.container}>
             <div className={`${styles.left} ${showPopUp ? styles.dropdownActive : ''}`}>
@@ -61,13 +67,13 @@ export const Header = () => {
             </div>
             <div className={styles.right}>
                 <div className={styles.chat}>
-                    <i className="fa-regular fa-comments fa-xl"></i>
+                    <i className="fa-regular fa-comments fa-xl" onClick={handleChat}></i>
                 </div>
                 <div className={styles.alarm}>
                     <i className="fa-regular fa-bell fa-xl"></i>
                 </div>
                 <div className={styles.user_info}>
-                    <div className={styles.user_profile_img}>
+                    <div className={styles.user_profile_img} onClick={()=>{ navi("/mypage")}}>
                         <img src={image} alt="" />
                     </div>
                 </div>
