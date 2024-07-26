@@ -1,11 +1,11 @@
 import { useContext, useState, useEffect, useRef } from 'react';
-import { ChatsContext } from '../../Context/ChatsContext';
+import { ChatsContext } from '../../../Context/ChatsContext';
 import { Editor } from '@tinymce/tinymce-react';
 import { debounce } from 'lodash';
 import styles from './MyEditor.module.css';
 import './MyEditor.css';
 import axios from 'axios';
-import { useCheckList } from '../../store/store';
+import { useCheckList } from '../../../store/store';
 import { api } from '../../config/config'
 import { host } from '../../config/config'
 

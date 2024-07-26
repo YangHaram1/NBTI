@@ -9,7 +9,7 @@ import Chats from './Chats/Chats';
 import Alarms from './Alarms/Alarms';
 import avatar from '../../images/다운로드.png';
 import axios from 'axios';
-import { useAuthStore } from '../../store/store';
+import { useAuthStore } from '../../../store/store';
 import { host } from '../../config/config'
 axios.defaults.withCredentials=true;
 const Home = () => {

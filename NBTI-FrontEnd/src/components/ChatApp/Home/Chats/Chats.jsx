@@ -1,6 +1,6 @@
 import styles from './Chats.module.css';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../../../store/store';
+import { useAuthStore } from '../../../../store/store';
 const Chats = () => {
     const { loginID } = useAuthStore();
     const navi = useNavigate();
