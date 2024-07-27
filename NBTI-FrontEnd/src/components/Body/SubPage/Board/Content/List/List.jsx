@@ -1,14 +1,30 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./List.module.css";
-
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { format } from 'date-fns';
+import { useBoardStore } from "../../../../../../store/store";
 
 export const List = () => {
-
     const navi = useNavigate();
+    const [list, setList] = useState([{}]);
+    const { boardType } = useBoardStore();
+
+    useEffect(() => {
+        // 1 : 자유 2: 공지
+        let code = 1;
+        if (boardType === "자유") code = 1;
+        else if (boardType === "공지") code = 2;
+
+        axios.get(`http://172.30.1.31/board/${code}`).then((resp) => {
+            console.log(resp);
+            setList(resp.data);
+        });
+    }, [boardType]);
 
     return (
         <div className={styles.container}>
-            <h1>자유 게시판</h1>
+            <h1>{boardType} 게시판</h1>
             <div className={styles.searchBox}>
                 <div className={styles.dropdown}>
                     <select>
@@ -38,25 +54,33 @@ export const List = () => {
                         <p>조회수</p>
                     </div>
                 </div>
-                <div className={styles.list}>
-                    <div className={styles.seq}>
-                        <p>1</p>
-                    </div>
-                    <div className={styles.title}>
-                        <p onClick={() => { navi("detail") }}>자유게시판 제목입니다.</p>
-                    </div>
-                    <div className={styles.writer}>
-                        <p>롱초</p>
-                    </div>
-                    <div className={styles.writeDate}>
-                        <p>2024-07-26 15:20</p>
-                    </div>
-                    <div className={styles.viewCount}>
-                        <p>3</p>
-                    </div>
-                </div>
+                {
+                    list.map((item, index) => {
+                        const date = new Date(item.write_date);
+                        const currentDate = !isNaN(date) ? format(date, 'yyyy-MM-dd') : 'Invalid Date';
+                        // const currentDate = format(new Date(item.write_date), 'yyyy-MM-dd');
+                        return (
+                            <div className={styles.list} key={index}>
+                                <div className={styles.seq}>
+                                    <p>{item.seq}</p>
+                                </div>
+                                <div className={styles.title}>
+                                    <p onClick={() => { navi("detail") }}>{item.title}</p>
+                                </div>
+                                <div className={styles.writer}>
+                                    <p>{item.member_id}</p>
+                                </div>
+                                <div className={styles.writeDate}>
+                                    <p>{currentDate}</p>
+                                </div>
+                                <div className={styles.viewCount}>
+                                    <p>{item.view_count}</p>
+                                </div>
+                            </div>
+                        );
+                    })
+                }
             </div>
-
         </div>
     )
 

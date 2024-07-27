@@ -64,6 +64,7 @@ div {
 }
 
 .container .body {
+  width: 100%;
   height: 820px;
   padding: 30px;
   display: flex;
@@ -71,6 +72,7 @@ div {
 }
 
 .container .body .listTitle {
+  min-width: 1015px;
   height: 30px;
   display: flex;
 }
@@ -83,22 +85,23 @@ div {
   font-size: 0.8rem;
 }
 .container .body .listTitle > div:nth-child(1) {
-  flex: 1;
+  width: 8%;
 }
 .container .body .listTitle > div:nth-child(2) {
-  flex: 7;
+  width: 54%;
 }
 .container .body .listTitle > div:nth-child(3) {
-  flex: 2;
+  width: 15%;
 }
 .container .body .listTitle > div:nth-child(4) {
-  flex: 2;
+  width: 15%;
 }
 .container .body .listTitle > div:nth-child(5) {
-  flex: 1;
+  width: 8%;
 }
 
 .container .body .list {
+  min-width: 1015px;
   height: 40px;
   display: flex;
   border-bottom: 1px solid #6b908061;
@@ -114,21 +117,21 @@ div {
 }
 
 .container .body .list .seq {
-  flex: 1;
+  width: 8%;
 }
 .container .body .list .title {
-  flex: 7;
+  width: 54%;
   cursor: pointer;
 }
 .container .body .list .title:hover {
   color: #50635b;
 }
 .container .body .list .writer {
-  flex: 2;
+  width: 15%;
 }
 .container .body .list .writeDate {
-  flex: 2;
+  width: 15%;
 }
 .container .body .list .viewCount {
-  flex: 1;
+  width: 8%;
 }
