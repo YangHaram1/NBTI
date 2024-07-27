@@ -11,9 +11,9 @@ export const useAuthStore= create((set)=>{
 
 /*하람*/ 
 export const useCheckList = create((set) => ({
-    emoticonDisplay: true,
+    emoticonDisplay: false,
     searchDisplay: true,
-    setEmoticonDisplay: (emt) => set({ emoticonDisplay: emt }),
+    setEmoticonDisplay: (emt) => set((state) => ({ emoticonDisplay: !state.emoticonDisplay })),
     setSearchDisplay: (search) => set({ searchDisplay: search })
   }));
 
