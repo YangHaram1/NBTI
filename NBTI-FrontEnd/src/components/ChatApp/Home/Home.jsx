@@ -3,7 +3,6 @@ import member from '../../../images/member.png';
 import chat from '../../../images/chat.png';
 import alarm from '../../../images/alarm.png';
 import { useState, useContext } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
 import Members from './Members/Members';
 import Chats from './Chats/Chats';
 import Alarms from './Alarms/Alarms';
@@ -13,6 +12,7 @@ import { useAuthStore } from '../../../store/store';
 import { host } from '../../../config/config'
 import { ChatsContext } from './../../../Context/ChatsContext';
 axios.defaults.withCredentials = true;
+
 const Home = () => {
     //이미지는 <a href="/kr">Freeimages.com</a>에서 가져왔습니다.
     const [color, setColor] = useState({ member: false, chat: false, alarm: false });
@@ -39,7 +39,7 @@ const Home = () => {
         setChatNaviBody('alarms')
     }
     const handleLogin = () => {
-        axios.post(`http://${host}/auth`, '1').then(resp => {
+        axios.post(`http://${host}/auth`,"HARAM0704").then(resp => {
             sessionStorage.setItem("loginID", resp.data);
             setLoginID(resp.data);
         });

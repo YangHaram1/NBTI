@@ -11,9 +11,12 @@ axios.defaults.withCredentials = true;
 
 const ChatApp = () => {
     //   <Outlet />
-    const { chatAppRef,chatNavi,setCahtNavi } = useContext(ChatsContext);
-    
+    const { chatAppRef,chatNavi} = useContext(ChatsContext);
+    if(chatNavi===''){
+        return false;
+    }
     return (
+      
 
         <div className={styles.container} ref={chatAppRef}>
             {chatNavi==='home' && <Home/>}
