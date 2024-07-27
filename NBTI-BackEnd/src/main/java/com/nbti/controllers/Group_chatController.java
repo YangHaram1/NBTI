@@ -2,6 +2,7 @@ package com.nbti.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +21,18 @@ public class Group_chatController {
 	//@RequestParamm(required=true)
 	
 	@PostMapping
-	public ResponseEntity<Void> post(@RequestBody ChatDTO dto) {
-	
+	public ResponseEntity<Void> post(String member_id) throws Exception {
+		System.out.println(member_id);
+		int seq=serv.insert(member_id);
+		
 		return ResponseEntity.ok().build(); // 200  	
 	} 
+	
+	
+	
+	@ExceptionHandler(Exception.class)
+	public String exceptionHandler(Exception e) {
+		e.printStackTrace();
+		return "error";
+	}
 }

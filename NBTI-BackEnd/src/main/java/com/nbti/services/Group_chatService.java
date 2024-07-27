@@ -1,5 +1,6 @@
 package com.nbti.services;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,9 @@ public class Group_chatService {
 	private Group_chatDAO dao;
 	
 	
+	public int insert(String member_id) throws Exception{
+		return dao.insert(member_id);
+	}
 	
 
 }
