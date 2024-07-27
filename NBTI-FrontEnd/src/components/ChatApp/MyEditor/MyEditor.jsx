@@ -12,10 +12,8 @@ import { host } from '../../../config/config'
 //import html2canvas from 'html2canvas';
 
 const MyEditor = ({ sidebarRef, editorRef }) => {
-  //const {emoticonDisplay,setEmoticonDisplay,setSearchDisplay} = useCheckList();
 
-  const emoticonDisplay = useCheckList((state) => state.emoticonDisplay);
-  const setSearchDisplay = useCheckList((state) => state.setSearchDisplay);
+  const {emoticonDisplay,setEmoticonDisplay} =useCheckList();
 
 
   const [content, setContent] = useState('');
@@ -26,7 +24,6 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
   const handleEditorChange = debounce((content) => {
     localStorage.setItem('editorContent', content);
     //setContent(content);
-    // console.log("오잉");
   }, 300);
 
   const handleUpload = () => {
@@ -50,6 +47,13 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
   }, []);
 
 
+  useEffect(() => {
+    const sidebar = sidebarRef.current;
+    if (sidebar) {
+      sidebar.style.display = emoticonDisplay ? 'block' : 'none';
+    }
+  }, [emoticonDisplay]);
+
   //localStorage.removeItem('editorContent');
 
   return (
@@ -65,7 +69,7 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
         init={{
           height: 126,
           menubar: false,
-          plugins: 'wordcount anchor  code image', //image
+          plugins: 'wordcount anchor  code', //image
           toolbar: 'fileupload emoticon| forecolor backcolor  blocks fontfamily fontsize fontcolor | bold italic underline strikethrough | link image media table mergetags  | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat ',
           language: 'ko_KR',
           statusbar: false,
@@ -103,9 +107,7 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
               onSetup: (e) => {
               },
               onAction: (e) => {
-                const sidebar = sidebarRef.current;
-                sidebar.style.display = emoticonDisplay ? "block" : "none";
-                setSearchDisplay(!emoticonDisplay);
+                setEmoticonDisplay();
               },
             });
             editor.on('keydown', (event) => {

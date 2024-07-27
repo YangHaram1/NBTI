@@ -1,8 +1,9 @@
+import { useCheckList } from '../../../../store/store';
 import styles from './Emoticon.module.css';
 import { useRef } from 'react';
 
 const Emoticon = ({ sidebarRef, editorRef }) => {
-
+    const {setEmoticonDisplay} =useCheckList();
     const defualtEmoticon = [
         '😃', '😃', '😄', '😁', '😆', '😅', '🤣', '😂',
         '🥰', '😍', '😌', '😉', '🙃', '🙂', '😇', '😊',
@@ -22,7 +23,7 @@ const Emoticon = ({ sidebarRef, editorRef }) => {
         '👩‍🦰', '👩', '👨‍🦲', '👨‍🦳', '👨‍🦱', '👨‍🦰', '🧔', '👨'
     ];
     const handleCancel = () => {
-        sidebarRef.current.style.display = 'none';
+        setEmoticonDisplay();
     }
     const handleEmoticon = (e) => {
         const text = e.target.textContent.trim();

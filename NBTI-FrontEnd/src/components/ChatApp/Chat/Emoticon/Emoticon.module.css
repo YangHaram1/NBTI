@@ -1,8 +1,9 @@
 .container {
     position: fixed;
-    top: 10px;
-    width: 300px; /* 사이드바의 너비 */
-    height: 450px;
+    top: 200px;
+    width: 310px; /* 사이드바의 너비 */
+    height: 400px;
+    overflow: auto;
     background-color: #333;
     color: white;
     padding: 10px;
@@ -12,6 +13,7 @@
 .div1{
     display: flex;
     justify-content: flex-end;
+    border-bottom: 2px solid gray;
 }
 .div1 button{
     background-color: #333;
