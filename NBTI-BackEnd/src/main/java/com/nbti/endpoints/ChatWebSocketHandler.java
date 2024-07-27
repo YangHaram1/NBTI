@@ -40,7 +40,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		HttpSession httpSession = (HttpSession) session.getAttributes().get("HTTPSESSIONID"); 
 																							
-		String sender = "HARAM0704";
+		String sender =(String) httpSession.getAttribute("loginID");
 		ChatDTO dto = new ChatDTO(0, sender, message.getPayload(), null, 1);
 		dto = chatService.insert(dto);
 		String json = gson.toJson(dto);

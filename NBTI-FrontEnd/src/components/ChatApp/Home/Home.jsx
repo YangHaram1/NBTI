@@ -39,7 +39,19 @@ const Home = () => {
         setChatNaviBody('alarms')
     }
     const handleLogin = () => {
-        axios.post(`http://${host}/auth`,"HARAM0704").then(resp => {
+        axios.post(`http://${host}/auth`,"HARAM0704",{ headers: {
+            'Content-Type': 'text/plain'  // 문자열을 전송할 때, Content-Type을 text/plain으로 설정
+          }}).then(resp => {
+            sessionStorage.setItem("loginID", resp.data);
+            setLoginID(resp.data);
+        });
+        console.log(loginID);
+    }
+
+    const handleLogin2 = () => {
+        axios.post(`http://${host}/auth`,"eunmi",{ headers: {
+            'Content-Type': 'text/plain'  // 문자열을 전송할 때, Content-Type을 text/plain으로 설정
+          }}).then(resp => {
             sessionStorage.setItem("loginID", resp.data);
             setLoginID(resp.data);
         });
@@ -57,7 +69,7 @@ const Home = () => {
                     <img src={avatar} alt='' className={styles.avatar}></img>
                 </div>
                 <div className={styles.div1_2}>
-                    <div className={styles.name}>
+                    <div className={styles.name} onClick={handleLogin2}>
                         양하람
                     </div>
                     <div className={styles.status} onClick={handleLogin}>
