@@ -55,13 +55,13 @@ export const Side = () => {
             >
               <li>
                 <span>
-                  <i className="fa-solid fa-clipboard fa-sm"></i>
+                  <i className="fa-solid fa-star fa-smm"></i>
                 </span>
                 <span>1</span>
               </li>
               <li>
                 <span>
-                  <i className="fa-solid fa-clipboard fa-sm"></i>
+                  <i className="fa-solid fa-star fa-sm"></i>
                 </span>
                 <span>2</span>
               </li>
@@ -83,7 +83,7 @@ export const Side = () => {
             >
               <li>
                 <span>
-                  <i className="fa-solid fa-clipboard fa-sm"></i>
+                  <i className="fa-solid fa-star fa-sm"></i>
                 </span>
                 <span>1</span>
               </li>

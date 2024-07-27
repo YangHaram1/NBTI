@@ -29,19 +29,35 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     z-index: 1000;
     display: flex; flex-direction: column;
-    background-color: red;
 }
+/* 제목 */
 .modal h2 {flex: 1;}
 .modalInner{flex: 9; display: flex;flex-direction: column;}
 .modalInner > div {flex: 1;display: flex;align-items: center;}
-.modalInner > div p {width: 20%; background-color: palegreen;}
-.modalInner > div:not(5) { background-color: aqua;}
-
+/* 왼쪽 title */
+.modalInner > div p {width: 20%;}
+/* 오른쪽 input, select */
+.modalInner > div select , .modalInner > div input{
+    width: 80%;
+}
+.modalInner > div select , .modalInner > div .inputBox{
+    width: 40%;
+}
+.modalInner > div select , .modalInner > div .dateBox{
+    width: 40%;
+}
+/* 버튼 */
 .modalInner > div:nth-child(5) {
-    background-color: aqua;display: flex; justify-content: space-evenly; align-items: center;
+    display: flex; justify-content: space-evenly; align-items: center;
 }
 .modalInner > div:nth-child(5) > button {
-    padding: 2%;
+    padding: 2% 5%;
+    border: none;
+    border-radius: 50px; cursor: pointer;
+    transition: all ease 0.2s;
+}
+.modalInner > div:nth-child(5) > button:hover{
+    background-color: #6b9080cc; color: white;
 }
 
 

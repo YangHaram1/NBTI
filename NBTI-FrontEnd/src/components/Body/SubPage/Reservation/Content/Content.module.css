@@ -1,0 +1,15 @@
+div {
+    /* border: 1px solid black; */
+  }
+  
+  .container {
+    width: calc(100% - 250px);
+    margin-left: 250px;
+    overflow: auto;
+    padding: 0px 20px 20px;
+    background-color: #6b9080cc;
+    min-height: 930px;
+    /* float: right; */
+    /* height: 100%; 100vh ? */
+    /* will-change: width; */
+  }
