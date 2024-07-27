@@ -18,10 +18,13 @@ const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch, cha
         handleSearch();
     }
     const handleList = () => {
-        const searchParam = search ? `?search=${encodeURIComponent(search)}` : '';
-        axios.get(`http://${host}/chat${searchParam}`).then((resp) => {
-            setSearchList(resp.data);
-        })
+        if(search!==''){
+            const searchParam = search ? `?search=${encodeURIComponent(search)}` : '';
+            axios.get(`http://${host}/chat${searchParam}`).then((resp) => {
+                setSearchList(resp.data);
+            })
+        }
+     
     }
 
     const handleUp = () => {
@@ -31,9 +34,10 @@ const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch, cha
                     const temp = prev - 1;
                     chatRef.current[temp].scrollIntoView({ behavior: 'smooth', block: 'center' });
                     chatRef.current[temp].classList.add(styles.shake);
+                   
                     setTimeout(() => {
                         chatRef.current[temp].classList.remove(styles.shake);
-                      }, 500); // 애니메이션 지속 시간과 동일하게 설정
+                      }, 1000); // 애니메이션 지속 시간과 동일하게 설정하게 설정
                     return temp;
                 }
                 else{
@@ -45,13 +49,15 @@ const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch, cha
     const handleDown = () => {
         if (divRef.current) {
             setCount((prev) => {
-                if (chatRef.current.length >= prev + 1) {
+                if (prev+1<chatRef.current.length) {
                     const temp = prev + 1;
                     chatRef.current[temp].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
                     chatRef.current[temp].classList.add(styles.shake);
                     setTimeout(() => {
                         chatRef.current[temp].classList.remove(styles.shake);
-                      }, 500); // 애니메이션 지속 시간과 동일하게 설정
+                      }, 1000); // 애니메이션 지속 시간과 동일하게 설정하게 설정
+                      
                     return temp;
                 }
                 else {
@@ -62,11 +68,16 @@ const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch, cha
         }
     }
 
+    const handleEnter=(e)=>{
+        if(e.key==='Enter'){
+            handleList();
+        }
+    }
 
     return (
         <div className={`${styles.container}`} ref={searchRef}>
             <div className={styles.div1}>
-                <input type="text" placeholder='검색할 내용을 입력하세요' name='content' value={search} onChange={handleSearchDate} />
+                <input type="text" placeholder='검색할 내용을 입력하세요' name='content' value={search} onChange={handleSearchDate} onKeyDown={handleEnter}/>
             </div>
             <div className={styles.updown}>
                 <div>

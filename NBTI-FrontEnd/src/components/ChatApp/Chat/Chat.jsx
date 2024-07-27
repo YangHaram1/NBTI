@@ -130,15 +130,15 @@ const Chat = () => {
     let result = '';
     if (!searchDisplay) {
       if (searchList.length > 0) {
-        // console.log("검색");
         searchList.forEach((s_item) => {
           if (item.seq === s_item.seq) {
             const temp = item.message.replace(search, `<span style="background-color: red !important;">${search}</span>`);
+           // console.log(temp);
             result = temp;
 
           }
         })
-      }
+      } 
     }
     return result;
   }, [searchList]);
@@ -199,7 +199,7 @@ const Chat = () => {
         );
       })
     );
-    console.log(chatRef.current);
+   
   }, [chats, handleSearchData])
 
   useEffect(() => {
@@ -208,7 +208,10 @@ const Chat = () => {
   }, [handleChatsData])
 
   const scrollBottom = useCallback(() => {
-    if (divRef.current) {
+    if(chatRef.current.length!==0){
+      chatRef.current[chatRef.current.length-1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    else if (divRef.current) {
       divRef.current.scrollTop = divRef.current.scrollHeight;
     }
 
