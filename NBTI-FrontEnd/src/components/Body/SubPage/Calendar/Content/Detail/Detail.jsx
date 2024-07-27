@@ -60,11 +60,17 @@ export const Detail = ()=>{
                             </div>
                             <div> 
                                 <p>시작</p>
-                                <input type="date" />
+                                <input type="date" className={styles.inputBox}/>
+                                <div className={styles.dateBox}>
+                                    <input type="time" id="startTime" name="startTime" />
+                                </div>
                             </div>
                             <div> 
                                 <p>종료</p>
-                                <input type="date" />   
+                                <input type="date" className={styles.inputBox} />   
+                                <div className={styles.dateBox}>
+                                    <input type="time" id="endTime" name="endTime" />
+                                </div>
                             </div>
                             <div>
                                 <p>내용</p>

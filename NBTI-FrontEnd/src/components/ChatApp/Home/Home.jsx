@@ -1,7 +1,4 @@
 import styles from './Home.module.css';
-import member from '../../../images/member.png';
-import chat from '../../../images/chat.png';
-import alarm from '../../../images/alarm.png';
 import { useState, useContext } from 'react';
 import Members from './Members/Members';
 import Chats from './Chats/Chats';
@@ -39,9 +36,11 @@ const Home = () => {
         setChatNaviBody('alarms')
     }
     const handleLogin = () => {
-        axios.post(`http://${host}/auth`,"HARAM0704",{ headers: {
-            'Content-Type': 'text/plain'  // 문자열을 전송할 때, Content-Type을 text/plain으로 설정
-          }}).then(resp => {
+        axios.post(`http://${host}/auth`, "HARAM0704", {
+            headers: {
+                'Content-Type': 'text/plain'  // 문자열을 전송할 때, Content-Type을 text/plain으로 설정
+            }
+        }).then(resp => {
             sessionStorage.setItem("loginID", resp.data);
             setLoginID(resp.data);
         });
@@ -49,9 +48,11 @@ const Home = () => {
     }
 
     const handleLogin2 = () => {
-        axios.post(`http://${host}/auth`,"eunmi",{ headers: {
-            'Content-Type': 'text/plain'  // 문자열을 전송할 때, Content-Type을 text/plain으로 설정
-          }}).then(resp => {
+        axios.post(`http://${host}/auth`, "eunmi", {
+            headers: {
+                'Content-Type': 'text/plain'  // 문자열을 전송할 때, Content-Type을 text/plain으로 설정
+            }
+        }).then(resp => {
             sessionStorage.setItem("loginID", resp.data);
             setLoginID(resp.data);
         });
@@ -82,13 +83,13 @@ const Home = () => {
             </div>
             <div className={styles.div2}>
                 <div className={color.member ? styles.white : styles.none} onClick={handleMemberList}>
-                    <img src={member} alt=''  ></img>
+                    <i className="fa-regular fa-user fa-xl"></i>
                 </div>
                 <div className={color.chat ? styles.white : styles.none} onClick={handleChatList}>
-                    <img src={chat} alt='' ></img>
+                    <i className="fa-regular fa-comments fa-xl"></i>
                 </div>
                 <div className={color.alarm ? styles.white : styles.none} onClick={handleAlarmList}>
-                    <img src={alarm} alt=''  ></img>
+                    <i className="fa-regular fa-bell fa-xl"></i>
                 </div>
             </div>
             <div className={styles.div3}>

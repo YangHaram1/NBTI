@@ -36,12 +36,22 @@
     justify-content: center;
     
 }
-.div2 img{
-    width: 30px;
+.div2 i{
+    width: 40px;
     height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    margin-left: 15px;
+    transition-duration: 0.4s;
+    color: #6b9080;
     
 }
+.div2 i:hover{
+    color: #00ff88;
+}
+
 
 .white{
     background-color: #CCDBFD;
