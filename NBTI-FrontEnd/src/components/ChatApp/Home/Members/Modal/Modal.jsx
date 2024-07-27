@@ -1,9 +1,13 @@
 import styles from './Modal.module.css';
-
-const Modal=({modalRef,index})=>{
+import axios from 'axios';
+import { host } from '../../../../../config/config';
+const Modal=({modalRef,index,item})=>{
 
     const handleChatRoom=()=>{
-        console.log("채팅하기")
+        console.log(item)
+        axios.post(`http://${host}/group_chat?member_id=${item}`).then((resp)=>{
+
+        })
     }
     const handleMemberIfo=()=>{
         console.log("사용자 정보")
