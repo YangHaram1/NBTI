@@ -41,6 +41,8 @@
 .div1 {
     display: flex;
     flex: 1;
+    margin-bottom: 5px;
+    gap: 5px;
 }
 
 .div1Left {
@@ -48,6 +50,8 @@
     align-items: flex-end;
     display: flex;
     flex: 1;
+    margin-bottom: 5px;
+   
 }
 .avatar{
     display: flex;
@@ -64,6 +68,13 @@
     flex: 1.7;
 
 }
+.nameReverse{
+    display: none;
+}
+.name{
+    display: flex;
+}
+
 
 .contents {
     overflow: auto;
@@ -71,12 +82,7 @@
     flex: 5;
     flex-direction: column;
 }
-.contentsReverse{
-    overflow: auto;
-    display: flex;
-    flex: 5;
-    flex-direction: row-reverse;
-}
+
 
 .mbox {
     font-family: 'Courier New', Courier, monospace;
@@ -95,10 +101,12 @@
     display: inline-block;
     border-radius: 10px;
     padding: 10px;
+    font-size: 13px;
 }
 
 .dateSeparator {
-    background-color: red;
+    background-color: #ff000057;
+    margin: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -107,6 +115,14 @@
 
 .content {
     display: flex;
+    gap: 5px;
+}
+
+.contentReverse{
+    overflow: auto;
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 5px;
 }
 
 .date {
@@ -114,6 +130,7 @@
     justify-content: flex-end;
     align-items: flex-end;
     font-weight: 600;
+    font-size: 10px;
 }
 
 /* 전체 스크롤바 스타일 */

@@ -97,7 +97,7 @@ const Chat = () => {
 
 
   const handleCancel = () => {
-    setChatNavi("");
+    setChatNavi("home");
   }
   const handleSearch = () => {
     const Searchbar = searchRef.current;
@@ -185,9 +185,9 @@ const Chat = () => {
                 !idCheck&&( <div className={styles.avatar}><img src={avatar} alt="" /></div>)
               }
               <div>
-                <div>{item.member_id}</div>
-                <div className={idCheck ? styles.contentsReverse : styles.content}>
-                  <div dangerouslySetInnerHTML={{ __html: (check ? temp : item.message) + '&nbsp' }}
+                <div className={idCheck?styles.nameReverse:styles.name}>{item.member_id}</div>
+                <div className={idCheck ? styles.contentReverse : styles.content}>
+                  <div dangerouslySetInnerHTML={{ __html: (check ? temp : item.message)}}
                     ref={el => {
                       if (el && check) {
                         chatRef.current[count++] = el;
