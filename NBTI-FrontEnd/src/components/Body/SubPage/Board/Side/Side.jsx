@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import styles from "./Side.module.css";
 import { useNavigate } from "react-router-dom";
+import { useBoardStore } from "../../../../../store/store";
 
 export const Side = () => {
   // ===== 메뉴 토글 =====
   const [FreeBoard, setFreeBoard] = useState(false);
   const [NoticeBoard, setNoticeBoard] = useState(false);
+  const { setBoardType } = useBoardStore();
 
   const toggleFreeBoard = () => {
     setFreeBoard(!FreeBoard);
@@ -53,19 +55,19 @@ export const Side = () => {
               className={`${styles.submenu} ${FreeBoard ? styles.open : ""}`}
               onClick={preventPropagation}
             >
-              <li>
+              <li onClick={() => { navi("free"); setBoardType('자유') }}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
                 </span>
                 <span>자유 게시판</span>
               </li>
-              <li>
+              <li onClick={() => { navi("detail"); }}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
                 </span>
                 <span>작성한 게시글</span>
               </li>
-              <li>
+              <li onClick={() => { navi("bookmark") }}>
                 <span>
                   <i className="fa-solid fa-star fa-sm"></i>
                 </span>
@@ -81,13 +83,13 @@ export const Side = () => {
               className={`${styles.submenu} ${NoticeBoard ? styles.open : ""}`}
               onClick={preventPropagation}
             >
-              <li>
+              <li onClick={() => { navi("notice"); setBoardType('공지') }}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
                 </span>
                 <span>공지 게시판</span>
               </li>
-              <li>
+              <li onClick={() => { navi("bookmark") }}>
                 <span>
                   <i className="fa-solid fa-star fa-sm"></i>
                 </span>
