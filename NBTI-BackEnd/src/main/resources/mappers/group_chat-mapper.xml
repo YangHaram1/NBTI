@@ -8,7 +8,7 @@
 		insert into group_chat values(group_chat_seq.nextval,#{name},'N','N')
 		
 		<selectKey resultType="int" order="AFTER" keyProperty="seq">
-			select group_chat.currval from dual
+			select group_chat_seq.currval from dual
 		</selectKey>
 	</insert>
 </mapper>

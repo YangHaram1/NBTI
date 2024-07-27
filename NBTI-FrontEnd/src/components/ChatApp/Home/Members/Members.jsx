@@ -46,7 +46,7 @@ const Members = () => {
                 list.map((item, index) => {
                     return (
                         <div onContextMenu={handleRightClick(index)} key={index} >
-                            {item}<Modal modalRef={modalRef} index={index} list={item}></Modal>
+                            {item}<Modal modalRef={modalRef} index={index} item={item}></Modal>
                         </div>
                     );
                 })

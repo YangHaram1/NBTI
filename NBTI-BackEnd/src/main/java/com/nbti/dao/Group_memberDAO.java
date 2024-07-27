@@ -12,6 +12,6 @@ public class Group_memberDAO {
 	private SqlSession mybatis;
 	
 	public void insert(Group_memberDTO dto) throws Exception {
-		mybatis.insert(null);
+		mybatis.insert("Group_member.insert",dto);
 	}
 }
