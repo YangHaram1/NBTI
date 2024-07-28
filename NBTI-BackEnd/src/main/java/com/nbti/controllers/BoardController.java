@@ -38,12 +38,12 @@ public class BoardController {
 	}
 	
 	// 게시글 출력
-	@GetMapping("/{code}/{seq}")
-	public ResponseEntity<BoardDTO> selectBoard(@PathVariable int seq, @PathVariable int code){
+	@GetMapping("/{boardSeq}/{code}")
+	public ResponseEntity<BoardDTO> selectBoard(@PathVariable int boardSeq, @PathVariable int code){
 		
-		System.out.println("seq : " + seq + " / code : " + code);
+		System.out.println("seq : " + boardSeq + " / code : " + code);
 		
-		BoardDTO dto = bserv.selectBoard(seq, code);
+		BoardDTO dto = bserv.selectBoard(boardSeq, code);
 		
 		System.out.println(dto.getSeq() + ": "+ dto.getTitle() + ":"+dto.getMember_id() + ":");
 		

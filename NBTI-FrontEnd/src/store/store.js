@@ -21,7 +21,11 @@ export const useCheckList = create((set) => ({
 export const useBoardStore = create((set) => {
     return {
         boardType: '자유',
-        setBoardType: (type) => set({ boardType: type })
+        boardSeq: -1,
+        setBoardType: (type) => set({ boardType: type }),
+        setBoardSeq: (seq) => set({ boardSeq: seq })
+
+
     }
 });
 
