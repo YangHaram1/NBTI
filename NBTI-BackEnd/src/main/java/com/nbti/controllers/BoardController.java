@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,13 +38,41 @@ public class BoardController {
 	}
 	
 	// 게시글 출력
-//	@GetMapping("/detail")
-//	public ResponseEntity<BoardDTO> selectBoard(@RequestParam int seq, @RequestParam int code){
-//		
-//		BoardDTO board = bserv.selectBoard(seq, code);
-//		return ResponseEntity.ok(board);
-//	}
+	@GetMapping("/{code}/{seq}")
+	public ResponseEntity<BoardDTO> selectBoard(@PathVariable int seq, @PathVariable int code){
+		
+		System.out.println("seq : " + seq + " / code : " + code);
+		
+		BoardDTO dto = bserv.selectBoard(seq, code);
+		
+		System.out.println(dto.getSeq() + ": "+ dto.getTitle() + ":"+dto.getMember_id() + ":");
+		
+		return ResponseEntity.ok(dto);
+	}
 	
+	// 게시글 작성
+	@PostMapping
+	public ResponseEntity<Void> insert(@RequestParam BoardDTO dto) {
+		bserv.insert(dto);
+		return ResponseEntity.ok().build();
+	}
+	
+	// 게시글 삭제
+	@DeleteMapping("/{seq}")
+	public ResponseEntity<Void> delete(@PathVariable int seq){
+		bserv.delete(seq);
+		return ResponseEntity.ok().build();
+	}
+	
+	
+	// 게시글 수정
+	@PutMapping
+	public ResponseEntity<Void> modify(@RequestParam BoardDTO dto){
+		String id = (String) session.getAttribute("loginID");
+		
+		bserv.modify(id, dto);
+		return ResponseEntity.ok().build();
+	}
 	
 	
 	
