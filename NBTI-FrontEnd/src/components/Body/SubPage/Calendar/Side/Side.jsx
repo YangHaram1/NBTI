@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import styles from "./Side.module.css";
 import { useNavigate } from "react-router-dom";
 
-export const Side = () => {
+export const Side = ({setAddOpen}) => {
   // ===== 메뉴 토글 =====
   const [FreeBoard, setFreeBoard] = useState(false);
   const [NoticeBoard, setNoticeBoard] = useState(false);
@@ -36,10 +36,26 @@ export const Side = () => {
 
   const navi = useNavigate();
 
+  // ==== 모달창/ ====
+  // const [modalOpen, setModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  //모달창 열기
+  const handleDateClick = (arg) => {
+      setSelectedDate(arg.dateStr);
+      setAddOpen(true);
+  };
+  //모달창 닫기
+  const closeModal = () => {
+    setAddOpen(false);
+      setSelectedDate(null);
+  };
+  // === /모달창 ===
+
   return (
     <div className={styles.container}>
       <div className={styles.mainBtn}>
-        <button onClick={() => { navi("insert") }}>
+        <button onClick={handleDateClick}>
           <i className="fa-solid fa-plus"></i>
           <p>일정추가</p>
         </button>
@@ -97,6 +113,45 @@ export const Side = () => {
           </li>
         </ul>
       </div>
+{/* 
+      {addOpen && (
+                    <div className={styles.modalOverlay} onClick={closeModal}>
+                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                        <h2>예약하기</h2>
+                        <div className={styles.modalInner}>
+                            <div>
+                                <p>자원이름</p>
+                                <select>
+                                    <option>어쩌고</option>
+                                    <option>저쩌고</option>
+                                </select>
+                            </div>
+                            <div> 
+                                <p>날짜</p>
+                                <input type="date" />
+                            </div>
+                            <div>
+                                <label htmlFor="startTime">시작 시간: </label>
+                                <input type="time" id="startTime" name="startTime" />
+                            </div>
+                            <div>
+                                <label htmlFor="endTime">종료 시간: </label>
+                                <input type="time" id="endTime" name="endTime" />
+                            </div>
+
+                            <div>
+                                <p>사용 용도</p>
+                                <input type="text" />
+                            </div>
+                            <div>
+                                <button>저장</button>
+                                <button onClick={closeModal}>취소</button>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                )} */}
+                
     </div>
   );
 };
