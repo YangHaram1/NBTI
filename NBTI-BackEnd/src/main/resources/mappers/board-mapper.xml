@@ -14,5 +14,22 @@
 	<select id="selectBoard" resultType="com.nbti.dto.BoardDTO">
 		select *from board where seq = ${seq} and board_code = ${code}
 	</select>
+	
+	<!-- 게시글 입력 -->
+	<insert id="insert">
+		insert into board values(board_seq.nextval, #{title}, #{contents}, #{member_id}, sysdate, 0, ${board_code})
+	</insert>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="delete">
+		delete from board where seq = ${seq}
+	</delete>
+	
+	<!-- 게시글 수정 -->
+	<update id="modify">
+		update board set title = #{title}, contents = #{contents} where id = #{id}
+	</update>
+	
+	
 
 </mapper>

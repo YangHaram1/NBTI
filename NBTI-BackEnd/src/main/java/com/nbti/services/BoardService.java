@@ -23,4 +23,20 @@ public class BoardService {
 	public BoardDTO selectBoard(int seq, int code) {
 		return bdao.selectBoard(seq, code);
 	}
+	
+	// 게시글 작성
+	public void insert(BoardDTO dto) {
+		bdao.insert(dto);
+	}
+
+	// 게시글 삭제
+	public void delete(int seq) {
+		bdao.delete(seq);
+	}
+	
+	// 게시글 수정
+	public void modify(String id, BoardDTO dto) {
+		bdao.modify(id, dto);
+	}
+
 }

@@ -15,7 +15,7 @@ export const List = () => {
     else if (boardType === "공지") code = 2;
 
     useEffect(() => {
-        axios.get(`http://172.30.1.31/board/${code}`).then((resp) => {
+        axios.get(`http://localhost/board/${code}`).then((resp) => {
             console.log("게시판 : " + resp.data);
             setBoardList(resp.data);
         });
@@ -25,7 +25,7 @@ export const List = () => {
     // detail 페이지로 이동
     const handleDetail = (seq) => {
         return (
-            axios.get(`http://172.30.1.31/board/${code}/${seq}`).then((resp) => {
+            axios.get(`http://localhost/board/${code}/${seq}`).then((resp) => {
                 console.log(resp)
                 // setBoardList(resp);
 
@@ -77,12 +77,6 @@ export const List = () => {
                     boardList.map((item, index) => {
                         const date = new Date(item.write_date);
                         const currentDate = !isNaN(date) ? format(date, 'yyyy-MM-dd') : 'Invalid Date';
-                        // const currentDate = format(new Date(item.write_date), 'yyyy-MM-dd');
-
-                        // console.log('Item:', item);
-                        // console.log('Item.seq:', item.seq);
-                        // console.log('Item.code:', item.code);
-
 
                         return (
                             <div className={styles.list} key={index}>
@@ -91,6 +85,7 @@ export const List = () => {
                                 </div>
                                 <div className={styles.title}>
                                     <p onClick={() => { handleDetail(item.seq) }}>{item.title}</p>
+                                    {/* <p onClick={() => { navi("detail") }}>{item.title}</p> */}
                                 </div>
                                 <div className={styles.writer}>
                                     <p>{item.member_id}</p>
