@@ -28,5 +28,12 @@ public class Group_memberDAO {
 		Integer groupSeq = mybatis.selectOne("Group_member.check", map);
 		return groupSeq != null;
 	}
+	
+	
+	public List<Group_memberDTO> list(String member_id) throws Exception {
+		return mybatis.selectList("Group_member.list",member_id);
+	}
+	
+	
 
 }

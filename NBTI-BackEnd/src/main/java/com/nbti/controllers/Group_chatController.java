@@ -6,10 +6,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nbti.dto.Group_chatDTO;
 import com.nbti.dto.Group_memberDTO;
 import com.nbti.services.Group_chatService;
 import com.nbti.services.Group_memberService;
@@ -55,6 +57,14 @@ public class Group_chatController {
 		return ResponseEntity.ok().build(); // 200  	
 	} 
 	
+	
+	@GetMapping
+	public ResponseEntity<List<Group_chatDTO>> get() throws Exception{
+		String loginID= (String) session.getAttribute("loginID");
+		List<Group_memberDTO> list= new ArrayList<>();
+		list=mserv.list(loginID);
+		return ResponseEntity.ok(serv.getList(list));
+	}
 	
 	
 	@ExceptionHandler(Exception.class)

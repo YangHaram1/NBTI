@@ -20,4 +20,8 @@ public class Group_memberService {
 	public boolean check(List<String> list) throws Exception{
 		return dao.check(list);
 	}
+	
+	public List<Group_memberDTO> list(String member_id) throws Exception{
+		return dao.list(member_id);
+	}
 }

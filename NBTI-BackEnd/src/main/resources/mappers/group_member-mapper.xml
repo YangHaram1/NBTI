@@ -19,4 +19,8 @@
 		GROUP BY group_seq
 		HAVING COUNT(DISTINCT MEMBER_ID) = #{size}
 	</select>
+	
+	<select id="list" resultType="com.nbti.dto.Group_memberDTO">
+		select * from group_member where member_id=#{param}
+	</select>
 </mapper>
