@@ -1,0 +1,130 @@
+.container {
+    width: 100%;
+    height: 100%;
+    /* display: flex;
+    flex-direction: column; */
+    overflow-y: hidden;
+  }
+
+.title{
+    margin-top: 18px;
+    font-size: 22px;
+    text-indent: 10px;
+    width: 100%;
+    flex:0.5;
+    margin-bottom: 30px;
+}
+
+.content{
+    /* border: 1px solid black; */
+    margin-left: 50px;
+    height: 600px;
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+.box{
+    flex:1;
+    display: flex;
+}
+
+.name{
+    text-indent: 25px;
+    flex:3;
+    display: flex;
+    align-items: center;
+}
+
+.value{
+    flex:7;
+    display: flex;
+    align-items: center;
+}
+
+
+.photo_box{
+    flex: 2;
+}
+
+.photo_name{
+    display: flex;
+    align-items: start;
+}
+
+.photo_value_box{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: start;
+}
+
+.change_btn{
+    width: 125px;
+    background-color: #c0dcd6;
+    border: 0px;
+    margin: 0px;
+    padding: 3px;
+}
+
+.change_btn:hover{
+    cursor: pointer;
+    background-color: #86a99a;
+    color:white;
+}
+
+.photo{
+    /* border: 1px solid black; */
+    height: 120px;
+    width: 125px;  
+    display: flex;
+    align-items: center;
+    justify-content: center;  
+}
+
+.preview {
+    max-height: 100%;
+    max-width: 100%;
+    border-radius: 0;
+}
+
+.btns{
+    height: 50px;
+    width: 650px;
+    /* border: 1px solid black; */
+    display: flex;
+    justify-content: end;
+}
+
+.empty_box{
+    width: 30px;
+}
+
+.btns button{
+    height: 70%;
+    width: 80px;
+}
+
+.save_btn{
+    background-color: #c0dcd6;
+    border: 1px solid white;
+    border-radius: 5px;
+}
+
+.save_btn:hover{
+    cursor: pointer;
+    background-color: #86a99a;
+    color:white;
+}
+
+.cancle_btn{
+    background-color: white;
+    border: 1px solid #d5e7e3;
+    border-radius: 5px;
+}
+
+.cancle_btn:hover{
+    cursor: pointer;
+    background-color: #dbe3df;
+    color:#86a99a;
+}
