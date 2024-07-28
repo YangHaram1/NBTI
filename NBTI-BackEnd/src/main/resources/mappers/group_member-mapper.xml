@@ -5,6 +5,18 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Group_member">
 	<insert id="insert">
-		insert into group_member values(${group_seq},#{member_id},#{chat_check},#{file_path},#{chat_path})
+		insert into group_member
+		values(${group_seq},#{member_id},#{chat_check},#{file_path},#{chat_path})
 	</insert>
+	
+	<select id="check" resultType="Integer">
+		SELECT group_seq
+		FROM GROUP_MEMBER
+		WHERE MEMBER_ID IN 
+		<foreach item="member_id" index="index" collection="list" open="(" separator="," close=")">
+            #{member_id}
+        </foreach>
+		GROUP BY group_seq
+		HAVING COUNT(DISTINCT MEMBER_ID) = #{size}
+	</select>
 </mapper>
