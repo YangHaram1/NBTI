@@ -1,0 +1,183 @@
+.container {
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+  }
+
+.title{
+    margin-top: 18px;
+    font-size: 22px;
+    text-indent: 10px;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.pw_box{
+    height: 100px;
+    /* border: 1px solid black; */
+    width: 500px;
+    margin-left: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.pw_title{
+    flex:1;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.pw_last_change{
+    flex:1;
+    display: flex;
+    margin-left: 22px;
+    align-items: center;
+}
+
+.pw_last_title{
+    flex:3;
+    font-weight: 100;
+}
+
+.pw_last_date{
+    flex:7;
+    text-align: start;
+    font-weight: 100;
+}
+
+.pw_btn{
+    flex:1;
+}
+
+.pw_btn button{
+    flex:1;
+    margin-left: 20px;
+    color:#86a99a;
+    background-color: rgba(245, 245, 245, 0);
+    border: 0px;
+    padding: 3px;
+    padding-top: 0px;
+}
+
+.pw_btn button:hover{
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.change_pw_box{
+    display: none;
+}
+
+.pw_check{
+    height: 130px;
+    width: 485px;
+    margin-left: 30px;
+    border: 1px solid #6B9080;
+    background-color: #EAF4F4;
+}
+
+.pw_check_title{
+    margin-top: 15px;
+    height: 30px;
+    text-indent: 20px;
+}
+
+.pw_check_content{
+    height: 30px;
+    font-size: 15px;
+    text-indent: 30px;
+}
+
+.pw_check .input input{
+    width: 220px;
+    height: 25px;
+    border: 0px;
+}
+
+.pw_check .input button{
+    width: 60px;
+    height: 25px;
+    background-color: #CCE3DE;
+    border: 1px solid #CCE3DE;
+}
+
+.pw_check .input button:hover{
+    cursor: pointer;
+    background-color: #A4C3B2;
+    border: 1px solid #CCE3DE;
+}
+
+
+.input{
+    text-indent: 30px;
+}
+
+.new_pw_box{
+    height: 250px;
+    width: 485px;
+    margin-left: 30px;
+    border: 1px solid #6B9080;
+    background-color: #EAF4F4;
+    display: none;
+}
+
+.new_pw_title{
+    margin-top: 15px;
+    margin-bottom: 5px;
+    height: 30px;
+    text-indent: 20px;
+}
+
+.new_pw_content1{
+    height: 30px;
+    font-size: 13px;
+    text-indent: 30px;
+    margin-bottom: 0px;
+}
+
+.new_pw_content2{
+    height: 30px;
+    font-size: 13px;
+    text-indent: 30px;
+    margin-top: 0px;
+}
+
+.change_btn{
+    display: flex;
+    width: 100%;
+    justify-content: end;
+    align-items: end;
+}
+
+.new_pw_box .input input{
+    width: 220px;
+    height: 25px;
+    border: 0px;
+}
+
+.new_pw_box .input button{
+    width: 60px;
+    height: 25px;
+    /* border-radius: 5px; */
+    background-color: #CCE3DE;
+    border: 1px solid #CCE3DE;
+}
+
+.result{
+    height: 30px;
+    color: red;
+    font-size: 12px;
+    text-indent: 30px;
+}
+
+.empty_box{
+    width: 50px;
+}
+
+.notSame{
+    color: red;
+}
+
+.show {
+    display: block; /* 상태가 true일 때 보이도록 설정 */
+}
