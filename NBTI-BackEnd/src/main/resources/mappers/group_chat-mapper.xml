@@ -11,4 +11,11 @@
 			select group_chat_seq.currval from dual
 		</selectKey>
 	</insert>
+	
+	<select id="list" resultType="com.nbti.dto.Group_chatDTO">
+		select *from group_chat where seq in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item.group_seq}
+        </foreach>
+	</select>
 </mapper>
