@@ -81,17 +81,36 @@ export const Detail = () => {
 
 
             <div className={styles.reply}>
-                <div className={styles.replyCount}>
+                <div className={styles.count}>
                     <span>0</span>
                     <span>개의 댓글</span>
                 </div>
-                <div className={styles.replyBox}>
+                <div className={styles.replyInput}>
                     <img src={image} alt="" />
                     <textarea></textarea>
                     <button>등록</button>
                 </div>
-            </div>
 
+                {/* --------------[ 댓 글 ]------------ */}
+
+                <div className={styles.replyOutputWrap}>
+                    <div className={styles.replyOutput}>
+                        <img src={image} alt="" />
+                        <div>
+                            <div className={styles.writer_writeDate}>
+                                <span>롱초</span>
+                                <span>2024-07-29 11:32</span>
+                            </div>
+                            <span>댓글 내용 어쩌구</span>
+                        </div>
+                        <div className={styles.likes}>
+                            <i class="fa-regular fa-heart fa-lg" />
+                            <p>5</p>
+                        </div>
+                        <button>X</button>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

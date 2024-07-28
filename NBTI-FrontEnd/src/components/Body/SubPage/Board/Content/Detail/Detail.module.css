@@ -1,5 +1,5 @@
 div {
-  border: 1px solid black;
+  /* border: 1px solid black; */
 }
 
 .container {
@@ -28,6 +28,7 @@ div {
 }
 .container .top .left i {
   color: #6b9080;
+  cursor: pointer;
 }
 
 .container .top .right {
@@ -52,7 +53,7 @@ div {
   width: 70px;
   height: 70px;
   margin-left: 10px;
-  border: 1.5px solid #6b9080;
+  border: 1px solid #6b908061;
   border-radius: 50%;
 }
 .container .title .titleWriter {
@@ -101,37 +102,37 @@ div {
   font-size: 0.85rem;
   /* padding: 10px; */
 }
-.container .reply .replyCount {
+.container .reply .count {
   display: flex;
   margin-bottom: 15px;
 }
-.container .reply .replyCount > span:nth-child(1) {
+.container .reply .count > span:nth-child(1) {
   margin-right: 3px;
   color: #6b9080;
 }
-.container .reply .replyBox {
+.container .reply .replyInput {
   display: flex;
   align-items: center;
   padding: 20px;
+  background-color: #eaf4f4;
+  border-top: 1px solid #6b908061;
 }
-.container .reply .replyBox > img {
+.container .reply .replyInput > img {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  margin-right: 20px;
 }
-.container .reply .replyBox > textarea {
-  width: 80%;
+.container .reply .replyInput > textarea {
+  width: 88%;
   height: 34px;
   min-height: 34px;
-  margin-right: 20px;
-  /* padding: 4px 16px 4px 10px; */
+  margin: 0 20px;
+  padding: 4px 16px 4px 10px;
   border: 1px solid #d6d6d6;
   border-radius: 2px;
   background-color: #ffffff;
-  /* color: rgb(51, 51, 51); */
 }
-.container .reply .replyBox > button {
+.container .reply .replyInput > button {
   width: 60px;
   height: 30px;
   border: none;
@@ -139,4 +140,65 @@ div {
   background-color: #6b9080;
   color: white;
   cursor: pointer;
+  transition-duration: 0.4s;
+}
+.container .reply .replyInput > button:hover {
+  background-color: #6b9080cc;
+}
+
+.replyOutputWrap .replyOutput {
+  display: flex;
+  padding: 10px 8px 20px 20px;
+  border-bottom: 1px solid #6b908061;
+}
+
+.replyOutputWrap .replyOutput > img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 0 20px 20px 0;
+}
+
+.replyOutputWrap .replyOutput > div {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+}
+.replyOutputWrap .replyOutput > div .writer_writeDate {
+  height: 20px;
+  margin-bottom: 5px;
+}
+.replyOutputWrap .replyOutput > div .writer_writeDate > span:nth-child(2) {
+  margin: 0 20px;
+  color: #959595;
+  font-size: 0.75rem;
+}
+
+.replyOutputWrap .replyOutput .likes {
+  width: 30px;
+  margin-right: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.replyOutputWrap .replyOutput .likes i {
+  margin-bottom: 7px;
+  cursor: pointer;
+  color: #6b9080;
+}
+.replyOutputWrap .replyOutput .likes p {
+  font-size: 0.8rem;
+  color: #6b9080;
+}
+
+.replyOutputWrap .replyOutput > button {
+  padding: 0px;
+  width: 20px;
+  height: 20px;
+  background-color: #ffffff00;
+  border: none;
+  cursor: pointer;
+  color: #959595;
+  /* margin-top: 8px; */
 }
