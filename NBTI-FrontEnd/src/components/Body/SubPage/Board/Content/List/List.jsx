@@ -7,20 +7,39 @@ import { useBoardStore } from "../../../../../../store/store";
 
 export const List = () => {
     const navi = useNavigate();
-    const [list, setList] = useState([{}]);
+    const [boardList, setBoardList] = useState([{}]);
     const { boardType } = useBoardStore();
+    // 1 : 자유 2: 공지
+    let code = 1;
+    if (boardType === "자유") code = 1;
+    else if (boardType === "공지") code = 2;
 
     useEffect(() => {
-        // 1 : 자유 2: 공지
-        let code = 1;
-        if (boardType === "자유") code = 1;
-        else if (boardType === "공지") code = 2;
-
         axios.get(`http://172.30.1.31/board/${code}`).then((resp) => {
-            console.log(resp);
-            setList(resp.data);
+            console.log("게시판 : " + resp.data);
+            setBoardList(resp.data);
         });
     }, [boardType]);
+
+
+    // detail 페이지로 이동
+    const handleDetail = (seq) => {
+        return (
+            axios.get(`http://172.30.1.31/board/${code}/${seq}`).then((resp) => {
+                console.log(resp)
+                // setBoardList(resp);
+
+                // navi("detail");
+
+            })
+
+        )
+
+    }
+
+
+
+
 
     return (
         <div className={styles.container}>
@@ -55,17 +74,23 @@ export const List = () => {
                     </div>
                 </div>
                 {
-                    list.map((item, index) => {
+                    boardList.map((item, index) => {
                         const date = new Date(item.write_date);
                         const currentDate = !isNaN(date) ? format(date, 'yyyy-MM-dd') : 'Invalid Date';
                         // const currentDate = format(new Date(item.write_date), 'yyyy-MM-dd');
+
+                        // console.log('Item:', item);
+                        // console.log('Item.seq:', item.seq);
+                        // console.log('Item.code:', item.code);
+
+
                         return (
                             <div className={styles.list} key={index}>
                                 <div className={styles.seq}>
                                     <p>{item.seq}</p>
                                 </div>
                                 <div className={styles.title}>
-                                    <p onClick={() => { navi("detail") }}>{item.title}</p>
+                                    <p onClick={() => { handleDetail(item.seq) }}>{item.title}</p>
                                 </div>
                                 <div className={styles.writer}>
                                     <p>{item.member_id}</p>
