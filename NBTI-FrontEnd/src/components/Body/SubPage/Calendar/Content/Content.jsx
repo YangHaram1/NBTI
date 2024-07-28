@@ -3,11 +3,11 @@ import styles from "./Content.module.css";
 import { Detail } from "./Detail/Detail";
 
 
-export const Content = () => {
+export const Content = ({addOpen, setAddOpen}) => {
     return(
         <div className={styles.container}>
             <Routes>
-                <Route path="/" element={<Detail/>}></Route>
+                <Route path="/" element={<Detail addOpen={addOpen} setAddOpen={setAddOpen}/>}></Route>
             </Routes>
         </div>
     )
