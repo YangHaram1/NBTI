@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./Detail.module.css";
 import { useBoardStore } from "../../../../../../store/store";
 import axios from "axios";
 import { host } from '../../../../../../config/config'
 import image from "../../../../../../images/user.jpg";
 import { format } from 'date-fns';
-
-
-
+import { useNavigate } from "react-router-dom";
+import { Editor } from '@tinymce/tinymce-react';
 
 
 export const Detail = () => {
@@ -15,6 +14,11 @@ export const Detail = () => {
     const { boardSeq, boardType } = useBoardStore();
     const [detail, setDetail] = useState([]);
 
+    const navi = useNavigate();
+
+    // 게시글 날짜 타입 변경
+    const date = new Date(detail.write_date);
+    const currentDate = !isNaN(date) ? format(date, 'yyyy-MM-dd HH:mm') : 'Invalid Date';
 
     useEffect(() => {
         // 외부 스타일시트를 동적으로 추가
@@ -29,35 +33,118 @@ export const Detail = () => {
         };
     }, []);
 
+    // 해당 게시글로 이동
     useEffect(() => {
         let code = 0;
-        if (boardType === "자유") {
-            code = 1;
-        } else if (boardType === "공지") {
-            code = 2;
-        }
+        if (boardType === "자유") code = 1;
+        else if (boardType === "공지") code = 2;
 
         axios.get(`http://${host}/board/${boardSeq}/${code}`).then((resp) => {
             setDetail(resp.data);
         })
     }, []);
 
-    const date = new Date(detail.write_date);
-    const currentDate = !isNaN(date) ? format(date, 'yyyy-MM-dd HH:mm') : 'Invalid Date';
+
+    /** ================[ 삭 제 ]============= */
+    const handleDelBtn = () => {
+        if (window.confirm("정말 삭제하시겠습니까?")) {
+            axios.delete(`http://${host}/board/${detail.seq}`).then(resp => {
+                navi('/board/free');
+            })
+        }
+    }
+
+
+    /** ================[ 수 정 ]============= */
+    const [isEditing, setIsEditing] = useState(false);
+    const [title, setTitle] = useState(detail.title);
+    const [content, setContent] = useState(detail.contents);
+    const [data, setData] = useState({ title: detail.title, content: detail.contents, write_date: detail.write_date });
+
+    // 에디터 내용 변경 핸들러
+    const handleEditorChange = (content) => {
+        setContent(content);
+        setData((prevData) => ({ ...prevData, content })); // content 상태 업데이트와 동시에 data 상태 업데이트
+    };
+
+    // 수정 click 
+    const handleEditBtn = () => {
+        setIsEditing(true);
+    };
+
+
+    const getCurrentDateTime = () => {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    };
+
+    // detail 변경될 때 상태 초기화
+    useEffect(() => {
+        setTitle(detail.title);
+        setContent(detail.contents);
+    }, [detail]);
+
+
+    // 저장 click
+    const handleSaveBtn = () => {
+
+        console.log("data: " + data);
+
+        const updatedData = {
+            ...data,
+            write_date: getCurrentDateTime() // 현재 날짜 및 시간으로 write_date 업데이트
+        };
+
+        axios.post(`http://${host}/board`, updatedData).then((resp) => {
+
+            console.log("data2222: " + resp.data);
+
+
+            setTitle(updatedData.title);
+            setContent(updatedData.content);
+            setData(updatedData); // 상태를 업데이트된 데이터로 설정
+
+            setIsEditing(false);
+        })
+    };
+
+
+
+    // 취소 click 
+    const handleCancelBtn = () => {
+        setIsEditing(false);
+        setTitle(detail.title);
+        setContent(detail.contents);
+    };
+
 
     return (
-
-
         <div className={styles.container}>
-            {/* <div>{detail.title}</div> */}
             <div className={styles.top}>
                 <div className={styles.left}>
                     <i class="fa-regular fa-star"></i>
                 </div>
                 <div className={styles.right}>
-                    <p>수정</p>
-                    <p>삭제</p>
+                    {!isEditing ? (
+                        <>
+                            <p onClick={handleEditBtn}>수정</p>
+                            <p onClick={handleDelBtn}>삭제</p>
+                        </>
+                    ) : null}
+
                 </div>
+                {isEditing && (
+                    <div className={styles.editButtons}>
+                        <p onClick={handleSaveBtn}>저장</p>
+                        <p onClick={handleCancelBtn}>취소</p>
+                    </div>
+                )}
             </div>
             <div className={styles.title}>
                 <div className={styles.image}>
@@ -65,7 +152,17 @@ export const Detail = () => {
                 </div>
                 <div className={styles.titleWriter}>
                     <div className={styles.innerTitle}>
-                        <p>{detail.title}</p>
+                        {isEditing ? (
+                            <input
+                                type="text"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder="제목을 입력하세요."
+                                className={styles.editTitle}
+                            />
+                        ) : (
+                            <p>{detail.title}</p>
+                        )}
                     </div>
                     <div className={styles.innerWriter}>
                         <p>{detail.member_id}</p>
@@ -76,10 +173,25 @@ export const Detail = () => {
                 </div>
             </div>
             <div className={styles.content}>
-                <span>{detail.contents}</span>
+                {isEditing ? (
+                    <Editor
+                        initialValue={content}
+                        apiKey="YOUR_TINYMCE_API_KEY"
+                        init={{
+                            height: 400,
+                            menubar: true,
+                            plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste code help wordcount',
+                            toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+                            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                        }}
+                        onEditorChange={handleEditorChange} // 에디터 내용 변경 시 호출
+                    />
+                ) : (
+                    <span>{detail.contents}</span>
+                )}
             </div>
 
-
+            {/* --------------[ 댓글 작성 ]------------ */}
             <div className={styles.reply}>
                 <div className={styles.count}>
                     <span>0</span>
@@ -91,8 +203,7 @@ export const Detail = () => {
                     <button>등록</button>
                 </div>
 
-                {/* --------------[ 댓 글 ]------------ */}
-
+                {/* --------------[ 댓글 출력 ]------------ */}
                 <div className={styles.replyOutputWrap}>
                     <div className={styles.replyOutput}>
                         <img src={image} alt="" />
