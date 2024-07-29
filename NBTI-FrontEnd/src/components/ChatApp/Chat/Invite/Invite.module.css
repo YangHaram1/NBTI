@@ -1,0 +1,41 @@
+.container {
+    position: fixed;
+    top: 230px;
+    right: 120px;
+    width: 300px; /* 사이드바의 너비 */
+    height: 430px;
+    overflow: auto;
+    background-color: white;
+    color: gray;
+    padding: 10px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    z-index: 9999;
+    flex-direction: column;
+    gap: 5px;
+}
+.container input{
+    border-radius: 20px;
+    background-color: rgb(203, 201, 201);
+}
+.item{
+    display: flex;
+    gap: 10px;
+}
+.itemDiv1{
+    flex: 1;
+}
+.itemDiv2{
+    flex: 1;
+    align-items: center;
+}
+.avatar{
+    width: 30px;
+    height: 30px;
+}
+.checkbox{
+    flex: 3;
+    display: flex;
+    justify-content: flex-end;
+   align-items: center;
+}

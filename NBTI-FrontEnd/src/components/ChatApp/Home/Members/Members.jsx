@@ -8,7 +8,7 @@ const Members = () => {
     const [modalDisplay, setModalDisplay] = useState(null);
     const modalRef = useRef([]);
     useEffect(() => {
-        /* axios.post('',)
+       /* axios.post(`http://${host}/group_chat`,)
              .then(response => {
                  setList(response);
              })
