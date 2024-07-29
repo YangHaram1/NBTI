@@ -13,18 +13,22 @@ import { host } from './config/config';
 axios.defaults.withCredentials = true;
 
 function App() {
-  const { setLoginID } = useAuthStore();
-  const {setMembers} = useMemberStore();
-  
+  const { loginID, setLoginID } = useAuthStore();
+  const { setMembers } = useMemberStore();
+
   useEffect(() => {
     setLoginID(sessionStorage.getItem("loginID"));
-    axios.get(`http://${host}/members/selectAll`)
-      .then((resp) => {
-        setMembers(resp.data);
-        console.log('Fetched Members:', resp.data);
-      })
-  }, [setMembers]); // 의존성 배열에 setMembers 추가
+  }, []); // 의존성 배열에 setMembers 추가
 
+  useEffect(() => {
+    if (loginID !== null) {
+      axios.get(`http://${host}/members/selectAll`)
+        .then((resp) => {
+          setMembers(resp.data);
+          console.log('Fetched Members:', resp.data);
+        })
+    }
+  }, [loginID])
   return (
     <ChatsProvider>
       <Router>
