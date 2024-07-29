@@ -57,19 +57,19 @@ export const Side = () => {
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
                 </span>
-                <span>결재전체</span>
+                <span>결재 전체</span>
               </li>
               <li onClick={()=>{navi("listWait")}}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
                 </span>
-                <span>결재대기</span>
+                <span>결재 대기</span>
               </li>
               <li onClick={()=>{navi("listReserved")}}>
                 <span>
                   <i className="fa-solid fa-star fa-sm"></i>
                 </span>
-                <span>결재예정</span>
+                <span>결재 예정</span>
               </li>
             </ul>
           </li>

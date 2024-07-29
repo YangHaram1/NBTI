@@ -24,4 +24,8 @@ public class Group_memberService {
 	public List<Group_memberDTO> list(String member_id) throws Exception{
 		return dao.list(member_id);
 	}
+	
+	public void delete(int group_seq,String member_id) throws Exception{
+		dao.delete(group_seq,member_id);
+	}
 }

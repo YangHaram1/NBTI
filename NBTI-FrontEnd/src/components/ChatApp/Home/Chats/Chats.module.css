@@ -15,6 +15,9 @@
     display: flex;
     gap: 15px;
 }
+.room:hover{
+    background-color: rgb(230, 210, 210);
+}
 
 .avatar{
     width: 35px;

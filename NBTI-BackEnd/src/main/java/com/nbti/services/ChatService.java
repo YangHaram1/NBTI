@@ -22,11 +22,11 @@ public class ChatService {
 		return dao.insert(dto);
 	}
 
-	public List<ChatDTO> getList()throws Exception {
-		return dao.list();
+	public List<ChatDTO> getList(int group_seq)throws Exception {
+		return dao.list(group_seq);
 	}
 	
-	public List<ChatDTO> searchList(String content)throws Exception {
-		return dao.search(content);
+	public List<ChatDTO> searchList(String content,int group_seq)throws Exception {
+		return dao.search(content,group_seq);
 	}
 }

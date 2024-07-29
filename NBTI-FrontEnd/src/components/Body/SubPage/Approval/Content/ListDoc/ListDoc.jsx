@@ -1,7 +1,20 @@
-import styles from './List.module.css';
+import { useEffect, useState } from 'react';
+import styles from './ListDoc.module.css';
+import axios from 'axios';
+import { host } from '../../../../../../config/config';
 
 
-export const List = ({setlist}) => {
+export const ListDoc = ({setlist}) => {
+
+    // DTO 하나 생성하기 -> 기안일, 결재양식, 긴급, 제목, 첨부, 기안자, 문서번호, 문서 상태, 임시번호
+    const [Lists, setLists] = useState({})
+
+    // useEffect(()=>{
+    //     axios.get(`http://${host}/approval/${setlist}`)
+    //     .then((resp)=>{
+    //         console.log(resp.data);
+    //     })
+    // })
 
     return(
         <div className={styles.container}>
@@ -18,6 +31,8 @@ export const List = ({setlist}) => {
                     <div className={styles.content_title}> 제목</div>
                     <div className={styles.file}> 첨부</div>
                     <div className={styles.writer}> 기안자</div>
+                    <div className={styles.doc_number}> 문서번호</div>
+                    <div className={styles.doc_state}> 문서상태</div>
                 </div>
                 <div className={styles.body}>
 
@@ -30,6 +45,12 @@ export const List = ({setlist}) => {
                     <div className={styles.content_title}>휴가가 너무너무 가고싶어요</div>
                     <div className={styles.file}>Y</div>
                     <div className={styles.writer}> 기안자</div>
+                    <div className={styles.doc_number}> 문서번호</div>
+                    <div className={styles.doc_state}>
+                        {/* 조건에 따라서 상태가 다르게 표시되게 설정 */}
+                        <div className={styles.state_badge}>결재진행중</div>
+                    </div>
+                    <div className={styles.temp_number}>문서 임시번호</div>
                 </div>
             </div>
         </div>

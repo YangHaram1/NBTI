@@ -1,6 +1,7 @@
 import styles from './Modal.module.css';
 import axios from 'axios';
 import { host } from '../../../../../config/config';
+import React from 'react';
 const Modal=({modalRef,index,item})=>{
 
     const handleChatRoom=()=>{
