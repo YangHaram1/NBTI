@@ -1,5 +1,5 @@
 import styles from './Home.module.css';
-import { useState, useContext } from 'react';
+import { useState, useContext ,React} from 'react';
 import Members from './Members/Members';
 import Chats from './Chats/Chats';
 import Alarms from './Alarms/Alarms';
@@ -70,10 +70,10 @@ const Home = () => {
                     <img src={avatar} alt='' className={styles.avatar}></img>
                 </div>
                 <div className={styles.div1_2}>
-                    <div className={styles.name} onClick={handleLogin2}>
+                    <div className={styles.name}>
                         양하람
                     </div>
-                    <div className={styles.status} onClick={handleLogin}>
+                    <div className={styles.status}>
                         온라인
                     </div>
                 </div>

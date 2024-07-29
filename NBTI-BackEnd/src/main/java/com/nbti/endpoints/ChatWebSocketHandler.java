@@ -39,9 +39,9 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		HttpSession httpSession = (HttpSession) session.getAttributes().get("HTTPSESSIONID"); 
-																							
+		int group_seq=(int)httpSession.getAttribute("group_seq");																					
 		String sender =(String) httpSession.getAttribute("loginID");
-		ChatDTO dto = new ChatDTO(0, sender, message.getPayload(), null, 1);
+		ChatDTO dto = new ChatDTO(0, sender, message.getPayload(), null, group_seq);
 		dto = chatService.insert(dto);
 		String json = gson.toJson(dto);
 		broadcastMessage(json);
@@ -49,7 +49,13 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	}
 
 	@Override
-	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {	
+		HttpSession httpSession = (HttpSession) session.getAttributes().get("HTTPSESSIONID"); 
+		synchronized (httpSession) {
+	        if (httpSession != null && httpSession.getAttribute("group_seq") != null) {
+	            httpSession.removeAttribute("group_seq");
+	        }
+	    }
 		clients.remove(session);
 	}
 

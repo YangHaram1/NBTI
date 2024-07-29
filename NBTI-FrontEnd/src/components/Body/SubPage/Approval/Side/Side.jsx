@@ -39,7 +39,7 @@ export const Side = () => {
   return (
     <div className={styles.container}>
       <div className={styles.mainBtn}>
-        <button onClick={() => { navi("insert") }}>
+        <button onClick={() => { navi("write") }}>
           <i className="fa-solid fa-plus"></i>
           <p>글쓰기</p>
         </button>
@@ -53,23 +53,23 @@ export const Side = () => {
               className={`${styles.submenu} ${FreeBoard ? styles.open : ""}`}
               onClick={preventPropagation}
             >
-              <li>
+              <li onClick={()=>{navi("listAll")}}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
                 </span>
-                <span>결재전체</span>
+                <span>결재 전체</span>
               </li>
-              <li>
+              <li onClick={()=>{navi("listWait")}}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
                 </span>
-                <span>결재대기</span>
+                <span>결재 대기</span>
               </li>
-              <li>
+              <li onClick={()=>{navi("listReserved")}}>
                 <span>
                   <i className="fa-solid fa-star fa-sm"></i>
                 </span>
-                <span>결재예정</span>
+                <span>결재 예정</span>
               </li>
             </ul>
           </li>
@@ -81,43 +81,43 @@ export const Side = () => {
               className={`${styles.submenu} ${NoticeBoard ? styles.open : ""}`}
               onClick={preventPropagation}
             >
-              <li>
+              <li onClick={()=>{navi("listDocAll")}}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
                 </span>
                 <span>전체 문서함</span>
               </li>
-              <li>
+              <li onClick={()=>{navi("listDocWrite")}}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
                 </span>
                 <span>기안 문서함</span>
               </li>
-              <li>
+              <li onClick={()=>{navi("listDocApproval")}}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
                 </span>
                 <span>결재 문서함</span>
               </li>
-              <li>
+              <li onClick={()=>{navi("listDocReceive")}}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
                 </span>
                 <span>수신 문서함</span>
               </li>
-              <li>
+              <li onClick={()=>{navi("listDocReference")}}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
                 </span>
                 <span>참조/열람 문서함</span>
               </li>
-              <li>
+              <li onClick={()=>{navi("listDocBan")}}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
                 </span>
                 <span>반려 문서함</span>
               </li>
-              <li>
+              <li onClick={()=>{navi("listDocCancle")}}>
                 <span>
                   <i className="fa-solid fa-star fa-sm"></i>
                 </span>
@@ -127,12 +127,12 @@ export const Side = () => {
           </li>
         </ul>
         <ul>
-            <li>
+            <li onClick={()=>{navi("listDocTemp")}}>
                 임시 저장 문서함
             </li>
         </ul>
         <ul>
-            <li>
+            <li onClick={()=>{navi("listDocSetting")}}>
                 전자결재 관리
             </li>
         </ul>

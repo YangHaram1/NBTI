@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import styles from "./Side.module.css";
 import { useNavigate } from "react-router-dom";
 
@@ -40,12 +40,12 @@ export const Side = () => {
     <div className={styles.container}>
       <div className={styles.menus}>
         <ul>
-            <li>
+            <li onClick={() => { navi("/mypage/profile") }}>
                 프로필 설정
             </li>
         </ul>
         <ul>
-            <li>
+            <li onClick={() => { navi("/mypage/security") }}>
                 보안 설정
             </li>
         </ul>

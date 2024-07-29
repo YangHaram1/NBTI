@@ -1,0 +1,55 @@
+/* Login.module.css */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f8f4; /* 배경 색상 */
+}
+
+.loginBox {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+}
+
+.title {
+    color: #6B9080;
+    margin-bottom: 20px;
+}
+
+.input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.input:focus {
+    border-color: #6B9080;
+    outline: none;
+}
+
+.button {
+    background-color: #6B9080;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.button:hover {
+    background-color: #5a7f68;
+}
+
+.alert {
+    color: #e74c3c;
+    margin-top: 10px;
+}

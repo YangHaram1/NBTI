@@ -1,4 +1,7 @@
 import { create } from 'zustand';
+import { host } from '../config/config';
+import axios from 'axios';
+
 /*공통*/
 export const useAuthStore = create((set) => {
     return {
@@ -9,6 +12,12 @@ export const useAuthStore = create((set) => {
     }
 });
 
+export const useMemberStore = create((set) => ({
+    members: [],
+    setMembers: (members) => set({ members }),
+  }));
+
+
 /*하람*/
 export const useCheckList = create((set) => ({
     emoticonDisplay: false,
@@ -16,6 +25,7 @@ export const useCheckList = create((set) => ({
     setEmoticonDisplay: (emt) => set((state) => ({ emoticonDisplay: !state.emoticonDisplay })),
     setSearchDisplay: (search) => set({ searchDisplay: search })
 }));
+
 
 /*유나*/
 export const useBoardStore = create((set) => {

@@ -27,6 +27,7 @@
     /* margin: 0 0 20px 0; */
     padding: 0;
     font-size: 1.0rem;
+    margin-top: 25px;
   }
 
   .container .menus ul > li:hover {

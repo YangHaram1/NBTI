@@ -1,80 +1,30 @@
 import styles from './Content.module.css';
+import { Routes, Route } from 'react-router-dom';
+import { Home } from './Home/Home';
+import { Write } from './Write/Write';
+import { List } from './List/List';
+import { ListDoc } from './ListDoc/ListDoc';
 
 export const Content = ()=>{
     return(
-        <div className={styles.container}>
-            <div className={styles.title}>전자결재</div>
-            <div className={styles.bubble_box}>
-                <div className={styles.bubble}>
-                </div>
-                <div className={styles.bubble}>
-                </div>
-                <div className={styles.bubble}>
-                </div>
-                <div className={styles.bubble}>
-                </div>
-                <div className={styles.bubble}>
-                </div>5
-                <div className={styles.bubble}>
-                </div>
-                <div className={styles.bubble}>
-                </div>
-                <div className={styles.bubble}>
-                </div>
-            </div>
-            <hr></hr>
-            <div className={styles.draft_box}>
-                <div className={styles.sub_title}>
-                    기안 진행 문서
-                </div>
-                <div className={styles.sub_content}>
-                    <div className={styles.table}>
-                        <div className={styles.table_head}>
-                            <div className={styles.doc_number}>문서번호</div>
-                            <div className={styles.doc_title}>제목</div>
-                            <div className={styles.doc_emergency}>긴급</div>
-                            <div className={styles.doc_writer}>기안자</div>
-                            <div className={styles.doc_write_date}>기안일</div>
-                            <div className={styles.doc_state}>상태</div>
-                        </div>
-                        <div className={styles.table_body}>
-                            <div className={styles.doc_number}>HR-27-001</div>
-                            <div className={styles.doc_title}>27년 하반기 워크숍 일정 종합</div>
-                            <div className={styles.doc_emergency}>긴급</div>
-                            <div className={styles.doc_writer}>기안자</div>
-                            <div className={styles.doc_write_date}>2027-07-24</div>
-                            <div className={styles.doc_state}>진행중</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <hr></hr>
-            <div className={styles.doc_box}>
-                <div className={styles.sub_title}>
-                    문서함
-                </div>
-                <div className={styles.sub_content}>
-                    <div className={styles.table}>  
-                        <div className={styles.table_head}>
-                            <div className={styles.doc_number}>문서번호</div>
-                            <div className={styles.doc_title}>제목</div>
-                            <div className={styles.doc_emergency}>긴급</div>
-                            <div className={styles.doc_writer}>기안자</div>
-                            <div className={styles.doc_write_date}>기안일</div>
-                            <div className={styles.doc_state}>상태</div>
-                        </div>
-                        <div className={styles.table_body}>
-                            <div className={styles.doc_number}>HR-27-001</div>
-                            <div className={styles.doc_title}>27년 하반기 워크숍 일정 종합</div>
-                            <div className={styles.doc_emergency}>긴급</div>
-                            <div className={styles.doc_writer}>기안자</div>
-                            <div className={styles.doc_write_date}>2027-07-24</div>
-                            <div className={styles.doc_state}>진행중</div>
-                        </div>
-                        
-                        </div>
-                    </div>
-            </div>
+        <div className={styles.container}> 
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="write" element={<Write />} />
+                <Route path="home/*" element={<Home />} />
+                <Route path="listAll/*" element={<List setlist={"결재 전체"}/>} />
+                <Route path="listWait/*" element={<List setlist={"결재 대기"} />} />
+                <Route path="listReserved/*" element={<List setlist={"결재 예약"} />}/>
+                <Route path="listDocAll/*" element={<ListDoc setlist={"전체 문서함"} />} />
+                <Route path="listDocWrite/*" element={<ListDoc setlist={"기안 문서함"} />} />
+                <Route path="listDocApproval/*" element={<ListDoc setlist={"결재 문서함"} />} />
+                <Route path="listDocReceive/*" element={<ListDoc setlist={"수신 문서함"} />} />
+                <Route path="listDocReference/*" element={<ListDoc setlist={"참조/열람 문서함"} />} />
+                <Route path="listDocBan/*" element={<ListDoc setlist={"반려 문서함"} />} />
+                <Route path="listDocCancle/*" element={<ListDoc setlist={"상신취소 문서함"} />} />
+                <Route path="listDocTemp/*" element={<ListDoc setlist={"임시 저장 문서함"} />} />
+                <Route path="listDocSetting/*" element={<ListDoc setlist={"전자결재 관리"} />} />
+            </Routes>
         </div>
     );
 }

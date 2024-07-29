@@ -13,6 +13,7 @@ import { useAuthStore } from './../../../store/store';
 import './Chat.css';
 
 import avatar from '../../../images/user.jpg'
+import Invite from './Invite/Invite.jsx';
 axios.defaults.withCredentials = true;
 const Chat = () => {
 
@@ -26,13 +27,14 @@ const Chat = () => {
   const { loginID } = useAuthStore();
 
 
-  const { chats, setChats, ws, setChatNavi } = useContext(ChatsContext);
+  const { chats, setChats, ws, setChatNavi,chatSeq } = useContext(ChatsContext);
   let lastDate = null;
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
   const { searchDisplay, setSearchDisplay } = useCheckList();
   const [searchList, setSearchList] = useState([]);
+  const [invite,setInvite] =useState(false);
 
 
 
@@ -53,7 +55,7 @@ const Chat = () => {
     ws.current = new WebSocket(`ws://${host}/chatWebsocket`);
 
     ws.current.onopen = () => {
-      axios.get(`http://${host}/chat`).then(response => {
+      axios.get(`http://${host}/chat?chatSeq=${chatSeq}`).then(response => {
         setChats(response.data);
         console.log("채팅목록가저오기");
       })
@@ -99,6 +101,14 @@ const Chat = () => {
   const handleCancel = () => {
     setChatNavi("home");
   }
+  const handleInvite=()=>{
+    setInvite((prev)=>{
+      return !prev;
+    })
+  }
+
+
+
   const handleSearch = () => {
     const Searchbar = searchRef.current;
     Searchbar.style.display = searchDisplay ? "flex" : "none";
@@ -239,7 +249,7 @@ const Chat = () => {
               방제목
             </div>
             <div className={styles.header2}>
-              <button >➕</button>
+              <button onClick={handleInvite}>➕</button>
               <button onClick={handleSearch}>🔍 </button>
               <button onClick={handleCancel}>❌</button>
             </div>
@@ -255,6 +265,7 @@ const Chat = () => {
         </div>
         <Search search={search} setSearch={setSearch} searchRef={searchRef} setSearchList={setSearchList} handleSearch={handleSearch} chatRef={chatRef} divRef={divRef}></Search>
         <Emoticon sidebarRef={sidebarRef} editorRef={editorRef} />
+        { invite&&(<Invite setInvite={setInvite}></Invite>)}
       </React.Fragment>
     );
   }

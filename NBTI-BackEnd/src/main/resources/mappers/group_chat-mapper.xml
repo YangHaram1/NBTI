@@ -18,4 +18,8 @@
             #{item.group_seq}
         </foreach>
 	</select>
+	
+	<delete id="delete">
+		delete from group_chat where seq=${param}
+	</delete>
 </mapper>
