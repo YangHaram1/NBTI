@@ -32,16 +32,15 @@ public class Group_memberController {
 	public ResponseEntity<Void> post(@RequestBody Group_memberDTO dto) throws Exception {
 		System.out.println(dto);
 		//serv.insert(dto);
-		
 		return ResponseEntity.ok().build(); // 200  	
 	} 
 	
 	@DeleteMapping()
-	public ResponseEntity<Void> delete(int seq) throws Exception{
-		System.out.println(seq);
+	public ResponseEntity<Void> delete(int group_seq) throws Exception{
+		System.out.println(group_seq);
 		//seq =group_seq
 		String loginID= (String) session.getAttribute("loginID");
-		serv.delete(seq,loginID);
+		serv.delete(group_seq,loginID);
 		return ResponseEntity.ok().build();
 	}
 	
