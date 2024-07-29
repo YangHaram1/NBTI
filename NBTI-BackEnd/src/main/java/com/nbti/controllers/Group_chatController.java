@@ -69,6 +69,10 @@ public class Group_chatController {
 		List<Group_chatDTO> chatList=serv.getList(list);
 		List<Group_chatSizeDTO> result=new ArrayList<>();
 
+		if(chatList==null) {
+			return ResponseEntity.ok(null);
+		}
+		
 		for(int i=0;i<chatList.size();i++) {
 			int size=mserv.members(list.get(i).getGroup_seq()).size();
 			Group_chatDTO dto = chatList.get(i);

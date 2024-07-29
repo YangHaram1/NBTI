@@ -6,7 +6,6 @@ import Alarms from './Alarms/Alarms';
 import avatar from '../../../images/user.jpg';
 import axios from 'axios';
 import { useAuthStore } from '../../../store/store';
-import { host } from '../../../config/config'
 import { ChatsContext } from './../../../Context/ChatsContext';
 axios.defaults.withCredentials = true;
 

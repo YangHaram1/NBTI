@@ -17,6 +17,10 @@ public class Group_memberService {
 		dao.insert(list);
 	}
 	
+	public void insert(Group_memberDTO dto) throws Exception {
+		dao.insert(dto);
+	}
+	
 	public boolean check(List<String> list) throws Exception{
 		return dao.check(list);
 	}

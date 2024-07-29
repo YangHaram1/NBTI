@@ -21,6 +21,10 @@ public class Group_memberDAO {
 			mybatis.insert("Group_member.insert", dto);
 		}
 	}
+	
+	public void insert(Group_memberDTO dto) throws Exception{
+		mybatis.insert("Group_member.insert",dto);
+	}
 
 	public boolean check(List<String> list) throws Exception {
 		Map<String, Object> map = new HashMap<>();
