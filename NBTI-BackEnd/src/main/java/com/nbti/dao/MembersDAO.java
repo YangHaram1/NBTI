@@ -1,5 +1,7 @@
 package com.nbti.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,6 +21,18 @@ public class MembersDAO {
 			return true;
 		}
 		return false;
+	}
+	
+	public MembersDTO selectMyData(String id) {
+		return mybatis.selectOne("Member.mydata",id);
+	}
+	
+	public void updateMyData(MembersDTO dto) {
+		mybatis.update("Member.updateMyData", dto);
+	}
+	
+	public List<MembersDTO> selectAll (){
+		return mybatis.selectList("Member.selectAll");
 	}
 	
 
