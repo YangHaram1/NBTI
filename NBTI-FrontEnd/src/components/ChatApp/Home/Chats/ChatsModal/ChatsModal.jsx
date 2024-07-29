@@ -1,6 +1,7 @@
 import styles from './ChatsModal.module.css';
 import axios from 'axios';
 import { host } from '../../../../../config/config';
+axios.defaults.withCredentials = true;
 const ChatsModal = ({ modalRef, index, item, setGroup_chats }) => {
     const seq = item.seq;
 

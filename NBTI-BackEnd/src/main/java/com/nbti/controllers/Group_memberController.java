@@ -38,6 +38,7 @@ public class Group_memberController {
 	
 	@DeleteMapping()
 	public ResponseEntity<Void> delete(int seq) throws Exception{
+		System.out.println(seq);
 		//seq =group_seq
 		String loginID= (String) session.getAttribute("loginID");
 		serv.delete(seq,loginID);
