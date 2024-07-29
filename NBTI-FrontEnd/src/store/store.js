@@ -17,6 +17,7 @@ export const useCheckList = create((set) => ({
     setSearchDisplay: (search) => set({ searchDisplay: search })
 }));
 
+
 /*유나*/
 export const useBoardStore = create((set) => {
     return {

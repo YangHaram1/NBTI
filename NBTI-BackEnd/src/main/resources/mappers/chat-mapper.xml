@@ -13,12 +13,12 @@
 	</insert>
 
 	<select id="list" resultType="com.nbti.dto.ChatDTO">
-		select *from chat order by seq
+		select *from chat where group_seq=#{param}  order by seq
 	</select>
 
 	<select id="search" resultType="com.nbti.dto.ChatDTO">
 		select *from chat
-		where message like '%'||#{param}||'%'
+		where message like '%'||#{content}||'%' and group_seq=#{group_seq}
 		order by seq
 	</select>
 

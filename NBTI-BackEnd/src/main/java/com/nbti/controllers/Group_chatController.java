@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -63,9 +65,18 @@ public class Group_chatController {
 		String loginID= (String) session.getAttribute("loginID");
 		List<Group_memberDTO> list= new ArrayList<>();
 		list=mserv.list(loginID);
+		if(list!=null)
 		return ResponseEntity.ok(serv.getList(list));
+		
+		return ResponseEntity.ok().build();
 	}
 	
+	
+	@DeleteMapping()
+	public ResponseEntity<Void> delete(int seq) throws Exception{
+		serv.delete(seq);
+		return ResponseEntity.ok().build();
+	}
 	
 	@ExceptionHandler(Exception.class)
 	public String exceptionHandler(Exception e) {

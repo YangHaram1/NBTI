@@ -24,5 +24,9 @@ public class Group_chatService {
 		return dao.getList(list);
 	}
 	
+	public void delete(int seq) throws Exception{
+		dao.delete(seq);
+	}
+	
 
 }

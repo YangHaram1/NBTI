@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nbti.dto.ChatDTO;
 import com.nbti.services.ChatService;
 
+import jakarta.servlet.http.HttpSession;
+
 @RestController
 @RequestMapping("/chat")
 public class ChatController {
@@ -23,6 +25,9 @@ public class ChatController {
 	@Autowired
 	private ChatService cserv;
 	//@RequestParamm(required=true)
+	@Autowired
+	private HttpSession session;
+	
 	
 	@PostMapping
 	public ResponseEntity<Void> post(@RequestBody ChatDTO dto) {
@@ -31,19 +36,22 @@ public class ChatController {
 	} 
 	
 	@GetMapping
-	public ResponseEntity<List<ChatDTO>> get(String search) throws Exception{
+	public ResponseEntity<List<ChatDTO>> get(String search,int chatSeq) throws Exception{
 		 List<ChatDTO> list=new ArrayList<>();
+		 System.out.println(chatSeq);
 		if(search!=null) {
-			list=cserv.searchList(search);
+			list=cserv.searchList(search,chatSeq);
 		}
 		else {
-			list =cserv.getList();
+			list =cserv.getList(chatSeq);
 		}
+		session.setAttribute("group_seq", chatSeq);
 		return ResponseEntity.ok(list);
 	}
 	
 	
-	@DeleteMapping("/")
+	
+	@DeleteMapping()
 	public void delete() throws Exception{
 		
 	}

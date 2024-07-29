@@ -1,10 +1,12 @@
 import styles from './Search.module.css';
 import axios from 'axios';
 import { host } from '../../../../config/config'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { ChatsContext } from './../../../../Context/ChatsContext';
 
 const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch, chatRef, divRef }) => {
     const [count, setCount] = useState();
+    const {chatSeq} =useContext(ChatsContext)
 
     useEffect(() => {
         // console.log("셋팅")
@@ -20,7 +22,7 @@ const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch, cha
     const handleList = () => {
         if(search!==''){
             const searchParam = search ? `?search=${encodeURIComponent(search)}` : '';
-            axios.get(`http://${host}/chat${searchParam}`).then((resp) => {
+            axios.get(`http://${host}/chat${searchParam}&&chatSeq=${chatSeq}`).then((resp) => {
                 setSearchList(resp.data);
             })
         }

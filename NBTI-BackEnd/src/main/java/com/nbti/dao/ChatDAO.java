@@ -1,6 +1,8 @@
 package com.nbti.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +22,14 @@ public class ChatDAO {
 		return dto;
 	}
 	
-	public List<ChatDTO> list() throws Exception{
-		return mybatis.selectList("Chat.list");
+	public List<ChatDTO> list(int group_seq) throws Exception{
+		return mybatis.selectList("Chat.list",group_seq);
 	}
 	
-	public List<ChatDTO> search(String content) throws Exception{
-		return mybatis.selectList("Chat.search",content);
+	public List<ChatDTO> search(String content,int group_seq) throws Exception{
+		Map<String, String> maps=new HashMap<>();
+		maps.put("content", content);
+		maps.put("group_seq", String.valueOf(group_seq));
+		return mybatis.selectList("Chat.search",maps);
 	}
 }
