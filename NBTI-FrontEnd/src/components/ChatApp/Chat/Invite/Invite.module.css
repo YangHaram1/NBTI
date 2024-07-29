@@ -1,6 +1,6 @@
 .container {
     position: fixed;
-    top: 230px;
+    top: 245px;
     right: 120px;
     width: 300px; /* 사이드바의 너비 */
     height: 430px;
@@ -12,11 +12,17 @@
     display: flex;
     z-index: 9999;
     flex-direction: column;
-    gap: 5px;
+    gap: 25px;
 }
 .container input{
     border-radius: 20px;
     background-color: rgb(203, 201, 201);
+}
+.list{
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    flex: 8;
 }
 .item{
     display: flex;
@@ -38,4 +44,30 @@
     display: flex;
     justify-content: flex-end;
    align-items: center;
+}
+.button{
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+.button button{
+    border: 0px;
+    cursor: pointer;
+    font-size: 17px;
+    font-family: 'Times New Roman', Times, serif;
+    
+}
+
+.btn1{
+    background-color: yellowgreen;
+}
+.btn1:hover{
+    background-color: yellow;
+}
+.btn2:hover{
+    background-color: red;
+}
+.btn2{
+    background-color: rgb(240, 219, 219);
 }

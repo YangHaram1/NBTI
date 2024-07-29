@@ -90,7 +90,7 @@ const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch, cha
                 </div>
             </div>
             <div className={styles.div2}>
-                <button className={styles.btn1} onClick={handleList}>검색</button>
+                <button className={styles.btn1} onClick={handleList}></button>
             </div>
             <div className={styles.div3}>
                 <button className={styles.btn2} onClick={handleCancel}>❌</button>

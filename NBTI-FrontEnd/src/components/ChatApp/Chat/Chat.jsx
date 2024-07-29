@@ -102,7 +102,9 @@ const Chat = () => {
     setChatNavi("home");
   }
   const handleInvite=()=>{
-
+    setInvite((prev)=>{
+      return !prev;
+    })
   }
 
 
@@ -263,7 +265,7 @@ const Chat = () => {
         </div>
         <Search search={search} setSearch={setSearch} searchRef={searchRef} setSearchList={setSearchList} handleSearch={handleSearch} chatRef={chatRef} divRef={divRef}></Search>
         <Emoticon sidebarRef={sidebarRef} editorRef={editorRef} />
-        <Invite></Invite>
+        { invite&&(<Invite setInvite={setInvite}></Invite>)}
       </React.Fragment>
     );
   }

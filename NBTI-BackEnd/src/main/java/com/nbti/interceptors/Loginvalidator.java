@@ -18,9 +18,10 @@ public class Loginvalidator implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		System.out.println("언터셉터 동작확인");
+		
 		String loginID=(String)session.getAttribute("loginID");
 		if(loginID!=null) {
+			System.out.println("아이디 있음");
 			return true;
 		}
 		String uri =request.getRequestURI();
