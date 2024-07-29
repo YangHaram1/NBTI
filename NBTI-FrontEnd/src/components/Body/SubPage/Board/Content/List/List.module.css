@@ -1,9 +1,6 @@
-div {
-  /* border: 1px solid black; */
-}
 .container {
-  /* background-color: cadetblue; */
   width: 100%;
+  min-width: 1000px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -72,7 +69,7 @@ div {
 }
 
 .container .body .listTitle {
-  min-width: 1015px;
+  min-width: 800px;
   height: 30px;
   display: flex;
 }
@@ -101,7 +98,7 @@ div {
 }
 
 .container .body .list {
-  min-width: 1015px;
+  min-width: 800px;
   height: 40px;
   display: flex;
   border-bottom: 1px solid #6b908061;

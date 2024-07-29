@@ -38,17 +38,20 @@ public class BoardDAO {
 	
 	// 게시글 삭제
 	public void delete(int seq) {
-		mybatis.delete("Board.delete");
+		mybatis.delete("Board.delete", seq);
 	}
 	
 	// 게시글 수정
-	public void modify(String id, BoardDTO dto) {
+	public void modify(BoardDTO dto) {
 		
 		Map<String, Object> params = new HashMap<>();
-		params.put("id", id);
 		params.put("title", dto.getTitle());
 		params.put("contents", dto.getContents());
 		
 		mybatis.update("Board.modify",params);
 	}
+	
+	
+	
+	
 }
