@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nbti.commons.EncryptionUtils;
 import com.nbti.dto.ChatDTO;
 import com.nbti.dto.MembersDTO;
 import com.nbti.services.MembersService;
@@ -32,6 +33,9 @@ public class AuthController {
 	
 	   @PostMapping
 	   public ResponseEntity<String> login(@RequestBody MembersDTO dto) {
+		   String encryptedPassword = EncryptionUtils.getSHA512(dto.getPw());
+	        dto.setPw(encryptedPassword);
+		   
 	      boolean result = mServ.login(dto);   
 	      
 	      System.out.println(dto.getId()+":"+dto.getPw());
