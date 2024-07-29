@@ -17,7 +17,7 @@ public class Group_memberDAO {
 
 	public void insert(List<Group_memberDTO> list) throws Exception {
 		for (Group_memberDTO dto : list) {
-			//System.out.println(dto.getMember_id());
+			// System.out.println(dto.getMember_id());
 			mybatis.insert("Group_member.insert", dto);
 		}
 	}
@@ -29,20 +29,24 @@ public class Group_memberDAO {
 		Integer groupSeq = mybatis.selectOne("Group_member.check", map);
 		return groupSeq != null;
 	}
-	
-	
+
 	public List<Group_memberDTO> list(String member_id) throws Exception {
-		
-		return mybatis.selectList("Group_member.list",member_id);
-		
+
+		return mybatis.selectList("Group_member.list", member_id);
+
 	}
-	public void delete(int group_seq,String member_id) throws Exception{
+
+	public List<Group_memberDTO> members(int group_seq) throws Exception {
+
+		return mybatis.selectList("Group_member.members",group_seq);
+
+	}
+
+	public void delete(int group_seq, String member_id) throws Exception {
 		Map<String, String> map = new HashMap<>();
 		map.put("group_seq", String.valueOf(group_seq));
 		map.put("member_id", member_id);
-		mybatis.delete("Group_member.delete",map);
+		mybatis.delete("Group_member.delete", map);
 	}
-	
-	
 
 }

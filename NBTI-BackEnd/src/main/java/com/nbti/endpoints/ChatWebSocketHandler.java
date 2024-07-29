@@ -2,6 +2,7 @@ package com.nbti.endpoints;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,9 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.google.gson.Gson;
 import com.nbti.dto.ChatDTO;
+import com.nbti.dto.Group_memberDTO;
 import com.nbti.services.ChatService;
+import com.nbti.services.Group_memberService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -25,6 +28,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 
 	@Autowired
 	private ChatService chatService;
+	@Autowired
+	private Group_memberService memberService;
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -44,7 +49,9 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 		ChatDTO dto = new ChatDTO(0, sender, message.getPayload(), null, group_seq);
 		dto = chatService.insert(dto);
 		String json = gson.toJson(dto);
-		broadcastMessage(json);
+		List<Group_memberDTO> list=memberService.members(group_seq);
+		broadcastMessage(json,list);
+		System.out.println(list.get(1).getMember_id());
 		System.out.println("메세지보냄");
 	}
 
@@ -65,11 +72,18 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 		exception.printStackTrace();
 	}
 
-	private void broadcastMessage(String message) {
+	private void broadcastMessage(String message,List<Group_memberDTO> list) {
 		synchronized (clients) {
 			for (WebSocketSession client : clients) {
 				try {
-					client.sendMessage(new TextMessage(message));
+					String member_id=(String)((HttpSession)client.getAttributes().get("HTTPSESSIONID")).getAttribute("loginID");
+					for(Group_memberDTO dto : list) {
+						if(dto.getMember_id().equals(member_id)) {
+							client.sendMessage(new TextMessage(message));
+							break;
+						}
+					}
+					
 				} catch (Exception e) {
 					System.out.println("Error sending message: " + e.getMessage());
 				}

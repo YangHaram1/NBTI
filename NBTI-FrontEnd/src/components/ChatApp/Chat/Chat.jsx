@@ -75,11 +75,13 @@ const Chat = () => {
     ws.current.onmessage = (e) => {
       // alert("메세지옴");
       let chat = JSON.parse(e.data);
-      setChats((prev) => {
-        // console.log([...prev,chat]);
-        return [...prev, chat]
-      })
-
+      if(chat.group_seq===chatSeq){
+        setChats((prev) => {
+        
+          return [...prev, chat]
+        })
+      }
+    
     }
 
 
