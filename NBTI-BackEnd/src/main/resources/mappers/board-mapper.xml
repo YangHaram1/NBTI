@@ -27,7 +27,7 @@
 	
 	<!-- 게시글 수정 -->
 	<update id="modify">
-		update board set title = #{title}, contents = #{contents} where id = #{id}
+		update board set title = #{title}, contents = #{contents} where seq = ${seq} and board_code = ${code}
 	</update>
 	
 	

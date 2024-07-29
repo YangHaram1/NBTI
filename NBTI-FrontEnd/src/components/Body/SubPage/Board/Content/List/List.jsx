@@ -23,23 +23,6 @@ export const List = () => {
     }, [boardType]);
 
 
-    // detail 페이지로 이동
-    // const handleDetail = (seq) => {
-    //     return (
-    //         axios.get(`http://${host}/board/${code}/${seq}`).then((resp) => {
-    //             console.log(resp)
-    //             // setBoardList(resp);
-
-    //             // navi("detail");
-
-    //         })
-
-    //     )
-
-    // }
-
-
-
     return (
         <div className={styles.container}>
             <h1>{boardType} 게시판</h1>
@@ -84,7 +67,6 @@ export const List = () => {
                                 </div>
                                 <div className={styles.title}>
                                     {/* <p onClick={() => { handleDetail(item.seq) }}>{item.title}</p> */}
-                                    {/* <p onClick={() => { navi("detail") }}>{item.title}</p> */}
                                     <p onClick={() => { navi("/board/detail"); setBoardSeq(item.seq) }}>{item.title}</p>
                                 </div>
                                 <div className={styles.writer}>

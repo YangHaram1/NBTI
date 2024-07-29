@@ -35,8 +35,8 @@ public class BoardService {
 	}
 	
 	// 게시글 수정
-	public void modify(String id, BoardDTO dto) {
-		bdao.modify(id, dto);
+	public void modify(BoardDTO dto) {
+		bdao.modify(dto);
 	}
 
 }
