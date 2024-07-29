@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
 import styles from "./Side.module.css";
 import { useNavigate } from "react-router-dom";
+import Modal from "../Content/Modal/Modal";
+import SecondModal from "../Content/SecondModal/SecondModal";
+import { Form_Detail } from "../Content/Form_Detail/Form_Detail";
 
 export const Side = () => {
   // ===== 메뉴 토글 =====
   const [FreeBoard, setFreeBoard] = useState(false);
   const [NoticeBoard, setNoticeBoard] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
+  const [isModalOpen, setIsModalOpen] = useState(false); // 첫 번째 모달 상태
+  const [isSecondModalOpen, setIsSecondModalOpen] = useState(false); // 두 번째 모달 상태
 
   const toggleFreeBoard = () => {
     setFreeBoard(!FreeBoard);
@@ -34,12 +40,49 @@ export const Side = () => {
     e.stopPropagation();
   };
 
+  const handlePopupForm = () => {
+    setIsModalOpen(true); // 첫 번째 모달 열기
+  };
+
+  const closeFirstModal = () => {
+    setIsModalOpen(false); // 첫 번째 모달 닫기
+  };
+
+  const closeSecondModal = () => {
+    setIsSecondModalOpen(false); // 두 번째 모달 닫기
+  };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault(); // 폼 제출 기본 동작 방지
+
+    // 첫 번째 모달 닫기
+    setIsModalOpen(false);
+
+    // 두 번째 모달 열기
+    setIsSecondModalOpen(true);
+  };
+
+  // const handlePopupForm = () => {
+  //   setIsModalOpen(true); // 모달 열기
+  // };
+
+  // const closeModal = () => {
+  //   setIsModalOpen(false); // 모달 닫기
+  // };
+
+  // const [form, setForm] = useState(false);
+
+  // const handlePopupForm =()=>{
+  //   setForm(true);
+    
+  // }
+
   const navi = useNavigate();
 
   return (
     <div className={styles.container}>
       <div className={styles.mainBtn}>
-        <button onClick={() => { navi("write") }}>
+        <button onClick={handlePopupForm}>
           <i className="fa-solid fa-plus"></i>
           <p>글쓰기</p>
         </button>
@@ -137,6 +180,61 @@ export const Side = () => {
             </li>
         </ul>
       </div>
+
+      <Modal isOpen={isModalOpen} onClose={closeFirstModal}>
+        {/* 첫 번째 모달 내용 */}
+        <h2>결재 양식</h2>
+        <form onSubmit={handleFormSubmit}>
+          <div className={styles.form_box}>
+            <div className={styles.form_menu}>
+              <div className={styles.form_menu_title}> 문서 종류 </div>
+              <div className={styles.form_menu_tree}>
+                <ul>
+                  <li>목록1
+                    <ul>
+                      <li>세부목록1</li>
+                      <li>세부목록2</li>
+                    </ul>
+                  </li>
+                  <li>목록2
+                    <ul>
+                      <li>세부목록1</li>
+                      <li>세부목록2</li>
+                    </ul>
+                  </li>
+                  <li>목록3
+                    <ul>
+                      <li>세부목록1</li>
+                      <li>세부목록2</li>
+                    </ul>
+                  </li>
+                  <li>목록4
+                    <ul>
+                      <li>세부목록1</li>
+                      <li>세부목록2</li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className={styles.form_check}>
+              {/* <div>상세정보</div>
+              <div className="form_detail_title"></div> */}
+              <Form_Detail />
+            </div>
+          </div>
+          <div className={styles.form_btns}>
+            <button type="submit">제출</button>
+            <button type="button" onClick={closeFirstModal}>닫기</button>
+          </div>
+        </form>
+      </Modal>
+
+      <SecondModal
+        isOpen={isSecondModalOpen}
+        onClose={closeSecondModal}
+      />
+
     </div>
   );
 };
