@@ -29,5 +29,8 @@ public class MembersService {
 	public List<MembersDTO> selectAll(){
 		return mdao.selectAll();
 	}
+	public void insert(MembersDTO dto) {
+		mdao.insert(dto);
+	}
 		
 }

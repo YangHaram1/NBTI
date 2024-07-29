@@ -34,6 +34,25 @@ public class MembersDAO {
 	public List<MembersDTO> selectAll (){
 		return mybatis.selectList("Member.selectAll");
 	}
+	public void insert(MembersDTO dto) {
+		System.out.println("id:"+dto.getId());
+		System.out.println("pw:"+dto.getPw());
+		System.out.println("name:"+dto.getName());
+		System.out.println("email:"+dto.getEmail());
+		System.out.println("team:"+dto.getTeam_code());
+		System.out.println("birth:"+dto.getBirth());
+		System.out.println("add:"+dto.getAddress());
+		System.out.println("job:"+dto.getJob_code());
+		System.out.println("gen"+dto.getGender());
+		System.out.println("enter:"+dto.getEnter_date());
+		System.out.println("period"+dto.getVacation_period());
+		System.out.println("level:"+dto.getMember_level());
+		System.out.println("call:"+dto.getMember_call());
+		System.out.println("yn:"+dto.getEnt_yn());
+		System.out.println("enddate"+dto.getEnd_date());
+		
+		mybatis.insert("Member.insert",dto);
+	}
 	
 
 }

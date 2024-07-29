@@ -3,6 +3,7 @@ import axios from 'axios';
 import styles from './Signup.module.css';
 import { host } from '../../../../config/config';
 import { useMemberStore } from '../../../../store/store';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
     const [formData, setFormData] = useState({
@@ -10,57 +11,39 @@ const Signup = () => {
         pw: '',
         name: '',
         email: '',
-        teamCode: '',
-        jobCode: '',
-        memberLevel: '',
-        memberCall: '',
+        team_code: '',
+        job_code: '',
+        member_level: '',
+        member_call: '',
         address: '',
         birth: '',
         gender: '',
-        entYn: 'N',
-        entDate: '',
-        vacationPeriod: 15,
-        departmentCode: ''
+        ent_yn: 'N',
+        vacation_period: 15,
+        end_date: ''
     });
 
-    const [departments, setDepartments] = useState([]);
     const [teams, setTeams] = useState([]);
     const [jobs, setJobs] = useState([]);
-    const [filteredTeams, setFilteredTeams] = useState([]);
     const [levels, setLevels] = useState([]);
 
     const { members, setMembers } = useMemberStore(); // Zustand store 사용
-
+    const navi = useNavigate();
     useEffect(() => {
-        // Fetch departments
-        axios.get(`http://${host}/members/selectDepartment`)
-            .then(response => setDepartments(response.data))
-            .catch(error => console.error('Error fetching departments:', error));
-
-        // Fetch teams
         axios.get(`http://${host}/members/selectTeam`)
             .then(response => setTeams(response.data))
             .catch(error => console.error('Error fetching teams:', error));
 
-        // Fetch jobs
         axios.get(`http://${host}/members/selectJob`)
             .then(response => setJobs(response.data))
             .catch(error => console.error('Error fetching jobs:', error));
 
-        // Fetch levels
         axios.get(`http://${host}/members/selectLevel`)
             .then(response => setLevels(response.data))
             .catch(error => console.error('Error fetching levels:', error));
     }, []);
 
     useEffect(() => {
-        // Filter teams based on selected department
-        const departmentTeams = teams.filter(team => team.dept_code === formData.departmentCode);
-        setFilteredTeams(departmentTeams);
-    }, [formData.departmentCode, teams]);
-
-    useEffect(() => {
-        // Set password to birthdate if birthdate is provided
         if (formData.birth) {
             setFormData(prev => ({
                 ...prev,
@@ -75,10 +58,8 @@ const Signup = () => {
     };
 
     const handleAddressSearch = () => {
-        // Daum 우편번호 API 호출
         new window.daum.Postcode({
             oncomplete: function(data) {
-                // 주소 정보를 formData에 설정
                 setFormData(prev => ({
                     ...prev,
                     address: data.address
@@ -97,10 +78,24 @@ const Signup = () => {
         return '권한 없음';
     };
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // `enter_date`를 포함하지 않음
+        axios.post(`http://${host}/members`, formData)
+            .then(response => {
+                alert('회원가입이 성공적으로 완료되었습니다.');
+                setMembers([...members, response.data]);
+                navi("/");
+            })
+            .catch(error => {
+                console.error('Error submitting form:', error);
+                alert('회원가입 중 오류가 발생했습니다.');
+            });
+    };
+
     return (
         <div className={styles.container}>
             <h2>사용자 등록</h2>
-           
             <input
                 type="text"
                 placeholder="아이디"
@@ -134,34 +129,21 @@ const Signup = () => {
                 required
             />
             <select
-                name="departmentCode"
-                value={formData.departmentCode}
-                onChange={handleChange}
-                required
-            >
-                <option value="">부서 선택</option>
-                {departments.map(department => (
-                    <option key={department.dept_code} value={department.dept_code}>
-                        {department.dept_name}
-                    </option>
-                ))}
-            </select>
-            <select
-                name="teamCode"
-                value={formData.teamCode}
+                name="team_code"
+                value={formData.team_code}
                 onChange={handleChange}
                 required
             >
                 <option value="">팀 선택</option>
-                {filteredTeams.map(team => (
+                {teams.map(team => (
                     <option key={team.team_code} value={team.team_code}>
                         {team.team_name}
                     </option>
                 ))}
             </select>
             <select
-                name="jobCode"
-                value={formData.jobCode}
+                name="job_code"
+                value={formData.job_code}
                 onChange={handleChange}
                 required
             >
@@ -173,8 +155,8 @@ const Signup = () => {
                 ))}
             </select>
             <select
-                name="memberLevel"
-                value={formData.memberLevel}
+                name="member_level"
+                value={formData.member_level}
                 onChange={handleChange}
                 required
             >
@@ -188,8 +170,8 @@ const Signup = () => {
             <input
                 type="text"
                 placeholder="전화번호"
-                name="memberCall"
-                value={formData.memberCall}
+                name="member_call"
+                value={formData.member_call}
                 onChange={handleChange}
             />
             <input
@@ -225,30 +207,30 @@ const Signup = () => {
                 <option value="F">여성</option>
             </select>
             <select
-                name="entYn"
-                value={formData.entYn}
+                name="ent_yn"
+                value={formData.ent_yn}
                 onChange={handleChange}
             >
-                <option value="N">재직 </option>
-                <option value="Y">휴직 </option>
+                <option value="N">재직</option>
+                <option value="Y">휴직</option>
             </select>
-            {formData.entYn === 'Y' && (
+            {formData.ent_yn === 'Y' && (
                 <input
                     type="text"
                     placeholder="휴직일"
-                    name="entDate"
-                    value={formData.entDate}
+                    name="end_date"
+                    value={formData.end_date}
                     onChange={handleChange}
                 />
             )}
             <input
                 type="number"
                 placeholder="휴가 기간"
-                name="vacationPeriod"
-                value={formData.vacationPeriod}
+                name="vacation_period"
+                value={formData.vacation_period}
                 onChange={handleChange}
             />
-            <button type="submit">회원가입</button>
+            <button type="submit" onClick={handleSubmit}>회원가입</button>
         </div>
     );
 };

@@ -24,8 +24,9 @@ function App() {
     if (loginID !== null) {
       axios.get(`http://${host}/members/selectAll`)
         .then((resp) => {
-          setMembers(resp.data);
-          console.log('Fetched Members:', resp.data);
+          const filteredMembers = resp.data.map(({ pw, ...rest }) => rest);
+          setMembers(filteredMembers);
+          console.log('Fetched Members:', filteredMembers);
         })
     }
   }, [loginID])
