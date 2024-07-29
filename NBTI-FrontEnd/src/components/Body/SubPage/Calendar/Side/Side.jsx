@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import styles from "./Side.module.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { host } from "../../../../../config/config";
 
 export const Side = ({setAddOpen}) => {
   // ===== 메뉴 토글 =====
@@ -55,19 +56,18 @@ export const Side = ({setAddOpen}) => {
 
 
 
-  // 내 캘린더 수정하기 
+  // 내 캘린더 수정하기
   const [isEditing, setIsEditing] = useState(false); // 수정 버튼 누르면 보이는 input 창 열고 닫기
   const [value, setValue] = useState('내 프로젝트'); // <span>의 초기 값
-  const [seq, setSeq] = useState(1); // seq 값을 초기화 (수정할 항목의 seq)
+  const [seq, setSeq] = useState(1); // 수정할 항목의 seq
 
   // 수정 모드로 전환
   const edit = () => {
-      setIsEditing(true);
+    setIsEditing(true);
   };
 
   // 입력 값 변경
   const handleChange = (e) => {
-    console.log(e.target.value+ "입력 값");
     setValue(e.target.value);
   };
 
@@ -76,14 +76,14 @@ export const Side = ({setAddOpen}) => {
     const dataToSend = {
       seq: seq, // 수정할 schedule seq 값
       title: value, // 수정할 캘린더 제목
-      scheduleTitle: { 
+      scheduleTitle: {
         seq: 1, // 수정할 scheduleTitle의 seq 값
         scheduleTitle_name: value // 수정할 제목
       }
     };
-    
 
-    axios.put(`http://192.168.1.8/calendar`, dataToSend)
+    // API 호출
+    axios.put(`http://${host}/calendar/title`, dataToSend) // PUT 요청을 보낼 API 경로를 수정
       .then((resp) => {
         console.log(resp);
         setIsEditing(false);
@@ -92,7 +92,6 @@ export const Side = ({setAddOpen}) => {
         console.error('Error:', error);
         setIsEditing(false);
       });
-
   };
   
 
@@ -119,7 +118,7 @@ export const Side = ({setAddOpen}) => {
                           type="text"
                           value={value}
                           onChange={handleChange}
-                          onBlur={handleBlur}
+                          onBlur={handleBlur} // 입력 필드에서 포커스가 벗어날 때 handleBlur 호출
                           autoFocus
                       />
                   ) : (
@@ -152,46 +151,7 @@ export const Side = ({setAddOpen}) => {
             </ul>
           </li>
         </ul>
-      </div>
-{/* 
-      {addOpen && (
-                    <div className={styles.modalOverlay} onClick={closeModal}>
-                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                        <h2>예약하기</h2>
-                        <div className={styles.modalInner}>
-                            <div>
-                                <p>자원이름</p>
-                                <select>
-                                    <option>어쩌고</option>
-                                    <option>저쩌고</option>
-                                </select>
-                            </div>
-                            <div> 
-                                <p>날짜</p>
-                                <input type="date" />
-                            </div>
-                            <div>
-                                <label htmlFor="startTime">시작 시간: </label>
-                                <input type="time" id="startTime" name="startTime" />
-                            </div>
-                            <div>
-                                <label htmlFor="endTime">종료 시간: </label>
-                                <input type="time" id="endTime" name="endTime" />
-                            </div>
-
-                            <div>
-                                <p>사용 용도</p>
-                                <input type="text" />
-                            </div>
-                            <div>
-                                <button>저장</button>
-                                <button onClick={closeModal}>취소</button>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
-                )} */}
-                
+      </div>           
     </div>
   );
 };

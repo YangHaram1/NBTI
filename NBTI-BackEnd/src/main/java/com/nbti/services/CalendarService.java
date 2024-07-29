@@ -13,21 +13,19 @@ public class CalendarService {
 	private CalendarDAO cdao;
 	
 	//캘린더 입력
-	public void insert (CalendarDTO dto) {
+	public void insert (CalendarDTO dto)  throws Exception {
 		cdao.insert(dto);
 	}
-	
-//	// 캘린더 제목 업데이트
-//	public void edit(CalendarDTO dto) {
-//		cdao.edit(dto);
-//	}
-	
-//    public void edit(CalendarDTO calendarDTO, scheduleTitleDTO scheduleTitleDTO) {
-//        // 캘린더 제목 수정
-//        cdao.updateCalendar(calendarDTO);
-//
-//        // 일정 제목 수정
-//        cdao.updateScheduleTitle(scheduleTitleDTO);
-//    }
+
+	// 캘린더 제목 수정
+    public void editTitle(CalendarDTO dto)  throws Exception {
+        cdao.editTitle(dto); 
+    }
+
+    // 캘린더 제목 업데이트 (Optional)
+    public void updateCalendarTitle(CalendarDTO dto)  throws Exception {
+        cdao.updateCalendarTitle(dto); 
+    }
+
 
 }

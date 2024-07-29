@@ -35,27 +35,30 @@ const Invite = ({ setInvite }) => {
     },[])
 
     const handleList = useCallback(() => {
-        const result= members.filter((item)=>{
-            let check=false;
-            invited.forEach(element => {
-            
-               if(item.id===element.member_id){
-                    check=true;
-               } 
-            });
-            if(check) return false;
-            return true;
-        }).map((item, index) => {
-            if (item.name.includes(nameSearch)) {
-
-                return item.name;
-            }
-            return null;
-        }).filter((item) => {
-            return item !== null
-        })
-
-        setList(result);
+        if(invited.length>0){
+            const result= members.filter((item)=>{
+                let check=false;
+                invited.forEach(element => {
+                
+                   if(item.id===element.member_id){
+                        check=true;
+                   } 
+                });
+                if(check) return false;
+                return true;
+            }).map((item, index) => {
+                if (item.name.includes(nameSearch)) {
+    
+                    return item;
+                }
+                return null;
+            }).filter((item) => {
+                return item !== null
+            })
+    
+            setList(result);
+        }
+      
     }, [nameSearch,invited])
 
     useEffect(() => {
@@ -67,8 +70,17 @@ const Invite = ({ setInvite }) => {
     }
 
     const handleAdd=()=>{
-        axios.post(`http://${host}/group_member?group_seq=${chatSeq}`).then((resp)=>{
-
+        const data=list.filter((item,index)=>{
+            if(isChecked[index]===true){
+                return true;
+            }
+            return false;
+        }).map((item)=>{
+            return item.id;
+        })
+        console.log(data);
+        axios.post(`http://${host}/group_member`,data).then((resp)=>{
+            setInvite(false);
         })
     }
 
@@ -86,10 +98,10 @@ const Invite = ({ setInvite }) => {
                                     <img src={avatar} alt="" className={styles.avatar} />
                                 </div>
                                 <div className={styles.itemDiv2}>
-                                    {item}
+                                    {item.name}
                                 </div>
                                 <div className={styles.checkbox}>
-                                    <input type="checkbox" checked={isChecked[index] || false} onChange={(e) => { handleCheck(index) }} />
+                                    <input type="checkbox" checked={isChecked[index] || false} onChange={(e) => { handleCheck(index) }}  value={item.id}/>
                                 </div>
                             </div>
                         );
@@ -104,7 +116,6 @@ const Invite = ({ setInvite }) => {
                     <button className={styles.btn2} onClick={handleCancel}>❌</button>
                 </div>
             </div>
-
         </div>
     )
 }
