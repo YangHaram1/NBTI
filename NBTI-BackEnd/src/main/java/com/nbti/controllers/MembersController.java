@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nbti.commons.EncryptionUtils;
 import com.nbti.dto.DepartmentDTO;
 import com.nbti.dto.JobDTO;
 import com.nbti.dto.M_LevelDTO;
@@ -85,6 +86,9 @@ public class MembersController {
 	}
 	@PostMapping
 	public ResponseEntity<Void> insert(@RequestBody MembersDTO dto){
+		String encryptedPassword = EncryptionUtils.getSHA512(dto.getPw());
+	    dto.setPw(encryptedPassword);
+
 		mServ.insert(dto);
 		return ResponseEntity.ok().build();
 	}
