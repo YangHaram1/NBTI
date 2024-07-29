@@ -1,14 +1,19 @@
 import styles from './Invite.module.css';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import avatar from '../../../../images/user.jpg'
 import { useMemberStore } from '../../../../store/store';
 import { useAuthStore } from './../../../../store/store';
+import axios from 'axios';
+import { ChatsContext } from '../../../../Context/ChatsContext';
+import { host } from '../../../../config/config';
 const Invite = ({ setInvite }) => {
     const {members} =useMemberStore();
     const {loginID} =useAuthStore();
     const [list, setList] = useState([]);
     const [nameSearch, setNameSearch] = useState('');
     const [isChecked, setIsChecked] = useState([]);
+    const {chatSeq} =useContext(ChatsContext);
+    const [invited,setInvited]=useState([]);
     const handleNameSearch = (e) => {
         setNameSearch(e.target.value);
     }
@@ -21,13 +26,24 @@ const Invite = ({ setInvite }) => {
         const initialCheckedState = list.map(() => false);
         setIsChecked(initialCheckedState);
     }, [list]);
-
+    
+    useEffect(()=>{
+        axios.get(`http://${host}/group_member?group_seq=${chatSeq}`).then((resp)=>{
+            //console.log(resp.data);
+            setInvited(resp.data);
+        })
+    },[])
 
     const handleList = useCallback(() => {
         const result= members.filter((item)=>{
-            if(item.id===loginID){
-                return false;
-            }
+            let check=false;
+            invited.forEach(element => {
+            
+               if(item.id===element.member_id){
+                    check=true;
+               } 
+            });
+            if(check) return false;
             return true;
         }).map((item, index) => {
             if (item.name.includes(nameSearch)) {
@@ -40,7 +56,7 @@ const Invite = ({ setInvite }) => {
         })
 
         setList(result);
-    }, [nameSearch])
+    }, [nameSearch,invited])
 
     useEffect(() => {
         handleList();
@@ -49,6 +65,13 @@ const Invite = ({ setInvite }) => {
     const handleCancel = () => {
         setInvite(false);
     }
+
+    const handleAdd=()=>{
+        axios.post(`http://${host}/group_member?group_seq=${chatSeq}`).then((resp)=>{
+
+        })
+    }
+
     return (
         <div className={styles.container}>
             <div>
@@ -75,7 +98,7 @@ const Invite = ({ setInvite }) => {
             </div>
             <div className={styles.button}>
                 <div>
-                    <button className={styles.btn1}>➕</button>
+                    <button className={styles.btn1} onClick={handleAdd}>➕</button>
                 </div>
                 <div>
                     <button className={styles.btn2} onClick={handleCancel}>❌</button>

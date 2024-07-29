@@ -19,7 +19,6 @@ const Members = ({setName}) => {
 
             if (item.id === loginID) {
                 setName(item.name);
-                
             }
             return false;
         })

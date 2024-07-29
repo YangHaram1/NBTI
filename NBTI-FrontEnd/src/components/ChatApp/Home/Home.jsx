@@ -49,7 +49,7 @@ const Home = () => {
                 </div>
                 <div className={styles.div1_2}>
                     <div className={styles.name}>
-                        {name}
+                        {loginID}
                     </div>
                     <div className={styles.status}>
                         온라인

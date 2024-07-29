@@ -5,6 +5,7 @@
     display: flex;
     flex-direction: column;
     background-color: white;
+
 }
 .div1{
     display: flex;
@@ -69,6 +70,8 @@
     display: flex;
     flex: 5;
     background-color: #EDF2FB;
+    overflow: auto;
+    overflow-x: hidden;
 }
 .avatar{
     width: 100%;

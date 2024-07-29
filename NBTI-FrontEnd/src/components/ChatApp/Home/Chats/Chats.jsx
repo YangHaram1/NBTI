@@ -2,14 +2,14 @@ import styles from './Chats.module.css';
 import { useAuthStore } from '../../../../store/store';
 import { ChatsContext } from './../../../../Context/ChatsContext';
 import axios from 'axios';
-import React, { useContext, useEffect, useState ,useRef} from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import { host } from './../../../../config/config';
 import avatar from '../../../../images/user.jpg';
 import ChatsModal from './ChatsModal/ChatsModal';
 
 const Chats = () => {
     const { loginID } = useAuthStore();
-    const { setChatNavi,setChatSeq } = useContext(ChatsContext);
+    const { setChatNavi, setChatSeq } = useContext(ChatsContext);
     const [group_chats, setGroup_chats] = useState([]);
 
     const [modalDisplay, setModalDisplay] = useState(null);
@@ -17,15 +17,15 @@ const Chats = () => {
 
     useEffect(() => {
         axios.get(`http://${host}/group_chat`).then((resp) => {
-           // console.log(resp.data);
-            if(resp.data!==''){
+            // console.log(resp.data);
+            if (resp.data !== '') {
                 setGroup_chats(resp.data);
             }
-            else{
+            else {
                 setGroup_chats([]);
             }
         })
-    },[])
+    }, [])
 
     const handleRightClick = (index) => (e) => {
         const { clientX: x, clientY: y } = e;
@@ -37,7 +37,7 @@ const Chats = () => {
             }
             modalRef.current[index].style.display = 'flex';
             modalRef.current[index].style.top = (y) + 'px';
-            modalRef.current[index].style.left = (x) +'px';
+            modalRef.current[index].style.left = (x) + 'px';
             return modalRef.current[index];
         });
     };
@@ -51,13 +51,13 @@ const Chats = () => {
         })
     }
 
-    const handleDoubleClick=(seq)=>()=>{
+    const handleDoubleClick = (seq) => () => {
         if (loginID === null) {
             setChatNavi('');
         }
         else {
-            
-            setChatNavi((prev)=>{
+
+            setChatNavi((prev) => {
                 setChatSeq(seq);
                 return 'chat';
             });
@@ -76,7 +76,13 @@ const Chats = () => {
                                 </div>
                                 <div className={styles.message}>
                                     <div className={styles.name}>
-                                        {item.name}
+                                        <div>
+                                            {item.name}
+                                        </div>
+                                        <div className={styles.size}>
+                                            {item.size}
+                                        </div>
+
                                     </div>
                                     <div className={styles.content}>
                                         메세지 마지막 내용
@@ -86,7 +92,7 @@ const Chats = () => {
                                     2024-07-08
                                 </div>
                             </div>
-                            <ChatsModal  modalRef={modalRef} index={index} item={item} setGroup_chats={setGroup_chats}></ChatsModal>
+                            <ChatsModal modalRef={modalRef} index={index} item={item} setGroup_chats={setGroup_chats}></ChatsModal>
                         </React.Fragment>
                     );
                 })

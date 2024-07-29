@@ -1,6 +1,5 @@
 package com.nbti.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nbti.dto.ChatDTO;
 import com.nbti.dto.Group_memberDTO;
 import com.nbti.services.Group_memberService;
 
@@ -44,4 +42,10 @@ public class Group_memberController {
 		return ResponseEntity.ok().build();
 	}
 	
+	@GetMapping
+	public ResponseEntity<List<Group_memberDTO>> get(int group_seq) throws Exception{
+		
+		
+		return ResponseEntity.ok(serv.members(group_seq));
+	}
 }

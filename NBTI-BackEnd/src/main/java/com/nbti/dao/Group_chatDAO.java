@@ -27,6 +27,7 @@ public class Group_chatDAO {
 		if(list.size()>0) {
 			Map<String, Object> map = new HashMap<>();
 		    map.put("list", list);
+		    
 			return mybatis.selectList("Group_chat.list",map);
 		}
 		return null;
