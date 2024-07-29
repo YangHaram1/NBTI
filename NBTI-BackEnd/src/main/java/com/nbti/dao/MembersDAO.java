@@ -54,5 +54,6 @@ public class MembersDAO {
 		mybatis.insert("Member.insert",dto);
 	}
 	
+	
 
 }
