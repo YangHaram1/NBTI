@@ -18,6 +18,10 @@
 	<update id="updateMyData">
 		update members set address=#{address}, member_call = #{member_call},email= #{email} where id=#{id}
 	</update>
+	
+	<select id="selectAll" resultType="com.nbti.dto.MembersDTO">
+		select * from members
+	</select>
 
 </mapper>
 
