@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Group_chat">
+	<insert id="insert">
+		insert into group_chat values(group_chat_seq.nextval,#{name},'N','N')
+		
+		<selectKey resultType="int" order="AFTER" keyProperty="seq">
+			select group_chat_seq.currval from dual
+		</selectKey>
+	</insert>
+	
+	<select id="list" resultType="com.nbti.dto.Group_chatDTO">
+		select *from group_chat where seq in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item.group_seq}
+        </foreach>
+	</select>
+</mapper>

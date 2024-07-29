@@ -10,6 +10,7 @@ import Emoticon from './Emoticon/Emoticon.jsx';
 import Search from './Search/Search.jsx';
 import { host } from '../../../config/config.js'
 import { useAuthStore } from './../../../store/store';
+import './Chat.css';
 
 import avatar from '../../../images/user.jpg'
 axios.defaults.withCredentials = true;
@@ -56,6 +57,8 @@ const Chat = () => {
         setChats(response.data);
         console.log("채팅목록가저오기");
       })
+      updateSidebarPosition();
+      updateSearchPosition();
       console.log('Connected to WebSocket');
     }
     ws.current.onclose = () => {
@@ -94,7 +97,7 @@ const Chat = () => {
 
 
   const handleCancel = () => {
-    setChatNavi("");
+    setChatNavi("home");
   }
   const handleSearch = () => {
     const Searchbar = searchRef.current;
@@ -182,9 +185,9 @@ const Chat = () => {
                 !idCheck&&( <div className={styles.avatar}><img src={avatar} alt="" /></div>)
               }
               <div>
-                <div>{item.member_id}</div>
-                <div className={idCheck ? styles.contentsReverse : styles.content}>
-                  <div dangerouslySetInnerHTML={{ __html: (check ? temp : item.message) + '&nbsp' }}
+                <div className={idCheck?styles.nameReverse:styles.name}>{item.member_id}</div>
+                <div className={idCheck ? styles.contentReverse : styles.content}>
+                  <div dangerouslySetInnerHTML={{ __html: (check ? temp : item.message)}}
                     ref={el => {
                       if (el && check) {
                         chatRef.current[count++] = el;

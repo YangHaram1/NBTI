@@ -1,0 +1,147 @@
+.container {
+    width: 100%;
+    height: 100%;
+    /* display: flex;
+    flex-direction: column; */
+    overflow-y: hidden;
+  }
+
+hr{width: 100%;}
+
+.title{
+    margin-top: 18px;
+    font-size: 25px;
+    text-indent: 10px;
+    width: 100%;
+    flex:0.5;
+}
+
+.bubble_box{
+    width: 100%;
+    height: 240px;
+    margin-top: 20px;
+    overflow-x:auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.bubble{
+    border: 1px solid black;
+    height: 210px;
+    min-width: 310px;
+    border-radius: 15px;
+    margin-right: 20px;
+    margin-left: 20px;
+    /* display: flex;
+    align-items: start;
+    justify-content: start; */
+}
+
+/* 스크롤 */
+
+/* 전체 스크롤바의 스타일을 설정합니다. */
+.bubble_box::-webkit-scrollbar {
+    /* width: 10px; 스크롤바의 너비 */
+    height: 10px; /* 스크롤바의 높이 */
+}
+
+/* 스크롤바의 트랙(스크롤바가 움직이는 부분) 스타일을 설정합니다. */
+.bubble_box::-webkit-scrollbar-track {
+    background-color: #F6FFF8; /* 배경색 */
+    border-radius: 10px; /* 모서리 둥글기 */
+}
+
+/* 스크롤바의 핸들(스크롤바의 이동 부분) 스타일을 설정합니다. */
+.bubble_box::-webkit-scrollbar-thumb {
+    background-color: #CCE3DE; /* 핸들의 색상 */
+    border-radius: 10px; /* 핸들의 모서리 둥글기 */
+}
+
+/* 핸들에 마우스를 올렸을 때 스타일을 설정합니다. */
+.bubble_box::-webkit-scrollbar-thumb:hover {
+    background-color: #A4C3B2; /* 핸들에 마우스를 올렸을 때 색상 */
+}
+
+.draft_box{
+    width: 100%;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.doc_box{
+    width: 100%;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sub_title{
+    flex:1;
+    text-indent: 20px;
+    font-size: 21px;
+}
+.sub_content{
+    flex:9;
+    width: 100%;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+}
+
+.table{
+    margin-top: 10px;
+    width: 95%;
+    height: 100%;
+    display: flex;
+    /* justify-content: start;
+    align-items: center; */
+    flex-direction: column;
+}
+
+.table_head{
+    display: flex;
+    width: 100%;
+    height: 32px;
+    border: 1px solid black;
+    background-color: #A4C3B2;
+}
+
+.table_body{
+    display: flex;
+    width: 100%;
+    height: 32px;
+    border: 1px solid black;
+}
+
+.table_body:hover{
+    cursor: pointer;
+}
+
+.doc_number{
+    flex:1;
+    text-align: center;
+}
+.doc_title{
+    flex:4.5;
+}
+.doc_emergency{
+    flex:1;
+    text-align: center;
+}
+.doc_writer{
+    flex:1;
+    text-align: center;
+}
+.doc_write_date{
+    flex:1.5;
+    text-align: center;
+}
+.doc_state{
+    flex:1;
+    text-align: center;
+}
+

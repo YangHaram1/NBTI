@@ -10,7 +10,7 @@ export const Body = () => {
     <div className={styles.container}>
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route path="mypage" element={<Mypage/>} />
+        <Route path="mypage/*" element={<Mypage/>} />
       </Routes>
       <SubPage />
     </div>

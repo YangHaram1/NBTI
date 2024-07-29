@@ -1,13 +1,14 @@
 import './App.css';
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route,Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { Header } from './components/Header/Header';
 import { Body } from './components/Body/Body';
 import axios from 'axios';
 import { useAuthStore } from './store/store';
 import { useEffect, useContext } from 'react';
 import ChatApp from './components/ChatApp/ChatApp';
-import { ChatsProvider} from './Context/ChatsContext';
+import { ChatsProvider } from './Context/ChatsContext';
+
 axios.defaults.withCredentials = true;
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
           <ChatApp></ChatApp>
         </div>
       </Router>
-      
+
     </ChatsProvider>
   );
 }
