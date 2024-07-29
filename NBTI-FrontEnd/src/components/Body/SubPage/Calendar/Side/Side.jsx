@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import styles from "./Side.module.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const Side = ({setAddOpen}) => {
   // ===== 메뉴 토글 =====
@@ -52,6 +53,49 @@ export const Side = ({setAddOpen}) => {
   };
   // === /모달창 ===
 
+
+
+  // 내 캘린더 수정하기 
+  const [isEditing, setIsEditing] = useState(false); // 수정 버튼 누르면 보이는 input 창 열고 닫기
+  const [value, setValue] = useState('내 프로젝트'); // <span>의 초기 값
+  const [seq, setSeq] = useState(1); // seq 값을 초기화 (수정할 항목의 seq)
+
+  // 수정 모드로 전환
+  const edit = () => {
+      setIsEditing(true);
+  };
+
+  // 입력 값 변경
+  const handleChange = (e) => {
+    console.log(e.target.value+ "입력 값");
+    setValue(e.target.value);
+  };
+
+  // 수정 완료
+  const handleBlur = () => {
+    const dataToSend = {
+      seq: seq, // 수정할 schedule seq 값
+      title: value, // 수정할 캘린더 제목
+      scheduleTitle: { 
+        seq: 1, // 수정할 scheduleTitle의 seq 값
+        scheduleTitle_name: value // 수정할 제목
+      }
+    };
+    
+
+    axios.put(`http://192.168.1.8/calendar`, dataToSend)
+      .then((resp) => {
+        console.log(resp);
+        setIsEditing(false);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        setIsEditing(false);
+      });
+
+  };
+  
+
   return (
     <div className={styles.container}>
       <div className={styles.mainBtn}>
@@ -64,29 +108,25 @@ export const Side = ({setAddOpen}) => {
       <div className={styles.menus}>
         <ul>
           <li onClick={toggleFreeBoard}>
-            <i className="fa-solid fa-user-large"></i>내 프로젝트 일정 
+            <i className="fa-solid fa-user-large"></i>  내 캘린더
             <ul
               className={`${styles.submenu} ${FreeBoard ? styles.open : ""}`}
               onClick={preventPropagation}
             >
-              <li>
-                <span>
-                  <i className="fa-solid fa-star fa-smm"></i>
-                </span>
-                <span>1</span>
-              </li>
-              <li>
-                <span>
-                  <i className="fa-solid fa-star fa-sm"></i>
-                </span>
-                <span>2</span>
-              </li>
-              <li>
-                <span>
-                  <i className="fa-solid fa-star fa-sm"></i>
-                </span>
-                <span>3</span>
-              </li>
+              <div>
+                  {isEditing ? (
+                      <input
+                          type="text"
+                          value={value}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          autoFocus
+                      />
+                  ) : (
+                      <span>{value}</span>
+                  )}
+                  <button onClick={edit}>수정</button>
+              </div>
             </ul>
           </li>
         </ul>

@@ -1,7 +1,12 @@
 package com.nbti.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -9,10 +14,6 @@ import com.nbti.dto.MembersDTO;
 import com.nbti.services.MembersService;
 
 import jakarta.servlet.http.HttpSession;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 //import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -42,5 +43,10 @@ public class MembersController {
 		mServ.updateMyData(dto);
 		return ResponseEntity.ok().build();
 	}
+    @GetMapping("/selectAll")
+    public ResponseEntity<List<MembersDTO>> selectAll() {
+        List<MembersDTO> members = mServ.selectAll();
+        return ResponseEntity.ok(members);  // HTTP 200 OK와 함께 members를 반환
+    }
 	
 }
