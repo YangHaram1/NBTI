@@ -1,25 +1,32 @@
-import  React,{ useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './Members.module.css';
 import axios from 'axios';
 import Modal from './Modal/Modal';
+import { useMemberStore } from '../../../../store/store';
+import { useAuthStore } from './../../../../store/store';
 
-const Members = () => {
-    const [list, setList] = useState(['양하람', '전은미', '송유나', '김지연', '서상혁']);
+const Members = ({setName}) => {
+    const [list, setList] = useState([]);
     const [modalDisplay, setModalDisplay] = useState(null);
-    const modalRef = useRef([]);
-    useEffect(() => {
-       /* axios.post(`http://${host}/group_chat`,)
-             .then(response => {
-                 setList(response);
-             })
-             .catch(error => {
-                 console.error('There was an error posting the data!', error);
-             });*/
-    }, [])
+    const { members } = useMemberStore();
+    const { loginID } = useAuthStore();
 
+    const modalRef = useRef([]);
+
+    useEffect(() => {
+        setList(members);
+        members.filter((item)=>{
+
+            if (item.id === loginID) {
+                setName(item.name);
+                
+            }
+            return false;
+        })
+    }, [])
     const handleRightClick = (index) => (e) => {
         const { clientX: x, clientY: y } = e;
-        console.log(`${x}:${y}`);
+       // console.log(`${x}:${y}`);
         e.preventDefault();
         setModalDisplay((prev) => {
             if (prev != null) {
@@ -43,11 +50,16 @@ const Members = () => {
     return (
         <div className={styles.container} onClick={handleClick}>
             {
-                list.map((item, index) => {
+                list.filter((item) => {
+                    if (item.id === loginID) {
+                        return false;
+                    }
+                    return true;
+                }).map((item, index) => {
                     return (
                         <React.Fragment key={index}>
                             <div onContextMenu={handleRightClick(index)} >
-                                {item}
+                                {item.name}
                             </div>
                             <Modal modalRef={modalRef} index={index} item={item}></Modal>
                         </React.Fragment>

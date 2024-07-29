@@ -1,9 +1,12 @@
 import styles from './Invite.module.css';
 import { useEffect, useState, useCallback } from 'react';
 import avatar from '../../../../images/user.jpg'
+import { useMemberStore } from '../../../../store/store';
+import { useAuthStore } from './../../../../store/store';
 const Invite = ({ setInvite }) => {
-    const defaultList = ['양하람', '전은미', '송유나', '김지연', '서상혁'];
-    const [list, setList] = useState(defaultList);
+    const {members} =useMemberStore();
+    const {loginID} =useAuthStore();
+    const [list, setList] = useState([]);
     const [nameSearch, setNameSearch] = useState('');
     const [isChecked, setIsChecked] = useState([]);
     const handleNameSearch = (e) => {
@@ -21,10 +24,15 @@ const Invite = ({ setInvite }) => {
 
 
     const handleList = useCallback(() => {
-        const result = defaultList.map((item, index) => {
-            if (item.includes(nameSearch)) {
+        const result= members.filter((item)=>{
+            if(item.id===loginID){
+                return false;
+            }
+            return true;
+        }).map((item, index) => {
+            if (item.name.includes(nameSearch)) {
 
-                return item;
+                return item.name;
             }
             return null;
         }).filter((item) => {
@@ -36,7 +44,7 @@ const Invite = ({ setInvite }) => {
 
     useEffect(() => {
         handleList();
-    }, [handleList])
+    }, [handleList]);
 
     const handleCancel = () => {
         setInvite(false);

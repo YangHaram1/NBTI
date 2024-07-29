@@ -36,7 +36,7 @@ public class Group_chatController {
 	private Group_memberService mserv;
 	
 	@PostMapping
-	public ResponseEntity<Void> post(String member_id) throws Exception {
+	public ResponseEntity<Void> post(String member_id,String name) throws Exception {
 		List<String> list =new ArrayList<>();
 		String loginID= (String) session.getAttribute("loginID");
 		
@@ -45,7 +45,7 @@ public class Group_chatController {
 		boolean check=mserv.check(list);
 		
 		if(!check) {
-			int seq=serv.insert(member_id);
+			int seq=serv.insert(name);
 			
 			List<Group_memberDTO> member_list=new ArrayList<>();
 			for(int i=0; i<list.size();i++) {
