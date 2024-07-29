@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./Detail.module.css";
 import { useBoardStore } from "../../../../../../store/store";
 import axios from "axios";
-import { host } from '../../../../../../config/config'
+import { host, api } from '../../../../../../config/config'
 import image from "../../../../../../images/user.jpg";
 import { format } from 'date-fns';
 import { useNavigate } from "react-router-dom";
@@ -12,7 +12,7 @@ import { Editor } from '@tinymce/tinymce-react';
 export const Detail = () => {
 
     const { boardSeq, boardType } = useBoardStore();
-    const [detail, setDetail] = useState([]);
+    const [detail, setDetail] = useState({});
 
     const navi = useNavigate();
 
@@ -21,6 +21,21 @@ export const Detail = () => {
     const currentDate = !isNaN(date) ? format(date, 'yyyy-MM-dd HH:mm') : 'Invalid Date';
 
     useEffect(() => {
+        let code = 1;
+        if (boardType === "자유") code = 1;
+        else if (boardType === "공지") code = 2;
+
+        if (boardSeq === -1) {
+            navi('/board');
+        }
+
+        if (boardSeq !== -1) {
+            axios.get(`http://${host}/board/${boardSeq}/${code}`).then((resp) => {
+                setDetail(resp.data);
+            })
+        }
+
+
         // 외부 스타일시트를 동적으로 추가
         const link = document.createElement("link");
         link.rel = "stylesheet";
@@ -34,23 +49,18 @@ export const Detail = () => {
     }, []);
 
     // 해당 게시글로 이동
-    useEffect(() => {
-        let code = 0;
-        if (boardType === "자유") code = 1;
-        else if (boardType === "공지") code = 2;
 
-        axios.get(`http://${host}/board/${boardSeq}/${code}`).then((resp) => {
-            setDetail(resp.data);
-        })
-    }, []);
 
 
     /** ================[ 삭 제 ]============= */
     const handleDelBtn = () => {
         if (window.confirm("정말 삭제하시겠습니까?")) {
-            axios.delete(`http://${host}/board/${detail.seq}`).then(resp => {
-                navi('/board/free');
-            })
+            if (boardSeq !== -1) {
+                axios.delete(`http://${host}/board/${detail.seq}`).then(resp => {
+                    navi('/board/free');
+                })
+            }
+
         }
     }
 
@@ -59,7 +69,7 @@ export const Detail = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [title, setTitle] = useState(detail.title);
     const [content, setContent] = useState(detail.contents);
-    const [data, setData] = useState({ title: detail.title, content: detail.contents, write_date: detail.write_date });
+    const [data, setData] = useState({ title: detail.title, content: detail.contents });
 
     // 에디터 내용 변경 핸들러
     const handleEditorChange = (content) => {
@@ -73,16 +83,6 @@ export const Detail = () => {
     };
 
 
-    const getCurrentDateTime = () => {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-    };
 
     // detail 변경될 때 상태 초기화
     useEffect(() => {
@@ -94,21 +94,15 @@ export const Detail = () => {
     // 저장 click
     const handleSaveBtn = () => {
 
-        console.log("data: " + data);
 
-        const updatedData = {
-            ...data,
-            write_date: getCurrentDateTime() // 현재 날짜 및 시간으로 write_date 업데이트
-        };
-
-        axios.post(`http://${host}/board`, updatedData).then((resp) => {
+        axios.post(`http://${host}/board`, data).then((resp) => {
 
             console.log("data2222: " + resp.data);
 
 
-            setTitle(updatedData.title);
-            setContent(updatedData.content);
-            setData(updatedData); // 상태를 업데이트된 데이터로 설정
+            setTitle(data.title);
+            setContent(data.content);
+            // setData(updatedData); // 상태를 업데이트된 데이터로 설정
 
             setIsEditing(false);
         })
@@ -176,7 +170,7 @@ export const Detail = () => {
                 {isEditing ? (
                     <Editor
                         initialValue={content}
-                        apiKey="YOUR_TINYMCE_API_KEY"
+                        apiKey={api}
                         init={{
                             height: 400,
                             menubar: true,
