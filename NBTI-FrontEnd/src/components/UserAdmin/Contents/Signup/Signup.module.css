@@ -1,0 +1,65 @@
+/* Container for the signup form */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin: 0 auto; /* Center the form horizontally */
+    max-width: 500px; /* Maximum width of the form */
+    background-color: #f5f5f5; /* Light background color */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative; /* Relative positioning for child elements */
+    z-index: 1; /* Ensure the container is above other elements if needed */
+}
+
+/* Heading styling */
+h2 {
+    color: #6B9080; /* Title color */
+    margin-bottom: 20px;
+    font-size: 24px; /* Adjust font size as needed */
+}
+
+/* Form styling */
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Styling for input fields, selects, and buttons */
+input,
+select,
+button {
+    width: 100%; /* Ensure full width */
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+/* Specific styling for input fields and selects */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+select {
+    background-color: #fff; /* White background for input fields */
+}
+
+/* Button styling */
+button,
+#search-address-btn {
+    background-color: #6B9080; /* Button background color */
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* Button hover styling */
+button:hover,
+#search-address-btn:hover {
+    background-color: #4a6f5a; /* Darker background color on hover */
+}
