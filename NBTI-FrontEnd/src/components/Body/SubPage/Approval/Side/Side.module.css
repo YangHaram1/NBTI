@@ -91,4 +91,63 @@ div {
   .submenu.open {
     max-height: 300px; /* 충분히 큰 값으로 설정하여 모든 항목이 표시되도록 합니다. */
   }
+
+  .form_box{
+    height: 390px;
+    width: 575px;
+    margin-top: 50px;
+    margin-left: 40px;
+    /* border: 1px solid black; */
+    display: flex;
+  }
+
+  .form_menu{
+    flex:5;
+    border: 1px solid black;
+  }
+
+  .form_check{
+    flex:5;
+    border: 1px solid black;
+  }
+  
+  .form_btns{
+    width: 595px;
+    margin-left: 40px;
+    display: flex;
+    justify-content: end;
+  }
+
+  .form_btns button{
+    width: 60px;
+    margin-right:20px;
+    margin-top: 15px;
+  }
+
+  .form_menu_title{
+    height: 30px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #c0dcd6;
+
+  }
+  
+  .form_menu_tree{
+    height: 360px;
+    overflow-y: auto;
+  }
+  .form_menu_tree ul{
+    margin-left: 0px;
+    padding-left: 20px;
+    margin-bottom: 13px;
+  }
+
+  .form_menu_tree li{
+    list-style: none;
+    margin-bottom: 7px;
+  }
+
+
   

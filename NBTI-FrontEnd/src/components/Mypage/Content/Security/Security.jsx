@@ -8,6 +8,7 @@ import { host } from '../../../../config/config';
 export const Security = () => {
 
     const [showChangePwBox, setShowChangePwBox] = useState(false);
+    const [pw, SetPw] = useState('');
     const [showNewPwBox, setShowNewPwBox] = useState(false);
     const [checkPw, setCheckPw] = useState('');
     const [checkResult, setCheckResult] = useState(true);
@@ -28,8 +29,14 @@ export const Security = () => {
         setCheckResult( checkPw === checkValue );
     }
 
+    const handlePw=(e)=>{
+        console.log(e.target.value);
+        SetPw(e.target.value);
+    }
+
+    // 비밀번호 확인하는 코드 짜야함.  
     const handlePwRight = () => {
-        axios.get(`http://${host}/members`)
+        axios.post(`http://${host}/members`, pw)
         .then((resp) =>{
             console.log(resp);
             setShowNewPwBox(true);
@@ -63,7 +70,7 @@ export const Security = () => {
                     <div className={styles.pw_check_title}>비밀번호 재확인</div>
                     <div className={styles.pw_check_content}>계정 정보 보호를 위해 비밀번호를 다시 입력해주세요.</div>
                     <div className={styles.input}>
-                        <input type='text' placeholder='비밀번호를 입력해주세요'></input>
+                        <input type='password' placeholder='비밀번호를 입력해주세요' onChange={handlePw}></input>
                         <button onClick={handlePwRight}>확인</button>
                     </div>
                 </div>

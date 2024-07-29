@@ -60,6 +60,7 @@ public class BoardController {
 	// 게시글 삭제
 	@DeleteMapping("/{seq}")
 	public ResponseEntity<Void> delete(@PathVariable int seq){
+		System.out.println("aaa : " + seq);
 		bserv.delete(seq);
 		return ResponseEntity.ok().build();
 	}
@@ -68,9 +69,9 @@ public class BoardController {
 	// 게시글 수정
 	@PutMapping
 	public ResponseEntity<Void> modify(@RequestParam BoardDTO dto){
-		String id = (String) session.getAttribute("loginID");
+//		String id = (String) session.getAttribute("loginID");
 		
-		bserv.modify(id, dto);
+		bserv.modify(dto);
 		return ResponseEntity.ok().build();
 	}
 	

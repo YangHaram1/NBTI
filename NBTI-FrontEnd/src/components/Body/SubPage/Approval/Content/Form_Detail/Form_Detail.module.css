@@ -1,0 +1,47 @@
+.container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.title{
+    height: 30px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #c0dcd6;
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+}
+
+.common_box{
+    margin-top: 20px;
+    flex:1;
+    display: flex;
+}
+
+.detail_box{
+    margin-top: 20px;
+    flex:1;
+    display: flex;
+}
+
+.save_box{
+    margin-top: 20px;
+    flex:1;
+    display: flex;
+}
+
+.name{
+    text-indent: 20px;
+    flex:2;
+}
+
+.value{
+    flex: 3;
+}
