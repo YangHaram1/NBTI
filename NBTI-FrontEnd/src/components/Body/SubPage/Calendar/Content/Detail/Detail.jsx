@@ -1,18 +1,22 @@
 import styles from './Detail.module.css';
-import { useRef, useState } from 'react';
+import { host } from '../../../../../../config/config';
+import { useState } from 'react';
+import axios from 'axios';
+
 import FullCalendar from '@fullcalendar/react'; // FullCalendar 컴포넌트
 import dayGridPlugin from '@fullcalendar/daygrid'; // 월 보기 플러그인
 import timeGridPlugin from '@fullcalendar/timegrid'; // 주 및 일 보기 플러그인
 import interactionPlugin from '@fullcalendar/interaction'; // 클릭 이벤트를 위한 플러그인
 import { default as koLocale } from '@fullcalendar/core/locales/ko'; // 한국어 로케일
-import axios from 'axios';
-import { host } from '../../../../../../config/config';
+
+
 
 export const Detail = ({ setAddOpen, addOpen }) => {
-
+    // const calendarRef = useRef(); // 캘린더 내용 참조를 위한 ref
     const [modalOpen, setModalOpen] = useState(false); // 모달창 열기/닫기 상태
     const [selectedDate, setSelectedDate] = useState(null); // 선택한 날짜
     const [insert, setInsert] = useState({ title: 0, calendarTitle : '', contents: '', start_date: '', start_time: '', end_date: '', end_time: '' }); // 입력 데이터 상태
+    const [events, setEvents] = useState([]); // 이벤트 상태
     
     //입력된 값을 insert 상태에 업데이트
     const handleChange = (e) => {
@@ -24,48 +28,66 @@ export const Detail = ({ setAddOpen, addOpen }) => {
     };
 
     const handleSave = () => {
-
-        // 사용자가 입력한 시작 날짜, 시작 시간, 종료 날짜, 종료 시간 가져옴 
-        const { start_date, start_time, end_date, end_time } = insert;
+        // 사용자가 입력한 시작 날짜, 시작 시간, 종료 날짜, 종료 시간, 제목 가져옴 
+        const { start_date, start_time, end_date, end_time, calendarTitle, contents } = insert;
     
         // 날짜와 시간이 모두 입력되었는지 확인
-        if (!start_date || !start_time || !end_date || !end_time) {
+        if (!start_date || !start_time || !end_date || !end_time || !calendarTitle) {
+            console.error('모든 필드를 입력하세요.');
             return;
         }
     
         // 날짜와 시간 합치기
         const startDate = new Date(`${start_date}T${start_time}:00`);
         const endDate = new Date(`${end_date}T${end_time}:00`);
-
-        // Date 객체를 ISO 형식의 문자열로 변환하고 변환된 문자열에서 'Z' 제거
+    
+        // Date 객체를 ISO 형식의 문자열로 변환하고, 이를 Timestamp로 변환
         if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
             console.error('Invalid date or time value');
             return;
         }
     
-        const updatedInsert = {
-            ...insert,
-            start_date: startDate.toISOString().replace('Z', ''),
-            end_date: endDate.toISOString().replace('Z', '')
+        // 서버에 데이터 전송
+        const postData = {
+            // seq는 클라이언트에서 보내지 않도록 설정
+            member_id: sessionStorage.getItem("loginID"), // 로그인 세션에서 ID를 가져옴
+            title: 0, // 초기 값, 나중에 필요에 따라 수정
+            calendarTitle: calendarTitle, // 클라이언트에서 입력한 제목
+            contents: contents || '', // 클라이언트에서 입력한 내용
+            start_date: startDate, // Date 객체, 서버에서 Timestamp로 변환할 수 있음
+            end_date: endDate // Date 객체, 서버에서 Timestamp로 변환할 수 있음
         };
     
-        console.log('입력 data:', updatedInsert);
-        axios.post(`http://192.168.1.8/calendar`, updatedInsert)
+        console.log('전송할 데이터:', postData);
+    
+        axios.post(`http://${host}/calendar`, postData)
             .then((resp) => {
-                console.log(resp)
-                setInsert({ title: 0, calendarTitle : '', contents: '', start_date: '', start_time: '', end_date: '', end_time: '' });
+                console.log(resp);
+                // 이벤트 추가
+                setEvents(prev => [
+                    ...prev,
+                    {
+                        title: calendarTitle,
+                        start: startDate,
+                        end: endDate
+                    }
+                ]);
+                // 모달 상태 초기화
+                setInsert({ title: 0, calendarTitle: '', contents: '', start_date: '', start_time: '', end_date: '', end_time: '' });
                 setModalOpen(false);
                 setAddOpen(false);
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Error:', error.response ? error.response.data : error.message);
             });
     };
     
     
+    // 인쇄
+    const handlePrint = () => {
+        window.print(); // 브라우저의 기본 인쇄 다이얼로그 표시
+    };
     
-    
-
     // 모달창 열기
     const handleDateClick = (arg) => {
         setModalOpen(true);
@@ -73,70 +95,39 @@ export const Detail = ({ setAddOpen, addOpen }) => {
         setInsert((prev) => ({ ...prev, start_date: arg.dateStr}));
         setAddOpen(true);
     };
-
     // 모달창 닫기
     const closeModal = () => {
         setModalOpen(false);
         setSelectedDate(null);
         setAddOpen(false);
     };
-    // 인쇄할 내용을 담을 ref 추가
-    const calendarRef = useRef();
-    // 인쇄 기능
-    const handlePrint = () => {
-        const printWindow = window.open('', '_blank'); // 새 창 열기
-        const content = calendarRef.current.innerHTML; // 현재 캘린더 내용 가져오기
-        printWindow.document.write(`
-            <html>
-                <head>
-                    <title>캘린더 인쇄</title>
-                    <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                        }
-                        h1 {
-                            text-align: center;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h1>캘린더 인쇄</h1>
-                    ${content}
-                </body>
-            </html>
-        `);
-        printWindow.document.close();
-        printWindow.print(); // 인쇄 창 띄우기
-    };
-
-
     
 
     return (
         <div className={styles.calender}>
             <div className={styles.innerCalender}>
-            <div className={styles.innerCalender} ref={calendarRef}> {/* ref 추가 */}
-                <button onClick={handlePrint}>인쇄하기</button> {/* 인쇄 버튼 추가 */}
                 <FullCalendar
+                    // ref={calendarRef} // 프린트
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                     initialView="dayGridMonth"
                     locales={[koLocale]} // 한국어 로케일 설정
-                    locale="ko" // 로케일 설정
-                    selectable="true" //달력일자 드래그 설정  
+                    locale="ko" 
+                    selectable="true" //달력 드래그 
                     headerToolbar={{
-                        left: 'prev,next today',
+                        left: 'prev,next today print', // 전/후 달로 이동, 오늘로 이동, 인쇄
                         center: 'title',
                         right: 'dayGridMonth,dayGridWeek,dayGridDay' // 월 주 일
                     }}
+                    customButtons={{
+                        print: {
+                            text: '인쇄',
+                            click: handlePrint // 인쇄 함수 연결
+                        }
+                    }}
                     //일정 추가 이벤트
-                    events={[
-                        { title: 'Meeting', start: new Date() },
-                        { title: "캘린더", start: "2024-07-21" },
-                        { title: "실행됨", start: "2024-07-24" },
-                    ]}
+                    events={events}
                     dateClick={handleDateClick}
                 />
-                </div>
             </div>
 
             {(addOpen || modalOpen) && (
