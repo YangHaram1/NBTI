@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nbti.dto.Group_memberDTO;
+import com.nbti.dto.MembersDTO;
 import com.nbti.services.Group_memberService;
 
 import jakarta.servlet.http.HttpSession;
@@ -27,9 +28,17 @@ public class Group_memberController {
 	private HttpSession session;
 	
 	@PostMapping
-	public ResponseEntity<Void> post(@RequestBody Group_memberDTO dto) throws Exception {
-		System.out.println(dto);
-		//serv.insert(dto);
+	public ResponseEntity<Void> post(@RequestBody String[] members) throws Exception {
+		for (String string : members) {
+			System.out.println(string);
+		}
+		int group_seq=(int)session.getAttribute("group_seq");
+		
+		for(int i=0;i<members.length;i++) {
+			Group_memberDTO dto = new Group_memberDTO(group_seq,members[i],"N","","");
+			serv.insert(dto);
+		}
+		
 		return ResponseEntity.ok().build(); // 200  	
 	} 
 	
