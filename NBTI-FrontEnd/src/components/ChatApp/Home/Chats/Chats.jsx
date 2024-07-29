@@ -17,7 +17,7 @@ const Chats = () => {
 
     useEffect(() => {
         axios.get(`http://${host}/group_chat`).then((resp) => {
-            console.log(resp.data);
+           // console.log(resp.data);
             if(resp.data!==''){
                 setGroup_chats(resp.data);
             }
