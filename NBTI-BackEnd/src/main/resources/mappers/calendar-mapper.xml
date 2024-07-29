@@ -7,7 +7,44 @@
   
   <!-- 캘린더 입력 -->
 	<insert id="insert">
-		insert into schedule values(schedule_seq.nextval, #{member_id}, #{title}, #{contents}, #{start_date}, #{end_date})
-	</insert>
+       insert into schedule 
+   	   values(schedule_seq.nextval, #{member_id}, #{title}, #{calendarTitle}, #{contents}, #{start_date}, #{end_date})
+       <selectKey resultType="int" order="AFTER" keyProperty="seq"> 
+            select schedule_seq.currval from dual
+      </selectKey>
+    </insert>
+    
+	
+	
+	<!-- 캘린더 제목 업데이트 -->
+<!-- 캘린더 제목 업데이트 -->
+<!-- 	<update id="edit">
+	    제목 수정
+	    UPDATE scheduleTitle 
+	    SET scheduleTitle_name = #{newTitle} 
+	    WHERE seq = #{seq}; 
+	
+	    schedule에서 title 업데이트
+	    UPDATE schedule 
+	    SET title = (SELECT seq FROM scheduleTitle WHERE scheduleTitle_name = #{newTitle})
+	    WHERE title = #{seq}; 
+	</update> -->
+<!-- 	<update id="edit">
+		UPDATE schedule
+		SET calendarTitle = #{calendarTitle}
+		WHERE seq = #{seq}
+	</update>
+	<update id="edit">
+		 UPDATE scheduleTitle
+		SET scheduleTitle_name = #{scheduleTitle_name}
+		WHERE seq = #{seq}
+	</update> -->
+
+	
+
+
+	
+    
+    
 </mapper>
 

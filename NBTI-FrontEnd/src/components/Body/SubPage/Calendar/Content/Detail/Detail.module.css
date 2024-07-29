@@ -49,16 +49,16 @@
     width: 40%;
 }
 /* 버튼 */
-.modalInner > div:nth-child(5) {
+.modalInner > div:nth-child(6) {
     display: flex; justify-content: space-evenly; align-items: center;
 }
-.modalInner > div:nth-child(5) > button {
+.modalInner > div:nth-child(6) > button {
     padding: 2% 5%;
     border: none;
     border-radius: 50px; cursor: pointer;
     transition: all ease 0.2s;
 }
-.modalInner > div:nth-child(5) > button:hover{
+.modalInner > div:nth-child(6) > button:hover{
     background-color: #6b9080cc; color: white;
 }
 
