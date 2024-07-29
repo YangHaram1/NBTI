@@ -51,8 +51,8 @@ export const Header = () => {
 
     const navi = useNavigate();
 
-    const {setChatNavi} =useContext(ChatsContext);
-    const handleChat=()=>{
+    const { setChatNavi } = useContext(ChatsContext);
+    const handleChat = () => {
         setChatNavi("home");
     }
 
@@ -66,6 +66,10 @@ export const Header = () => {
                 </div>
             </div>
             <div className={styles.right}>
+                <div className={styles.user_admin}>
+
+                    <i className="fa-solid fa-user-cog fa-xl" onClick={() => { navi("/useradmin") }}></i>
+                </div>
                 <div className={styles.chat}>
                     <i className="fa-regular fa-comments fa-xl" onClick={handleChat}></i>
                 </div>
@@ -73,7 +77,7 @@ export const Header = () => {
                     <i className="fa-regular fa-bell fa-xl"></i>
                 </div>
                 <div className={styles.user_info}>
-                    <div className={styles.user_profile_img} onClick={()=>{ navi("/mypage")}}>
+                    <div className={styles.user_profile_img} onClick={() => { navi("/mypage") }}>
                         <img src={image} alt="" />
                     </div>
                 </div>
