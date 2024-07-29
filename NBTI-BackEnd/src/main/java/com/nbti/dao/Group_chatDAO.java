@@ -24,8 +24,15 @@ public class Group_chatDAO {
 	}
 	
 	public List<Group_chatDTO> getList(List<Group_memberDTO> list) throws Exception{
-		Map<String, Object> map = new HashMap<>();
-	    map.put("list", list);
-		return mybatis.selectList("Group_chat.list",map);
+		if(list.size()>0) {
+			Map<String, Object> map = new HashMap<>();
+		    map.put("list", list);
+			return mybatis.selectList("Group_chat.list",map);
+		}
+		return null;
+	}
+	
+	public void delete(int seq) throws Exception{
+		mybatis.delete("Group_chat.delete",seq);
 	}
 }

@@ -26,7 +26,7 @@ const Chat = () => {
   const { loginID } = useAuthStore();
 
 
-  const { chats, setChats, ws, setChatNavi } = useContext(ChatsContext);
+  const { chats, setChats, ws, setChatNavi,chatSeq } = useContext(ChatsContext);
   let lastDate = null;
   const [isLoading, setIsLoading] = useState(false);
 
@@ -53,7 +53,7 @@ const Chat = () => {
     ws.current = new WebSocket(`ws://${host}/chatWebsocket`);
 
     ws.current.onopen = () => {
-      axios.get(`http://${host}/chat`).then(response => {
+      axios.get(`http://${host}/chat?chatSeq=${chatSeq}`).then(response => {
         setChats(response.data);
         console.log("채팅목록가저오기");
       })

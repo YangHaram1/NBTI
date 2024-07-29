@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, React } from 'react';
+import  React,{ useState, useEffect, useRef } from 'react';
 import styles from './Members.module.css';
 import axios from 'axios';
 import Modal from './Modal/Modal';
@@ -26,8 +26,8 @@ const Members = () => {
                 prev.style.display = 'none'
             }
             modalRef.current[index].style.display = 'flex';
-            modalRef.current[index].style.top=y+'px';
-            modalRef.current[index].style.left=x;
+            modalRef.current[index].style.top = y + 'px';
+            modalRef.current[index].style.left = x;
             return modalRef.current[index];
         });
     };
@@ -45,9 +45,12 @@ const Members = () => {
             {
                 list.map((item, index) => {
                     return (
-                        <div onContextMenu={handleRightClick(index)} key={index} >
-                            {item}<Modal modalRef={modalRef} index={index} item={item}></Modal>
-                        </div>
+                        <React.Fragment key={index}>
+                            <div onContextMenu={handleRightClick(index)} >
+                                {item}
+                            </div>
+                            <Modal modalRef={modalRef} index={index} item={item}></Modal>
+                        </React.Fragment>
                     );
                 })
             }
