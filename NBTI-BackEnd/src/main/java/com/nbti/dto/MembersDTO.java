@@ -6,7 +6,7 @@ public class MembersDTO {
 	
 	private String id, pw, name, email;
 	private Timestamp enter_date;
-	private String team_code, job_code, member_level, member_call, address, brith, gender, end_date, ent_yn;
+	private String team_code, job_code, member_level, member_call, address, birth, gender, end_date, ent_yn;
 	private int vacation_period;
 	
 	public MembersDTO() {
@@ -14,7 +14,7 @@ public class MembersDTO {
 	}
 
 	public MembersDTO(String id, String pw, String name, String email, Timestamp enter_date, String team_code,
-			String job_code, String member_level, String member_call, String address, String brith, String gender,
+			String job_code, String member_level, String member_call, String address, String birth, String gender,
 			String end_date, String ent_yn, int vacation_period) {
 		super();
 		this.id = id;
@@ -27,7 +27,7 @@ public class MembersDTO {
 		this.member_level = member_level;
 		this.member_call = member_call;
 		this.address = address;
-		this.brith = brith;
+		this.birth = birth;
 		this.gender = gender;
 		this.end_date = end_date;
 		this.ent_yn = ent_yn;
@@ -114,12 +114,12 @@ public class MembersDTO {
 		this.address = address;
 	}
 
-	public String getBrith() {
-		return brith;
+	public String getBirth() {
+		return birth;
 	}
 
-	public void setBrith(String brith) {
-		this.brith = brith;
+	public void setBirth(String birth) {
+		this.birth = birth;
 	}
 
 	public String getGender() {

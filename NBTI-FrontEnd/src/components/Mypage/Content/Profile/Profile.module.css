@@ -45,6 +45,7 @@
 
 .photo_box{
     flex: 2;
+    /* border: 1px solid black; */
 }
 
 .photo_name{
@@ -57,6 +58,7 @@
     flex-direction: column;
     width: 100%;
     align-items: start;
+    /* border: 1px solid black; */
 }
 
 .change_btn{
@@ -74,7 +76,7 @@
 }
 
 .photo{
-    /* border: 1px solid black; */
+    border: 1px solid black;
     height: 120px;
     width: 125px;  
     display: flex;
