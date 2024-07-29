@@ -16,4 +16,12 @@ public class MembersService {
 		return mdao.login(dto);
 	}
 	
+	public MembersDTO selectMyData(String id) {
+		return mdao.selectMyData(id);
+	}
+	
+	public void updateMyData(MembersDTO dto) {
+		mdao.updateMyData(dto);
+	}
+	
 }

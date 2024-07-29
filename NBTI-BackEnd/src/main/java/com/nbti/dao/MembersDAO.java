@@ -21,5 +21,13 @@ public class MembersDAO {
 		return false;
 	}
 	
+	public MembersDTO selectMyData(String id) {
+		return mybatis.selectOne("Member.mydata",id);
+	}
+	
+	public void updateMyData(MembersDTO dto) {
+		mybatis.update("Member.updateMyData", dto);
+	}
+	
 
 }

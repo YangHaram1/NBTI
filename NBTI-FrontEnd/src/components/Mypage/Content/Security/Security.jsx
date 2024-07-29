@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import styles from './Security.module.css';
+import axios from 'axios';
+import { host } from '../../../../config/config';
 // import axios from 'axios';
 
 
@@ -27,9 +29,12 @@ export const Security = () => {
     }
 
     const handlePwRight = () => {
-        // axios.get(`${host}/member`).then(setShowNewPwBox)
-        setShowNewPwBox(true);
-        setShowChangePwBox(false);
+        axios.get(`http://${host}/members`)
+        .then((resp) =>{
+            console.log(resp);
+            setShowNewPwBox(true);
+            setShowChangePwBox(false);
+        })
         console.log(showNewPwBox);
         console.log(checkPw);
     }
