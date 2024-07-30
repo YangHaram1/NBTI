@@ -23,6 +23,11 @@ export const List = () => {
         });
     }, [boardType]);
 
+    // 페이지네이션 
+    useEffect(() => {
+
+    }, []);
+
 
     return (
         <div className={styles.container}>
@@ -84,6 +89,7 @@ export const List = () => {
                     })
                 }
             </div>
+            <span className={styles.pagination}></span>
         </div>
     )
 

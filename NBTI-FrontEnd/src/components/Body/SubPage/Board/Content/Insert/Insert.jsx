@@ -26,7 +26,7 @@ export const Insert = () => {
 
   const handleInput = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
+    // console.log(name, value);
     setBoard((prev) => {
       return (
         { ...prev, [name]: value }

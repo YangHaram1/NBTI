@@ -7,18 +7,22 @@ import image from "../../../../../../images/user.jpg";
 import { format } from 'date-fns';
 import { useNavigate } from "react-router-dom";
 import { Editor } from '@tinymce/tinymce-react';
+import BoardEditor from "../../../../BoardEditor/BoardEditor";
 
 
 export const Detail = () => {
 
     const { boardSeq, boardType } = useBoardStore();
-    const [detail, setDetail] = useState({});
+    const [detail, setDetail] = useState({}); // 게시글의 detail 정보
+    const [board, setBoard] = useState({ title: '', contents: '', board_code: 1 });
 
     const navi = useNavigate();
 
     // 게시글 날짜 타입 변경
     const date = new Date(detail.write_date);
     const currentDate = !isNaN(date) ? format(date, 'yyyy-MM-dd HH:mm') : 'Invalid Date';
+
+
 
     useEffect(() => {
         let code = 1;
@@ -31,7 +35,9 @@ export const Detail = () => {
 
         if (boardSeq !== -1) {
             axios.get(`${host}/board/${boardSeq}/${code}`).then((resp) => {
-                setDetail(resp.data);
+                setDetail(resp.data); // 취소 시 원본 데이터
+                setBoard(resp.data);
+                console.log(JSON.stringify(detail))
             })
         }
 
@@ -67,40 +73,18 @@ export const Detail = () => {
 
     /** ================[ 수 정 ]============= */
     const [isEditing, setIsEditing] = useState(false);
-    const [title, setTitle] = useState(detail.title);
-    const [content, setContent] = useState(detail.contents);
-    const [data, setData] = useState({ title: detail.title, content: detail.contents });
 
-    // 에디터 내용 변경 핸들러
-    const handleEditorChange = (title, content) => {
-        setContent(content);
-        setData((prevData) => ({ ...prevData, title, content })); // content 상태 업데이트와 동시에 data 상태 업데이트
-    };
 
     // 수정 click 
     const handleEditBtn = () => {
         setIsEditing(true);
     };
 
-    // detail 변경될 때 상태 초기화
-    useEffect(() => {
-        setTitle(detail.title);
-        setContent(detail.contents);
-    }, [detail]);
-
-
     // 저장 click
     const handleSaveBtn = () => {
 
-        console.log("data: ", data);
-
-        axios.post(`${host}/board`, data).then((resp) => {
-
-            // console.log("data2222: ", resp.data);
-
-            setTitle(data.title);
-            setContent(data.content);
-
+        axios.put(`${host}/board`, board).then((resp) => {
+            setDetail(board)
             setIsEditing(false);
         })
     };
@@ -108,16 +92,46 @@ export const Detail = () => {
     // 취소 click 
     const handleCancelBtn = () => {
         setIsEditing(false);
-        setTitle(detail.title);
-        setContent(detail.contents);
+        setBoard((prev) => {
+            return { ...prev, title: detail.title, contents: detail.contents }
+        })
     };
+
+
+    // ==========[댓 글]==========
+    const [replyContents, setReplyContents] = useState('');
+    const [reply, setReply] = useState([]);
+    const handleInputReply = (e) => {
+        const textContent = e.target.innerText;
+        setReplyContents(textContent);
+    }
+
+    const handleReplyAdd = () => {
+        console.log('Reply:', replyContents);
+
+        let code = 1;
+        if (boardType === "자유") code = 1;
+        else if (boardType === "공지") code = 2;
+
+        const requestBody = { board_seq: boardSeq, board_code: code, contents: replyContents };
+
+        axios.post(`${host}/reply`, requestBody).then((resp) => {
+            setReply((prev) => {
+                if (prev.length > 0) {
+                    return [...prev, resp.data];
+                }
+                return [resp.data];
+            })
+            setReplyContents('');
+        })
+    }
 
 
     return (
         <div className={styles.container}>
             <div className={styles.top}>
                 <div className={styles.left}>
-                    <i class="fa-regular fa-star"></i>
+                    <i className="fa-regular fa-star"></i>
                 </div>
                 <div className={styles.right}>
                     {!isEditing ? (
@@ -144,8 +158,10 @@ export const Detail = () => {
                         {isEditing ? (
                             <input
                                 type="text"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
+                                value={board.title}
+                                onChange={(e) => setBoard((prev) => {
+                                    return { ...prev, title: e.target.value };
+                                })}
                                 placeholder="제목을 입력하세요."
                                 className={styles.editTitle}
                             />
@@ -163,18 +179,7 @@ export const Detail = () => {
             </div>
             <div className={styles.content}>
                 {isEditing ? (
-                    <Editor
-                        initialValue={content}
-                        apiKey={api}
-                        init={{
-                            height: 400,
-                            menubar: true,
-                            plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste code help wordcount',
-                            toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                        }}
-                        onEditorChange={handleEditorChange} // 에디터 내용 변경 시 호출
-                    />
+                    <BoardEditor setBoard={setBoard} />
                 ) : (
                     <span>{detail.contents}</span>
                 )}
@@ -188,27 +193,44 @@ export const Detail = () => {
                 </div>
                 <div className={styles.replyInput}>
                     <img src={image} alt="" />
-                    <textarea></textarea>
-                    <button>등록</button>
+                    <div
+                        className={styles.inputText}
+                        contentEditable="true"
+                        onInput={handleInputReply}
+                        suppressContentEditableWarning={true}
+                        dangerouslySetInnerHTML={{ __html: replyContents }}
+                    />
+                    <button onClick={handleReplyAdd}>등록</button>
                 </div>
 
                 {/* --------------[ 댓글 출력 ]------------ */}
                 <div className={styles.replyOutputWrap}>
-                    <div className={styles.replyOutput}>
-                        <img src={image} alt="" />
-                        <div>
-                            <div className={styles.writer_writeDate}>
-                                <span>롱초</span>
-                                <span>2024-07-29 11:32</span>
-                            </div>
-                            <span>댓글 내용 어쩌구</span>
-                        </div>
-                        <div className={styles.likes}>
-                            <i class="fa-regular fa-heart fa-lg" />
-                            <p>5</p>
-                        </div>
-                        <button>X</button>
-                    </div>
+                    {
+                        reply.map((item, i) => {
+                            // 댓글 날짜 타입 변경 
+                            const reply_date = new Date(item.write_date);
+                            const reply_currentDate = !isNaN(reply_date) ? format(reply_date, 'yyyy-MM-dd HH:mm') : 'Invalid Date';
+
+                            return (
+                                <div className={styles.replyOutput} key={i}>
+                                    <img src={image} alt="" />
+                                    <div>
+                                        <div className={styles.writer_writeDate}>
+                                            <span>{item.member_id}</span>
+                                            <span>{reply_currentDate}</span>
+                                        </div>
+                                        <span>{item.contents}</span>
+                                    </div>
+                                    <div className={styles.likes}>
+                                        <i className="fa-regular fa-heart fa-lg" />
+                                        <p>5</p>
+                                    </div>
+                                    <button>X</button>
+                                </div>
+                            )
+                        })
+
+                    }
                 </div>
             </div>
         </div>

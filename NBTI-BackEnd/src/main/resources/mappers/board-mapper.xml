@@ -7,12 +7,12 @@
 
 	<!-- 목록 출력 -->
 	<select id="selectAll" resultType="com.nbti.dto.BoardDTO">
-		select *from board where board_code = ${code} order by seq desc 
+		select *from board where board_code = ${board_code} order by seq desc 
 	</select>
 
 	<!-- 게시글 출력 -->
 	<select id="selectBoard" resultType="com.nbti.dto.BoardDTO">
-		select *from board where seq = ${seq} and board_code = ${code}
+		select *from board where seq = ${seq} and board_code = ${board_code}
 	</select>
 	
 	<!-- 게시글 입력 -->
@@ -27,7 +27,7 @@
 	
 	<!-- 게시글 수정 -->
 	<update id="modify">
-		update board set title = #{title}, contents = #{contents} where seq = ${seq} and board_code = ${code}
+		update board set title = #{title}, contents = #{contents} where seq = ${seq} and board_code = ${board_code}
 	</update>
 	
 	
