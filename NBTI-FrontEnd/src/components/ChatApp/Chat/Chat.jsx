@@ -39,7 +39,6 @@ const Chat = () => {
 
 
   const handleChats = useCallback(() => {
-    // Initial positioning
     if (!searchDisplay) {
       updateSidebarPosition();
       updateSearchPosition();
@@ -75,25 +74,24 @@ const Chat = () => {
     ws.current.onmessage = (e) => {
       // alert("메세지옴");
       let chat = JSON.parse(e.data);
-      setChats((prev) => {
-        // console.log([...prev,chat]);
-        return [...prev, chat]
-      })
-
+      if(chat.group_seq===chatSeq){
+        setChats((prev) => {
+        
+          return [...prev, chat]
+        })
+      }
+    
     }
 
-
-    // Update position on window resize
     window.addEventListener('resize', updateSidebarPosition);
     console.log("셋팅");;
-    // Clean up event listener on component unmount
-
+  
     return () => {
       ws.current.close();
       window.removeEventListener('resize', updateSidebarPosition);
     };
 
-  }, []); // 빈 의존성 배열로 컴포넌트 마운트 시 한 번만 실행
+  }, []); 
 
 
 
@@ -146,7 +144,6 @@ const Chat = () => {
         searchList.forEach((s_item) => {
           if (item.seq === s_item.seq) {
             const temp = item.message.replace(search, `<span style="background-color: red !important;">${search}</span>`);
-           // console.log(temp);
             result = temp;
 
           }
@@ -161,10 +158,8 @@ const Chat = () => {
 
   const handleChatsData = useCallback(() => {
     let count = 0;
-    // console.log(searchList);
     setList(
       chats.map((item, index) => {
-        // console.log("리랜더링");
         const formattedTimestamp = format(new Date(item.write_date), 'a hh:mm').replace('AM', '오전').replace('PM', '오후');
         const currentDate = format(new Date(item.write_date), 'yyyy-MM-dd');
         const isDateChanged = currentDate !== lastDate;
@@ -201,7 +196,6 @@ const Chat = () => {
                     ref={el => {
                       if (el && check) {
                         chatRef.current[count++] = el;
-                        // console.log(check);
                       }
                     }} className={styles.mbox}></div>
                   <div className={styles.date}>{formattedTimestamp}</div>

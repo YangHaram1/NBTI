@@ -24,6 +24,10 @@
 		select * from group_member where member_id=#{param}
 	</select>
 	
+	<select id="members"  resultType="com.nbti.dto.Group_memberDTO">
+		select * from group_member where group_seq=#{param}
+	</select>
+	
 	
 	<delete id="delete">
 		delete from group_member where group_seq=${group_seq} and member_id=#{member_id}

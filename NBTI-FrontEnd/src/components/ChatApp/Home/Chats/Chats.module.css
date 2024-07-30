@@ -31,7 +31,15 @@
 .name{
     font-weight: 600;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    gap: 30px;
 }
+.size{
+    font-size: 13px;
+    color: gray;
+}
+
+
 .content{
     color: gray;
     font-size: 14px;

@@ -17,12 +17,20 @@ public class Group_memberService {
 		dao.insert(list);
 	}
 	
+	public void insert(Group_memberDTO dto) throws Exception {
+		dao.insert(dto);
+	}
+	
 	public boolean check(List<String> list) throws Exception{
 		return dao.check(list);
 	}
 	
 	public List<Group_memberDTO> list(String member_id) throws Exception{
 		return dao.list(member_id);
+	}
+	
+	public List<Group_memberDTO> members(int group_seq) throws Exception{
+		return dao.members(group_seq);
 	}
 	
 	public void delete(int group_seq,String member_id) throws Exception{

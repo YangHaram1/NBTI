@@ -6,13 +6,13 @@ import Alarms from './Alarms/Alarms';
 import avatar from '../../../images/user.jpg';
 import axios from 'axios';
 import { useAuthStore } from '../../../store/store';
-import { host } from '../../../config/config'
 import { ChatsContext } from './../../../Context/ChatsContext';
 axios.defaults.withCredentials = true;
 
 const Home = () => {
     //이미지는 <a href="/kr">Freeimages.com</a>에서 가져왔습니다.
     const [color, setColor] = useState({ member: false, chat: false, alarm: false });
+    const [name ,setName] =useState();
     const { loginID, setLoginID } = useAuthStore();
     const { setChatNavi, chatNaviBody, setChatNaviBody } = useContext(ChatsContext);
     const handleMemberList = (e) => {
@@ -35,29 +35,6 @@ const Home = () => {
         });
         setChatNaviBody('alarms')
     }
-    const handleLogin = () => {
-        axios.post(`http://${host}/auth`, "HARAM0704", {
-            headers: {
-                'Content-Type': 'text/plain'  // 문자열을 전송할 때, Content-Type을 text/plain으로 설정
-            }
-        }).then(resp => {
-            sessionStorage.setItem("loginID", resp.data);
-            setLoginID(resp.data);
-        });
-        console.log(loginID);
-    }
-
-    const handleLogin2 = () => {
-        axios.post(`http://${host}/auth`, "eunmi", {
-            headers: {
-                'Content-Type': 'text/plain'  // 문자열을 전송할 때, Content-Type을 text/plain으로 설정
-            }
-        }).then(resp => {
-            sessionStorage.setItem("loginID", resp.data);
-            setLoginID(resp.data);
-        });
-        console.log(loginID);
-    }
 
 
     const handleCancel = () => {
@@ -71,7 +48,7 @@ const Home = () => {
                 </div>
                 <div className={styles.div1_2}>
                     <div className={styles.name}>
-                        양하람
+                        {loginID}
                     </div>
                     <div className={styles.status}>
                         온라인
@@ -93,7 +70,7 @@ const Home = () => {
                 </div>
             </div>
             <div className={styles.div3}>
-                {chatNaviBody === 'members' && <Members />}
+                {chatNaviBody === 'members' && <Members  setName={setName}/>}
                 {chatNaviBody === 'chats' && <Chats />}
                 {chatNaviBody === 'alarms' && <Alarms />}
             </div>
