@@ -30,15 +30,15 @@ const Signup = () => {
     const { members, setMembers } = useMemberStore(); // Zustand store 사용
     const navi = useNavigate();
     useEffect(() => {
-        axios.get(`http://${host}/members/selectTeam`)
+        axios.get(`${host}/members/selectTeam`)
             .then(response => setTeams(response.data))
             .catch(error => console.error('Error fetching teams:', error));
 
-        axios.get(`http://${host}/members/selectJob`)
+        axios.get(`${host}/members/selectJob`)
             .then(response => setJobs(response.data))
             .catch(error => console.error('Error fetching jobs:', error));
 
-        axios.get(`http://${host}/members/selectLevel`)
+        axios.get(`${host}/members/selectLevel`)
             .then(response => setLevels(response.data))
             .catch(error => console.error('Error fetching levels:', error));
     }, []);
@@ -82,7 +82,7 @@ const Signup = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         // `enter_date`를 포함하지 않음
-        axios.post(`http://${host}/members`, formData)
+        axios.post(`${host}/members`, formData)
             .then(response => {
                 alert('회원가입이 성공적으로 완료되었습니다.');
                 setMembers([...members, response.data]);
@@ -231,7 +231,7 @@ const Signup = () => {
                 value={formData.vacation_period}
                 onChange={handleChange}
             />
-            <button type="submit" onClick={handleSubmit}>회원가입</button>
+            <button type="button" onClick={handleSubmit}>회원가입</button>
         </div>
     );
 };
