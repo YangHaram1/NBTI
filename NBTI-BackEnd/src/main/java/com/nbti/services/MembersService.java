@@ -21,6 +21,7 @@ public class MembersService {
 	}
 	
 	public MembersDTO selectMyData(String id) {
+		System.out.println(id);
 		return mdao.selectMyData(id);
 	}
 	
@@ -40,8 +41,15 @@ public class MembersService {
 	   public List<Map<String, Object>> getMembers() {
 	        return mdao.getMembers();
 	    }
-
-	
+	// 관리자 사용자 수정
+	   public void updateUser(MembersDTO dto) {
+		   mdao.updateUser(dto);
+	   }
+	// 관리자 회원 탈퇴
+	   public void deleteUser(String id) {
+		   mdao.deleteUser(id);
+	   }
+	  
 	// 비밀번호 변경시 기존 비밀번호 확인
 	public boolean checkPw(HashMap<String, String> map) {
 		return mdao.checkPw(map);
@@ -51,6 +59,8 @@ public class MembersService {
 	public boolean changePw(HashMap<String, String> map) {
 		return mdao.changePw(map);
 	}
+	
+
 	
 	
 
