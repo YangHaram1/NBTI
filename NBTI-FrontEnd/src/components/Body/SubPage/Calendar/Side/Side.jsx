@@ -61,18 +61,21 @@ export const Side = ({setAddOpen}) => {
   const [value, setValue] = useState('내 프로젝트'); // <span>의 초기 값
   const [seq, setSeq] = useState(1); // 수정할 항목의 seq
 
-  // 수정 모드로 전환
+  // 수정 버튼을 누르면 수정 모드로 전환
   const edit = () => {
     setIsEditing(true);
   };
 
   // 입력 값 변경
   const handleChange = (e) => {
+    console.log(e.target.value + "입력 값")
+    console.log(e.target + "입력 값")
     setValue(e.target.value);
   };
 
   // 수정 완료
   const handleBlur = () => {
+    console.log(`${seq} : "seq" : ${value}`)
     const dataToSend = {
       seq: seq, // 수정할 schedule seq 값
       title: value, // 수정할 캘린더 제목
@@ -112,7 +115,7 @@ export const Side = ({setAddOpen}) => {
               className={`${styles.submenu} ${FreeBoard ? styles.open : ""}`}
               onClick={preventPropagation}
             >
-              <div>
+              <div className={styles.editBox}>
                   {isEditing ? (
                       <input
                           type="text"

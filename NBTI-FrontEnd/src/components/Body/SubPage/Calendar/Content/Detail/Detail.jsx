@@ -1,6 +1,6 @@
 import styles from './Detail.module.css';
 import { host } from '../../../../../../config/config';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import FullCalendar from '@fullcalendar/react'; // FullCalendar 컴포넌트
@@ -17,6 +17,7 @@ export const Detail = ({ setAddOpen, addOpen }) => {
     const [selectedDate, setSelectedDate] = useState(null); // 선택한 날짜
     const [insert, setInsert] = useState({ title: 0, calendarTitle : '', contents: '', start_date: '', start_time: '', end_date: '', end_time: '' }); // 입력 데이터 상태
     const [events, setEvents] = useState([]); // 이벤트 상태
+    console.log(events+ "현재 내 이벤트")
     
     //입력된 값을 insert 상태에 업데이트
     const handleChange = (e) => {
@@ -60,7 +61,7 @@ export const Detail = ({ setAddOpen, addOpen }) => {
     
         console.log('전송할 데이터:', postData);
     
-        axios.post(`http://${host}/calendar`, postData)
+        axios.post(`${host}/calendar`, postData)
             .then((resp) => {
                 console.log(resp);
                 // 이벤트 추가
@@ -101,6 +102,30 @@ export const Detail = ({ setAddOpen, addOpen }) => {
         setSelectedDate(null);
         setAddOpen(false);
     };
+
+
+    // useEffect(() => {
+    //     axios.get(`${host}/calendar`)
+    //         .then((resp) => {
+    //             console.log(resp + "목록");
+    //         })
+    // }, []);
+    useEffect(() => {
+        axios.get(`${host}/calendar`)
+            .then((resp) => {
+                console.log(resp.data + "목록 출력");
+                const eventList = resp.data.map(event => ({
+                    title: event.calendarTitle,
+                    start: event.start_date,
+                    end: event.end_date
+                }));
+                setEvents(eventList);
+            })
+            .catch((error) => {
+                console.error('Error', error);
+            });
+    }, []);
+    
     
 
     return (
