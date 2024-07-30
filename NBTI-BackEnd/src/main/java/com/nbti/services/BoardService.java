@@ -29,6 +29,7 @@ public class BoardService {
 		bdao.insert(dto);
 	}
 
+
 	// 게시글 삭제
 	public void delete(int seq) {
 		bdao.delete(seq);
