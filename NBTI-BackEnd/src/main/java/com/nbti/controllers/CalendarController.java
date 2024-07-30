@@ -1,8 +1,11 @@
 package com.nbti.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,13 +36,18 @@ public class CalendarController {
     }
     
     // 내 캘린더 제목 변경
-    @PutMapping("/title")
-    public ResponseEntity<Void> editTitle(@RequestBody CalendarDTO dto) throws Exception {
-        dto.setMember_id((String) session.getAttribute("loginID")); 
-        cserv.editTitle(dto); 
-        return ResponseEntity.ok().build();
-    }
+//    @PutMapping("/title")
+//    public ResponseEntity<Void> editTitle(@RequestBody CalendarDTO dto) throws Exception {
+//        dto.setMember_id((String) session.getAttribute("loginID")); 
+//        cserv.editTitle(dto); 
+//        return ResponseEntity.ok().build();
+//    }
 
+    @GetMapping
+    public ResponseEntity<List<CalendarDTO>> list () throws Exception {
+    	List<CalendarDTO> list = cserv.list();
+    	return ResponseEntity.ok(list);
+    }
 
 
     
