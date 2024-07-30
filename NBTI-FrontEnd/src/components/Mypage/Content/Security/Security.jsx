@@ -41,7 +41,7 @@ export const Security = () => {
 
     // 비밀번호 확인하는 코드 짜야함.  
     const handlePwRight = () => {
-        axios.post(`http://${host}/members/checkPw`, {pw:pw})
+        axios.post(`${host}/members/checkPw`, {pw:pw})
         .then((resp) =>{
             console.log(resp);
             if(resp.data){
@@ -57,12 +57,12 @@ export const Security = () => {
 
     // 비밀번호 변경
     const handleChangeNewPw = ()=>{
-        axios.post(`http://${host}/members/changePw`, {pw:checkPw})
+        axios.post(`${host}/members/changePw`, {pw:checkPw})
         .then((resp)=>{
             // 비밀번호 변경 후 로그아웃
             alert("새로운 비밀번호 다시 로그인 해주세요");
             if(resp.data){
-                axios.delete(`http://${host}/auth`)
+                axios.delete(`${host}/auth`)
                 .then((resp)=>{
                     sessionStorage.removeItem("loginID");
                     setLoginID(null);
