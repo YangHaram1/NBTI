@@ -3,13 +3,13 @@ package com.nbti.dto;
 import java.sql.Timestamp;
 
 public class BoardDTO {
-	private int seq;
+	private int seq=-1;
 	private String title;
 	private String contents;
-	private String member_id;
-	private Timestamp write_date;
-	private int view_count;
-	private int board_code;
+	private String member_id="";
+	private Timestamp write_date=null;
+	private int view_count=0;
+	private int board_code=1;
 	
 	public BoardDTO() {
 	}

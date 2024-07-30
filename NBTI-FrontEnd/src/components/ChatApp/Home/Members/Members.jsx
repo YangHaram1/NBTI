@@ -4,6 +4,7 @@ import axios from 'axios';
 import Modal from './Modal/Modal';
 import { useMemberStore } from '../../../../store/store';
 import { useAuthStore } from './../../../../store/store';
+import Profile from './Profile/Profile';
 
 const Members = ({setName}) => {
     const [list, setList] = useState([]);
@@ -12,6 +13,7 @@ const Members = ({setName}) => {
     const { loginID } = useAuthStore();
 
     const modalRef = useRef([]);
+    const profileRef =useRef([]);
 
     useEffect(() => {
         setList(members);
@@ -60,7 +62,9 @@ const Members = ({setName}) => {
                             <div onContextMenu={handleRightClick(index)} >
                                 {item.name}
                             </div>
-                            <Modal modalRef={modalRef} index={index} item={item}></Modal>
+                            <Profile profileRef={profileRef} index={index} item={item}></Profile>
+                            <Modal modalRef={modalRef} index={index} item={item} profileRef={profileRef}></Modal>
+                           
                         </React.Fragment>
                     );
                 })
