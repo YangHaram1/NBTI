@@ -33,9 +33,6 @@ public class CalendarService {
     public List<CalendarDTO> list () throws Exception{
     	
     	List<CalendarDTO> list = cdao.list();
-    	for(CalendarDTO dto: list) {
-    		System.out.println(dto.getSeq());
-    	}
     	return list;
     }
 
