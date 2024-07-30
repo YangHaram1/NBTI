@@ -82,9 +82,13 @@ export const Header = () => {
 
     const navi = useNavigate();
 
-    const { setChatNavi } = useContext(ChatsContext);
+    const { setChatNavi ,chatAppRef} = useContext(ChatsContext);
     const handleChat = () => {
-        setChatNavi("home");
+        setChatNavi((prev)=>{
+            chatAppRef.current.style.display="flex";
+            return 'home'
+        });
+        
     }
 
     return (

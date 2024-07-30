@@ -14,9 +14,10 @@ export const useAuthStore = create((set) => {
 
 export const useMemberStore = create((set) => ({
     members: [],
+    selectedMember: null,
     setMembers: (members) => set({ members }),
+    setSelectedMember: (member) => set({ selectedMember: member }),
   }));
-
 
 /*하람*/
 export const useCheckList = create((set) => ({
@@ -40,6 +41,12 @@ export const useBoardStore = create((set) => {
 });
 
 
-
-
-/**/
+/*지연*/
+export const useDocFormStore = create((set)=>{
+    return{
+        docForm : {name:'', id:'', period:''},
+        setDocForm : (form)=> set(()=>({
+            docForm : form
+        }))
+    }
+})
