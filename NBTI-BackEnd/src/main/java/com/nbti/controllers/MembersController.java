@@ -1,13 +1,15 @@
 package com.nbti.controllers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,7 +55,16 @@ public class MembersController {
 		
 		return mServ.selectMyData(id);
 	}
-	
+	 @GetMapping("/{id}")
+	    public ResponseEntity<MembersDTO> selectById(@PathVariable("id") String id) {
+	        MembersDTO member = mServ.selectMyData(id);
+	        System.out.println(member);
+	        if (member != null) {
+	            return ResponseEntity.ok(member);
+	        } else {
+	            return ResponseEntity.notFound().build();
+	        }
+	    }
 	@PutMapping
 	public ResponseEntity<Void> update(@RequestBody MembersDTO dto) {
 		String id = (String)session.getAttribute("loginID");
@@ -62,38 +73,45 @@ public class MembersController {
 		mServ.updateMyData(dto);
 		return ResponseEntity.ok().build();
 	}
+	// 멤버테이블 전체 추출
     @GetMapping("/selectAll")
     public ResponseEntity<List<MembersDTO>> selectAll() {
         List<MembersDTO> members = mServ.selectAll();
         return ResponseEntity.ok(members);  // HTTP 200 OK와 함께 members를 반환
     }
+    // 사용자 조회
     @GetMapping("/selectMembers")
     public ResponseEntity<java.util.List<Map<String, Object>>> selectMembers(){
         List<Map<String, Object>> selectMembers = mServ.getMembers();
         return ResponseEntity.ok(selectMembers);
     }
+    // 부서 추출
     @GetMapping("/selectDepartment")
     public ResponseEntity<List<DepartmentDTO>> selectDepartment(){
     	List<DepartmentDTO> dapt = dServ.selectDepartment();
     	return ResponseEntity.ok(dapt);
     }
+    
+    // 팀 추출
     @GetMapping("/selectTeam")
     public ResponseEntity<List<TeamsDTO>> selectTeams(){
     	List<TeamsDTO> team = tServ.selectTeams();
     	return ResponseEntity.ok(team);
     }
+    // 직급 추출
     @GetMapping("/selectJob")
     public ResponseEntity<List<JobDTO>> selectJob(){
     	List<JobDTO> job = jServ.selectJob();
     	return ResponseEntity.ok(job);
     }
+    // 권한 추출
 	@GetMapping("/selectLevel")
 	public ResponseEntity<List<M_LevelDTO>>selectLevel(){
 		List<M_LevelDTO> level = lServ.selectLevel();
 		return ResponseEntity.ok(level);
 	}
 	
-	
+	// 암호화 회원가입
 	@PostMapping
 	public ResponseEntity<Void> insert(@RequestBody MembersDTO dto){
 		String encryptedPassword = EncryptionUtils.getSHA512(dto.getPw());
@@ -102,6 +120,19 @@ public class MembersController {
 		mServ.insert(dto);
 		return ResponseEntity.ok().build();
 	}
+	// 관리자 사용자 수정
+	@PutMapping("/updateUser")
+	public ResponseEntity<Void> updateUser(@RequestBody MembersDTO dto){
+		mServ.updateUser(dto);
+		return ResponseEntity.ok().build();
+	}
+	// 관리자 회원 탈퇴
+	@DeleteMapping("/deleteUser/{id}")
+	public ResponseEntity<Void> deleteUser(@PathVariable("id") String id){
+		mServ.deleteUser(id);
+		return ResponseEntity.ok().build();
+	}
+	
 	
 	// 작성일 24.07.30 
 	// 작성자 김지연
