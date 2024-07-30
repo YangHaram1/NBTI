@@ -10,8 +10,9 @@ import { useContext } from 'react';
 import { useEffect } from 'react';
 axios.defaults.withCredentials = true;
 
-const ChatApp = () => {
-    const { chatAppRef,chatNavi} = useContext(ChatsContext);
+const ChatApp = ({websocketRef}) => {
+    const { chatAppRef,chatNavi,ws} = useContext(ChatsContext);
+    ws.current=websocketRef.current;
     useEffect(()=>{
         if ("Notification" in window) {
             Notification.requestPermission().then(permission => {
