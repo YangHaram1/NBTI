@@ -40,3 +40,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+.clickable {
+    cursor: pointer;
+    color: black;
+    
+}

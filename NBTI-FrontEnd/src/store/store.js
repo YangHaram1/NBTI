@@ -14,9 +14,10 @@ export const useAuthStore = create((set) => {
 
 export const useMemberStore = create((set) => ({
     members: [],
+    selectedMember: null,
     setMembers: (members) => set({ members }),
+    setSelectedMember: (member) => set({ selectedMember: member }),
   }));
-
 
 /*하람*/
 export const useCheckList = create((set) => ({

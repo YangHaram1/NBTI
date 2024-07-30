@@ -16,9 +16,7 @@ public class MembersDAO {
 	@Autowired
 	private SqlSession mybatis;
 	
-	 
-	
-	public boolean login(MembersDTO dto) {
+public boolean login(MembersDTO dto) {
 		String result =mybatis.selectOne("Member.login",dto);
 		System.out.println(result);
 		if(result!=null) {
@@ -26,8 +24,12 @@ public class MembersDAO {
 		}
 		return false;
 	}
+	public void updateUser(MembersDTO dto) {
+		mybatis.update("Member.updateMember",dto);
+	}
 	
 	public MembersDTO selectMyData(String id) {
+		System.out.println(id);
 		return mybatis.selectOne("Member.mydata",id);
 	}
 	
@@ -37,6 +39,9 @@ public class MembersDAO {
 	
 	public List<MembersDTO> selectAll (){
 		return mybatis.selectList("Member.selectAll");
+	}
+	public void deleteUser(String id) {
+		mybatis.delete("Member.deleteUser",id);
 	}
 	public void insert(MembersDTO dto) {
 		mybatis.insert("Member.insert",dto);
@@ -58,6 +63,5 @@ public class MembersDAO {
 			return true;
 		}else {return false;}
 	}
-
 
 }
