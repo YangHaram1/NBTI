@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.nbti.dto.CalendarDTO;
+import com.nbti.dto.ScheduleTitleDTO;
 
 @Repository
 public class CalendarDAO {
@@ -41,5 +42,10 @@ public class CalendarDAO {
     public List<CalendarDTO> list ()  throws Exception{
     	return mybatis.selectList("Calendar.list");
     }
+    
+    public List<ScheduleTitleDTO> scheduleName() throws Exception {
+        return mybatis.selectList("Calendar.scheduleName");
+    }
+
 
 }
