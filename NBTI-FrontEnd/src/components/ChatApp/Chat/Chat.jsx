@@ -11,9 +11,11 @@ import Search from './Search/Search.jsx';
 import { host } from '../../../config/config.js'
 import { useAuthStore } from './../../../store/store';
 import './Chat.css';
-
+import { toast } from 'react-toastify';
 import avatar from '../../../images/user.jpg'
 import Invite from './Invite/Invite.jsx';
+
+import 'react-toastify/dist/ReactToastify.css'
 axios.defaults.withCredentials = true;
 const Chat = () => {
 
@@ -27,14 +29,14 @@ const Chat = () => {
   const { loginID } = useAuthStore();
 
 
-  const { chats, setChats, ws, setChatNavi,chatSeq } = useContext(ChatsContext);
+  const { chats, setChats, ws, setChatNavi, chatSeq, chatNavi } = useContext(ChatsContext);
   let lastDate = null;
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
   const { searchDisplay, setSearchDisplay } = useCheckList();
   const [searchList, setSearchList] = useState([]);
-  const [invite,setInvite] =useState(false);
+  const [invite, setInvite] = useState(false);
 
 
 
@@ -51,68 +53,94 @@ const Chat = () => {
 
   // WebSocket 연결을 설정하는 useEffect
   useEffect(() => {
-    ws.current = new WebSocket(`ws://${host}/chatWebsocket`);
+    const url = host.replace(/^https?:/, '')
+    // ws.current = new WebSocket(`${url}/chatWebsocket`);
 
-    ws.current.onopen = () => {
+    //  ws.current.onopen = () => {
+
+    // }
+    if (loginID != null) {
       axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {
-        
+
         setChats(resp.data);
         console.log("채팅목록가저오기");
       })
       updateSidebarPosition();
       updateSearchPosition();
-      console.log('Connected to WebSocket');
-    }
-    ws.current.onclose = () => {
-      console.log('Disconnected from WebSocket');
-    };
-
-    ws.current.onerror = (error) => {
-      console.log('WebSocket error observed:', error);
-      // 오류 처리 로직을 추가할 수 있습니다.
-    };
-
-    ws.current.onmessage = (e) => {
-      // alert("메세지옴");
-      let chat = JSON.parse(e.data);
-      if(chat.group_seq===chatSeq){
-        setChats((prev) => {
-        
-          return [...prev, chat]
-        })
-      }
-
-      const notificationTitle = "새 메시지";
-      const notificationOptions = {
-        body: chat,
-        icon: {avatar} // 알림 아이콘의 경로
+      ws.current.onclose = () => {
+        console.log('Disconnected from WebSocket');
       };
-    
-      // 알림 생성
-      if (Notification.permission === "granted") {
-        new Notification(notificationTitle, notificationOptions);
+
+      ws.current.onerror = (error) => {
+        console.log('WebSocket error observed:', error);
+        // 오류 처리 로직을 추가할 수 있습니다.
+      };
+
+      ws.current.onmessage = (e) => {
+        // alert("메세지옴");
+        let chat = JSON.parse(e.data);
+        if (chat.member_id !== loginID) {
+          notify(chat);
+        }
+        if (chat.group_seq === chatSeq) {
+          setChats((prev) => {
+
+            return [...prev, chat]
+          })
+        }
+        console.log("메세지보냄");
+        /*toast("알림", {
+          position: "top-left", // 위치 설정
+          autoClose: 5000,       // 자동 닫힘 시간 (5초)
+          hideProgressBar: true, // 진행 바 숨기기
+        });*/
+
+
+
+
+        // 알림 생성
+        const notificationTitle = "새 메시지";
+        const notificationOptions = {
+          body: chat,
+          icon: { avatar } // 알림 아이콘의 경로
+        };
+
+        if (Notification.permission === "granted") {
+          new Notification(notificationTitle, notificationOptions);
+        }
+        ///
       }
-    
     }
+
 
     window.addEventListener('resize', updateSidebarPosition);
     console.log("셋팅");;
-  
+
     return () => {
-      ws.current.close();
       window.removeEventListener('resize', updateSidebarPosition);
     };
 
-  }, []); 
+  }, []);
 
 
-
+  const notify = (item) => {
+    console.log("알림");
+    toast.info(`${item.member_id}님한테 메세지가 왔습니다`, {
+      position: "top-right", // 오른쪽 위에 표시
+      autoClose: 5000, // 5초 후 자동으로 닫힘
+      hideProgressBar: false, // 진행 바 숨기기: false로 설정하여 진행 바 표시
+      closeOnClick: true, // 클릭 시 닫기
+      pauseOnHover: true, // 마우스 오버 시 일시 정지
+      draggable: true, // 드래그 가능
+      rtl: false // RTL 텍스트 지원 비활성화
+    });
+  };
 
   const handleCancel = () => {
     setChatNavi("home");
   }
-  const handleInvite=()=>{
-    setInvite((prev)=>{
+  const handleInvite = () => {
+    setInvite((prev) => {
       return !prev;
     })
   }
@@ -160,7 +188,7 @@ const Chat = () => {
 
           }
         })
-      } 
+      }
     }
     return result;
   }, [searchList]);
@@ -199,12 +227,12 @@ const Chat = () => {
             )}
             <div className={idCheck ? styles.div1Left : styles.div1} >
               {
-                !idCheck&&( <div className={styles.avatar}><img src={avatar} alt="" /></div>)
+                !idCheck && (<div className={styles.avatar}><img src={avatar} alt="" /></div>)
               }
               <div>
-                <div className={idCheck?styles.nameReverse:styles.name}>{item.member_id}</div>
+                <div className={idCheck ? styles.nameReverse : styles.name}>{item.member_id}</div>
                 <div className={idCheck ? styles.contentReverse : styles.content}>
-                  <div dangerouslySetInnerHTML={{ __html: (check ? temp : item.message)}}
+                  <div dangerouslySetInnerHTML={{ __html: (check ? temp : item.message) }}
                     ref={el => {
                       if (el && check) {
                         chatRef.current[count++] = el;
@@ -218,7 +246,7 @@ const Chat = () => {
         );
       })
     );
-   
+
   }, [chats, handleSearchData])
 
   useEffect(() => {
@@ -227,8 +255,8 @@ const Chat = () => {
   }, [handleChatsData])
 
   const scrollBottom = useCallback(() => {
-    if(chatRef.current.length!==0){
-      chatRef.current[chatRef.current.length-1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (chatRef.current.length !== 0) {
+      chatRef.current[chatRef.current.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
     else if (divRef.current) {
       divRef.current.scrollTop = divRef.current.scrollHeight;
@@ -271,7 +299,7 @@ const Chat = () => {
         </div>
         <Search search={search} setSearch={setSearch} searchRef={searchRef} setSearchList={setSearchList} handleSearch={handleSearch} chatRef={chatRef} divRef={divRef}></Search>
         <Emoticon sidebarRef={sidebarRef} editorRef={editorRef} />
-        { invite&&(<Invite setInvite={setInvite}></Invite>)}
+        {invite && (<Invite setInvite={setInvite}></Invite>)}
       </React.Fragment>
     );
   }

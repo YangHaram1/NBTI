@@ -3,14 +3,12 @@ import styles from './Profile.module.css';
 import { host } from '../../../../config/config';
 import axios from 'axios';
 import { format } from 'date-fns';
-import { useNavigate } from 'react-router';
+// import { useNavigate } from 'react-router';
 // import Button from 'react-bootstrap/Button';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 export const Profile = () =>{
-
-    const navi = useNavigate();
 
     const fileInputRef = useRef(null);
     const [previewImage, setPreviewImage] = useState(null);

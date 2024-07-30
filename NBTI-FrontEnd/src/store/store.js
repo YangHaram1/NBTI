@@ -41,6 +41,12 @@ export const useBoardStore = create((set) => {
 });
 
 
-
-
-/**/
+/*지연*/
+export const useDocFormStore = create((set)=>{
+    return{
+        docForm : {name:'', id:'', period:''},
+        setDocForm : (form)=> set(()=>({
+            docForm : form
+        }))
+    }
+})

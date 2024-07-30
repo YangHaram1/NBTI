@@ -16,7 +16,7 @@
     
 	
 <!-- 캘린더 제목 업데이트 -->
-    <update id="editTitle">
+<!--     <update id="editTitle">
         UPDATE schedule
         SET title = (SELECT seq FROM scheduleTitle WHERE scheduleTitle_name = #{calendarTitle})
         WHERE seq = #{seq};
@@ -26,7 +26,12 @@
         UPDATE schedule
         SET calendarTitle = #{calendarTitle}
         WHERE seq = #{seq};
-    </update>
+    </update> -->
+    
+    <!-- 캘린더 List 불러오기 -->
+    <select id="list" resultType="com.nbti.dto.CalendarDTO">
+    	SELECT * from schedule
+    </select>
 
 	
     
