@@ -22,7 +22,7 @@ function App() {
 
   useEffect(() => {
     if (loginID !== null) {
-      axios.get(`http://${host}/members/selectAll`)
+      axios.get(`${host}/members/selectAll`)
         .then((resp) => {
           const filteredMembers = resp.data.map(({ pw, ...rest }) => rest);
           setMembers(filteredMembers);
