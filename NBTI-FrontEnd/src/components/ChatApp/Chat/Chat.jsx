@@ -29,7 +29,7 @@ const Chat = () => {
   const { loginID } = useAuthStore();
 
 
-  const { chats, setChats, ws, setChatNavi,chatSeq } = useContext(ChatsContext);
+  const { chats, setChats, ws, setChatNavi,chatSeq ,chatNavi} = useContext(ChatsContext);
   let lastDate = null;
   const [isLoading, setIsLoading] = useState(false);
 
@@ -77,6 +77,9 @@ const Chat = () => {
     ws.current.onmessage = (e) => {
       // alert("메세지옴");
       let chat = JSON.parse(e.data);
+      if(chat.member_id!==loginID){
+        notify(chat);
+      }
       if(chat.group_seq===chatSeq){
         setChats((prev) => {
         
@@ -89,7 +92,9 @@ const Chat = () => {
         autoClose: 5000,       // 자동 닫힘 시간 (5초)
         hideProgressBar: true, // 진행 바 숨기기
       });*/
-      notify(chat);
+      
+ 
+      
 
       // 알림 생성
       const notificationTitle = "새 메시지";
