@@ -1,0 +1,42 @@
+.container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.userTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.userTable th, .userTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.userTable th {
+    background-color: #f2f2f2;
+    color: #333;
+    font-weight: bold;
+}
+
+.userTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.userTable tr:hover {
+    background-color: #f1f1f1;
+}
+
+.userTable td {
+    max-width: 150px; /* Set a max-width for td elements */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

@@ -54,8 +54,9 @@ const Chat = () => {
     ws.current = new WebSocket(`ws://${host}/chatWebsocket`);
 
     ws.current.onopen = () => {
-      axios.get(`http://${host}/chat?chatSeq=${chatSeq}`).then(response => {
-        setChats(response.data);
+      axios.get(`http://${host}/chat?chatSeq=${chatSeq}`).then(resp => {
+        
+        setChats(resp.data);
         console.log("채팅목록가저오기");
       })
       updateSidebarPosition();

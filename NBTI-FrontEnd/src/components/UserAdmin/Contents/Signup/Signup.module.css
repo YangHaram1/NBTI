@@ -14,23 +14,23 @@
 }
 
 /* Heading styling */
-h2 {
+.container h2 {
     color: #6B9080; /* Title color */
     margin-bottom: 20px;
     font-size: 24px; /* Adjust font size as needed */
 }
 
 /* Form styling */
-form {
+.container form {
     width: 100%;
     display: flex;
     flex-direction: column;
 }
 
 /* Styling for input fields, selects, and buttons */
-input,
-select,
-button {
+.container input,
+.container select,
+.container button {
     width: 100%; /* Ensure full width */
     margin-bottom: 15px;
     padding: 10px;
@@ -41,16 +41,16 @@ button {
 }
 
 /* Specific styling for input fields and selects */
-input[type="text"],
-input[type="password"],
-input[type="email"],
-input[type="number"],
-select {
+.container input[type="text"],
+.container input[type="password"],
+.container input[type="email"],
+.container input[type="number"],
+.container select {
     background-color: #fff; /* White background for input fields */
 }
 
 /* Button styling */
-button,
+.container button,
 #search-address-btn {
     background-color: #6B9080; /* Button background color */
     color: white;
@@ -59,7 +59,7 @@ button,
 }
 
 /* Button hover styling */
-button:hover,
+.container button:hover,
 #search-address-btn:hover {
     background-color: #4a6f5a; /* Darker background color on hover */
 }
