@@ -49,8 +49,10 @@ function App() {
  
 
     return () => {
-      if(websocketRef.current!=null)
-      websocketRef.current.close();
+      if(websocketRef.current!=null){
+        websocketRef.current.close();
+      }
+      
   
     };
     
