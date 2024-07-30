@@ -72,17 +72,15 @@ export const Detail = () => {
     const [data, setData] = useState({ title: detail.title, content: detail.contents });
 
     // 에디터 내용 변경 핸들러
-    const handleEditorChange = (content) => {
+    const handleEditorChange = (title, content) => {
         setContent(content);
-        setData((prevData) => ({ ...prevData, content })); // content 상태 업데이트와 동시에 data 상태 업데이트
+        setData((prevData) => ({ ...prevData, title, content })); // content 상태 업데이트와 동시에 data 상태 업데이트
     };
 
     // 수정 click 
     const handleEditBtn = () => {
         setIsEditing(true);
     };
-
-
 
     // detail 변경될 때 상태 초기화
     useEffect(() => {
@@ -93,9 +91,12 @@ export const Detail = () => {
 
     // 저장 click
     const handleSaveBtn = () => {
+
+        console.log("data: ", data);
+
         axios.post(`http://${host}/board`, data).then((resp) => {
 
-            console.log("data2222: " + resp.data);
+            // console.log("data2222: ", resp.data);
 
             setTitle(data.title);
             setContent(data.content);
@@ -103,8 +104,6 @@ export const Detail = () => {
             setIsEditing(false);
         })
     };
-
-
 
     // 취소 click 
     const handleCancelBtn = () => {
