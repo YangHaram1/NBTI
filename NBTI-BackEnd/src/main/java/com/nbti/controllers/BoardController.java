@@ -57,10 +57,6 @@ public class BoardController {
 	public ResponseEntity<Void> insert(@RequestBody BoardDTO dto) {
 	String member_id = (String) session.getAttribute("loginID");
 	dto.setMember_id(member_id);
-	System.out.println(dto.getBoard_code());
-	System.out.println(dto.getTitle());
-	System.out.println(dto.getContents());
-	System.out.println(dto.getMember_id());
 	bserv.insert(dto);
 		return ResponseEntity.ok().build();
 	}

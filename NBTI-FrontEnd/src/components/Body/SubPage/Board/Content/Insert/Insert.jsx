@@ -3,6 +3,7 @@ import BoardEditor from "../../../../BoardEditor/BoardEditor";
 import styles from "./Insert.module.css";
 import { useState } from 'react';
 import { host } from '../../../../../../config/config'
+import { useNavigate } from "react-router-dom";
 
 export const Insert = () => {
 
@@ -19,6 +20,7 @@ export const Insert = () => {
     setIsPopupOpen(false);
   };
 
+  const navi = useNavigate();
 
   const [board, setBoard] = useState({ title: '', contents: '', board_code: 1 });
 
@@ -36,8 +38,8 @@ export const Insert = () => {
     console.log(board);
 
     axios.post(`http://${host}/board`, board).then((resp) => {
-      console.log("게시물 추가 : ", resp.data);
-      // 추가 성공 후 실행 코드 
+      alert("글이 작성되었습니다.");
+      navi('/board/free')
     })
 
   }

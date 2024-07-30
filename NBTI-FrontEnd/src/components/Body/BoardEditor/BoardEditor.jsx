@@ -50,7 +50,6 @@ const BoardEditor = ({ setBoard }) => {
           editorRef.current = editor;
         }}
         init={{
-          // height: 126,
           height: 500,
           menubar: true,
           plugins: "wordcount anchor code image", //image
