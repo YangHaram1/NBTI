@@ -83,7 +83,7 @@ export const Side = ({setAddOpen}) => {
     };
 
     // API 호출
-    axios.put(`http://${host}/calendar/title`, dataToSend) // PUT 요청을 보낼 API 경로를 수정
+    axios.put(`${host}/calendar/title`, dataToSend) // PUT 요청을 보낼 API 경로를 수정
       .then((resp) => {
         console.log(resp);
         setIsEditing(false);

@@ -7,7 +7,7 @@ const ChatsModal = ({ modalRef, index, item, setGroup_chats }) => {
 
 
     const handleDelete = () => {
-        axios.delete(`http://${host}/group_member?group_seq=${group_seq}`).then((resp) => {
+        axios.delete(`${host}/group_member?group_seq=${group_seq}`).then((resp) => {
             setGroup_chats((prev) => {
                 return (
                     prev.filter((temp) => {

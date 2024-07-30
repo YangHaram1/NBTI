@@ -54,7 +54,7 @@ const Chat = () => {
     ws.current = new WebSocket(`ws://${host}/chatWebsocket`);
 
     ws.current.onopen = () => {
-      axios.get(`http://${host}/chat?chatSeq=${chatSeq}`).then(resp => {
+      axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {
         
         setChats(resp.data);
         console.log("채팅목록가저오기");

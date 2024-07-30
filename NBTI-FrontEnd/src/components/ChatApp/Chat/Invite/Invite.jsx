@@ -28,7 +28,7 @@ const Invite = ({ setInvite }) => {
     }, [list]);
     
     useEffect(()=>{
-        axios.get(`http://${host}/group_member?group_seq=${chatSeq}`).then((resp)=>{
+        axios.get(`${host}/group_member?group_seq=${chatSeq}`).then((resp)=>{
             //console.log(resp.data);
             setInvited(resp.data);
         })
@@ -79,7 +79,7 @@ const Invite = ({ setInvite }) => {
             return item.id;
         })
         console.log(data);
-        axios.post(`http://${host}/group_member`,data).then((resp)=>{
+        axios.post(`${host}/group_member`,data).then((resp)=>{
             setInvite(false);
         })
     }

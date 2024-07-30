@@ -16,7 +16,7 @@ const Chats = () => {
     const modalRef = useRef([]);
 
     useEffect(() => {
-        axios.get(`http://${host}/group_chat`).then((resp) => {
+        axios.get(`${host}/group_chat`).then((resp) => {
             if(resp!=null){
                 if (resp.data !== '') {
                     setGroup_chats(resp.data);

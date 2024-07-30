@@ -22,7 +22,7 @@ const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch, cha
     const handleList = () => {
         if(search!==''){
             const searchParam = search ? `?search=${encodeURIComponent(search)}` : '';
-            axios.get(`http://${host}/chat${searchParam}&&chatSeq=${chatSeq}`).then((resp) => {
+            axios.get(`${host}/chat${searchParam}&&chatSeq=${chatSeq}`).then((resp) => {
                 setSearchList(resp.data);
             })
         }

@@ -33,7 +33,7 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
     const file = inputRef.current.files[0];
     const formData = new FormData();
     formData.append("file", file);
-    axios.post(`http://${host}/chatUpload`, formData).then(response => { //쿼리 파라미터 형식으로 전송된다
+    axios.post(`${host}/chatUpload`, formData).then(response => { //쿼리 파라미터 형식으로 전송된다
       console.log('Post successful:', response.data);
     }).catch(error => {
       console.error('There was an error posting the data!', error);

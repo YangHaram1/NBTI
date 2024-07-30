@@ -10,7 +10,7 @@ const Modal=({modalRef,index,item,profileRef})=>{
 
     const handleChatRoom=()=>{
         //console.log(item)
-        axios.post(`http://${host}/group_chat?member_id=${item.id}&&name=${item.name}`).then((resp)=>{
+        axios.post(`${host}/group_chat?member_id=${item.id}&&name=${item.name}`).then((resp)=>{
             setChatNaviBody("chats");
         })
     }
