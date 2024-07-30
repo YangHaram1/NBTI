@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import styles from './TreeNode.module.css';
-import { useDocFormStore } from '../../../../../../store/store';
+import { useDocFormStore } from '../../../../../../../store/store';
 
 export const TreeNode = ({ node }) => {
 

@@ -3,14 +3,14 @@ import styles from "./Side.module.css";
 import { useNavigate } from "react-router-dom";
 import Modal from "../Content/Modal/Modal";
 import SecondModal from "../Content/SecondModal/SecondModal";
-import DocTree from "./DocTree/DocTree";
+import DocTree from "../Content/Modal/DocTree/DocTree";
 import { FormDetail } from "../Content/FormDetail/FormDetial";
 
 export const Side = () => {
   // ===== 메뉴 토글 =====
   const [FreeBoard, setFreeBoard] = useState(false);
   const [NoticeBoard, setNoticeBoard] = useState(false);
-  // const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
+ 
   const [isModalOpen, setIsModalOpen] = useState(false); // 첫 번째 모달 상태
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false); // 두 번째 모달 상태
 
@@ -55,28 +55,12 @@ export const Side = () => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault(); // 폼 제출 기본 동작 방지
-
     // 첫 번째 모달 닫기
     setIsModalOpen(false);
 
     // 두 번째 모달 열기
     setIsSecondModalOpen(true);
   };
-
-  // const handlePopupForm = () => {
-  //   setIsModalOpen(true); // 모달 열기
-  // };
-
-  // const closeModal = () => {
-  //   setIsModalOpen(false); // 모달 닫기
-  // };
-
-  // const [form, setForm] = useState(false);
-
-  // const handlePopupForm =()=>{
-  //   setForm(true);
-    
-  // }
 
   const navi = useNavigate();
 
@@ -190,33 +174,8 @@ export const Side = () => {
             <div className={styles.form_menu}>
               <div className={styles.form_menu_title}> 문서 종류 </div>
               <div className={styles.form_menu_tree}>
+                {/* 양식 선택 리스트 출력 (트리형식) */}
                 <DocTree/>
-                {/* <ul>
-                  <li>목록1
-                    <ul>
-                      <li>세부목록1</li>
-                      <li>세부목록2</li>
-                    </ul>
-                  </li>
-                  <li>목록2
-                    <ul>
-                      <li>세부목록1</li>
-                      <li>세부목록2</li>
-                    </ul>
-                  </li>
-                  <li>목록3
-                    <ul>
-                      <li>세부목록1</li>
-                      <li>세부목록2</li>
-                    </ul>
-                  </li>
-                  <li>목록4
-                    <ul>
-                      <li>세부목록1</li>
-                      <li>세부목록2</li>
-                    </ul>
-                  </li>
-                </ul> */}
               </div>
             </div>
             <div className={styles.form_check}>
@@ -226,7 +185,7 @@ export const Side = () => {
             </div>
           </div>
           <div className={styles.form_btns}>
-            <button type="submit">제출</button>
+            <button type="submit">다음</button>
             <button type="button" onClick={closeFirstModal}>닫기</button>
           </div>
         </form>
