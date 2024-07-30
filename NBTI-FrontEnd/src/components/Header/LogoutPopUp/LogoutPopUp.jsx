@@ -34,7 +34,7 @@ export const LogoutPopUp = forwardRef(({ onClose }, ref) => {
     };
 
     const handleLogout = ()=>{
-        axios.delete(`http://${host}/auth`)
+        axios.delete(`${host}/auth`)
         .then((resp)=>{
             console.log(resp);
             sessionStorage.removeItem("loginId");

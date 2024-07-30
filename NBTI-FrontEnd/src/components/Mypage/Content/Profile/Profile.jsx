@@ -52,7 +52,7 @@ export const Profile = () =>{
 
         // console.log(email, phone, address);
 
-        axios.put(`http://${host}/members`, updatedData)
+        axios.put(`${host}/members`, updatedData)
         .then(()=>{
             console.log("업데이트 성공");
         })
@@ -64,7 +64,7 @@ export const Profile = () =>{
     
 
     useEffect(()=>{
-        axios.get(`http://${host}/members`)
+        axios.get(`${host}/members`)
         .then((resp)=>{
             console.log(resp);
             SetMyData(resp.data);
