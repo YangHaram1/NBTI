@@ -1,6 +1,7 @@
 package com.nbti.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +64,11 @@ public class MembersController {
     public ResponseEntity<List<MembersDTO>> selectAll() {
         List<MembersDTO> members = mServ.selectAll();
         return ResponseEntity.ok(members);  // HTTP 200 OK와 함께 members를 반환
+    }
+    @GetMapping("/selectMembers")
+    public ResponseEntity<java.util.List<Map<String, Object>>> selectMembers(){
+        List<Map<String, Object>> selectMembers = mServ.getMembers();
+        return ResponseEntity.ok(selectMembers);
     }
     @GetMapping("/selectDepartment")
     public ResponseEntity<List<DepartmentDTO>> selectDepartment(){
