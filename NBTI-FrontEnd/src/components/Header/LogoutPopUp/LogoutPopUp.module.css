@@ -1,0 +1,64 @@
+div {
+    /* border: 1px solid black; */
+  }
+  .container {
+    width: 100px;
+    height: 90px;
+    border-radius: 5px;
+    position: fixed;
+    top: 60px;
+    right: 10px;
+    background-color: white;
+    border: 1px solid #abb5b1;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16);
+  
+    z-index: 9999;
+    display: none;
+    display: flex;
+    flex-direction: column;
+    
+  }
+  
+  .show {
+    display: block;
+  }
+  
+  .container .body {
+    margin: 0 10px;
+    padding: 0 0 10px;
+  }
+  
+  .container .body > ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    row-gap: 4px;
+    list-style: none;
+    padding: 0px;
+    margin: 5px 0;
+  }
+  
+  .container .body > ul > li {
+    display: flex;
+    align-items: center;
+    /* max-width: 50%; */
+    height: 35px;
+    padding-left: 8px;
+    flex-grow: 1;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+  .container .body > ul > li:hover {
+    border-radius: 5px;
+    background-color: #e5eded8a;
+  }
+  
+  .container .body > ul > li span:nth-child(1) {
+    /* width: 20px; */
+    width: 100%;
+  }
+  
+  .container .body > ul > li > span:nth-child(1) > i {
+    color: #6b9080;
+  }
+  

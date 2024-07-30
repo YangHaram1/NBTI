@@ -1,5 +1,6 @@
 package com.nbti.services;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,10 +35,25 @@ public class MembersService {
 	public void insert(MembersDTO dto) {
 		mdao.insert(dto);
 	}
+<<<<<<< HEAD
 	// 사용자 조회 
 	   public List<Map<String, Object>> getMembers() {
 	        return mdao.getMembers();
 	    }
+=======
+	
+	// 비밀번호 변경시 기존 비밀번호 확인
+	public boolean checkPw(HashMap<String, String> map) {
+		return mdao.checkPw(map);
+	}
+	
+	// 비밀번호 변경
+	public boolean changePw(HashMap<String, String> map) {
+		return mdao.changePw(map);
+	}
+	
+	
+>>>>>>> b7607a331167fa04d2b9938234beac389d0ef076
 		
 }
 

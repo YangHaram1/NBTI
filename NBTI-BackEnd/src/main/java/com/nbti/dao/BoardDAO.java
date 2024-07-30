@@ -24,7 +24,7 @@ public class BoardDAO {
 	// 게시글 출력
 	public BoardDTO selectBoard(int seq, int code) {
 		
-		Map<String, Object> params = new HashMap<>();
+		Map<String, Integer> params = new HashMap<>();
 		params.put("seq", seq);
 		params.put("code", code);
 

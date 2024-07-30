@@ -1,5 +1,7 @@
 package com.nbti.controllers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -90,6 +92,8 @@ public class MembersController {
 		List<M_LevelDTO> level = lServ.selectLevel();
 		return ResponseEntity.ok(level);
 	}
+	
+	
 	@PostMapping
 	public ResponseEntity<Void> insert(@RequestBody MembersDTO dto){
 		String encryptedPassword = EncryptionUtils.getSHA512(dto.getPw());
@@ -98,4 +102,38 @@ public class MembersController {
 		mServ.insert(dto);
 		return ResponseEntity.ok().build();
 	}
+	
+	// 작성일 24.07.30 
+	// 작성자 김지연
+	// 마이페이지 비밀번호 변경 시 기존 비밀번호 체크
+	@PostMapping("/checkPw")
+	public ResponseEntity<Boolean> checkPw(@RequestBody Map<String, String> request){
+		String pw = EncryptionUtils.getSHA512(request.get("pw"));
+		System.out.println("pw:" + pw);
+		
+		String id = (String)session.getAttribute("loginID");
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("id", id);
+		map.put("pw", pw);
+		Boolean result = mServ.checkPw(map);
+		return ResponseEntity.ok(result);
+	}
+	
+	
+	// 작성일 24.07.30 
+	// 작성자 김지연
+	// 마이페이지 비밀번호 변경
+	@PostMapping("/changePw")
+	public ResponseEntity<Boolean> changePw(@RequestBody Map<String, String> request){
+		String pw = EncryptionUtils.getSHA512(request.get("pw"));
+		System.out.println("pw:" + pw);
+		String id = (String)session.getAttribute("loginID");
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("id", id);
+		map.put("pw", pw);
+		Boolean result = mServ.changePw(map);
+		return ResponseEntity.ok(result);
+	}
+	
 }

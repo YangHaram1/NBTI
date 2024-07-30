@@ -1,5 +1,6 @@
 package com.nbti.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,9 +41,23 @@ public class MembersDAO {
 	public void insert(MembersDTO dto) {
 		mybatis.insert("Member.insert",dto);
 	}
+<<<<<<< HEAD
 	   public List<Map<String, Object>> getMembers() {
 	        return mybatis.selectList("Member.selectMembers");
 	    }
+=======
 	
+	public boolean checkPw(HashMap<String, String> map) {
+		return mybatis.selectOne("Member.checkPw",map);
+	}
+>>>>>>> b7607a331167fa04d2b9938234beac389d0ef076
+	
+	public boolean changePw(HashMap<String, String> map) {
+		int result = mybatis.update("Member.changePw",map);
+		if(result > 0) {
+			return true;
+		}else {return false;}
+	}
+
 
 }
