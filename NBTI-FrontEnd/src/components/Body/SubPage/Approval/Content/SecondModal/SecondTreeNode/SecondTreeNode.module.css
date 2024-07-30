@@ -1,0 +1,14 @@
+.tree{
+    list-style: none;
+}
+
+.treeList{
+    width: 100px;
+    list-style: none;
+}
+
+.treeList:hover{
+    background-color: pink;
+    cursor: pointer;
+}
+

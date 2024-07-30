@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styles from './ListDoc.module.css';
-import axios from 'axios';
-import { host } from '../../../../../../config/config';
+// import axios from 'axios';
+// import { host } from '../../../../../../config/config';
 
 
 export const ListDoc = ({setlist}) => {
