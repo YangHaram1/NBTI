@@ -15,11 +15,7 @@ div {
 .container .top {
   display: flex;
   height: 90px;
-  /* margin-bottom: 15px; */
-  /* top: 0px; */
   padding: 20px 10px;
-  /* position: sticky; */
-  /* background-color: rgb(255, 255, 255); */
 }
 .container .top .left {
   width: 50%;
@@ -111,6 +107,7 @@ div {
   line-height: 1.8;
 }
 
+/* =================[ 댓 글 ]================ */
 .container .reply {
   /* height: 120px; */
   display: flex;
@@ -151,6 +148,10 @@ div {
 .container .reply .replyInput > button {
   width: 60px;
   height: 30px;
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: none;
   border-radius: 3px;
   background-color: #6b9080;
