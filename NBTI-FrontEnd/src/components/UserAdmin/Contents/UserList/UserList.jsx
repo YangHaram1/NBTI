@@ -25,7 +25,7 @@ const UserList = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://${host}/members/selectMembers`);
+                const response = await axios.get(`${host}/members/selectMembers`);
                 console.log('Fetched Users:', response.data); // 데이터 확인
                 setUsers(response.data); // 상태에 데이터 저장
                 setLoading(false);
