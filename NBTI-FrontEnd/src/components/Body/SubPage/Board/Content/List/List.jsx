@@ -8,19 +8,33 @@ import { host } from "../../../../../../config/config";
 
 export const List = () => {
     const navi = useNavigate();
-    const [boardList, setBoardList] = useState([{}]);
+    const [boardList, setBoardList] = useState([]);
     const { boardType, setBoardSeq } = useBoardStore();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalRecords, setTotalRecords] = useState(0);
+    const recordsPerPage = 10;
+
     // 1 : 자유 2: 공지
     let code = 1;
     if (boardType === "자유") code = 1;
     else if (boardType === "공지") code = 2;
 
+    const fetchBoardList = (page) => {
+        axios.get(`http://${host}/board/${code}?page=${page}&size=${recordsPerPage}`)
+            .then((resp) => {
+                setBoardList(resp.data.boardList);
+                setTotalRecords(resp.data.totalRecords);
+            });
+    };
+
     useEffect(() => {
-        axios.get(`http://${host}/board/${code}`).then((resp) => {
-            console.log("게시판 : " + resp.data);
-            setBoardList(resp.data);
-        });
-    }, [boardType]);
+        fetchBoardList(currentPage);
+    }, [boardType, currentPage]);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
 
 
     return (
@@ -55,7 +69,7 @@ export const List = () => {
                         <p>조회수</p>
                     </div>
                 </div>
-                {
+                {/* {
                     boardList.map((item, index) => {
                         const date = new Date(item.write_date);
                         const currentDate = !isNaN(date) ? format(date, 'yyyy-MM-dd') : 'Invalid Date';
@@ -66,7 +80,6 @@ export const List = () => {
                                     <p>{item.seq}</p>
                                 </div>
                                 <div className={styles.title}>
-                                    {/* <p onClick={() => { handleDetail(item.seq) }}>{item.title}</p> */}
                                     <p onClick={() => { navi("/board/detail"); setBoardSeq(item.seq) }}>{item.title}</p>
                                 </div>
                                 <div className={styles.writer}>
@@ -81,6 +94,46 @@ export const List = () => {
                             </div>
                         );
                     })
+                } */}
+
+                {
+                    boardList.length > 0 ? (
+                        boardList.map((item, index) => {
+                            const date = new Date(item.write_date);
+                            const currentDate = !isNaN(date) ? format(date, 'yyyy-MM-dd') : 'Invalid Date';
+
+                            return (
+                                <div className={styles.list} key={index}>
+                                    <div className={styles.seq}>
+                                        <p>{item.seq}</p>
+                                    </div>
+                                    <div className={styles.title}>
+                                        <p onClick={() => { navi("/board/detail"); setBoardSeq(item.seq) }}>{item.title}</p>
+                                    </div>
+                                    <div className={styles.writer}>
+                                        <p>{item.member_id}</p>
+                                    </div>
+                                    <div className={styles.writeDate}>
+                                        <p>{currentDate}</p>
+                                    </div>
+                                    <div className={styles.viewCount}>
+                                        <p>{item.view_count}</p>
+                                    </div>
+                                </div>
+                            );
+                        })
+                    ) : (
+                        <p>No records found.</p>
+                    )
+                }
+            </div>
+            <div className={styles.pagination}>
+                {
+                    Array.from({ length: Math.ceil(totalRecords / recordsPerPage) }, (_, i) => (
+                        <button key={i + 1} onClick={() => handlePageChange(i + 1)}>
+                            {i + 1}
+                        </button>
+                    ))
                 }
             </div>
         </div>
