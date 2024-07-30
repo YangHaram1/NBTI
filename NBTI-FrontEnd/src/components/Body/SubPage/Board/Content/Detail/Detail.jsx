@@ -127,8 +127,6 @@ export const Detail = () => {
     }
 
 
-
-
     return (
         <div className={styles.container}>
             <div className={styles.top}>
