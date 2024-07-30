@@ -37,7 +37,7 @@ export const Insert = () => {
   const handleAddBtn = () => {
     console.log(board);
 
-    axios.post(`http://${host}/board`, board).then((resp) => {
+    axios.post(`${host}/board`, board).then((resp) => {
       alert("글이 작성되었습니다.");
       navi('/board/free')
     })

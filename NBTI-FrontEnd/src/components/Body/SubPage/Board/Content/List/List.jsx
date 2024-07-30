@@ -17,7 +17,7 @@ export const List = () => {
     else if (boardType === "공지") code = 2;
 
     useEffect(() => {
-        axios.get(`http://${host}/board/${code}`).then((resp) => {
+        axios.get(`${host}/board/${code}`).then((resp) => {
             console.log("게시판 : " + resp.data);
             setBoardList(resp.data);
         });
