@@ -69,12 +69,13 @@ const Signup = () => {
     };
 
     const getLevelName = (level) => {
-        if (!level) return '레벨 없음';
+        if (!level) return '';
         if (level.total === 'Y') return '전체 권한';
         if (level.hr === 'Y') return 'HR 권한';
         if (level.reservation === 'Y') return '예약 권한';
         if (level.message === 'Y') return '메시지 권한';
         if (level.task === 'Y') return '업무 권한';
+        if (level.payment==='Y') return '결제 권한';
         return '권한 없음';
     };
 
@@ -160,7 +161,7 @@ const Signup = () => {
                 onChange={handleChange}
                 required
             >
-                <option value="">회원 레벨 선택</option>
+                <option value="">권한 선택</option>
                 {levels.map(level => (
                     <option key={level.seq} value={level.seq}>
                         {getLevelName(level)}
