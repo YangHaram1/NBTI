@@ -74,8 +74,14 @@ public class Group_chatController {
 		}
 		
 		for(int i=0;i<chatList.size();i++) {
-			int size=mserv.members(list.get(i).getGroup_seq()).size();
+			int size=0;
 			Group_chatDTO dto = chatList.get(i);
+			for (Group_memberDTO MembetDTO : list) {
+				if(MembetDTO.getGroup_seq()==dto.getSeq()) {
+					size=mserv.members(MembetDTO.getGroup_seq()).size();
+					break;
+				}
+			}
 			result.add(new Group_chatSizeDTO(dto.getSeq(),dto.getName(),dto.getAlarm(),dto.getBookmark(),size));
 		}
 		

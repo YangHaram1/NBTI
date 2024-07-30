@@ -10,14 +10,17 @@
 	</insert>
 	
 	<select id="check" resultType="Integer">
-		SELECT group_seq
-		FROM GROUP_MEMBER
-		WHERE MEMBER_ID IN 
+		select group_seq
+		from group_member
+		where member_id in
 		<foreach item="member_id" index="index" collection="list" open="(" separator="," close=")">
             #{member_id}
         </foreach>
-		GROUP BY group_seq
-		HAVING COUNT(DISTINCT MEMBER_ID) = #{size}
+		group by group_seq
+		having count(DISTINCT MEMBER_ID) = #{size}
+		and count(*)=(
+			select count(*) from group_member gm where gm.group_seq= group_member.group_seq
+		)
 	</select>
 	
 	<select id="list" resultType="com.nbti.dto.Group_memberDTO">
