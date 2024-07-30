@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,11 +49,19 @@ public class AuthController {
 	      return ResponseEntity.ok(dto.getId()); // 로그인에 성공한 아이디 를 돌려보낸다
 	   }
 	
-	@GetMapping
-	public ResponseEntity<List<ChatDTO>> get(){
-		
-		//System.out.println(session.getAttribute("loginID"));
-		ResponseEntity.status(HttpStatus.UNAUTHORIZED);
-		return ResponseEntity.ok(null);
-	}
+	   @GetMapping
+	   public ResponseEntity<List<ChatDTO>> get(){
+			
+		   //System.out.println(session.getAttribute("loginID"));
+		   ResponseEntity.status(HttpStatus.UNAUTHORIZED);
+		   return ResponseEntity.ok(null);
+	   }
+	
+	   //로그아웃
+	   @DeleteMapping
+	   public ResponseEntity<Void> logout(){
+		   System.out.println("로그아웃 확인");
+		   session.invalidate();
+		   return ResponseEntity.ok().build();
+	   }
 }

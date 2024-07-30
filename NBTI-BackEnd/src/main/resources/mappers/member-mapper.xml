@@ -23,14 +23,21 @@
 		select * from members
 	</select>
 	
-<insert id="insert" parameterType="com.nbti.dto.MembersDTO">
-   INSERT INTO members (
-    id, pw, name, email, team_code, job_code, member_level, member_call, address, birth, gender, ent_yn, vacation_period, enter_date
-) VALUES (
-    #{id}, #{pw}, #{name}, #{email}, #{team_code}, #{job_code}, #{member_level}, #{member_call}, #{address}, #{birth}, #{gender}, #{ent_yn}, #{vacation_period}, SYSDATE
-)
-</insert>
-
+	<insert id="insert" parameterType="com.nbti.dto.MembersDTO">
+	   INSERT INTO members (
+	    id, pw, name, email, team_code, job_code, member_level, member_call, address, birth, gender, ent_yn, vacation_period, enter_date
+	) VALUES (
+	    #{id}, #{pw}, #{name}, #{email}, #{team_code}, #{job_code}, #{member_level}, #{member_call}, #{address}, #{birth}, #{gender}, #{ent_yn}, #{vacation_period}, SYSDATE
+	)
+	</insert>
+	
+	<select id="checkPw" resultType="boolean">
+		select count(*) from members where id = #{id} and pw = #{pw}
+	</select>
+	
+	<update id="changePw">
+		update members set pw = #{pw} where id = #{id}
+	</update>
 
 </mapper>
 
