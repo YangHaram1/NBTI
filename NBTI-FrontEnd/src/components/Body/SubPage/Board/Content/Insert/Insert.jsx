@@ -1,6 +1,8 @@
+import axios from "axios";
 import BoardEditor from "../../../../BoardEditor/BoardEditor";
 import styles from "./Insert.module.css";
 import { useState } from 'react';
+import { host } from '../../../../../../config/config'
 
 export const Insert = () => {
 
@@ -18,6 +20,28 @@ export const Insert = () => {
   };
 
 
+  const [board, setBoard] = useState({ title: '', contents: '', board_code: 1 });
+
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+    setBoard((prev) => {
+      return (
+        { ...prev, [name]: value }
+      )
+    })
+  }
+
+  const handleAddBtn = () => {
+    console.log(board);
+
+    axios.post(`http://${host}/board`, board).then((resp) => {
+      console.log("게시물 추가 : ", resp.data);
+      // 추가 성공 후 실행 코드 
+    })
+
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.box} onClick={openPopup}>
@@ -27,13 +51,13 @@ export const Insert = () => {
       <div className={styles.top}>
         <div className={styles.left}>
           <p>제목</p>
-          <input type="text" placeholder="제목을 입력하세요." />
+          <input type="text" name="title" value={board.title} placeholder="제목을 입력하세요." onChange={handleInput} />
           <p className={styles.tempSave}>임시저장 : 2024-07-26-17:13</p>
         </div>
         <div className={styles.right}>
           <div className={styles.btns}>
             <button>임시저장</button>
-            <button>작성완료</button>
+            <button onClick={handleAddBtn}>작성완료</button>
           </div>
         </div>
       </div>
@@ -43,7 +67,7 @@ export const Insert = () => {
         </div>
       </div>
       <div className={styles.contents}>
-        <BoardEditor />
+        <BoardEditor setBoard={setBoard} />
       </div>
 
       {/* 팝업 창 */}
@@ -69,13 +93,6 @@ export const Insert = () => {
           </div>
         </div>
       )}
-
-
-
-
-
-
-
     </div>
   );
 };

@@ -5,16 +5,16 @@ import axios from "axios";
 import { host, api } from "./../../../config/config";
 import styles from "./BoardEditor.module.css";
 
-const BoardEditor = () => {
+const BoardEditor = ({ setBoard }) => {
   const [content, setContent] = useState("");
   const editorRef = useRef();
   const inputRef = useRef(null);
 
-  const handleEditorChange = debounce((content) => {
-    localStorage.setItem("editorContent", content);
-    //setContent(content);
-    // console.log("오잉");
-  }, 300);
+  const handleEditorChange = (content) => {
+    setBoard((prev) => {
+      return { ...prev, contents: content };
+    });
+  };
 
   useEffect(() => {
     const savedContent = localStorage.getItem("editorContent");
@@ -50,7 +50,8 @@ const BoardEditor = () => {
           editorRef.current = editor;
         }}
         init={{
-          height: 126,
+          // height: 126,
+          height: 500,
           menubar: true,
           plugins: "wordcount anchor code image", //image
           toolbar:
@@ -78,14 +79,6 @@ const BoardEditor = () => {
               // 붙여넣기 후에 처리할 로직을 여기에 추가
               console.log("After Paste:", e.node.innerHTML);
             });
-            /*
-            editor.ui.registry.addButton("fileupload", {
-              text: "📁",
-              onSetup: (e) => {},
-              onAction: (e) => {
-                handleUpload();
-              },
-            });*/
             editor.on("keydown", (event) => {
               if (event.key === "Enter") {
                 if (!event.shiftKey) {
