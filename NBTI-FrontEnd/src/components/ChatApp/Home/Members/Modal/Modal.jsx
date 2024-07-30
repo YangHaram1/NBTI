@@ -5,8 +5,8 @@ import React from 'react';
 const Modal=({modalRef,index,item})=>{
 
     const handleChatRoom=()=>{
-        console.log(item)
-        axios.post(`http://${host}/group_chat?member_id=${item}`).then((resp)=>{
+        //console.log(item)
+        axios.post(`http://${host}/group_chat?member_id=${item.id}&&name=${item.name}`).then((resp)=>{
 
         })
     }

@@ -3,24 +3,24 @@ import axios from 'axios';
 import { host } from '../../../../../config/config';
 axios.defaults.withCredentials = true;
 const ChatsModal = ({ modalRef, index, item, setGroup_chats }) => {
-    const seq = item.seq;
+    const group_seq = item.seq;
 
 
-    const handleDelete = () => [
-        axios.delete(`http://${host}/group_member?seq=${seq}`).then((resp) => {
+    const handleDelete = () => {
+        axios.delete(`http://${host}/group_member?group_seq=${group_seq}`).then((resp) => {
             setGroup_chats((prev) => {
                 return (
-                    prev.filter((item) => {
-                        if(item.seq===seq){
+                    prev.filter((temp) => {
+                        if(temp.seq===group_seq){
                             return false;
                         }
                         return true;
                     })
                 )
 
-            })
+            });
         })
-    ]
+    }
 
     return (
         <div className={styles.container} ref={el => modalRef.current[index] = el}>

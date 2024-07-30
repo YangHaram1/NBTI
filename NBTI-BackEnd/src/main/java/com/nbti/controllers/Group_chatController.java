@@ -8,12 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nbti.dto.Group_chatDTO;
+import com.nbti.dto.Group_chatSizeDTO;
 import com.nbti.dto.Group_memberDTO;
 import com.nbti.services.Group_chatService;
 import com.nbti.services.Group_memberService;
@@ -36,7 +36,7 @@ public class Group_chatController {
 	private Group_memberService mserv;
 	
 	@PostMapping
-	public ResponseEntity<Void> post(String member_id) throws Exception {
+	public ResponseEntity<Void> post(String member_id,String name) throws Exception {
 		List<String> list =new ArrayList<>();
 		String loginID= (String) session.getAttribute("loginID");
 		
@@ -45,7 +45,7 @@ public class Group_chatController {
 		boolean check=mserv.check(list);
 		
 		if(!check) {
-			int seq=serv.insert(member_id);
+			int seq=serv.insert(name);
 			
 			List<Group_memberDTO> member_list=new ArrayList<>();
 			for(int i=0; i<list.size();i++) {
@@ -61,12 +61,26 @@ public class Group_chatController {
 	
 	
 	@GetMapping
-	public ResponseEntity<List<Group_chatDTO>> get() throws Exception{
+	public ResponseEntity<List<Group_chatSizeDTO>> get() throws Exception{
 		String loginID= (String) session.getAttribute("loginID");
 		List<Group_memberDTO> list= new ArrayList<>();
 		list=mserv.list(loginID);
+		
+		List<Group_chatDTO> chatList=serv.getList(list);
+		List<Group_chatSizeDTO> result=new ArrayList<>();
+
+		if(chatList==null) {
+			return ResponseEntity.ok(null);
+		}
+		
+		for(int i=0;i<chatList.size();i++) {
+			int size=mserv.members(list.get(i).getGroup_seq()).size();
+			Group_chatDTO dto = chatList.get(i);
+			result.add(new Group_chatSizeDTO(dto.getSeq(),dto.getName(),dto.getAlarm(),dto.getBookmark(),size));
+		}
+		
 		if(list!=null)
-		return ResponseEntity.ok(serv.getList(list));
+		return ResponseEntity.ok(result);
 		
 		return ResponseEntity.ok().build();
 	}

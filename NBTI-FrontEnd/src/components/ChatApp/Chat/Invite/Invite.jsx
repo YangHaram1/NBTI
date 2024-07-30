@@ -1,11 +1,19 @@
 import styles from './Invite.module.css';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import avatar from '../../../../images/user.jpg'
+import { useMemberStore } from '../../../../store/store';
+import { useAuthStore } from './../../../../store/store';
+import axios from 'axios';
+import { ChatsContext } from '../../../../Context/ChatsContext';
+import { host } from '../../../../config/config';
 const Invite = ({ setInvite }) => {
-    const defaultList = ['양하람', '전은미', '송유나', '김지연', '서상혁'];
-    const [list, setList] = useState(defaultList);
+    const {members} =useMemberStore();
+    const {loginID} =useAuthStore();
+    const [list, setList] = useState([]);
     const [nameSearch, setNameSearch] = useState('');
     const [isChecked, setIsChecked] = useState([]);
+    const {chatSeq} =useContext(ChatsContext);
+    const [invited,setInvited]=useState([]);
     const handleNameSearch = (e) => {
         setNameSearch(e.target.value);
     }
@@ -18,29 +26,64 @@ const Invite = ({ setInvite }) => {
         const initialCheckedState = list.map(() => false);
         setIsChecked(initialCheckedState);
     }, [list]);
-
+    
+    useEffect(()=>{
+        axios.get(`http://${host}/group_member?group_seq=${chatSeq}`).then((resp)=>{
+            //console.log(resp.data);
+            setInvited(resp.data);
+        })
+    },[])
 
     const handleList = useCallback(() => {
-        const result = defaultList.map((item, index) => {
-            if (item.includes(nameSearch)) {
-
-                return item;
-            }
-            return null;
-        }).filter((item) => {
-            return item !== null
-        })
-
-        setList(result);
-    }, [nameSearch])
+        if(invited.length>0){
+            const result= members.filter((item)=>{
+                let check=false;
+                invited.forEach(element => {
+                
+                   if(item.id===element.member_id){
+                        check=true;
+                   } 
+                });
+                if(check) return false;
+                return true;
+            }).map((item, index) => {
+                if (item.name.includes(nameSearch)) {
+    
+                    return item;
+                }
+                return null;
+            }).filter((item) => {
+                return item !== null
+            })
+    
+            setList(result);
+        }
+      
+    }, [nameSearch,invited])
 
     useEffect(() => {
         handleList();
-    }, [handleList])
+    }, [handleList]);
 
     const handleCancel = () => {
         setInvite(false);
     }
+
+    const handleAdd=()=>{
+        const data=list.filter((item,index)=>{
+            if(isChecked[index]===true){
+                return true;
+            }
+            return false;
+        }).map((item)=>{
+            return item.id;
+        })
+        console.log(data);
+        axios.post(`http://${host}/group_member`,data).then((resp)=>{
+            setInvite(false);
+        })
+    }
+
     return (
         <div className={styles.container}>
             <div>
@@ -55,10 +98,10 @@ const Invite = ({ setInvite }) => {
                                     <img src={avatar} alt="" className={styles.avatar} />
                                 </div>
                                 <div className={styles.itemDiv2}>
-                                    {item}
+                                    {item.name}
                                 </div>
                                 <div className={styles.checkbox}>
-                                    <input type="checkbox" checked={isChecked[index] || false} onChange={(e) => { handleCheck(index) }} />
+                                    <input type="checkbox" checked={isChecked[index] || false} onChange={(e) => { handleCheck(index) }}  value={item.id}/>
                                 </div>
                             </div>
                         );
@@ -67,13 +110,12 @@ const Invite = ({ setInvite }) => {
             </div>
             <div className={styles.button}>
                 <div>
-                    <button className={styles.btn1}>➕</button>
+                    <button className={styles.btn1} onClick={handleAdd}>➕</button>
                 </div>
                 <div>
                     <button className={styles.btn2} onClick={handleCancel}>❌</button>
                 </div>
             </div>
-
         </div>
     )
 }

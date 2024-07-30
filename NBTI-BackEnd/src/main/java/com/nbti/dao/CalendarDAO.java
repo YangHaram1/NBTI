@@ -13,8 +13,8 @@ public class CalendarDAO {
 	private SqlSession mybatis;
 	
 	//캘린더 입력
-	public void insert (CalendarDTO dto) {
-		dto.setMember_id("test");
+	public void insert (CalendarDTO dto)  throws Exception {
+//		dto.setMember_id("test");
 		System.out.println("dto seq : " + dto.getSeq());
 		System.out.println("dto member id : " + dto.getMember_id());
 		System.out.println("dto title : " + dto.getTitle());
@@ -25,19 +25,13 @@ public class CalendarDAO {
 		mybatis.insert("Calendar.insert",dto);
 		System.out.println("dto seq : " + dto.getSeq());
 	}
-	
-	
-//	public void edit (@RequestBody CalendarDTO dto) {
-//		dto.setMember_id("test");
-//		mybatis.update("Calendar.edit",dto);
-//	}
-//    // 캘린더 제목 업데이트
-//    public void updateCalendar(CalendarDTO dto) {
-//        mybatis.update("Calendar.edit", dto);
-//    }
-//
-//    // 일정 제목 업데이트
-//    public void updateScheduleTitle(scheduleTitleDTO scheduleTitleDTO) {
-//        mybatis.update("ScheduleTitle.edit", scheduleTitleDTO);
-//    }
+    // 캘린더 제목 업데이트
+    public void editTitle(CalendarDTO dto)  throws Exception {
+        mybatis.update("Calendar.editTitle", dto);
+    }
+
+    public void updateCalendarTitle(CalendarDTO dto)  throws Exception {
+        mybatis.update("Calendar.updateCalendarTitle", dto);
+    }
+
 }

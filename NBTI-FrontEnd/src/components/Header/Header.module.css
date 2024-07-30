@@ -117,3 +117,18 @@ img {
   height: 100%;
   border-radius: 100px;
 }
+.container .right .user_admin {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 15px;
+  transition-duration: 0.4s;
+  color: #6b9080;
+}
+
+.container .right .user_admin:hover {
+  color: #a1d3bc;
+}
