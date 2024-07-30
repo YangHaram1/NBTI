@@ -23,7 +23,8 @@ const ChatApp = ({websocketRef}) => {
     },[loginID])
  
     if(chatNavi===''){
-        return false;
+      if(chatAppRef.current!=null)
+      chatAppRef.current.style.display='none';
     }
     return (
       
