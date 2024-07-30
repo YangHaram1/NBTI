@@ -10,6 +10,7 @@ import { ChatsContext } from './../../../Context/ChatsContext';
 axios.defaults.withCredentials = true;
 
 const Home = () => {
+
     //이미지는 <a href="/kr">Freeimages.com</a>에서 가져왔습니다.
     const [color, setColor] = useState({ member: false, chat: false, alarm: false });
     const [name ,setName] =useState();
