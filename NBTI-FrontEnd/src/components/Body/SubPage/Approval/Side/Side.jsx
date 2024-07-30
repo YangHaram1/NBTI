@@ -3,7 +3,8 @@ import styles from "./Side.module.css";
 import { useNavigate } from "react-router-dom";
 import Modal from "../Content/Modal/Modal";
 import SecondModal from "../Content/SecondModal/SecondModal";
-import { Form_Detail } from "../Content/Form_Detail/Form_Detail";
+import DocTree from "./DocTree/DocTree";
+import { FormDetail } from "../Content/FormDetail/FormDetial";
 
 export const Side = () => {
   // ===== 메뉴 토글 =====
@@ -189,7 +190,8 @@ export const Side = () => {
             <div className={styles.form_menu}>
               <div className={styles.form_menu_title}> 문서 종류 </div>
               <div className={styles.form_menu_tree}>
-                <ul>
+                <DocTree/>
+                {/* <ul>
                   <li>목록1
                     <ul>
                       <li>세부목록1</li>
@@ -214,13 +216,13 @@ export const Side = () => {
                       <li>세부목록2</li>
                     </ul>
                   </li>
-                </ul>
+                </ul> */}
               </div>
             </div>
             <div className={styles.form_check}>
               {/* <div>상세정보</div>
               <div className="form_detail_title"></div> */}
-              <Form_Detail />
+              <FormDetail />
             </div>
           </div>
           <div className={styles.form_btns}>
