@@ -7,7 +7,7 @@ export const Contents = () => {
   return (
     <div className={styles.container}>
       <Routes>
-      <Route path='/userList' element={<UserList/>}></Route>
+      <Route path='/userlist' element={<UserList/>}></Route>
       <Route path="/signup" element={<Signup />} />
       </Routes>
     </div>

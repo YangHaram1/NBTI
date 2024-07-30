@@ -67,6 +67,11 @@ public class MembersController {
         List<MembersDTO> members = mServ.selectAll();
         return ResponseEntity.ok(members);  // HTTP 200 OK와 함께 members를 반환
     }
+    @GetMapping("/selectMembers")
+    public ResponseEntity<java.util.List<Map<String, Object>>> selectMembers(){
+        List<Map<String, Object>> selectMembers = mServ.getMembers();
+        return ResponseEntity.ok(selectMembers);
+    }
     @GetMapping("/selectDepartment")
     public ResponseEntity<List<DepartmentDTO>> selectDepartment(){
     	List<DepartmentDTO> dapt = dServ.selectDepartment();
