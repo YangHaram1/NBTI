@@ -81,6 +81,17 @@ const Chat = () => {
           return [...prev, chat]
         })
       }
+
+      const notificationTitle = "새 메시지";
+      const notificationOptions = {
+        body: chat,
+        icon: {avatar} // 알림 아이콘의 경로
+      };
+    
+      // 알림 생성
+      if (Notification.permission === "granted") {
+        new Notification(notificationTitle, notificationOptions);
+      }
     
     }
 

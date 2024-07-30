@@ -5,34 +5,32 @@ import { host } from '../../../../config/config';
 
 const UserList = () => {
     const [users, setUsers] = useState([]);
-    const [levels, setLevels] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // 레벨 이름을 매핑할 수 있는 함수
-    const getLevelName = (levelSeq) => {
-        const level = levels.find(l => l.seq === levelSeq);
-        if (!level) return '레벨 없음';
-        if (level.total === 'Y') return '전체 권한';
-        if (level.hr === 'Y') return '인사 권한';
-        if (level.reservation === 'Y') return '예약 권한';
-        if (level.message === 'Y') return '메시지 권한';
-        if (level.task === 'Y') return '업무 권한';
-        return '권한 없음';
-    };
+    // 권한 이름을 반환하는 함수
+    const levelMap = {
+        1: '권한 없음',
+        2: '전체 권한',
+        3: '인사 권한',
+        4: '예약 권한',
+        5:  '메시지 권한',
+        6:   '업무 권한',
+        7 : ' 결제 권한 '
 
+    };
+    const getLevelName = (levelSeq) => {
+        return levelMap[levelSeq] || '권한 없음';
+    };
     useEffect(() => {
-        // 사용자 데이터와 레벨 데이터 모두 가져오기
         const fetchData = async () => {
             try {
-                const usersResponse = await axios.get(`http://${host}/members/selectAll`);
-                setUsers(usersResponse.data);
-
-                const levelsResponse = await axios.get(`http://${host}/members/selectLevel`);
-                setLevels(levelsResponse.data);
-
+                const response = await axios.get(`http://${host}/members/selectMembers`);
+                console.log('Fetched Users:', response.data); // 데이터 확인
+                setUsers(response.data); // 상태에 데이터 저장
                 setLoading(false);
             } catch (err) {
+                console.error('Fetch Error:', err); // 에러 확인
                 setError('사용자 데이터를 가져오는 데 실패했습니다.');
                 setLoading(false);
             }
@@ -41,12 +39,12 @@ const UserList = () => {
         fetchData();
     }, []);
 
-    if (loading) return <div>로딩 중...</div>;
-    if (error) return <div>{error}</div>;
+    if (loading) return <div className={styles.loading}>로딩 중...</div>;
+    if (error) return <div className={styles.error}>{error}</div>;
 
     return (
         <div className={styles.container}>
-            <h2>사용자 목록</h2>
+            <h2 className={styles.title}>사용자 목록</h2>
             {users.length > 0 ? (
                 <table className={styles.userTable}>
                     <thead>
@@ -66,18 +64,18 @@ const UserList = () => {
                     </thead>
                     <tbody>
                         {users.map(user => (
-                            <tr key={user.id}>
-                                <td>{user.name}</td>
-                                <td>{user.id}</td>
+                            <tr key={user.ID}>
+                                <td>{user.NAME || '이름 없음'}</td>
+                                <td>{user.ID || '아이디 없음'}</td>
                                 <td>{'*'.repeat(8)}</td>
-                                <td>{user.email}</td>
-                                <td>{user.team_code}</td>
-                                <td>{user.job_code}</td>
-                                <td>{getLevelName(user.member_level)}</td>
-                                <td>{user.member_call}</td>
-                                <td>{user.gender === 'M' ? '남성' : '여성'}</td>
-                                <td>{user.ent_yn === 'Y' ? '휴직' : '재직'}</td>
-                                <td>{user.vacation_period}일</td>
+                                <td>{user.EMAIL || '이메일 없음'}</td>
+                                <td>{user.TEAM_NAME || '팀명 없음'}</td>
+                                <td>{user.JOB_NAME || '직급명 없음'}</td>
+                                <td>{getLevelName(user.MEMBER_LEVEL) || '권한 없음'}</td> {/* 권한 출력 */}
+                                <td>{user.MEMBER_CALL || '전화번호 없음'}</td>
+                                <td>{user.GENDER === 'M' ? '남성' : user.GENDER === 'F' ? '여성' : '성별 정보 없음'}</td>
+                                <td>{user.ENT_YN === 'Y' ? '휴직' : '재직'}</td>
+                                <td>{user.VACATION_PERIOD != null ? `${user.VACATION_PERIOD}일` : '휴가 정보 없음'}</td>
                             </tr>
                         ))}
                     </tbody>

@@ -2,7 +2,7 @@ import styles from './Profile.module.css';
 const Profile =({profileRef,index})=>{
 
     const handleCancel=()=>{
-
+        profileRef.current[index].style.display='none';
     }
     return (
             <div className={styles.container} ref={el=>profileRef.current[index]=el}>
@@ -18,7 +18,7 @@ const Profile =({profileRef,index})=>{
                     멤버 이름
                 </div>
                 <div className={styles.content} >
-                    멤버 정조
+                    멤버 정보
                 </div>
                
             </div>
