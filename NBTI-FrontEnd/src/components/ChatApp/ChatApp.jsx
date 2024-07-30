@@ -8,25 +8,19 @@ import styles from './ChatApp.module.css';
 import { ChatsContext } from '../../Context/ChatsContext';
 import { useContext } from 'react';
 import { useEffect } from 'react';
+import { useAuthStore } from './../../store/store';
 axios.defaults.withCredentials = true;
 
 const ChatApp = ({websocketRef}) => {
-    const { chatAppRef,chatNavi,ws} = useContext(ChatsContext);
+    const { chatAppRef,chatNavi,ws,setChatNavi} = useContext(ChatsContext);
+    const { loginID } = useAuthStore;
     ws.current=websocketRef.current;
     useEffect(()=>{
-        if ("Notification" in window) {
-            Notification.requestPermission().then(permission => {
-              if (permission === "granted") {
-                console.log("Notification permission granted.");
-              } else if (permission === "denied") {
-                console.log("Notification permission denied.");
-              //  alert("알림이 차단되었습니다. 브라우저 설정에서 알림을 허용해주세요.");
-              } else {
-                console.log("Notification permission default.");
-              }
-            });
-          }
-    },[])
+        if(loginID!==null){
+          setChatNavi('chat');
+          console.log("chat");
+        }
+    },[loginID])
  
     if(chatNavi===''){
         return false;
