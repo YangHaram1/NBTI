@@ -30,7 +30,7 @@ const BoardEditor = ({ setBoard }) => {
     const formData = new FormData();
     formData.append("file", file);
     axios
-      .post(`http://${host}/chatUpload`, formData)
+      .post(`${host}/chatUpload`, formData)
       .then((response) => {
         //쿼리 파라미터 형식으로 전송된다
         console.log("Post successful:", response.data);

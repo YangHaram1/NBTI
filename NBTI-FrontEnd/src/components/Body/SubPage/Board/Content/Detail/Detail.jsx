@@ -30,7 +30,7 @@ export const Detail = () => {
         }
 
         if (boardSeq !== -1) {
-            axios.get(`http://${host}/board/${boardSeq}/${code}`).then((resp) => {
+            axios.get(`${host}/board/${boardSeq}/${code}`).then((resp) => {
                 setDetail(resp.data);
             })
         }
@@ -56,7 +56,7 @@ export const Detail = () => {
     const handleDelBtn = () => {
         if (window.confirm("정말 삭제하시겠습니까?")) {
             if (boardSeq !== -1) {
-                axios.delete(`http://${host}/board/${detail.seq}`).then(resp => {
+                axios.delete(`${host}/board/${detail.seq}`).then(resp => {
                     navi('/board/free');
                 })
             }
@@ -94,7 +94,7 @@ export const Detail = () => {
 
         console.log("data: ", data);
 
-        axios.post(`http://${host}/board`, data).then((resp) => {
+        axios.post(`${host}/board`, data).then((resp) => {
 
             // console.log("data2222: ", resp.data);
 
