@@ -11,9 +11,11 @@ import Search from './Search/Search.jsx';
 import { host } from '../../../config/config.js'
 import { useAuthStore } from './../../../store/store';
 import './Chat.css';
-
+import { toast } from 'react-toastify';
 import avatar from '../../../images/user.jpg'
 import Invite from './Invite/Invite.jsx';
+
+import 'react-toastify/dist/ReactToastify.css'
 axios.defaults.withCredentials = true;
 const Chat = () => {
 
@@ -52,9 +54,9 @@ const Chat = () => {
   // WebSocket 연결을 설정하는 useEffect
   useEffect(() => {
     const url=host.replace(/^https?:/, '')
-    ws.current = new WebSocket(`${url}/chatWebsocket`);
+   // ws.current = new WebSocket(`${url}/chatWebsocket`);
 
-    ws.current.onopen = () => {
+  //  ws.current.onopen = () => {
       axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {
         
         setChats(resp.data);
@@ -62,8 +64,7 @@ const Chat = () => {
       })
       updateSidebarPosition();
       updateSearchPosition();
-      console.log('Connected to WebSocket');
-    }
+   // }
     ws.current.onclose = () => {
       console.log('Disconnected from WebSocket');
     };
@@ -82,32 +83,49 @@ const Chat = () => {
           return [...prev, chat]
         })
       }
+      console.log("메세지보냄");
+      /*toast("알림", {
+        position: "top-left", // 위치 설정
+        autoClose: 5000,       // 자동 닫힘 시간 (5초)
+        hideProgressBar: true, // 진행 바 숨기기
+      });*/
+      notify(chat);
 
+      // 알림 생성
       const notificationTitle = "새 메시지";
       const notificationOptions = {
         body: chat,
         icon: {avatar} // 알림 아이콘의 경로
       };
-    
-      // 알림 생성
+        
       if (Notification.permission === "granted") {
         new Notification(notificationTitle, notificationOptions);
       }
-    
+      ///
     }
 
     window.addEventListener('resize', updateSidebarPosition);
     console.log("셋팅");;
   
     return () => {
-      ws.current.close();
       window.removeEventListener('resize', updateSidebarPosition);
     };
 
   }, []); 
 
 
-
+  const notify = (item) => {
+    console.log("알림");
+    toast.info(`${item.member_id}님한테 메세지가 왔습니다`, {
+      position: "top-right", // 오른쪽 위에 표시
+      autoClose: 5000, // 5초 후 자동으로 닫힘
+      hideProgressBar: false, // 진행 바 숨기기: false로 설정하여 진행 바 표시
+      closeOnClick: true, // 클릭 시 닫기
+      pauseOnHover: true, // 마우스 오버 시 일시 정지
+      draggable: true, // 드래그 가능
+      rtl: false // RTL 텍스트 지원 비활성화
+    });
+  };
 
   const handleCancel = () => {
     setChatNavi("home");

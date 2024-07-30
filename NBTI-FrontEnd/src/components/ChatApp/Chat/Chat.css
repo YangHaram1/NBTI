@@ -2,3 +2,8 @@
     z-index: 9999 !important;
     position: fixed !important;
 }
+/* styles.css */
+.my-toast {
+    background-color: #333 !important;
+    color: red !important;
+  }
