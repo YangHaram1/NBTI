@@ -20,7 +20,7 @@ const Login = () => {
 
     const handleLogin = () => {
         axios
-            .post(`http://${host}/auth`, auth)
+            .post(`${host}/auth`, auth)
             .then(resp => {
                 console.log('Server Response:', resp.data);
                 sessionStorage.setItem('loginID', resp.data);
