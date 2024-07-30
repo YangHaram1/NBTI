@@ -3,16 +3,27 @@ package com.nbti.dto;
 import java.sql.Timestamp;
 
 public class BoardDTO {
-	private int seq=-1;
+	private int seq;
 	private String title;
 	private String contents;
-	private String member_id="";
-	private Timestamp write_date=null;
-	private int view_count=0;
-	private int board_code=1;
+	private String member_id;
+	private Timestamp write_date;
+	private int view_count;
+	private int board_code;
 	
 	public BoardDTO() {
 	}
+	
+	public BoardDTO(String title, String contents) {
+		this.title=title;
+		this.contents= contents;
+	}
+	
+	public BoardDTO(int seq, int code) {
+		this.seq=seq;
+		this.board_code= code;
+	}
+	
 
 	public BoardDTO(int seq, String title, String contents, String member_id, Timestamp write_date, int view_count,
 			int board_code) {

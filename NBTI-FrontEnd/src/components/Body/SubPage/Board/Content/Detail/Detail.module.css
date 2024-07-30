@@ -135,9 +135,10 @@
   height: 30px;
   border-radius: 50%;
 }
-.container .reply .replyInput > textarea {
+.container .reply .replyInput .inputText {
   width: 88%;
-  height: 34px;
+  height: auto;
+  min-height: 34px;
   min-height: 34px;
   margin: 0 20px;
   padding: 4px 16px 4px 5px;

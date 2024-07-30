@@ -22,13 +22,8 @@ public class BoardDAO {
 	}
 	
 	// 게시글 출력
-	public BoardDTO selectBoard(int seq, int code) {
-		
-		Map<String, Integer> params = new HashMap<>();
-		params.put("seq", seq);
-		params.put("code", code);
-
-		return mybatis.selectOne("Board.selectBoard", params);
+	public BoardDTO selectBoard(BoardDTO dto) {
+		return mybatis.selectOne("Board.selectBoard", dto);
 	}
 	
 	// 게시글 작성
@@ -42,13 +37,8 @@ public class BoardDAO {
 	}
 	
 	// 게시글 수정
-	public void modify(BoardDTO dto) {
-		
-		Map<String, Object> params = new HashMap<>();
-		params.put("title", dto.getTitle());
-		params.put("contents", dto.getContents());
-		
-		mybatis.update("Board.modify",params);
+	public void modify(BoardDTO dto) {		
+		mybatis.update("Board.modify",dto);
 	}
 	
 	
