@@ -93,16 +93,12 @@ export const Detail = () => {
 
     // 저장 click
     const handleSaveBtn = () => {
-
-
         axios.post(`http://${host}/board`, data).then((resp) => {
 
             console.log("data2222: " + resp.data);
 
-
             setTitle(data.title);
             setContent(data.content);
-            // setData(updatedData); // 상태를 업데이트된 데이터로 설정
 
             setIsEditing(false);
         })
