@@ -2,12 +2,12 @@ package com.nbti.services;
 
 import java.util.List;
 
-import org.apache.catalina.Contained;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nbti.dao.CalendarDAO;
 import com.nbti.dto.CalendarDTO;
+import com.nbti.dto.ScheduleTitleDTO;
 
 @Service
 public class CalendarService {
@@ -29,11 +29,16 @@ public class CalendarService {
 //        cdao.updateCalendarTitle(dto); 
 //    }
     
-    //List 불러오기
+	// 현재 등록된 캘린더 전체 목록
     public List<CalendarDTO> list () throws Exception{
     	
     	List<CalendarDTO> list = cdao.list();
     	return list;
+    }
+    
+    //내 캘린더의 이름 (공유/개인)
+    public List<ScheduleTitleDTO> scheduleName() throws Exception{
+    	return cdao.scheduleName();
     }
 
 
