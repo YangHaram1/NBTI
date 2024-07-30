@@ -1,5 +1,6 @@
 package com.nbti.dao;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -54,6 +55,16 @@ public class MembersDAO {
 		mybatis.insert("Member.insert",dto);
 	}
 	
+	public boolean checkPw(HashMap<String, String> map) {
+		return mybatis.selectOne("Member.checkPw",map);
+	}
 	
+	public boolean changePw(HashMap<String, String> map) {
+		int result = mybatis.update("Member.changePw",map);
+		if(result > 0) {
+			return true;
+		}else {return false;}
+	}
+
 
 }
