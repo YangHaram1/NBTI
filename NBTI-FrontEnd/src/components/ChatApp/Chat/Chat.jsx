@@ -51,7 +51,8 @@ const Chat = () => {
 
   // WebSocket 연결을 설정하는 useEffect
   useEffect(() => {
-    ws.current = new WebSocket(`ws://${host}/chatWebsocket`);
+    const url=host.replace(/^https?:/, '')
+    ws.current = new WebSocket(`${url}/chatWebsocket`);
 
     ws.current.onopen = () => {
       axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {
