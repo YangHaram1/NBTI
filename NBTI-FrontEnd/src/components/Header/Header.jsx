@@ -4,6 +4,7 @@ import image from "../../images/user.jpg";
 import { useNavigate } from 'react-router-dom';
 import { PopUp } from "./PopUp/PopUp";
 import { ChatsContext } from './../../Context/ChatsContext';
+import { LogoutPopUp } from './LogoutPopUp/LogoutPopUp';
 
 export const Header = () => {
 
@@ -15,6 +16,12 @@ export const Header = () => {
     const togglePopUp = () => {
         setShowPopUp(prevState => !prevState); // 상태를 토글
     };
+
+    // 로그아웃 & 마이페이지 팝업 관련 
+    const [showNewPopup, setShowNewPopup] = useState(false);
+    const newMenuRef = useRef(null);
+    const newPopupRef = useRef(null);
+
     // 다른 곳 click시 popUp창 hide
     const handleClickOutside = (event) => {
         if (
@@ -27,10 +34,34 @@ export const Header = () => {
         }
     };
 
+    // 로그아웃 & 마이페이지 팝업 토글
+    const toggleNewPopup = () => {
+        setShowNewPopup(prevState => !prevState);
+    }
+
+    // 다른 곳 click시 popUp창 hide
+    const handleClickOutsideNew = (event) => {
+        if (
+            newMenuRef.current &&
+            !newMenuRef.current.contains(event.target) &&
+            newPopupRef.current &&
+            !newPopupRef.current.contains(event.target)
+        ) {
+            setShowNewPopup(false);
+        }
+    };
+
     useEffect(() => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutsideNew);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutsideNew);
         };
     }, []);
 
@@ -76,13 +107,14 @@ export const Header = () => {
                 <div className={styles.alarm}>
                     <i className="fa-regular fa-bell fa-xl"></i>
                 </div>
-                <div className={styles.user_info}>
-                    <div className={styles.user_profile_img} onClick={() => { navi("/mypage") }}>
+                <div className={`${styles.user_info} ${showNewPopup ? styles.dropdownActive : ''}`}>
+                    <div className={styles.user_profile_img} onClick={toggleNewPopup} ref={newMenuRef}>
                         <img src={image} alt="" />
                     </div>
                 </div>
             </div>
             {showPopUp && <PopUp ref={popupRef} onClose={() => setShowPopUp(false)} />} {/* 조건부 렌더링 */}
+            {showNewPopup && <LogoutPopUp ref={newPopupRef} onClose={() => setShowNewPopup(false)} />} {/* 조건부 렌더링 */}
         </div>
     );
 };
