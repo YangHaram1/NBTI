@@ -15,6 +15,7 @@ export const Detail = () => {
     const { boardSeq, boardType } = useBoardStore();
     const [detail, setDetail] = useState({}); // 게시글의 detail 정보
     const [board, setBoard] = useState({ title: '', contents: '', board_code: 1 });
+    const [currentUser, setCurrentUser] = useState(null); // 로그인된 사용자 정보 상태
 
     // 게시판 코드
     let code = 1;
@@ -44,6 +45,16 @@ export const Detail = () => {
             document.head.removeChild(link); // 언마운트될 때 스타일시트를 제거
         };
     }, []);
+
+
+    useEffect(() => {
+        axios.get(`${host}/members`).then((resp) => {
+            setCurrentUser(resp.data);
+            // console.log("로그인 id : ", currentUser.id);
+        })
+    }, [])
+
+
 
 
     /** ================[ 삭 제 ]============= */
@@ -127,6 +138,8 @@ export const Detail = () => {
             })
         })
     }
+
+
 
 
 
@@ -230,7 +243,9 @@ export const Detail = () => {
                                         <i className="fa-regular fa-heart fa-lg" />
                                         <p>5</p>
                                     </div>
-                                    <button onClick={() => { handleDelReplyBtn(item.seq) }}>X</button>
+                                    {currentUser && currentUser.id === item.member_id && (
+                                        <button onClick={() => { handleDelReplyBtn(item.seq) }}>X</button>
+                                    )}
                                 </div>
                             )
                         })

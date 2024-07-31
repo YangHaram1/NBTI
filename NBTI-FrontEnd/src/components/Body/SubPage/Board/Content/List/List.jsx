@@ -23,9 +23,9 @@ export const List = () => {
     });
   }, [boardType]);
 
-  const handleViewCount = (seq) => {
-    axios.post(`${host}/board`);
-  };
+  //   const handleViewCount = (seq) => {
+  //     axios.post(`${host}/board`);
+  //   };
 
   // 페이지네이션
   useEffect(() => {}, []);
@@ -78,7 +78,7 @@ export const List = () => {
                   onClick={() => {
                     navi("/board/detail");
                     setBoardSeq(item.seq);
-                    handleViewCount(item.seq);
+                    // handleViewCount(item.seq);
                   }}
                 >
                   {item.title}
