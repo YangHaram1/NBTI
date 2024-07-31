@@ -97,9 +97,9 @@ export const Side = ({setAddOpen}) => {
       });
     };
 
-    axios.get(`${host}/calendar/title`).then((resp)=>{
-      console.log(resp)
-    })
+    // axios.get(`${host}/calendar/title`).then((resp)=>{
+    //   console.log(resp)
+    // })
 
   
 

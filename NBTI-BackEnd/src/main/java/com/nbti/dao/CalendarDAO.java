@@ -43,9 +43,14 @@ public class CalendarDAO {
     	return mybatis.selectList("Calendar.list");
     }
     
-    public List<ScheduleTitleDTO> scheduleName() throws Exception {
-        return mybatis.selectList("Calendar.scheduleName");
+    //수정
+    public void update (CalendarDTO dto) throws Exception {
+    	mybatis.update("Calendar.update",dto);
     }
+    
+//    public List<ScheduleTitleDTO> scheduleName() throws Exception {
+//        return mybatis.selectList("Calendar.scheduleName");
+//    }
 
 
 }

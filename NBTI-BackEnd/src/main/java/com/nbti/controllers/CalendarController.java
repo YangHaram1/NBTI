@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,12 +52,18 @@ public class CalendarController {
     	return ResponseEntity.ok(list);
     }
     
-    @GetMapping("/title")
-    public ResponseEntity<List<ScheduleTitleDTO>> scheduleName() throws Exception{
-    	return ResponseEntity.ok(cserv.scheduleName());
+//    @GetMapping("/title")
+//    public ResponseEntity<List<ScheduleTitleDTO>> scheduleName() throws Exception{
+//    	return ResponseEntity.ok(cserv.scheduleName());
+//    }
+
+    //수정하기 
+    @PutMapping
+    public ResponseEntity<Void> update (@RequestBody CalendarDTO dto) throws Exception{
+    	cserv.update(dto);
+    	return ResponseEntity.ok().build();
     }
-
-
+ 
     
     
     
