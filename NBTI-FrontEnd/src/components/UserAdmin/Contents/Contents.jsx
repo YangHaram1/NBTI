@@ -2,7 +2,7 @@ import styles from './Contents.module.css';
 import { Routes, Route } from 'react-router-dom';
 import Signup from './Signup/Signup';
 import UserList from './UserList/UserList';
-import UserUpdate from './UserUpdate/UserUpdate';
+import UserDetail from './UserDetail/UserDetail';
 import { useState } from 'react';
 
 export const Contents = () => {
@@ -13,7 +13,7 @@ export const Contents = () => {
       <Route path='/useradmin' element={<UserList setUserDetail={setUserDetail} />} />
                 <Route path='signup' element={<Signup />} />
                 <Route path='userlist' element={<UserList setUserDetail={setUserDetail} />} />
-                <Route path='userupdate/:id' element={<UserUpdate />} />
+                <Route path='userdetail/:id' element={<UserDetail/>} />
       </Routes>
     </div>
   );
