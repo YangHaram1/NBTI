@@ -28,7 +28,7 @@ export const Detail = () => {
     useEffect(() => {
         if (boardSeq === -1) navi('/board'); // detail 화면에서 f5 -> 목록으로 이동
         if (boardSeq !== -1) {
-            axios.get(`${host}/board/${boardSeq}/${code}`).then((resp) => {
+            axios.get(`${host}/board/${boardSeq}/${code}`).then((resp) => { // 게시글 출력
                 setDetail(resp.data); // 취소 시 원본 데이터
                 setBoard(resp.data);
             })
@@ -92,13 +92,13 @@ export const Detail = () => {
         setReplyContents(textContent);
     }
 
-    // 댓글 입력
+    // 댓글 입력 및 추가
     const handleReplyAdd = () => {
         const requestBody = { board_seq: boardSeq, board_code: code, contents: replyContents };
         axios.post(`${host}/reply`, requestBody).then((resp) => {
             setReply((prev) => {
                 if (prev.length > 0) {
-                    return [...prev, resp.data];
+                    return [resp.data, ...prev];
                 }
                 return [resp.data];
             })
