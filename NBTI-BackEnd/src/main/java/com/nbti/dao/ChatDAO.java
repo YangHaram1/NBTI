@@ -32,4 +32,8 @@ public class ChatDAO {
 		maps.put("group_seq", String.valueOf(group_seq));
 		return mybatis.selectList("Chat.search",maps);
 	}
+	
+	public ChatDTO getLastDTO(int group_seq) throws Exception{
+		return mybatis.selectOne("Chat.getLastDto",group_seq);
+	}
 }
