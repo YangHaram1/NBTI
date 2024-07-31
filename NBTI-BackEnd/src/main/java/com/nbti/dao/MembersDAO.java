@@ -18,7 +18,6 @@ public class MembersDAO {
 	
 public boolean login(MembersDTO dto) {
 		String result =mybatis.selectOne("Member.login",dto);
-		System.out.println(result);
 		if(result!=null) {
 			return true;
 		}
@@ -27,9 +26,13 @@ public boolean login(MembersDTO dto) {
 	public void updateUser(MembersDTO dto) {
 		mybatis.update("Member.updateMember",dto);
 	}
+	public List<MembersDTO> searchUser(String name){
+		System.out.println(name);
+		return mybatis.selectList("Member.searchUser",name);
+	}
 	
 	public MembersDTO selectMyData(String id) {
-		System.out.println(id);
+		
 		return mybatis.selectOne("Member.mydata",id);
 	}
 	
@@ -63,5 +66,6 @@ public boolean login(MembersDTO dto) {
 			return true;
 		}else {return false;}
 	}
+	
 
 }
