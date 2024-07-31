@@ -139,6 +139,12 @@ public class MembersController {
 		List<MembersDTO> user = mServ.searchUser(name);
 		return ResponseEntity.ok(user);
 	}
+	// 사용자목록 팀 조회
+	@GetMapping("/selectByTeam")
+	public ResponseEntity<List<MembersDTO>> selectByTeam(@RequestParam String team_code){
+		List<MembersDTO> byteam = mServ.selectByTeam(team_code);
+		return ResponseEntity.ok(byteam);
+	}
 	
 	
 	// 작성일 24.07.30 

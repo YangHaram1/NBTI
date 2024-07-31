@@ -57,6 +57,10 @@ public class MembersService {
 	        System.out.println("Found users: " + users);
 		   return users;
 	   }
+	// 팀 코드로 사용자 조회
+	   public List<MembersDTO> selectByTeam(String team_code){
+		   return mdao.selectByTeam(team_code);
+	   }
 	  
 	// 비밀번호 변경시 기존 비밀번호 확인
 	public boolean checkPw(HashMap<String, String> map) {
