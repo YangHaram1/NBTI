@@ -95,6 +95,7 @@ export const Detail = ({ setAddOpen, addOpen }) => {
                 setEvents(prev => [
                     ...prev,
                     {
+                        // color : title === 1 ? "#36F" : title === 2 ? "#FFCC00" : "#CCFF",
                         title: calendarTitle, //제목
                         start: startDate, //사작
                         end: endDate, //끝
@@ -160,7 +161,8 @@ export const Detail = ({ setAddOpen, addOpen }) => {
                     start: event.start_date,
                     end: event.end_date,
                     extendedProps: {
-                        contents: event.contents
+                        contents: event.contents,
+                        scheduleTitle_name :event.title
                     }
                 }));
                 setEvents(eventList);
@@ -265,6 +267,7 @@ export const Detail = ({ setAddOpen, addOpen }) => {
                             ) : ( // 수정 누르기 전 
                                 <div className={styles.modalInner}>
                                 <div className={styles.detail}>
+                                    <p>dd : {selectedEvent.scheduleTitle_name}</p>
                                     <p>제목 : {selectedEvent.title}</p>
                                     <p>시작 : {selectedEvent.start.toLocaleString()}</p>
                                     <p>종료 : {selectedEvent.end ? selectedEvent.end.toLocaleString() : '없음'}</p>
