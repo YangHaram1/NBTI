@@ -27,7 +27,7 @@ const Chat = () => {
   const divRef = useRef(null);
   const chatRef = useRef([]);
   const { loginID } = useAuthStore();
-
+  const [chatCheck,setChatCheck] =useState();
 
   const { chats, setChats, ws, setChatNavi,chatAppRef ,chatNavi} = useContext(ChatsContext);
   //const { maxCount,count, increment,decrement } = useNotification();
@@ -35,7 +35,7 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
-  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq } = useCheckList();
+  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq ,setOnmessage} = useCheckList();
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
 
@@ -86,6 +86,7 @@ const Chat = () => {
             return [...prev, chat]
           })
         }
+        setOnmessage();
         console.log("메세지보냄");
         /*toast("알림", {
           position: "top-left", // 위치 설정
@@ -296,6 +297,12 @@ const Chat = () => {
     scrollBottom();
   }, [scrollBottom])
 
+  useEffect(()=>{
+    axios.get(`${host}/group_member?group_seq=${chatSeq}`).then((resp)=>{
+      console.log(resp.data);
+      setChatCheck(resp.data);
+    })
+  },[invite])
 
 
 
@@ -328,7 +335,7 @@ const Chat = () => {
         </div>
         <Search search={search} setSearch={setSearch} searchRef={searchRef} setSearchList={setSearchList} handleSearch={handleSearch} chatRef={chatRef} divRef={divRef}></Search>
         <Emoticon sidebarRef={sidebarRef} editorRef={editorRef} />
-        {invite && (<Invite setInvite={setInvite}></Invite>)}
+        {invite&&(<Invite setInvite={setInvite} chatCheck={chatCheck}></Invite>)}
       </React.Fragment>
     );
   }
