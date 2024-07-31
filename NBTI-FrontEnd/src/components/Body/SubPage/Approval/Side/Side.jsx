@@ -5,6 +5,7 @@ import Modal from "../Content/Modal/Modal";
 import SecondModal from "../Content/SecondModal/SecondModal";
 import DocTree from "../Content/Modal/DocTree/DocTree";
 import { FormDetail } from "../Content/FormDetail/FormDetial";
+import { useDocFormStore } from "../../../../../store/store";
 
 export const Side = () => {
   // ===== 메뉴 토글 =====
@@ -13,6 +14,8 @@ export const Side = () => {
  
   const [isModalOpen, setIsModalOpen] = useState(false); // 첫 번째 모달 상태
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false); // 두 번째 모달 상태
+
+  const {docForm, setDocForm} = useDocFormStore();
 
   const toggleFreeBoard = () => {
     setFreeBoard(!FreeBoard);
@@ -42,6 +45,9 @@ export const Side = () => {
   };
 
   const handlePopupForm = () => {
+
+    setDocForm({name:"", id:"", period:""});
+    console.log(docForm.name);
     setIsModalOpen(true); // 첫 번째 모달 열기
   };
 
@@ -55,11 +61,16 @@ export const Side = () => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault(); // 폼 제출 기본 동작 방지
-    // 첫 번째 모달 닫기
-    setIsModalOpen(false);
 
-    // 두 번째 모달 열기
-    setIsSecondModalOpen(true);
+    if(docForm.name !== ''){
+      // 첫 번째 모달 닫기
+      setIsModalOpen(false);
+      // 두 번째 모달 열기
+      setIsSecondModalOpen(true);
+    }else{
+      alert("문서 종류를 선택해주세요.");
+    }
+    
   };
 
   const navi = useNavigate();
@@ -186,7 +197,7 @@ export const Side = () => {
           </div>
           <div className={styles.form_btns}>
             <button type="submit">다음</button>
-            <button type="button" onClick={closeFirstModal}>닫기</button>
+            {/* <button type="button" onClick={closeFirstModal}>닫기</button> */}
           </div>
         </form>
       </Modal>
