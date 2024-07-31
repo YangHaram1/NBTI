@@ -71,16 +71,16 @@ public class BoardController {
 	
 	
 	// 조회수 증가
-	@PutMapping
-	public ResponseEntity<Void> updateViewCount(@RequestBody BoardDTO dto) {
-		
-		System.out.println("seq : "+ dto.getSeq());
-		System.out.println("boardCode : "+ dto.getBoard_code());
-		
-		
-//		bserv.updateViewCount(dto);
-		return ResponseEntity.ok().build();
-	}
+//	@PutMapping
+//	public ResponseEntity<Void> updateViewCount(@RequestBody BoardDTO dto) {
+//		
+//		System.out.println("seq : "+ dto.getSeq());
+//		System.out.println("boardCode : "+ dto.getBoard_code());
+//		
+//		
+////		bserv.updateViewCount(dto);
+//		return ResponseEntity.ok().build();
+//	}
 	
 	
 	

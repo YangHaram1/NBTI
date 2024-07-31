@@ -31,8 +31,8 @@
 	</update>
 	
 	<!-- 조회수 증가 -->
-	<update id="updateViewCount"> 
+	<!-- <update id="updateViewCount"> 
 		update board set view_count = ${view_count} +1 where seq = ${seq} and board_code = ${board_code}
-	</update>
+	</update> -->
 
 </mapper>
