@@ -24,6 +24,9 @@ export const Content = ()=>{
                 <Route path="listDocCancle/*" element={<ListDoc setlist={"상신취소 문서함"} />} />
                 <Route path="listDocTemp/*" element={<ListDoc setlist={"임시 저장 문서함"} />} />
                 <Route path="listDocSetting/*" element={<ListDoc setlist={"전자결재 관리"} />} />
+                <Route path="write/docVacation/*" element={<Write setlist={"휴가신청서"} />} />
+                <Route path="write/docLeave/*" element={<Write setlist={"휴직신청서"} />} />
+                <Route path="write/docDraft/*" element={<Write setlist={"업무기안서"} />} />
             </Routes>
         </div>
     );

@@ -50,41 +50,36 @@
     flex-direction: column;
   }
 
-  .refer_btn{
-    display: flex;
-    /* height: 100px; */
-    flex:1;
-    align-items: center;
-  }
-
-  .refer_btn button{
-    height: 27px;
-    margin-top: 5px;
-    margin-right: 180px;
-    background-color: #CCE3DE;
-    border: 0px;
-    border-radius: 5px;
-  }
-
-  .refer_btn button:hover{
-    cursor: pointer;
-    background-color: #abc3be;
-  }
   .form_refer{
-    /* height: px; */
     flex:3.5;
     overflow-y: auto;
     display: flex;
     justify-content: center;
-    align-items: start;
+    align-items: flex-start;
   }
 
   .form_refer_box{
     border: 1px solid black;
-    width: 90%;
-    height: 80%;
+    width: 510px;
+    height: max-content;
+    display: flex;
+    /* flex-direction: column; */
+    flex-wrap: wrap;
+    gap: 3px; /* 자식 요소들 간의 간격 설정 */
+    max-height: 175px;
+    overflow-y: auto;
   }
 
+  .refer_member{
+    flex: 0 1 calc(30% - 10px);
+    width: 150px;
+    height: 20px;
+    font-size: 13px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin:10px;
+    text-align: center;
+  }
 
   /* .form_check{
     flex:5;

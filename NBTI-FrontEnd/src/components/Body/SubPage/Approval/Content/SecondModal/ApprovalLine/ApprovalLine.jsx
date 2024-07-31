@@ -2,7 +2,7 @@ import styles from './ApprovalLine.module.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { host } from '../../../../../../../config/config';
-import { useApprovalLine } from '../../../../../../../store/store';
+import { useApprovalLine, useReferLine } from '../../../../../../../store/store';
 
 export const ApprovalLine = ({setTitle, setOrder}) => {
 
@@ -10,8 +10,9 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
     const [teamCode, setTeamCode] = useState([{dept_code:'', team_name:'', team_code:''}]);
     const [members, setMembers] = useState([{}]);
     const [selectTeam, setSelectTeam] = useState('');
-    const [selectMember, setSelectMember] = useState('');
+    const [selectMember, setSelectMember] = useState({});
     const {approvalLine, setApprovalLine} = useApprovalLine();
+    const {referLine, setReferLine} = useReferLine();
 
     useEffect(()=>{
         axios.get(`${host}/members/selectDepartment`)
@@ -46,20 +47,35 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
       }, [selectTeam]);
     
       const handleMemberChange =(e)=>{
-        console.log(e.target.value);
-        setSelectMember(e.target.value);
+        const value = JSON.parse(e.target.value);
+        const id = value.id;
+        const name = value.name;
+        console.log(value.id);
+        console.log(value.name);
+        // console.log(e.target.innerText);
+        setSelectMember({id:id, name: name});
+        console.log("테스트중",selectMember);
       }
 
       useEffect(() => {
         if (selectMember !== '') {
-            const newApproval = {id: selectMember, order: setOrder};
-            setApprovalLine(newApproval);
-            console.log("선택", newApproval);
-            return(console.log("결과",approvalLine));
-            
+            if(setOrder !== "4"){
+                const newApproval = {id: selectMember.id, name:selectMember.name, order: setOrder};
+                setApprovalLine(newApproval);
+                console.log("선택", newApproval);
+            }
+            // return(console.log("결과",approvalLine));
         }
     }, [selectMember, setApprovalLine, setOrder]);
       
+    const handleAdd = () => {
+        const newRefer = {id: selectMember.id, name:selectMember.name, order: setOrder};
+        setReferLine(newRefer);
+    }
+
+    useEffect(()=>{
+        // console.log(referLine);
+    },[referLine])
 
     return(
     <div className={styles.approval_box}>
@@ -70,21 +86,24 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
             <option defaultValue="">선택</option>
                 {
                     teamCode.map((team) => {
-                        return (<option value={team.team_code}>{team.team_name}</option>);
+                        return (<option key={team.team_code} value={team.team_code}>{team.team_name}</option>);
                     })
                 }
             </select>
         </div>
         <div className={styles.approval_name}>
-            <select onChange={handleMemberChange} value={selectMember}>
+            <select onChange={handleMemberChange}>
                 <option defaultValue="" >선택</option>
                 {
                     members.map((member) => {
                         // job_code 조인해서 job_name으로 바꾸기
-                        return (<option value={member.id}>{member.name} {member.job_code}</option>);
+                        return (<option key={member.id} value={JSON.stringify({id:member.id, name:member.name})}>{member.name} {member.job_code}</option>);
                     })
                 }
             </select>
+            {
+                setOrder == 4 ? <button type='button' onClick={handleAdd}> 추가 </button> : ''
+            }
         </div>
     </div>
     );
