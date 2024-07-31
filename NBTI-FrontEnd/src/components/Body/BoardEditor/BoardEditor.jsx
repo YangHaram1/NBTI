@@ -1,51 +1,50 @@
 import { Editor } from "@tinymce/tinymce-react";
 import { useRef, useState, useEffect } from "react";
-import { debounce } from "lodash";
 import axios from "axios";
 import { host, api } from "./../../../config/config";
 import styles from "./BoardEditor.module.css";
 
-const BoardEditor = ({ setBoard }) => {
-  const [content, setContent] = useState("");
+const BoardEditor = ({ setBoard, contents }) => {
+  const [content, setContent] = useState(contents);
   const editorRef = useRef();
   const inputRef = useRef(null);
 
   const handleEditorChange = (content) => {
+    setContent(content); // 상태 업데이트
     setBoard((prev) => {
       return { ...prev, contents: content };
     });
   };
 
   useEffect(() => {
-    const savedContent = localStorage.getItem("editorContent");
-    setContent(savedContent || "");
-  }, []);
+    setContent(contents); // 컴포넌트가 마운트될 때 contents를 초기값으로 설정
+  }, [contents]); // contents가 변경될 때마다 업데이트
 
-  const handleUpload = () => {
-    inputRef.current.click();
-  };
+  // const handleUpload = () => {
+  //   inputRef.current.click();
+  // };
 
-  const handleOnchange = () => {
-    const file = inputRef.current.files[0];
-    const formData = new FormData();
-    formData.append("file", file);
-    axios
-      .post(`${host}/chatUpload`, formData)
-      .then((response) => {
-        //쿼리 파라미터 형식으로 전송된다
-        console.log("Post successful:", response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error posting the data!", error);
-      });
-  };
+  // const handleOnchange = () => {
+  //   const file = inputRef.current.files[0];
+  //   const formData = new FormData();
+  //   formData.append("file", file);
+  //   axios
+  //     .post(`${host}/board`, formData)
+  //     .then((response) => {
+  //       //쿼리 파라미터 형식으로 전송된다
+  //       console.log("Post successful:", response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("There was an error posting the data!", error);
+  //     });
+  // };
 
   return (
     <div className={styles.container}>
       <Editor
-        initialValue={content}
+        value={content}
         apiKey={api}
-        onEditorChange={(content) => handleEditorChange(content)}
+        onEditorChange={handleEditorChange}
         onInit={(evt, editor) => {
           editorRef.current = editor;
         }}
@@ -57,7 +56,6 @@ const BoardEditor = ({ setBoard }) => {
             "fileupload emoticon| forecolor backcolor  blocks fontfamily fontsize fontcolor | bold italic underline strikethrough | link image media table mergetags  | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat ",
           language: "ko_KR",
           statusbar: false,
-          // forced_root_block: false,
           file_picker_types: "file image media",
           file_picker_callback: (callback, value, meta) => {},
           setup: (editor) => {
@@ -92,8 +90,6 @@ const BoardEditor = ({ setBoard }) => {
               }
             });
           },
-
-          //
         }}
       />
     </div>
