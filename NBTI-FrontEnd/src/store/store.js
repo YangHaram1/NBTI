@@ -65,9 +65,11 @@ export const useDocFormStore = create((set)=>{
 export const useApprovalLine = create((set)=>{
     return{
         approvalLine : [{id : '', order:''}],
-        setApprovalLine : (approval)=>set((prev)=>({
-           approvalLine : [...prev.approvalLine, approval] 
-        }))
+        setApprovalLine : (approval)=>set((prev)=>{
+            // const existingIndex = prev.approvalLine.findIndex(line => line.order === approval.order);
+
+            // approvalLine : [...prev.approvalLine, approval] 
+        })
     }
 })
 

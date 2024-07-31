@@ -39,6 +39,7 @@ export const LogoutPopUp = forwardRef(({ onClose }, ref) => {
             console.log(resp);
             sessionStorage.removeItem("loginID");
             setLoginID(null);
+            navi("/");
         })
         .catch((err)=>{
             console.log(err);
