@@ -37,8 +37,7 @@ export const Security = () => {
         console.log(e.target.value);
         SetPw(e.target.value);
     }
-
-    // 비밀번호 확인하는 코드 짜야함.  
+ 
     const handlePwRight = () => {
         axios.post(`${host}/members/checkPw`, {pw:pw})
         .then((resp) =>{
