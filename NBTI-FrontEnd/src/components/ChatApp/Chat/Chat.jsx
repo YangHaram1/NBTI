@@ -9,7 +9,7 @@ import { useCheckList } from '../../../store/store.js';
 import Emoticon from './Emoticon/Emoticon.jsx';
 import Search from './Search/Search.jsx';
 import { host } from '../../../config/config.js'
-import { useAuthStore } from './../../../store/store';
+import { useAuthStore, useNotification } from './../../../store/store';
 import './Chat.css';
 import { Slide, toast } from 'react-toastify';
 import avatar from '../../../images/user.jpg'
@@ -29,12 +29,13 @@ const Chat = () => {
   const { loginID } = useAuthStore();
 
 
-  const { chats, setChats, ws, setChatNavi, chatSeq, chatNavi } = useContext(ChatsContext);
+  const { chats, setChats, ws, setChatNavi } = useContext(ChatsContext);
+  //const { maxCount,count, increment,decrement } = useNotification();
   let lastDate = null;
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
-  const { searchDisplay, setSearchDisplay } = useCheckList();
+  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq,chatAppRef } = useCheckList();
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
 
@@ -54,11 +55,7 @@ const Chat = () => {
   // WebSocket 연결을 설정하는 useEffect
   useEffect(() => {
     const url = host.replace(/^https?:/, '')
-    // ws.current = new WebSocket(`${url}/chatWebsocket`);
 
-    //  ws.current.onopen = () => {
-
-    // }
     if (loginID != null) {
       axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {
 
@@ -114,7 +111,6 @@ const Chat = () => {
 
 
     window.addEventListener('resize', updateSidebarPosition);
-    console.log("셋팅");;
 
     return () => {
       window.removeEventListener('resize', updateSidebarPosition);
@@ -123,21 +119,49 @@ const Chat = () => {
   }, []);
 
 
-  const notify = (item) => {
-    console.log("알림");
-    toast.info(`${item.member_id}님한테 메세지가 왔습니다`, {
-      position: "top-right", // 오른쪽 위에 표시
-      autoClose: 5000, // 5초 후 자동으로 닫힘
-      hideProgressBar: false, // 진행 바 숨기기: false로 설정하여 진행 바 표시
-      closeOnClick: true, // 클릭 시 닫기
-      pauseOnHover: false, // 마우스 오버 시 일시 정지
-      draggable: true, // 드래그 가능
-      rtl: false // RTL 텍스트 지원 비활성화
+  const notify = useCallback((item) => {
+    const { maxCount, count, increment, decrement } = useNotification.getState();
+    const { chatSeq } = useCheckList.getState();
+    console.log(`chatSeq= ${chatSeq} item.group_seq=${item.group_seq}`);
+    if (chatSeq !== 0) {
+      return false;
+    }
+    if (count < maxCount) {
+      console.log("알림");
+      toast.info(`${item.member_id}님한테 메세지가 왔습니다`, {
+        position: "top-right", // 오른쪽 위에 표시
+        autoClose: 5000, // 5초 후 자동으로 닫힘
+        hideProgressBar: false, // 진행 바 숨기기: false로 설정하여 진행 바 표시
+        closeOnClick: true, // 클릭 시 닫기
+        pauseOnHover: false, // 마우스 오버 시 일시 정지
+        draggable: true, // 드래그 가능
+        rtl: false, // RTL 텍스트 지원 비활성화
+        onClose: decrement,
+        onOpen: increment,
+        onClick:()=>handleToastOnclick(item)
+      });
+    }
+    //}
+
+  }, [chatSeq])
+
+
+  const handleToastOnclick=(item)=>{
+    console.log("on click toast");
+    setChatNavi((prev)=>{
+      chatAppRef.current.style.display="flex";
+      setChatSeq(item.group_seq);
+      return 'home'
     });
-  };
+    
+  }
+
 
   const handleCancel = () => {
-    setChatNavi("home");
+    setChatNavi((prev) => {
+      setChatSeq(0);
+      return "home";
+    });
   }
   const handleInvite = () => {
     setInvite((prev) => {
