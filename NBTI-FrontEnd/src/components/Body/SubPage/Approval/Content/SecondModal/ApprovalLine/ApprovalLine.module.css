@@ -18,3 +18,17 @@
     height: 40%;
 }
 
+.approval_name button{
+    height: 27px;
+    margin-top: 5px;
+    margin-left: 10px;
+    background-color: #CCE3DE;
+    border: 0px;
+    border-radius: 5px;
+  }
+
+  .approval_name button:hover{
+    cursor: pointer;
+    background-color: #abc3be;
+  }
+

@@ -1,0 +1,35 @@
+.container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.title{
+    margin-top: 18px;
+    font-size: 22px;
+    text-indent: 30px;
+    width: 100%;
+    flex:0.5;
+    margin-bottom: 30px;
+}
+
+.content{
+    flex:9.5;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+}
+
+.btns{
+    flex:1;
+}
+
+.write_box{
+    flex:7;
+}
+
+.files{
+    flex:2;
+}
+

@@ -60,16 +60,43 @@ export const useDocFormStore = create((set)=>{
             docForm : form
         }))
     }
-})
+});
 
 export const useApprovalLine = create((set)=>{
     return{
-        approvalLine : [{id : '', order:''}],
+        approvalLine : [{}],
         setApprovalLine : (approval)=>set((prev)=>{
-            // const existingIndex = prev.approvalLine.findIndex(line => line.order === approval.order);
-
-            // approvalLine : [...prev.approvalLine, approval] 
+            const exist = prev.approvalLine.findIndex(line => line.order === approval.order);
+            let newApprovalLine;
+            if(exist !== -1){
+                newApprovalLine = prev.approvalLine.map((line, index)=>
+                    index === exist ? {...line, ...approval} : line
+            );} else{
+                newApprovalLine = [...prev.approvalLine, approval];
+            }
+            console.log("저장소", newApprovalLine);
+            return {approvalLine : newApprovalLine};
         })
     }
-})
+});
 
+export const useReferLine = create((set)=>{
+    return{
+        referLine : [{}],
+        // setReferLine : (refer)=>set((prev)=>({
+        //     referLine: [...prev.referLine, refer]
+        // })), 
+        setReferLine : (refer) => set((prev)=>{
+            const exist = prev.referLine.findIndex(line => line.id === refer.id);
+            let newReferLine;
+            if(exist !== -1) {
+                newReferLine = prev.referLine.map((line, index)=>
+                index === exist ? {...line, ...refer} : line
+                );} else{
+                    newReferLine = [...prev.referLine, refer];
+                }
+                console.log("저장소", newReferLine);
+                return {referLine:newReferLine};
+        })
+    }
+});
