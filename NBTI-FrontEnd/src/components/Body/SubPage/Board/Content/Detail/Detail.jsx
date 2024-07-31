@@ -94,8 +94,8 @@ export const Detail = () => {
     const inputRef = useRef(null);
 
     const handleInputReply = (e) => {
-        const textContent = e.target.innerText;
-        setReplyContents(textContent);
+        const htmlContent = e.target.innerHTML;
+        setReplyContents(htmlContent);
     }
 
     // 댓글 입력 및 추가
@@ -109,7 +109,7 @@ export const Detail = () => {
                 return [resp.data];
             })
             if (inputRef.current) {
-                inputRef.current.innerText = ''; // div 내용 비우기
+                inputRef.current.innerHTML = ''; // div 내용 비우기
             }
         });
     }
@@ -201,7 +201,7 @@ export const Detail = () => {
             {/* --------------[ 댓글 작성 ]------------ */}
             <div className={styles.reply}>
                 <div className={styles.count}>
-                    <span>0</span>
+                    <span>{reply.length}</span>
                     <span>개의 댓글</span>
                 </div>
                 <div className={styles.replyInput}>
@@ -232,7 +232,10 @@ export const Detail = () => {
                                             <span>{item.member_id}</span>
                                             <span>{reply_currentDate}</span>
                                         </div>
-                                        <span>{item.contents}</span>
+                                        <div
+                                            className={styles.replyContent}
+                                            dangerouslySetInnerHTML={{ __html: item.contents }}
+                                        />
                                     </div>
                                     <div className={styles.likes}>
                                         <i className="fa-regular fa-heart fa-lg" />
