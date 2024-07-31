@@ -41,7 +41,10 @@ public class BoardDAO {
 		mybatis.update("Board.modify",dto);
 	}
 	
-	
+	// 조회수 증가
+	public void updateViewCount(int code) {
+		mybatis.update("Board.update", code);
+	}
 	
 	
 }
