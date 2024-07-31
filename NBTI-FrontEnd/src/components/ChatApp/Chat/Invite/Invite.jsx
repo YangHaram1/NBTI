@@ -6,7 +6,7 @@ import { useAuthStore } from './../../../../store/store';
 import axios from 'axios';
 import { ChatsContext } from '../../../../Context/ChatsContext';
 import { host } from '../../../../config/config';
-const Invite = ({ setInvite }) => {
+const Invite = ({ setInvite,chatCheck}) => {
     const {members} =useMemberStore();
     const {loginID} =useAuthStore();
     const [list, setList] = useState([]);
@@ -28,10 +28,7 @@ const Invite = ({ setInvite }) => {
     }, [list]);
     
     useEffect(()=>{
-        axios.get(`${host}/group_member?group_seq=${chatSeq}`).then((resp)=>{
-            //console.log(resp.data);
-            setInvited(resp.data);
-        })
+            setInvited(chatCheck);
     },[])
 
     const handleList = useCallback(() => {
