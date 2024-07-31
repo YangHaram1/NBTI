@@ -35,6 +35,11 @@ export const Detail = () => {
             })
         }
 
+        // 로그인 한 사용자 정보
+        axios.get(`${host}/members`).then((resp) => {
+            setCurrentUser(resp.data);
+        })
+
         // 외부 스타일시트를 동적으로 추가
         const link = document.createElement("link");
         link.rel = "stylesheet";
@@ -45,16 +50,6 @@ export const Detail = () => {
             document.head.removeChild(link); // 언마운트될 때 스타일시트를 제거
         };
     }, []);
-
-
-    useEffect(() => {
-        axios.get(`${host}/members`).then((resp) => {
-            setCurrentUser(resp.data);
-            // console.log("로그인 id : ", currentUser.id);
-        })
-    }, [])
-
-
 
 
     /** ================[ 삭 제 ]============= */
@@ -152,7 +147,7 @@ export const Detail = () => {
                     <i className="fa-regular fa-star"></i>
                 </div>
                 <div className={styles.right}>
-                    {!isEditing ? (
+                    {currentUser && detail.member_id === currentUser.id && !isEditing ? (
                         <>
                             <p onClick={handleEditBtn}>수정</p>
                             <p onClick={handleDelBtn}>삭제</p>
@@ -199,7 +194,7 @@ export const Detail = () => {
                 {isEditing ? (
                     <BoardEditor setBoard={setBoard} contents={board.contents} />
                 ) : (
-                    <span>{detail.contents}</span>
+                    <div dangerouslySetInnerHTML={{ __html: detail.contents }}></div>
                 )}
             </div>
 
@@ -252,6 +247,6 @@ export const Detail = () => {
                     }
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
