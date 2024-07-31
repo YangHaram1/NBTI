@@ -9,9 +9,9 @@ import { useCheckList } from '../../../store/store.js';
 import Emoticon from './Emoticon/Emoticon.jsx';
 import Search from './Search/Search.jsx';
 import { host } from '../../../config/config.js'
-import { useAuthStore } from './../../../store/store';
+import { useAuthStore, useNotification } from './../../../store/store';
 import './Chat.css';
-import { toast } from 'react-toastify';
+import { Slide, toast } from 'react-toastify';
 import avatar from '../../../images/user.jpg'
 import Invite from './Invite/Invite.jsx';
 
@@ -29,12 +29,13 @@ const Chat = () => {
   const { loginID } = useAuthStore();
 
 
-  const { chats, setChats, ws, setChatNavi, chatSeq, chatNavi } = useContext(ChatsContext);
+  const { chats, setChats, ws, setChatNavi,chatAppRef ,chatNavi} = useContext(ChatsContext);
+  //const { maxCount,count, increment,decrement } = useNotification();
   let lastDate = null;
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
-  const { searchDisplay, setSearchDisplay } = useCheckList();
+  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq } = useCheckList();
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
 
@@ -54,12 +55,9 @@ const Chat = () => {
   // WebSocket 연결을 설정하는 useEffect
   useEffect(() => {
     const url = host.replace(/^https?:/, '')
-    // ws.current = new WebSocket(`${url}/chatWebsocket`);
 
-    //  ws.current.onopen = () => {
-
-    // }
     if (loginID != null) {
+      const {chatSeq} =useCheckList.getState();
       axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {
 
         setChats(resp.data);
@@ -97,7 +95,7 @@ const Chat = () => {
 
 
 
-
+        /*
         // 알림 생성
         const notificationTitle = "새 메시지";
         const notificationOptions = {
@@ -108,36 +106,66 @@ const Chat = () => {
         if (Notification.permission === "granted") {
           new Notification(notificationTitle, notificationOptions);
         }
-        ///
+        ///*/
       }
     }
 
 
     window.addEventListener('resize', updateSidebarPosition);
-    console.log("셋팅");;
 
     return () => {
       window.removeEventListener('resize', updateSidebarPosition);
     };
 
-  }, []);
+  }, [chatNavi]);
 
 
-  const notify = (item) => {
-    console.log("알림");
-    toast.info(`${item.member_id}님한테 메세지가 왔습니다`, {
-      position: "top-right", // 오른쪽 위에 표시
-      autoClose: 5000, // 5초 후 자동으로 닫힘
-      hideProgressBar: false, // 진행 바 숨기기: false로 설정하여 진행 바 표시
-      closeOnClick: true, // 클릭 시 닫기
-      pauseOnHover: true, // 마우스 오버 시 일시 정지
-      draggable: true, // 드래그 가능
-      rtl: false // RTL 텍스트 지원 비활성화
+  const notify = useCallback((item) => {
+    const { maxCount, count, increment, decrement } = useNotification.getState();
+    const { chatSeq } = useCheckList.getState();
+    console.log(`chatSeq= ${chatSeq} item.group_seq=${item.group_seq}`);
+    if (chatSeq !== 0) {
+      return false;
+    }
+    if (count < maxCount) {
+      console.log("알림");
+      toast.info(`${item.member_id}님한테 메세지가 왔습니다`, {
+        position: "top-right", // 오른쪽 위에 표시
+        autoClose: 5000, // 5초 후 자동으로 닫힘
+        hideProgressBar: false, // 진행 바 숨기기: false로 설정하여 진행 바 표시
+        closeOnClick: true, // 클릭 시 닫기
+        pauseOnHover: false, // 마우스 오버 시 일시 정지
+        draggable: true, // 드래그 가능
+        rtl: false, // RTL 텍스트 지원 비활성화
+        onClose: decrement,
+        onOpen: increment,
+        onClick:()=>handleToastOnclick(item)
+      });
+    }
+    //}
+
+  }, [chatSeq])
+
+
+  const handleToastOnclick=(item)=>{
+   
+    setChatNavi((prev)=>{
+
+      if(chatAppRef.current!=null)
+      chatAppRef.current.style.display="flex";
+      console.log(`on click toast:${item.group_seq} `);
+      setChatSeq(item.group_seq);
+      return 'chat'
     });
-  };
+    
+  }
+
 
   const handleCancel = () => {
-    setChatNavi("home");
+    setChatNavi((prev) => {
+      setChatSeq(0);
+      return "home";
+    });
   }
   const handleInvite = () => {
     setInvite((prev) => {
@@ -237,7 +265,7 @@ const Chat = () => {
                       if (el && check) {
                         chatRef.current[count++] = el;
                       }
-                    }} className={styles.mbox}></div>
+                    }} className={idCheck?styles.mboxReverse:styles.mbox}></div>
                   <div className={styles.date}>{formattedTimestamp}</div>
                 </div>
               </div>
@@ -255,14 +283,15 @@ const Chat = () => {
   }, [handleChatsData])
 
   const scrollBottom = useCallback(() => {
-    if (chatRef.current.length !== 0) {
+    if (chatRef.current.length > 0) {
       chatRef.current[chatRef.current.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
     else if (divRef.current) {
       divRef.current.scrollTop = divRef.current.scrollHeight;
     }
 
-  }, [list])
+  }, [list]);
+
   useEffect(() => {
     scrollBottom();
   }, [scrollBottom])

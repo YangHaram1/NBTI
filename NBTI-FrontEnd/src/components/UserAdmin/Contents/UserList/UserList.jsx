@@ -1,15 +1,34 @@
-// UserList.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import styles from './UserList.module.css';
 import { host } from '../../../../config/config';
 import { useNavigate } from 'react-router-dom';
 import { useMemberStore } from '../../../../store/store';
+import SearchUser from './SearchUser/SearchUser';
+import Team from './Team/Team';
 
 const UserList = ({ setUserDetail }) => {
+    const convertKeysToLowerCase = (obj) => {
+        if (Array.isArray(obj)) {
+            return obj.map(convertKeysToLowerCase);
+        } else if (obj !== null && typeof obj === 'object') {
+            return Object.keys(obj).reduce((acc, key) => {
+                const lowerCaseKey = key.toLowerCase();
+                acc[lowerCaseKey] = convertKeysToLowerCase(obj[key]);
+                return acc;
+            }, {});
+        }
+        return obj;
+    };
+
     const [users, setUsers] = useState([]);
+    const [filteredUsers, setFilteredUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [teams, setTeams] = useState([]);
+    const [selectedTeam, setSelectedTeam] = useState('');
+
     const setSelectedMember = useMemberStore((state) => state.setSelectedMember);
     const navigate = useNavigate();
 
@@ -30,12 +49,20 @@ const UserList = ({ setUserDetail }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${host}/members/selectMembers`);
-                console.log('Fetched users:', response.data); // 데이터 구조 확인
-                setUsers(response.data);
+                const [userResponse, teamResponse] = await Promise.all([
+                    axios.get(`${host}/members/selectMembers`),
+                    axios.get(`${host}/members/selectTeam`)
+                ]);
+
+                const lowerCaseUsers = convertKeysToLowerCase(userResponse.data);
+                const lowerCaseTeams = convertKeysToLowerCase(teamResponse.data);
+
+                setUsers(lowerCaseUsers);
+                setTeams(lowerCaseTeams);
+                setFilteredUsers(lowerCaseUsers); // Initially show all users
                 setLoading(false);
             } catch (err) {
-                setError('사용자 데이터를 가져오는 데 실패했습니다.');
+                setError('데이터를 가져오는 데 실패했습니다.');
                 setLoading(false);
             }
         };
@@ -43,9 +70,51 @@ const UserList = ({ setUserDetail }) => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        const fetchFilteredUsers = async (teamCode) => {
+            try {
+                const response = await axios.get(`${host}/members/selectByTeam`, {
+                    params: { team_code: teamCode }
+                });
+                const lowerCaseData = convertKeysToLowerCase(response.data);
+                setFilteredUsers(lowerCaseData);
+            } catch (error) {
+                console.error('사용자 데이터를 가져오는 데 실패했습니다.', error);
+            }
+        };
+
+        if (selectedTeam) {
+            fetchFilteredUsers(selectedTeam);
+        } else {
+            setFilteredUsers(users); // Show all users if no team is selected
+        }
+    }, [selectedTeam, users]);
+
     const handleUserClick = (userId) => {
         setSelectedMember(userId); // 상태에 사용자 ID 저장
-        navigate(`/useradmin/userupdate/${userId}`); // 사용자 업데이트 페이지로 이동
+        navigate(`/useradmin/userdetail/${userId}`); // 사용자 업데이트 페이지로 이동
+    };
+
+    const handleSearch = async () => {
+        if (!searchTerm.trim()) {
+            alert('검색어를 입력해주세요.');
+            return;
+        }
+
+        try {
+            const response = await axios.get(`${host}/members/searchUser`, {
+                params: { name: searchTerm }
+            });
+            const lowerCaseData = convertKeysToLowerCase(response.data);
+            setFilteredUsers(lowerCaseData);
+        } catch (err) {
+            alert('검색 결과를 가져오는 데 실패했습니다.');
+        }
+    };
+
+    const handleTeamChange = (e) => {
+        const selectedTeamCode = e.target.value;
+        setSelectedTeam(selectedTeamCode); // 선택한 팀 코드로 상태 업데이트
     };
 
     if (loading) return <div className={styles.loading}>로딩 중...</div>;
@@ -54,7 +123,16 @@ const UserList = ({ setUserDetail }) => {
     return (
         <div className={styles.container}>
             <h2 className={styles.title}>사용자 목록</h2>
-            {users.length > 0 ? (
+            <div className={styles.searchAndFilter}>
+                <SearchUser searchTerm={searchTerm} setSearchTerm={setSearchTerm} onSearch={handleSearch} />
+                <Team
+                    teams={teams}
+                    selectedTeam={selectedTeam}
+                    onTeamChange={handleTeamChange}
+                />
+            </div>
+
+            {filteredUsers.length > 0 ? (
                 <table className={styles.userTable}>
                     <thead>
                         <tr>
@@ -72,24 +150,24 @@ const UserList = ({ setUserDetail }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map(user => (
-                            <tr key={user.ID}>
+                        {filteredUsers.map(user => (
+                            <tr key={user.id}>
                                 <td 
-                                    onClick={() => handleUserClick(user.ID)} 
+                                    onClick={() => handleUserClick(user.id)} 
                                     style={{ cursor: 'pointer' }}
                                 >
-                                    {user.NAME || '이름 없음'}
+                                    {user.name || '이름 없음'}
                                 </td>
-                                <td>{user.ID || '아이디 없음'}</td>
+                                <td>{user.id || '아이디 없음'}</td>
                                 <td>{'*'.repeat(8)}</td>
-                                <td>{user.EMAIL || '이메일 없음'}</td>
-                                <td>{user.TEAM_NAME || '팀명 없음'}</td>
-                                <td>{user.JOB_NAME || '직급명 없음'}</td>
-                                <td>{getLevelName(user.MEMBER_LEVEL) || '권한 없음'}</td>
-                                <td>{user.MEMBER_CALL || '전화번호 없음'}</td>
-                                <td>{user.GENDER === 'M' ? '남성' : user.GENDER === 'F' ? '여성' : '성별 정보 없음'}</td>
-                                <td>{user.ENT_YN === 'Y' ? '휴직' : '재직'}</td>
-                                <td>{user.VACATION_PERIOD != null ? `${user.VACATION_PERIOD}일` : '휴가 정보 없음'}</td>
+                                <td>{user.email || '이메일 없음'}</td>
+                                <td>{user.team_name || '팀명 없음'}</td>
+                                <td>{user.job_name || '직급명 없음'}</td>
+                                <td>{getLevelName(user.member_level) || '권한 없음'}</td>
+                                <td>{user.member_call || '전화번호 없음'}</td>
+                                <td>{user.gender === 'M' ? '남성' : user.gender === 'F' ? '여성' : '성별 정보 없음'}</td>
+                                <td>{user.ent_yn === 'Y' ? '휴직' : '재직'}</td>
+                                <td>{user.vacation_period != null ? `${user.vacation_period}일` : '휴가 정보 없음'}</td>
                             </tr>
                         ))}
                     </tbody>

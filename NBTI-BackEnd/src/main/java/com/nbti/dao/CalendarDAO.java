@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.nbti.dto.CalendarDTO;
-import com.nbti.dto.ScheduleTitleDTO;
 
 @Repository
 public class CalendarDAO {
@@ -43,9 +42,18 @@ public class CalendarDAO {
     	return mybatis.selectList("Calendar.list");
     }
     
-    public List<ScheduleTitleDTO> scheduleName() throws Exception {
-        return mybatis.selectList("Calendar.scheduleName");
+    //수정
+    public void update (CalendarDTO dto) throws Exception {
+    	mybatis.update("Calendar.update",dto);
     }
+    //삭제 
+    public void delete (int seq) {
+    	mybatis.delete("Calendar.delete",seq);
+    }
+    
+//    public List<ScheduleTitleDTO> scheduleName() throws Exception {
+//        return mybatis.selectList("Calendar.scheduleName");
+//    }
 
 
 }

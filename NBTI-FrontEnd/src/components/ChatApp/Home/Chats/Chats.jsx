@@ -6,10 +6,12 @@ import React, { useContext, useEffect, useState, useRef } from 'react';
 import { host } from './../../../../config/config';
 import avatar from '../../../../images/user.jpg';
 import ChatsModal from './ChatsModal/ChatsModal';
+import { useCheckList } from './../../../../store/store';
 
 const Chats = () => {
     const { loginID } = useAuthStore();
-    const { setChatNavi, setChatSeq } = useContext(ChatsContext);
+    const { setChatSeq } = useCheckList();
+    const {setChatNavi} = useContext(ChatsContext);
     const [group_chats, setGroup_chats] = useState([]);
 
     const [modalDisplay, setModalDisplay] = useState(null);

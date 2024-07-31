@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.nbti.dao.CalendarDAO;
 import com.nbti.dto.CalendarDTO;
-import com.nbti.dto.ScheduleTitleDTO;
 
 @Service
 public class CalendarService {
@@ -36,10 +35,20 @@ public class CalendarService {
     	return list;
     }
     
-    //내 캘린더의 이름 (공유/개인)
-    public List<ScheduleTitleDTO> scheduleName() throws Exception{
-    	return cdao.scheduleName();
+    //수정
+    public void update (CalendarDTO dto) throws Exception {
+    	cdao.update(dto);
     }
+    
+    //삭제 
+    public void delete (int seq) {
+    	cdao.delete(seq);
+    }
+    
+//    //내 캘린더의 이름 (공유/개인)
+//    public List<ScheduleTitleDTO> scheduleName() throws Exception{
+//    	return cdao.scheduleName();
+//    }
 
 
 }

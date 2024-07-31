@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import styles from "./Side.module.css";
 import { useNavigate } from "react-router-dom";
+import UserDetail from "../Contents/UserDetail/UserDetail";
 
 export const Side = () => {
   // ===== 메뉴 토글 =====
@@ -45,7 +46,7 @@ export const Side = () => {
             </li>
         </ul>
         <ul>
-            <li onClick={() => { navi("/useradmin/userlist") }}>
+            <li onClick={() => { navi("/useradmin/userdetail") }}>
                 사용자 조회
             </li>
         </ul>

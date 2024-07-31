@@ -45,3 +45,10 @@
     color: black;
     
 }
+.searchAndFilter {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 버튼 간의 간격 */
+    
+    
+}

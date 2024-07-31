@@ -1,46 +1,38 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import styles from "./Detail.module.css";
 import { useBoardStore } from "../../../../../../store/store";
 import axios from "axios";
-import { host, api } from '../../../../../../config/config'
+import { host } from '../../../../../../config/config'
 import image from "../../../../../../images/user.jpg";
 import { format } from 'date-fns';
 import { useNavigate } from "react-router-dom";
-import { Editor } from '@tinymce/tinymce-react';
 import BoardEditor from "../../../../BoardEditor/BoardEditor";
 
 
 export const Detail = () => {
+    const navi = useNavigate();
 
     const { boardSeq, boardType } = useBoardStore();
     const [detail, setDetail] = useState({}); // 게시글의 detail 정보
     const [board, setBoard] = useState({ title: '', contents: '', board_code: 1 });
 
-    const navi = useNavigate();
+    // 게시판 코드
+    let code = 1;
+    if (boardType === "자유") code = 1;
+    else if (boardType === "공지") code = 2;
 
     // 게시글 날짜 타입 변경
     const date = new Date(detail.write_date);
     const currentDate = !isNaN(date) ? format(date, 'yyyy-MM-dd HH:mm') : 'Invalid Date';
 
-
-
     useEffect(() => {
-        let code = 1;
-        if (boardType === "자유") code = 1;
-        else if (boardType === "공지") code = 2;
-
-        if (boardSeq === -1) {
-            navi('/board');
-        }
-
+        if (boardSeq === -1) navi('/board'); // detail 화면에서 f5 -> 목록으로 이동
         if (boardSeq !== -1) {
             axios.get(`${host}/board/${boardSeq}/${code}`).then((resp) => {
                 setDetail(resp.data); // 취소 시 원본 데이터
                 setBoard(resp.data);
-                console.log(JSON.stringify(detail))
             })
         }
-
 
         // 외부 스타일시트를 동적으로 추가
         const link = document.createElement("link");
@@ -48,32 +40,25 @@ export const Detail = () => {
         link.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css";
         document.head.appendChild(link);
 
-        // 컴포넌트가 언마운트될 때 스타일시트를 제거
         return () => {
-            document.head.removeChild(link);
+            document.head.removeChild(link); // 언마운트될 때 스타일시트를 제거
         };
     }, []);
-
-    // 해당 게시글로 이동
-
 
 
     /** ================[ 삭 제 ]============= */
     const handleDelBtn = () => {
         if (window.confirm("정말 삭제하시겠습니까?")) {
             if (boardSeq !== -1) {
-                axios.delete(`${host}/board/${detail.seq}`).then(resp => {
+                axios.delete(`${host}/board/${detail.seq}`).then((resp) => {
                     navi('/board/free');
                 })
             }
-
         }
     }
 
-
     /** ================[ 수 정 ]============= */
     const [isEditing, setIsEditing] = useState(false);
-
 
     // 수정 click 
     const handleEditBtn = () => {
@@ -82,7 +67,6 @@ export const Detail = () => {
 
     // 저장 click
     const handleSaveBtn = () => {
-
         axios.put(`${host}/board`, board).then((resp) => {
             setDetail(board)
             setIsEditing(false);
@@ -101,20 +85,16 @@ export const Detail = () => {
     // ==========[댓 글]==========
     const [replyContents, setReplyContents] = useState('');
     const [reply, setReply] = useState([]);
+    const inputRef = useRef(null);
+
     const handleInputReply = (e) => {
         const textContent = e.target.innerText;
         setReplyContents(textContent);
     }
 
+    // 댓글 입력
     const handleReplyAdd = () => {
-        console.log('Reply:', replyContents);
-
-        let code = 1;
-        if (boardType === "자유") code = 1;
-        else if (boardType === "공지") code = 2;
-
         const requestBody = { board_seq: boardSeq, board_code: code, contents: replyContents };
-
         axios.post(`${host}/reply`, requestBody).then((resp) => {
             setReply((prev) => {
                 if (prev.length > 0) {
@@ -122,9 +102,18 @@ export const Detail = () => {
                 }
                 return [resp.data];
             })
-            setReplyContents('');
-        })
+            if (inputRef.current) {
+                inputRef.current.innerText = ''; // div 내용 비우기
+            }
+        });
     }
+
+    // 댓글 전체 출력
+    useEffect(() => {
+        axios.get(`${host}/reply/${boardSeq}/${code}`).then((resp) => {
+            setReply(resp.data);
+        })
+    }, [])
 
 
     return (
@@ -179,7 +168,7 @@ export const Detail = () => {
             </div>
             <div className={styles.content}>
                 {isEditing ? (
-                    <BoardEditor setBoard={setBoard} />
+                    <BoardEditor setBoard={setBoard} contents={board.contents} />
                 ) : (
                     <span>{detail.contents}</span>
                 )}
@@ -194,11 +183,11 @@ export const Detail = () => {
                 <div className={styles.replyInput}>
                     <img src={image} alt="" />
                     <div
+                        ref={inputRef} // ref 설정
                         className={styles.inputText}
                         contentEditable="true"
                         onInput={handleInputReply}
                         suppressContentEditableWarning={true}
-                        dangerouslySetInnerHTML={{ __html: replyContents }}
                     />
                     <button onClick={handleReplyAdd}>등록</button>
                 </div>
@@ -209,7 +198,7 @@ export const Detail = () => {
                         reply.map((item, i) => {
                             // 댓글 날짜 타입 변경 
                             const reply_date = new Date(item.write_date);
-                            const reply_currentDate = !isNaN(reply_date) ? format(reply_date, 'yyyy-MM-dd HH:mm') : 'Invalid Date';
+                            const reply_currentDate = !isNaN(reply_date) ? format(reply_date, 'yyyy-MM-dd HH:mm:ss') : 'Invalid Date';
 
                             return (
                                 <div className={styles.replyOutput} key={i}>
@@ -229,7 +218,6 @@ export const Detail = () => {
                                 </div>
                             )
                         })
-
                     }
                 </div>
             </div>

@@ -21,7 +21,7 @@ public class MembersService {
 	}
 	
 	public MembersDTO selectMyData(String id) {
-		System.out.println(id);
+		
 		return mdao.selectMyData(id);
 	}
 	
@@ -48,6 +48,18 @@ public class MembersService {
 	// 관리자 회원 탈퇴
 	   public void deleteUser(String id) {
 		   mdao.deleteUser(id);
+	   }
+	// 사용자목록 회원 검색 ( 이름으로 )
+	   public List<MembersDTO> searchUser(String name){
+		   
+	        System.out.println("Search term: " + name);
+	        List<MembersDTO> users = mdao.searchUser(name);
+	        System.out.println("Found users: " + users);
+		   return users;
+	   }
+	// 팀 코드로 사용자 조회
+	   public List<MembersDTO> selectByTeam(String team_code){
+		   return mdao.selectByTeam(team_code);
 	   }
 	  
 	// 비밀번호 변경시 기존 비밀번호 확인

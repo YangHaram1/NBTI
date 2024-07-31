@@ -19,6 +19,14 @@
     	SELECT * from schedule
     </select>
     
+    <update id="update">
+    	update schedule set calendarTitle=#{calendarTitle}, contents=#{contents}  where seq = #{seq}
+    </update>
+    
+    <delete id="delete">
+    	delete schedule where seq = #{seq}
+    </delete>
+    
 <!--     <select id="scheduleName" resultType="com.nbti.dto.ScheduleTitleDTO">
 
 		SELECT 
