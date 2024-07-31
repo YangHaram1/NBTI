@@ -10,31 +10,29 @@ import BoardEditor from "../../../../BoardEditor/BoardEditor";
 
 
 export const Detail = () => {
+    const navi = useNavigate();
 
     const { boardSeq, boardType } = useBoardStore();
     const [detail, setDetail] = useState({}); // 게시글의 detail 정보
     const [board, setBoard] = useState({ title: '', contents: '', board_code: 1 });
 
-    const navi = useNavigate();
+    // 게시판 코드
+    let code = 1;
+    if (boardType === "자유") code = 1;
+    else if (boardType === "공지") code = 2;
 
     // 게시글 날짜 타입 변경
     const date = new Date(detail.write_date);
     const currentDate = !isNaN(date) ? format(date, 'yyyy-MM-dd HH:mm') : 'Invalid Date';
 
     useEffect(() => {
-        let code = 1;
-        if (boardType === "자유") code = 1;
-        else if (boardType === "공지") code = 2;
-
-        if (boardSeq === -1) navi('/board');
-
+        if (boardSeq === -1) navi('/board'); // detail 화면에서 f5 -> 목록으로 이동
         if (boardSeq !== -1) {
             axios.get(`${host}/board/${boardSeq}/${code}`).then((resp) => {
                 setDetail(resp.data); // 취소 시 원본 데이터
                 setBoard(resp.data);
             })
         }
-
 
         // 외부 스타일시트를 동적으로 추가
         const link = document.createElement("link");
@@ -52,7 +50,7 @@ export const Detail = () => {
     const handleDelBtn = () => {
         if (window.confirm("정말 삭제하시겠습니까?")) {
             if (boardSeq !== -1) {
-                axios.delete(`${host}/board/${detail.seq}`).then(resp => {
+                axios.delete(`${host}/board/${detail.seq}`).then((resp) => {
                     navi('/board/free');
                 })
             }
@@ -87,23 +85,16 @@ export const Detail = () => {
     // ==========[댓 글]==========
     const [replyContents, setReplyContents] = useState('');
     const [reply, setReply] = useState([]);
-    const inputRef = useRef(null); // ref 추가
+    const inputRef = useRef(null);
 
     const handleInputReply = (e) => {
         const textContent = e.target.innerText;
         setReplyContents(textContent);
     }
 
+    // 댓글 입력
     const handleReplyAdd = () => {
-        console.log('Reply:', replyContents);
-        console.log("게시판 seq : ", detail.seq)
-
-        let code = 1;
-        if (boardType === "자유") code = 1;
-        else if (boardType === "공지") code = 2;
-
         const requestBody = { board_seq: boardSeq, board_code: code, contents: replyContents };
-
         axios.post(`${host}/reply`, requestBody).then((resp) => {
             setReply((prev) => {
                 if (prev.length > 0) {
@@ -117,12 +108,12 @@ export const Detail = () => {
         });
     }
 
-
-    // useEffect(() => {
-    //     axios.get(`${host}/board/${detail.seq}/${detail.board_code}`).then((resp) => {
-    //         console.log("댓글 : " + resp.data);
-    //     })
-    // }, [])
+    // 댓글 전체 출력
+    useEffect(() => {
+        axios.get(`${host}/reply/${boardSeq}/${code}`).then((resp) => {
+            setReply(resp.data);
+        })
+    }, [])
 
 
     return (
@@ -227,7 +218,6 @@ export const Detail = () => {
                                 </div>
                             )
                         })
-
                     }
                 </div>
             </div>

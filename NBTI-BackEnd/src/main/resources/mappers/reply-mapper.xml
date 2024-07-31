@@ -7,8 +7,7 @@
 
 	<!-- 댓글 입력 -->
 	<insert id="insert">
-		 INSERT INTO reply (seq, member_id, contents, write_date, board_seq, board_code)
-        VALUES (reply_seq.nextval, #{member_id}, #{contents}, sysdate, ${board_seq}, ${board_code})
+		 insert into reply values (reply_seq.nextval, #{member_id}, #{contents}, sysdate, ${board_seq}, ${board_code})
 		<selectKey resultType="int" order="AFTER" keyProperty="seq">
 			select reply_seq.currval from dual
 		</selectKey>
@@ -21,7 +20,7 @@
 	
 	<!-- 댓글 출력 -->
 	<select id="selectReply" resultType="com.nbti.dto.ReplyDTO">
-		select * from reply where board_seq = ${board_seq} and board_code = ${board_code}
+		select * from reply where board_seq = ${board_seq} and board_code = ${board_code} order by seq desc
 	</select>
 
 </mapper>

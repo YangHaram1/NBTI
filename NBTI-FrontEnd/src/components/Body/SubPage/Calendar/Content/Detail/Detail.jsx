@@ -49,7 +49,7 @@ export const Detail = ({ setAddOpen, addOpen }) => {
     // 모달창 [해당 이벤트 클릭 시 상세 정보 보기]
     const handleEventClick = (info) => {
 
-        //console.log("info:"+JSON.stringify(info.event));
+        console.log("info:"+JSON.stringify(info.event));
 
         setSelectedEvent(info.event); // 선택한 이벤트 저장
         setModalOpen(true); // 상세보기 모달 열기
@@ -131,7 +131,7 @@ export const Detail = ({ setAddOpen, addOpen }) => {
 
     // };
     const handleSaveClick = () => {
-        console.log();
+        console.log(JSON.stringify(selectedEvent));
         console.log(selectedEvent.extendedProps.seq + ":" + editedTitle + ":" +editedContents);
 
         const updateData = {
@@ -160,7 +160,7 @@ export const Detail = ({ setAddOpen, addOpen }) => {
     useEffect(() => {
         axios.get(`${host}/calendar`)
             .then((resp) => {
-                // console.log(resp.data + "목록 출력");
+                //console.log(JSON.stringify(resp.data) + "목록 출력");
                 const eventList = resp.data.map(event => ({
                     seq: event.seq,
                     title: event.calendarTitle,
@@ -176,6 +176,25 @@ export const Detail = ({ setAddOpen, addOpen }) => {
                 console.error('Error', error);
             });
     }, []);
+
+    //삭제
+    const delModal = () => {
+        const seq = selectedEvent.extendedProps.seq; // seq 가져오기
+        console.log(JSON.stringify(events));
+        console.log(seq);
+        
+        axios.delete(`${host}/calendar/${seq}`)
+            .then((resp) => {
+                console.log("삭제 성공: " + resp.data);
+                // 이벤트 목록에서 삭제된 이벤트 제거
+                setEvents((prevEvents) => prevEvents.filter(event => event.seq !== seq));
+                closeModal(); // 모달 닫기
+            })
+            .catch((error) => {
+                console.error("삭제 실패:", error);
+            });
+    }
+    
 
 
     return (
@@ -239,6 +258,7 @@ export const Detail = ({ setAddOpen, addOpen }) => {
                                         <p>내용 : {selectedEvent.extendedProps.contents || '없음'}</p>
                                         <div className={styles.detailBtn}>
                                             <button onClick={closeModal}>닫기</button>
+                                            <button onClick={delModal}>삭제</button>
                                             <button onClick={updateBtn}>수정</button>
                                         </div>
                                     </div>
