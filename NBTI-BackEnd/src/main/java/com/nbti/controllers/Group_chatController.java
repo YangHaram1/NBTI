@@ -57,7 +57,7 @@ public class Group_chatController {
 			
 			List<Group_memberDTO> member_list=new ArrayList<>();
 			for(int i=0; i<list.size();i++) {
-				Group_memberDTO dto= new Group_memberDTO(seq,list.get(i),"N","","");
+				Group_memberDTO dto= new Group_memberDTO(seq,list.get(i),0,"","");
 				member_list.add(dto);
 			}
 			
