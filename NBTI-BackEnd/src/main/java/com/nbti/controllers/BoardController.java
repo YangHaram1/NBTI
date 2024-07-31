@@ -40,11 +40,7 @@ public class BoardController {
 	// 게시글 출력
 	@GetMapping("/{boardSeq}/{code}")
 	public ResponseEntity<BoardDTO> selectBoard(@PathVariable int boardSeq, @PathVariable int code){
-		BoardDTO dto = bserv.selectBoard(boardSeq, code);
-		
-		// 조회수 증가
-//		bserv.updateViewCount(code);
-		
+		BoardDTO dto = bserv.selectBoard(boardSeq, code);		
 		return ResponseEntity.ok(dto);
 	}
 	
@@ -75,11 +71,16 @@ public class BoardController {
 	
 	
 	// 조회수 증가
-//	@GetMapping("/{code}")
-//	public ResponseEntity<Void> updateViewCount(@PathVariable int code) {
-//		bserv.updateViewCount(code);
-//		return ResponseEntity.ok().build();
-//	}
+	@PutMapping
+	public ResponseEntity<Void> updateViewCount(@RequestBody BoardDTO dto) {
+		
+		System.out.println("seq : "+ dto.getSeq());
+		System.out.println("boardCode : "+ dto.getBoard_code());
+		
+		
+//		bserv.updateViewCount(dto);
+		return ResponseEntity.ok().build();
+	}
 	
 	
 	

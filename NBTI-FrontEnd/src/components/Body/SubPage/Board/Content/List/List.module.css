@@ -136,3 +136,12 @@
 .container .body .list .viewCount {
   width: 8%;
 }
+
+.container .pagination {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 70px 0;
+}
+.container .pagination > a {
+  text-decoration-line: none;
+}
