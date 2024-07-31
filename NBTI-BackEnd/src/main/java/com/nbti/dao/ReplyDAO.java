@@ -27,6 +27,10 @@ public class ReplyDAO {
 		return mybatis.selectList("Reply.selectReply", params);
 	}
 	
+	// 댓글 삭제
+	public void delete(int seq) {
+		mybatis.delete("Reply.delete", seq);
+	}
 	
 	
 }

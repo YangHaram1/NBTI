@@ -82,6 +82,8 @@ export const ApprovalTree =()=>{
     }
 
     const tree = buildTree();
+    // 트리 목록 출력
+    console.log(JSON.stringify(tree, null, 2));
 
     return(
         <div className={styles.tree_container}>

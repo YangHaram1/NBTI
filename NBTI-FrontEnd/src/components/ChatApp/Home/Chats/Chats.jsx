@@ -7,7 +7,7 @@ import { host } from './../../../../config/config';
 import avatar from '../../../../images/user.jpg';
 import ChatsModal from './ChatsModal/ChatsModal';
 import { useCheckList } from './../../../../store/store';
-
+import { format } from 'date-fns';
 const Chats = () => {
     const { loginID } = useAuthStore();
     const { setChatSeq } = useCheckList();
@@ -21,6 +21,7 @@ const Chats = () => {
         axios.get(`${host}/group_chat`).then((resp) => {
             if(resp!=null){
                 if (resp.data !== '') {
+                   // console.log(resp.data);
                     setGroup_chats(resp.data);
                 }
                 else {
@@ -72,6 +73,8 @@ const Chats = () => {
         <div className={styles.container} onClick={handleClick}>
             {
                 group_chats.map((item, index) => {
+
+                    const formattedTimestamp = format(new Date(item.dto.write_date), 'yyyy-MM-dd');
                     return (
                         <React.Fragment key={index}>
                             <div className={styles.room} onContextMenu={handleRightClick(index)} onDoubleClick={handleDoubleClick(item.seq)}>
@@ -88,12 +91,12 @@ const Chats = () => {
                                         </div>
 
                                     </div>
-                                    <div className={styles.content}>
-                                        메세지 마지막 내용
+                                    <div className={styles.content} dangerouslySetInnerHTML= {{ __html: item.dto.message}}>
+                
                                     </div>
                                 </div>
                                 <div className={styles.write_date}>
-                                    2024-07-08
+                                    {formattedTimestamp}
                                 </div>
                             </div>
                             <ChatsModal modalRef={modalRef} index={index} item={item} setGroup_chats={setGroup_chats}></ChatsModal>
