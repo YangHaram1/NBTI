@@ -115,6 +115,17 @@ export const Detail = () => {
         })
     }, [])
 
+    // 댓글 삭제 
+    const handleDelReplyBtn = () => {
+        console.log(`${this}`);
+        axios.delete(`${host}/reply`).then((resp) => {
+            console.log(resp.data);
+        })
+    }
+
+
+
+    //======================================================================================
 
     return (
         <div className={styles.container}>
@@ -214,7 +225,7 @@ export const Detail = () => {
                                         <i className="fa-regular fa-heart fa-lg" />
                                         <p>5</p>
                                     </div>
-                                    <button>X</button>
+                                    <button onClick={handleDelReplyBtn}>X</button>
                                 </div>
                             )
                         })
