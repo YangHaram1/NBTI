@@ -84,7 +84,6 @@
 
 .mbox {
     font-family: 'Courier New', Courier, monospace;
-
     width: auto;
     height: auto;
     overflow: auto;
@@ -93,6 +92,25 @@
 }
 
 .mbox p {
+    background-color: white;
+    max-width: 200px;
+    margin: 0 !important;
+    display: inline-block;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 13px;
+}
+
+.mboxReverse {
+    font-family: 'Courier New', Courier, monospace;
+    width: auto;
+    height: auto;
+    overflow: auto;
+    word-break: break-all;
+
+}
+
+.mboxReverse p {
     background-color: rgb(147, 248, 5);
     max-width: 200px;
     margin: 0 !important;
@@ -101,6 +119,7 @@
     padding: 10px;
     font-size: 13px;
 }
+
 
 .dateSeparator {
     background-color: #ff000057;

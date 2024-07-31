@@ -265,7 +265,7 @@ const Chat = () => {
                       if (el && check) {
                         chatRef.current[count++] = el;
                       }
-                    }} className={styles.mbox}></div>
+                    }} className={idCheck?styles.mboxReverse:styles.mbox}></div>
                   <div className={styles.date}>{formattedTimestamp}</div>
                 </div>
               </div>
