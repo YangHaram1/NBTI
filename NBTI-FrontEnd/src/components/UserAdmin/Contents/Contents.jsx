@@ -13,7 +13,7 @@ export const Contents = () => {
       <Route path='/useradmin' element={<UserList setUserDetail={setUserDetail} />} />
                 <Route path='signup' element={<Signup />} />
                 <Route path='userlist' element={<UserList setUserDetail={setUserDetail} />} />
-                <Route path='userdetail/:id' element={<UserDetail/>} />
+                <Route path='userdetail/:id' element={<UserDetail/>} /> 
       </Routes>
     </div>
   );
