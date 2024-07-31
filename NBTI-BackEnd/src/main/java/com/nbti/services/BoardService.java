@@ -46,4 +46,9 @@ public class BoardService {
 		bdao.modify(dto);
 	}
 
+	// 조회수 증가
+	public void updateViewCount(int code) {
+		bdao.updateViewCount(code);
+	}
+	
 }

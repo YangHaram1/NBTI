@@ -1,7 +1,6 @@
 package com.nbti.controllers;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nbti.dto.BoardDTO;
@@ -42,12 +40,10 @@ public class BoardController {
 	// 게시글 출력
 	@GetMapping("/{boardSeq}/{code}")
 	public ResponseEntity<BoardDTO> selectBoard(@PathVariable int boardSeq, @PathVariable int code){
-		
-		System.out.println("seq : " + boardSeq + " / code : " + code);
-		
 		BoardDTO dto = bserv.selectBoard(boardSeq, code);
 		
-		System.out.println(dto.getSeq() + ": "+ dto.getTitle() + ":"+dto.getMember_id() + ":");
+		// 조회수 증가
+//		bserv.updateViewCount(code);
 		
 		return ResponseEntity.ok(dto);
 	}
@@ -76,6 +72,22 @@ public class BoardController {
 		bserv.modify(dto); 
 		return ResponseEntity.ok().build();
 	}
+	
+	
+	// 조회수 증가
+//	@GetMapping("/{code}")
+//	public ResponseEntity<Void> updateViewCount(@PathVariable int code) {
+//		bserv.updateViewCount(code);
+//		return ResponseEntity.ok().build();
+//	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
