@@ -5,6 +5,7 @@ import { host } from '../../../../config/config';
 import { useNavigate } from 'react-router-dom';
 import { useMemberStore } from '../../../../store/store';
 import SearchUser from './SearchUser/SearchUser';
+import Team from './Team/Team';
 
 const UserList = ({ setUserDetail }) => {
     const convertKeysToLowerCase = (obj) => {
@@ -19,11 +20,15 @@ const UserList = ({ setUserDetail }) => {
         }
         return obj;
     };
+
     const [users, setUsers] = useState([]);
+    const [filteredUsers, setFilteredUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
-    const [filteredUsers, setFilteredUsers] = useState([]);
+    const [teams, setTeams] = useState([]);
+    const [selectedTeam, setSelectedTeam] = useState('');
+
     const setSelectedMember = useMemberStore((state) => state.setSelectedMember);
     const navigate = useNavigate();
 
@@ -44,23 +49,46 @@ const UserList = ({ setUserDetail }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${host}/members/selectMembers`);
-                console.log('Fetched users:', response.data); // 데이터 구조 확인
-                
-                // 키를 소문자로 변환
-                const lowerCaseData = convertKeysToLowerCase(response.data);
+                const [userResponse, teamResponse] = await Promise.all([
+                    axios.get(`${host}/members/selectMembers`),
+                    axios.get(`${host}/members/selectTeam`)
+                ]);
 
-                setUsers(lowerCaseData);
-                setFilteredUsers(lowerCaseData);
+                const lowerCaseUsers = convertKeysToLowerCase(userResponse.data);
+                const lowerCaseTeams = convertKeysToLowerCase(teamResponse.data);
+
+                setUsers(lowerCaseUsers);
+                setTeams(lowerCaseTeams);
+                setFilteredUsers(lowerCaseUsers); // Initially show all users
                 setLoading(false);
             } catch (err) {
-                setError('사용자 데이터를 가져오는 데 실패했습니다.');
+                setError('데이터를 가져오는 데 실패했습니다.');
                 setLoading(false);
             }
         };
 
         fetchData();
     }, []);
+
+    useEffect(() => {
+        const fetchFilteredUsers = async (teamCode) => {
+            try {
+                const response = await axios.get(`${host}/members/selectByTeam`, {
+                    params: { team_code: teamCode }
+                });
+                const lowerCaseData = convertKeysToLowerCase(response.data);
+                setFilteredUsers(lowerCaseData);
+            } catch (error) {
+                console.error('사용자 데이터를 가져오는 데 실패했습니다.', error);
+            }
+        };
+
+        if (selectedTeam) {
+            fetchFilteredUsers(selectedTeam);
+        } else {
+            setFilteredUsers(users); // Show all users if no team is selected
+        }
+    }, [selectedTeam, users]);
 
     const handleUserClick = (userId) => {
         setSelectedMember(userId); // 상태에 사용자 ID 저장
@@ -79,10 +107,14 @@ const UserList = ({ setUserDetail }) => {
             });
             const lowerCaseData = convertKeysToLowerCase(response.data);
             setFilteredUsers(lowerCaseData);
-            console.log('Search response:', response.data);
         } catch (err) {
             alert('검색 결과를 가져오는 데 실패했습니다.');
         }
+    };
+
+    const handleTeamChange = (e) => {
+        const selectedTeamCode = e.target.value;
+        setSelectedTeam(selectedTeamCode); // 선택한 팀 코드로 상태 업데이트
     };
 
     if (loading) return <div className={styles.loading}>로딩 중...</div>;
@@ -91,7 +123,15 @@ const UserList = ({ setUserDetail }) => {
     return (
         <div className={styles.container}>
             <h2 className={styles.title}>사용자 목록</h2>
-            <SearchUser searchTerm={searchTerm} setSearchTerm={setSearchTerm} onSearch={handleSearch} />
+            <div className={styles.searchAndFilter}>
+                <SearchUser searchTerm={searchTerm} setSearchTerm={setSearchTerm} onSearch={handleSearch} />
+                <Team
+                    teams={teams}
+                    selectedTeam={selectedTeam}
+                    onTeamChange={handleTeamChange}
+                />
+            </div>
+
             {filteredUsers.length > 0 ? (
                 <table className={styles.userTable}>
                     <thead>
