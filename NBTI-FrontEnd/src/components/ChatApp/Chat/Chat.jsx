@@ -27,7 +27,7 @@ const Chat = () => {
   const divRef = useRef(null);
   const chatRef = useRef([]);
   const { loginID } = useAuthStore();
-  const [chatCheck,setChatCheck] =useState();
+  const [chatCheck,setChatCheck] =useState([]);
 
   const { chats, setChats, ws, setChatNavi,chatAppRef ,chatNavi} = useContext(ChatsContext);
   //const { maxCount,count, increment,decrement } = useNotification();
@@ -230,6 +230,12 @@ const Chat = () => {
 
   const handleChatsData = useCallback(() => {
     let count = 0;
+    const chatCheckCount=chatCheck.filter((item)=>{
+      if(item.chat_check==='N')
+        return true;
+      return false;
+    }).length;
+
     setList(
       chats.map((item, index) => {
         const formattedTimestamp = format(new Date(item.write_date), 'a hh:mm').replace('AM', '오전').replace('PM', '오후');
@@ -271,7 +277,7 @@ const Chat = () => {
                       }
                     }} className={idCheck?styles.mboxReverse:styles.mbox}></div>
                     <div>
-                      <div className={styles.check}>count</div>
+                      <div className={styles.check}>{chatCheckCount||''}</div>
                       <div className={styles.date}>{formattedTimestamp}</div>
                     </div>
                 </div>
