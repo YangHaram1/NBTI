@@ -11,25 +11,31 @@
     text-indent: 30px;
     width: 100%;
     flex:0.5;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
 
 .content{
     flex:9.5;
     display: flex;
     flex-direction: column;
-    border: 1px solid black;
+    /* border: 1px solid black; */
 }
 
 .btns{
-    flex:1;
+    flex:0.5;
 }
 
 .write_box{
-    flex:7;
+    flex:8;
+    border-top: 1px solid black;
 }
 
 .files{
-    flex:2;
+    flex:1.5;
+    border: 1px solid black;
+    width: 98%;
+    margin-left: 10px;
 }
+
+
 
