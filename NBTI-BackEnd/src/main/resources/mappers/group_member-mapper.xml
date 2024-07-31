@@ -31,6 +31,10 @@
 		select * from group_member where group_seq=#{param}
 	</select>
 	
+	<update id="update_check">
+		update group_member set chat_check ='Y' where group_seq=${group_seq} and member_id=#{member_id}
+	</update>
+	
 	
 	<delete id="delete">
 		delete from group_member where group_seq=${group_seq} and member_id=#{member_id}

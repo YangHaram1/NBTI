@@ -27,7 +27,7 @@ const Chat = () => {
   const divRef = useRef(null);
   const chatRef = useRef([]);
   const { loginID } = useAuthStore();
-
+  const [chatCheck,setChatCheck] =useState([]);
 
   const { chats, setChats, ws, setChatNavi,chatAppRef ,chatNavi} = useContext(ChatsContext);
   //const { maxCount,count, increment,decrement } = useNotification();
@@ -35,7 +35,7 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
-  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq } = useCheckList();
+  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq ,setOnmessage} = useCheckList();
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
 
@@ -63,6 +63,9 @@ const Chat = () => {
         setChats(resp.data);
         console.log("채팅목록가저오기");
       })
+      axios.patch(`${host}/group_member?group_seq=${chatSeq}`).then((resp)=>{
+        //  console.log("업데이트")
+      })
       updateSidebarPosition();
       updateSearchPosition();
       ws.current.onclose = () => {
@@ -86,6 +89,7 @@ const Chat = () => {
             return [...prev, chat]
           })
         }
+        setOnmessage();
         console.log("메세지보냄");
         /*toast("알림", {
           position: "top-left", // 위치 설정
@@ -226,6 +230,12 @@ const Chat = () => {
 
   const handleChatsData = useCallback(() => {
     let count = 0;
+    const chatCheckCount=chatCheck.filter((item)=>{
+      if(item.chat_check==='N')
+        return true;
+      return false;
+    }).length;
+
     setList(
       chats.map((item, index) => {
         const formattedTimestamp = format(new Date(item.write_date), 'a hh:mm').replace('AM', '오전').replace('PM', '오후');
@@ -266,7 +276,10 @@ const Chat = () => {
                         chatRef.current[count++] = el;
                       }
                     }} className={idCheck?styles.mboxReverse:styles.mbox}></div>
-                  <div className={styles.date}>{formattedTimestamp}</div>
+                    <div>
+                      <div className={styles.check}>{chatCheckCount||''}</div>
+                      <div className={styles.date}>{formattedTimestamp}</div>
+                    </div>
                 </div>
               </div>
             </div>
@@ -296,6 +309,12 @@ const Chat = () => {
     scrollBottom();
   }, [scrollBottom])
 
+  useEffect(()=>{
+    axios.get(`${host}/group_member?group_seq=${chatSeq}`).then((resp)=>{
+      console.log(resp.data);
+      setChatCheck(resp.data);
+    })
+  },[invite])
 
 
 
@@ -328,7 +347,7 @@ const Chat = () => {
         </div>
         <Search search={search} setSearch={setSearch} searchRef={searchRef} setSearchList={setSearchList} handleSearch={handleSearch} chatRef={chatRef} divRef={divRef}></Search>
         <Emoticon sidebarRef={sidebarRef} editorRef={editorRef} />
-        {invite && (<Invite setInvite={setInvite}></Invite>)}
+        {invite&&(<Invite setInvite={setInvite} chatCheck={chatCheck}></Invite>)}
       </React.Fragment>
     );
   }

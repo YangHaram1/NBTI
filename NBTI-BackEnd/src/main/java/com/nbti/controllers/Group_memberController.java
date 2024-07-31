@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,5 +57,14 @@ public class Group_memberController {
 		
 		
 		return ResponseEntity.ok(serv.members(group_seq));
+	}
+	
+	@PatchMapping
+	public ResponseEntity<Void> patch(int group_seq) throws Exception{
+		//System.out.println("업데이트 멤버 check");
+		String loginID= (String) session.getAttribute("loginID");
+		serv.update_check(group_seq,loginID);
+		return ResponseEntity.ok().build();
+		
 	}
 }
