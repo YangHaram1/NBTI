@@ -29,4 +29,8 @@ public class ChatService {
 	public List<ChatDTO> searchList(String content,int group_seq)throws Exception {
 		return dao.search(content,group_seq);
 	}
+	
+	public ChatDTO getLastDTO(int group_seq) throws Exception{
+		return dao.getLastDTO(group_seq);
+	}
 }

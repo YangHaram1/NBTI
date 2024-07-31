@@ -21,6 +21,7 @@ const Chats = () => {
         axios.get(`${host}/group_chat`).then((resp) => {
             if(resp!=null){
                 if (resp.data !== '') {
+                    console.log(resp.data);
                     setGroup_chats(resp.data);
                 }
                 else {
@@ -88,8 +89,8 @@ const Chats = () => {
                                         </div>
 
                                     </div>
-                                    <div className={styles.content}>
-                                        메세지 마지막 내용
+                                    <div className={styles.content} dangerouslySetInnerHTML= {{ __html: item.dto.message}}>
+                                     
                                     </div>
                                 </div>
                                 <div className={styles.write_date}>
