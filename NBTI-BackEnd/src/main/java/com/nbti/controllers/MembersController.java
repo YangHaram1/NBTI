@@ -180,4 +180,13 @@ public class MembersController {
 		return ResponseEntity.ok(result);
 	}
 	
+	// 작성일 24.07.31 
+	// 작성자 김지연
+	// 팀별 사용자 검색
+    @GetMapping("/searchMembers/{selectTeam}")
+    public ResponseEntity<List<MembersDTO>> searchMembers(@PathVariable("selectTeam") String team){
+        List<MembersDTO> selectMembers = mServ.searchMembers(team);
+        return ResponseEntity.ok(selectMembers);
+    }
+	
 }
