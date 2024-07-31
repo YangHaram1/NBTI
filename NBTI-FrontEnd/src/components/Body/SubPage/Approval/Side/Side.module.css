@@ -120,9 +120,20 @@
 
   .form_btns button{
     width: 60px;
+    height: 30px;
     margin-right:20px;
     margin-top: 15px;
+    background-color: #CCE3DE;
+    border: 0px;
+    border-radius: 5px;
   }
+
+  .form_btns button:hover{
+    cursor: pointer;
+    background-color: #abc3be;
+  }
+
+
 
   .form_menu_title{
     height: 30px;

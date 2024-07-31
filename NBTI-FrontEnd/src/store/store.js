@@ -19,6 +19,7 @@ export const useMemberStore = create((set) => ({
     setSelectedMember: (member) => set({ selectedMember: member }),
   }));
 
+
 /*하람*/
 export const useCheckList = create((set) => ({
     emoticonDisplay: false,
@@ -50,3 +51,13 @@ export const useDocFormStore = create((set)=>{
         }))
     }
 })
+
+export const useApprovalLine = create((set)=>{
+    return{
+        approvalLine : [{id : '', order:''}],
+        setApprovalLine : (approval)=>set((prev)=>({
+           approvalLine : [...prev.approvalLine, approval] 
+        }))
+    }
+})
+

@@ -69,6 +69,10 @@
 	<update id="changePw">
 		update members set pw = #{pw} where id = #{id}
 	</update>
+	
+	<select id="searchMembers" resultType="com.nbti.dto.MembersDTO">
+		select * from members where team_code = #{team}
+	</select>
 
 
 </mapper>
