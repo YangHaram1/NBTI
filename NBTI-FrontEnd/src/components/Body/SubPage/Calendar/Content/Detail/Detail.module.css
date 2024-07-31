@@ -16,50 +16,107 @@
 
 }
 
-
+/* ========================== */
 /* 날짜 클릭시 나오는 일정 추가 모달창 */
 .modal {
     position: fixed;
     top: 50%;
     left: 50%;
-    width: 500px; height: 500px;
+    width: 500px; 
+    height: auto; 
+    max-height: 90%; 
     border-radius: 20px;
     transform: translate(-50%, -50%);
-    background: white;
+    background: #fff; 
     padding: 20px;
     border: 1px solid #ccc;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     z-index: 1050;
-    display: flex; flex-direction: column;
+    display: flex; 
+    flex-direction: column;
+    overflow-y: auto; 
+    background-color: #EAF4F4;
+    box-shadow: 1px 1px 2px #6B9080;
 }
-/* 제목 */
-.modal h2 {flex: 1;}
-.modalInner{flex: 9; display: flex;flex-direction: column;}
-.modalInner > div {flex: 1;display: flex;align-items: center;}
+
+/* 제목 스타일 */
+.modal h2 {
+    background-color: #6B9080; 
+    color: white; 
+    padding: 15px;
+    border-radius: 15px; 
+    text-align: center; 
+}
+
+/* 모달 내부 스타일 */
+.modalInner {
+    display: flex;
+    flex-direction: column;
+    padding: 10px; 
+}
+
+/* 내부 div 스타일 */
+.modalInner > div {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    margin: 10px 0; 
+}
+
+
 /* 왼쪽 title */
-.modalInner > div p {width: 20%;}
+.modalInner > div p {
+    width: 20%; /* 제목 영역 너비 */
+    font-weight: bold;
+}
+
 /* 오른쪽 input, select */
-.modalInner > div select , .modalInner > div input{
-    width: 80%;
+.modalInner > div select, 
+.modalInner > div input {
+    width: 80%; 
+    padding: 10px; 
+    border-radius: 10px;
+    border: 1px solid #ccc; 
+    transition: border 0.3s; 
 }
-.modalInner > div select , .modalInner > div .inputBox{
-    width: 40%;
+
+.modalInner > div select:focus, 
+.modalInner > div input:focus {
+    border: 1px solid #4CAF50; /* 포커스 시 초록색 경계선 */
+    outline: none; /* 기본 아웃라인 제거 */
 }
-.modalInner > div select , .modalInner > div .dateBox{
-    width: 40%;
+
+/* 왼쪽 select 스타일 */
+.modalInner > div .inputBox {
+    width: 40%; /* 입력 박스 너비 */
 }
-/* 버튼 */
+
+/* 왼쪽 dateBox 스타일 */
+.modalInner > div .dateBox {
+    width: 40%; /* 날짜 박스 너비 */
+    display: flex; justify-content: end;
+}
+
+/* 버튼 스타일 */
 .modalInner > div:nth-child(6) {
-    display: flex; justify-content: space-evenly; align-items: center;
+    display: flex; 
+    justify-content: space-evenly; 
+    align-items: center;
 }
-.modalInner > div:nth-child(6) > button {
-    padding: 2% 5%;
+
+.modalInner > div:nth-child(6) > button, .modalInner > .detail > .detailBtn > button {
+    padding: 10px 20px; 
     border: none;
-    border-radius: 50px; cursor: pointer;
-    transition: all ease 0.2s;
+    border-radius: 50px; 
+    cursor: pointer;
+    transition: all ease 0.3s;
+    background-color: #6B9080;
+    color: white; 
+    font-weight: bold; 
 }
-.modalInner > div:nth-child(6) > button:hover{
-    background-color: #6b9080cc; color: white;
+
+.modalInner > div:nth-child(6) > button:hover, .modalInner > .detail > .detailBtn > button:hover  {
+    background-color: #A4C3B2;
 }
 
 .modalOverlay {
@@ -68,11 +125,27 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.7);
     z-index: 1050;
 }
-
-
-
-
+/* ======== */
+/* 상세 모달창 */
+.modalInner > .detail {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border-radius: 10px; 
+}
+.modalInner > .detail > p{
+    width: 100%;
+    margin: 2% 0;
+}
+/* 버튼 스타일 */
+.modalInner > .detail > .detailBtn {
+    margin-top: 8%;
+    width: 100%;
+    display: flex; 
+    justify-content: space-evenly; 
+    align-items: center;
+}
 

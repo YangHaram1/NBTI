@@ -14,6 +14,28 @@
       </selectKey>
     </insert>
     
+    <!-- 현재 등록된 캘린더 전체 목록 -->
+    <select id="list" resultType="com.nbti.dto.CalendarDTO">
+    	SELECT * from schedule
+    </select>
+    
+    <update id="update">
+    	update schedule set calendarTitle=#{calendarTitle}, contents=#{contents}  where seq = #{seq}
+    </update>
+    
+<!--     <select id="scheduleName" resultType="com.nbti.dto.ScheduleTitleDTO">
+
+		SELECT 
+		    st.scheduleTitle_name, st.seq
+		FROM 
+		    schedule s
+		JOIN 
+		    scheduleTitle st ON s.title = st.seq;
+
+    </select>
+	 -->
+	
+	
 	
 <!-- 캘린더 제목 업데이트 -->
 <!--     <update id="editTitle">
@@ -28,10 +50,6 @@
         WHERE seq = #{seq};
     </update> -->
     
-    <!-- 캘린더 List 불러오기 -->
-    <select id="list" resultType="com.nbti.dto.CalendarDTO">
-    	SELECT * from schedule
-    </select>
 
 	
     

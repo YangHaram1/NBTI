@@ -95,7 +95,12 @@ export const Side = ({setAddOpen}) => {
         console.error('Error:', error);
         setIsEditing(false);
       });
-  };
+    };
+
+    // axios.get(`${host}/calendar/title`).then((resp)=>{
+    //   console.log(resp)
+    // })
+
   
 
   return (

@@ -1,8 +1,16 @@
 package com.nbti.dto;
 
-public class scheduleTitleDTO {
+public class ScheduleTitleDTO {
 	private int seq;
 	private String scheduleTitle_name;
+	public ScheduleTitleDTO() {
+		super();
+	}
+	public ScheduleTitleDTO(int seq, String scheduleTitle_name) {
+		super();
+		this.seq = seq;
+		this.scheduleTitle_name = scheduleTitle_name;
+	}
 	public int getSeq() {
 		return seq;
 	}
@@ -15,14 +23,7 @@ public class scheduleTitleDTO {
 	public void setScheduleTitle_name(String scheduleTitle_name) {
 		this.scheduleTitle_name = scheduleTitle_name;
 	}
-	public scheduleTitleDTO() {
-		super();
-	}
-	public scheduleTitleDTO(int seq, String scheduleTitle_name) {
-		super();
-		this.seq = seq;
-		this.scheduleTitle_name = scheduleTitle_name;
-	}
+
 	
 	
 }
