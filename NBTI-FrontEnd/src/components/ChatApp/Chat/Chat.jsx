@@ -29,13 +29,13 @@ const Chat = () => {
   const { loginID } = useAuthStore();
 
 
-  const { chats, setChats, ws, setChatNavi } = useContext(ChatsContext);
+  const { chats, setChats, ws, setChatNavi,chatAppRef ,chatNavi} = useContext(ChatsContext);
   //const { maxCount,count, increment,decrement } = useNotification();
   let lastDate = null;
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
-  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq,chatAppRef } = useCheckList();
+  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq } = useCheckList();
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
 
@@ -57,6 +57,7 @@ const Chat = () => {
     const url = host.replace(/^https?:/, '')
 
     if (loginID != null) {
+      const {chatSeq} =useCheckList.getState();
       axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {
 
         setChats(resp.data);
@@ -116,7 +117,7 @@ const Chat = () => {
       window.removeEventListener('resize', updateSidebarPosition);
     };
 
-  }, []);
+  }, [chatNavi]);
 
 
   const notify = useCallback((item) => {
@@ -147,11 +148,14 @@ const Chat = () => {
 
 
   const handleToastOnclick=(item)=>{
-    console.log("on click toast");
+   
     setChatNavi((prev)=>{
+
+      if(chatAppRef.current!=null)
       chatAppRef.current.style.display="flex";
+      console.log(`on click toast:${item.group_seq} `);
       setChatSeq(item.group_seq);
-      return 'home'
+      return 'chat'
     });
     
   }
@@ -279,14 +283,15 @@ const Chat = () => {
   }, [handleChatsData])
 
   const scrollBottom = useCallback(() => {
-    if (chatRef.current.length !== 0) {
+    if (chatRef.current.length > 0) {
       chatRef.current[chatRef.current.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
     else if (divRef.current) {
       divRef.current.scrollTop = divRef.current.scrollHeight;
     }
 
-  }, [list])
+  }, [list]);
+
   useEffect(() => {
     scrollBottom();
   }, [scrollBottom])
