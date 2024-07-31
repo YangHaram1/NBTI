@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nbti.commons.EncryptionUtils;
@@ -51,14 +52,13 @@ public class MembersController {
 	@GetMapping
 	public MembersDTO myPage() {
 		String id = (String)session.getAttribute("loginID");
-		System.out.println(id);
+		
 		
 		return mServ.selectMyData(id);
 	}
 	 @GetMapping("/{id}")
 	    public ResponseEntity<MembersDTO> selectById(@PathVariable("id") String id) {
 	        MembersDTO member = mServ.selectMyData(id);
-	        System.out.println(member);
 	        if (member != null) {
 	            return ResponseEntity.ok(member);
 	        } else {
@@ -131,6 +131,13 @@ public class MembersController {
 	public ResponseEntity<Void> deleteUser(@PathVariable("id") String id){
 		mServ.deleteUser(id);
 		return ResponseEntity.ok().build();
+	}
+	// 사용자목록 검색
+	@GetMapping("/searchUser")
+	public ResponseEntity<List<MembersDTO>> searchUser(@RequestParam String name){
+		System.out.println(name);
+		List<MembersDTO> user = mServ.searchUser(name);
+		return ResponseEntity.ok(user);
 	}
 	
 	

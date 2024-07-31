@@ -44,6 +44,11 @@
 <delete id="deleteUser" >
 	delete from members where id = #{id}
 </delete>
+<select id="searchUser" resultType="com.nbti.dto.MembersDTO">
+	    SELECT * FROM members 
+    WHERE name LIKE '%' || #{name} || '%' 
+    ORDER BY name
+</select>
   <select id="selectMembers" resultType="map">
         SELECT 
             m.id,

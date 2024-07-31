@@ -36,6 +36,7 @@
     flex-direction: column;
     overflow-y: auto; 
     background-color: #EAF4F4;
+    box-shadow: 1px 1px 2px #6B9080;
 }
 
 /* 제목 스타일 */
