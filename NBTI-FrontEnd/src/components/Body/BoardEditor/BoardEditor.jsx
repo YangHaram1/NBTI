@@ -76,19 +76,19 @@ const BoardEditor = ({ setBoard, contents }) => {
               // 붙여넣기 후에 처리할 로직을 여기에 추가
               console.log("After Paste:", e.node.innerHTML);
             });
-            editor.on("keydown", (event) => {
-              if (event.key === "Enter") {
-                if (!event.shiftKey) {
-                  event.preventDefault(); // 기본 Enter 키 동작을 막음
-                  if (editorRef.current.getContent() !== "") {
-                    // ws.current.send(editorRef.current.getContent());
-                  }
-                  editorRef.current.setContent("");
-                  // alert("메세지보냄");
-                  // alert(editorRef.current.getContent());
-                }
-              }
-            });
+            // editor.on("keydown", (event) => {
+            //   if (event.key === "Enter") {
+            //     if (!event.shiftKey) {
+            //       event.preventDefault(); // 기본 Enter 키 동작을 막음
+            //       if (editorRef.current.getContent() !== "") {
+            //         // ws.current.send(editorRef.current.getContent());
+            //       }
+            //       editorRef.current.setContent("");
+            //       // alert("메세지보냄");
+            //       // alert(editorRef.current.getContent());
+            //     }
+            //   }
+            // });
           },
         }}
       />
