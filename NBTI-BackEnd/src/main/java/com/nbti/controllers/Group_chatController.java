@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nbti.dto.ChatDTO;
 import com.nbti.dto.Group_chatDTO;
 import com.nbti.dto.Group_chatSizeDTO;
 import com.nbti.dto.Group_memberDTO;
+import com.nbti.services.ChatService;
 import com.nbti.services.Group_chatService;
 import com.nbti.services.Group_memberService;
 
@@ -24,16 +26,22 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/group_chat")
 public class Group_chatController {
 	
+
+	@Autowired
+	private HttpSession session;
+	
+	
 	
 	@Autowired
 	private Group_chatService serv;
 	//@RequestParamm(required=true)
 	
-	@Autowired
-	private HttpSession session;
 	
 	@Autowired
 	private Group_memberService mserv;
+	
+	@Autowired
+	private ChatService cserv;
 	
 	@PostMapping
 	public ResponseEntity<Void> post(String member_id,String name) throws Exception {
@@ -82,7 +90,8 @@ public class Group_chatController {
 					break;
 				}
 			}
-			result.add(new Group_chatSizeDTO(dto.getSeq(),dto.getName(),dto.getAlarm(),dto.getBookmark(),size));
+			ChatDTO cdto=cserv.getLastDTO(dto.getSeq());
+			result.add(new Group_chatSizeDTO(dto.getSeq(),dto.getName(),dto.getAlarm(),dto.getBookmark(),size,cdto));
 		}
 		
 		if(list!=null)

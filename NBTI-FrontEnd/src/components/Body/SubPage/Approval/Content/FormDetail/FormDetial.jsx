@@ -7,7 +7,7 @@ export const FormDetail = () => {
     const {docForm} = useDocFormStore();
 
     useEffect(()=>{
-        console.log("데이터 변동 중");
+        // console.log("데이터 변동 중");
     },[docForm])
 
     return(

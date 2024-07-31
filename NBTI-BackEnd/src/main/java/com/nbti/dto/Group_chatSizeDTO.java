@@ -6,6 +6,8 @@ public class Group_chatSizeDTO {
 	private String alarm;
 	private String bookmark;
 	private int size;
+	private ChatDTO dto;
+	
 	public int getSeq() {
 		return seq;
 	}
@@ -36,17 +38,27 @@ public class Group_chatSizeDTO {
 	public void setSize(int size) {
 		this.size = size;
 	}
-	public Group_chatSizeDTO(int seq, String name, String alarm, String bookmark, int size) {
+	public ChatDTO getDto() {
+		return dto;
+	}
+	public void setDto(ChatDTO dto) {
+		this.dto = dto;
+	}
+	public Group_chatSizeDTO(int seq, String name, String alarm, String bookmark, int size, ChatDTO dto) {
 		super();
 		this.seq = seq;
 		this.name = name;
 		this.alarm = alarm;
 		this.bookmark = bookmark;
 		this.size = size;
+		this.dto = dto;
 	}
 	public Group_chatSizeDTO() {
 		super();
 	}
+	
+	
+	
 	
 	
 }
