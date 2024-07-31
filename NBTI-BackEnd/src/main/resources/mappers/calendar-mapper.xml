@@ -15,8 +15,19 @@
     </insert>
     
     <!-- 현재 등록된 캘린더 전체 목록 -->
-    <select id="list" resultType="com.nbti.dto.CalendarDTO">
-    	SELECT * from schedule
+    <select id="list" resultType="com.nbti.dto.ScheduleTitleDTO">
+        SELECT 
+            s.seq AS schedule_seq,
+            s.member_id,
+            st.scheduleTitle_name,
+            s.calendarTitle,
+            s.contents,
+            s.start_date,
+            s.end_date
+        FROM 
+            schedule s
+        JOIN 
+            scheduleTitle st ON s.title = st.seq
     </select>
     
     <update id="update">
