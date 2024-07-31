@@ -1,7 +1,7 @@
 import styles from './Invite.module.css';
 import { useEffect, useState, useCallback, useContext } from 'react';
 import avatar from '../../../../images/user.jpg'
-import { useMemberStore } from '../../../../store/store';
+import { useCheckList, useMemberStore } from '../../../../store/store';
 import { useAuthStore } from './../../../../store/store';
 import axios from 'axios';
 import { ChatsContext } from '../../../../Context/ChatsContext';
@@ -12,7 +12,7 @@ const Invite = ({ setInvite }) => {
     const [list, setList] = useState([]);
     const [nameSearch, setNameSearch] = useState('');
     const [isChecked, setIsChecked] = useState([]);
-    const {chatSeq} =useContext(ChatsContext);
+    const {chatSeq} =useCheckList();
     const [invited,setInvited]=useState([]);
     const handleNameSearch = (e) => {
         setNameSearch(e.target.value);

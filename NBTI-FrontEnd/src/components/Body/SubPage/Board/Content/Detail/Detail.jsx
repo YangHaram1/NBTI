@@ -1,12 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import styles from "./Detail.module.css";
 import { useBoardStore } from "../../../../../../store/store";
 import axios from "axios";
-import { host, api } from '../../../../../../config/config'
+import { host } from '../../../../../../config/config'
 import image from "../../../../../../images/user.jpg";
 import { format } from 'date-fns';
 import { useNavigate } from "react-router-dom";
-import { Editor } from '@tinymce/tinymce-react';
 import BoardEditor from "../../../../BoardEditor/BoardEditor";
 
 
@@ -22,22 +21,17 @@ export const Detail = () => {
     const date = new Date(detail.write_date);
     const currentDate = !isNaN(date) ? format(date, 'yyyy-MM-dd HH:mm') : 'Invalid Date';
 
-
-
     useEffect(() => {
         let code = 1;
         if (boardType === "자유") code = 1;
         else if (boardType === "공지") code = 2;
 
-        if (boardSeq === -1) {
-            navi('/board');
-        }
+        if (boardSeq === -1) navi('/board');
 
         if (boardSeq !== -1) {
             axios.get(`${host}/board/${boardSeq}/${code}`).then((resp) => {
                 setDetail(resp.data); // 취소 시 원본 데이터
                 setBoard(resp.data);
-                console.log(JSON.stringify(detail))
             })
         }
 
@@ -48,14 +42,10 @@ export const Detail = () => {
         link.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css";
         document.head.appendChild(link);
 
-        // 컴포넌트가 언마운트될 때 스타일시트를 제거
         return () => {
-            document.head.removeChild(link);
+            document.head.removeChild(link); // 언마운트될 때 스타일시트를 제거
         };
     }, []);
-
-    // 해당 게시글로 이동
-
 
 
     /** ================[ 삭 제 ]============= */
@@ -66,14 +56,11 @@ export const Detail = () => {
                     navi('/board/free');
                 })
             }
-
         }
     }
 
-
     /** ================[ 수 정 ]============= */
     const [isEditing, setIsEditing] = useState(false);
-
 
     // 수정 click 
     const handleEditBtn = () => {
@@ -82,7 +69,6 @@ export const Detail = () => {
 
     // 저장 click
     const handleSaveBtn = () => {
-
         axios.put(`${host}/board`, board).then((resp) => {
             setDetail(board)
             setIsEditing(false);
@@ -101,6 +87,8 @@ export const Detail = () => {
     // ==========[댓 글]==========
     const [replyContents, setReplyContents] = useState('');
     const [reply, setReply] = useState([]);
+    const inputRef = useRef(null); // ref 추가
+
     const handleInputReply = (e) => {
         const textContent = e.target.innerText;
         setReplyContents(textContent);
@@ -108,6 +96,7 @@ export const Detail = () => {
 
     const handleReplyAdd = () => {
         console.log('Reply:', replyContents);
+        console.log("게시판 seq : ", detail.seq)
 
         let code = 1;
         if (boardType === "자유") code = 1;
@@ -122,9 +111,18 @@ export const Detail = () => {
                 }
                 return [resp.data];
             })
-            setReplyContents('');
-        })
+            if (inputRef.current) {
+                inputRef.current.innerText = ''; // div 내용 비우기
+            }
+        });
     }
+
+
+    // useEffect(() => {
+    //     axios.get(`${host}/board/${detail.seq}/${detail.board_code}`).then((resp) => {
+    //         console.log("댓글 : " + resp.data);
+    //     })
+    // }, [])
 
 
     return (
@@ -179,7 +177,7 @@ export const Detail = () => {
             </div>
             <div className={styles.content}>
                 {isEditing ? (
-                    <BoardEditor setBoard={setBoard} />
+                    <BoardEditor setBoard={setBoard} contents={board.contents} />
                 ) : (
                     <span>{detail.contents}</span>
                 )}
@@ -194,11 +192,11 @@ export const Detail = () => {
                 <div className={styles.replyInput}>
                     <img src={image} alt="" />
                     <div
+                        ref={inputRef} // ref 설정
                         className={styles.inputText}
                         contentEditable="true"
                         onInput={handleInputReply}
                         suppressContentEditableWarning={true}
-                        dangerouslySetInnerHTML={{ __html: replyContents }}
                     />
                     <button onClick={handleReplyAdd}>등록</button>
                 </div>
@@ -209,7 +207,7 @@ export const Detail = () => {
                         reply.map((item, i) => {
                             // 댓글 날짜 타입 변경 
                             const reply_date = new Date(item.write_date);
-                            const reply_currentDate = !isNaN(reply_date) ? format(reply_date, 'yyyy-MM-dd HH:mm') : 'Invalid Date';
+                            const reply_currentDate = !isNaN(reply_date) ? format(reply_date, 'yyyy-MM-dd HH:mm:ss') : 'Invalid Date';
 
                             return (
                                 <div className={styles.replyOutput} key={i}>

@@ -21,10 +21,20 @@ export const useMemberStore = create((set) => ({
 
 /*하람*/
 export const useCheckList = create((set) => ({
+    chatSeq:0,
     emoticonDisplay: false,
     searchDisplay: true,
     setEmoticonDisplay: (emt) => set((state) => ({ emoticonDisplay: !state.emoticonDisplay })),
-    setSearchDisplay: (search) => set({ searchDisplay: search })
+    setSearchDisplay: (search) => set({ searchDisplay: search }),
+    setChatSeq:(seq)=>set({chatSeq:seq})
+}));
+
+export const useNotification =create((set)=>({
+        maxCount:3,
+        count:0,
+        increment: () => set((state) => ({ count: state.count + 1 })),
+        decrement: () => set((state) => ({ count: Math.max(state.count - 1, 0) })),
+  
 }));
 
 
