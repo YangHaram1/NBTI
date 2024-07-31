@@ -53,7 +53,10 @@ public boolean login(MembersDTO dto) {
 	   public List<Map<String, Object>> getMembers() {
 	        return mybatis.selectList("Member.selectMembers");
 	    }
-
+	   
+	   public List<MembersDTO> selectByTeam(String team_code){
+		   return mybatis.selectList("Member.selectByTeam",team_code);
+	   }
 	
 	public boolean checkPw(HashMap<String, String> map) {
 		return mybatis.selectOne("Member.checkPw",map);
