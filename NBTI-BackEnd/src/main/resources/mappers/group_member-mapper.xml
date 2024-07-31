@@ -6,7 +6,7 @@
 <mapper namespace="Group_member">
 	<insert id="insert">
 		insert into group_member
-		values(${group_seq},#{member_id},#{chat_check},#{file_path},#{chat_path})
+		values(${group_seq},#{member_id},${last_chat_seq},#{file_path},#{chat_path})
 	</insert>
 	
 	<select id="check" resultType="Integer">
@@ -32,7 +32,7 @@
 	</select>
 	
 	<update id="update_check">
-		update group_member set chat_check ='Y' where group_seq=${group_seq} and member_id=#{member_id}
+		update group_member set last_chat_seq =${last_chat_seq} where group_seq=${group_seq} and member_id=#{member_id}
 	</update>
 	
 	
