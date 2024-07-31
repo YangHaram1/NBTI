@@ -20,8 +20,8 @@
 	</select>
 	
 	<!-- 댓글 출력 -->
-<!-- 	<select id="selectReply" resultType="com.nbti.dto.ReplyDTO">
-
-	</select> -->
+	<select id="selectReply" resultType="com.nbti.dto.ReplyDTO">
+		select * from reply where board_seq = ${board_seq} and board_code = ${board_code}
+	</select>
 
 </mapper>

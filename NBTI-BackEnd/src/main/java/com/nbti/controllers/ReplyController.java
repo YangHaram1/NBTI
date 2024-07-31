@@ -1,7 +1,10 @@
 package com.nbti.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,6 +47,7 @@ public class ReplyController {
 //		return ResponseEntity.ok().build();
 //	}
 	
+	// 댓글 입력
 	@PostMapping
 	public ResponseEntity<ReplyDTO> insert(@RequestBody ReplyDTO dto) {
 	String member_id = (String) session.getAttribute("loginID");
@@ -51,11 +55,16 @@ public class ReplyController {
 	System.out.println("멤버 아이디 : " + dto.getMember_id()); // 잘 나옴
 	System.out.println("댓글 내용 : " + dto.getContents()); // 잘 나옴
 	System.out.println("작성 시간 : " + dto.getWrite_date()); // null
-	
-	
+
 		return ResponseEntity.ok(rserv.insert(dto));
 	}
 	
+	// 댓글 출력
+	@GetMapping("/{board_seq}/{board_code}")
+	public ResponseEntity<List<ReplyDTO>> selectReply(@PathVariable int board_seq, @PathVariable int board_code){
+		List<ReplyDTO> list = rserv.selectReply(board_seq, board_code);
+		return ResponseEntity.ok(list);
+	}
 	
 	
 	
