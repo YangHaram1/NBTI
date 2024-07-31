@@ -63,6 +63,9 @@ const Chat = () => {
         setChats(resp.data);
         console.log("채팅목록가저오기");
       })
+      axios.patch(`${host}/group_member?group_seq=${chatSeq}`).then((resp)=>{
+        //  console.log("업데이트")
+      })
       updateSidebarPosition();
       updateSearchPosition();
       ws.current.onclose = () => {
@@ -267,7 +270,10 @@ const Chat = () => {
                         chatRef.current[count++] = el;
                       }
                     }} className={idCheck?styles.mboxReverse:styles.mbox}></div>
-                  <div className={styles.date}>{formattedTimestamp}</div>
+                    <div>
+                      <div className={styles.check}>count</div>
+                      <div className={styles.date}>{formattedTimestamp}</div>
+                    </div>
                 </div>
               </div>
             </div>

@@ -36,4 +36,8 @@ public class Group_memberService {
 	public void delete(int group_seq,String member_id) throws Exception{
 		dao.delete(group_seq,member_id);
 	}
+	
+	public void update_check(int group_seq,String member_id) throws Exception{
+		dao.update_check(group_seq,member_id);
+	}
 }

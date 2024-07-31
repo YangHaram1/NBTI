@@ -52,5 +52,12 @@ public class Group_memberDAO {
 		map.put("member_id", member_id);
 		mybatis.delete("Group_member.delete", map);
 	}
+	
+	public void update_check(int group_seq,String member_id) throws Exception{
+		Map<String, String> map = new HashMap<>();
+		map.put("group_seq", String.valueOf(group_seq));
+		map.put("member_id", member_id);
+		mybatis.delete("Group_member.update_check", map);
+	}
 
 }
