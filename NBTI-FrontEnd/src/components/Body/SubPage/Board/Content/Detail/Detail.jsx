@@ -116,10 +116,15 @@ export const Detail = () => {
     }, [])
 
     // 댓글 삭제 
-    const handleDelReplyBtn = () => {
-        console.log(`${this}`);
-        axios.delete(`${host}/reply`).then((resp) => {
-            console.log(resp.data);
+    const handleDelReplyBtn = (replySeq) => {
+        console.log(replySeq);
+
+        axios.delete(`${host}/reply/${replySeq}`).then((resp) => {
+            setReply((prev) => {
+                return (
+                    prev.filter((item) => item.seq !== replySeq)
+                )
+            })
         })
     }
 
@@ -225,7 +230,7 @@ export const Detail = () => {
                                         <i className="fa-regular fa-heart fa-lg" />
                                         <p>5</p>
                                     </div>
-                                    <button onClick={handleDelReplyBtn}>X</button>
+                                    <button onClick={() => { handleDelReplyBtn(item.seq) }}>X</button>
                                 </div>
                             )
                         })
