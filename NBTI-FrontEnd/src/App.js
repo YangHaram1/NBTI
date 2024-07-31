@@ -9,7 +9,7 @@ import { useEffect, useContext } from 'react';
 import ChatApp from './components/ChatApp/ChatApp';
 import { ChatsProvider ,ChatsContext} from './Context/ChatsContext';
 import { host } from './config/config';
-import { ToastContainer } from'react-toastify';
+import { Flip, Slide, ToastContainer } from'react-toastify';
 import { useRef } from 'react';
 
 
@@ -71,12 +71,14 @@ function App() {
           position="top-right"
           autoClose={5000}
           hideProgressBar={false}
-          newestOnTop={false}
+          newestOnTop={true}
           closeOnClick
           rtl={false}
           pauseOnFocusLoss
           draggable
           pauseOnHover
+          limit={3}
+          transition={Slide}
         />
       </Router>
 

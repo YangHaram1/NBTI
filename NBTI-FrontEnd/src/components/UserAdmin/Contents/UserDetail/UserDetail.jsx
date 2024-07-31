@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import styles from './UserUpdate.module.css'; // 스타일 파일 경로
+import styles from './UserDetail.module.css'; // 스타일 파일 경로
 import { host } from '../../../../config/config';
 import { useParams, useNavigate } from 'react-router-dom';
 
-const UserUpdate = () => {
+const UserDetail = () => {
     const { id } = useParams(); // URL 파라미터에서 ID 가져오기
     const [user, setUser] = useState({
         id: '',
@@ -259,4 +259,4 @@ const UserUpdate = () => {
     );
 };
 
-export default UserUpdate;
+export default UserDetail;

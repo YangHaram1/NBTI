@@ -56,20 +56,20 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	}
 
 	@Override
-	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {	
-		HttpSession httpSession = (HttpSession) session.getAttributes().get("HTTPSESSIONID"); 
-		synchronized (httpSession) {
-	        if (httpSession != null && httpSession.getAttribute("group_seq") != null) {
-	            httpSession.removeAttribute("group_seq");
-	        }
-	    }
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		clients.remove(session);
 	}
 
 	@Override
 	public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-		clients.remove(session);
-		exception.printStackTrace();
+		 try {
+			 clients.remove(session);
+		    } catch (Exception e) {
+		        // 예외 처리	      
+		    	exception.printStackTrace();
+		    }
+		
+		
 	}
 
 	private void broadcastMessage(String message,List<Group_memberDTO> list) {
