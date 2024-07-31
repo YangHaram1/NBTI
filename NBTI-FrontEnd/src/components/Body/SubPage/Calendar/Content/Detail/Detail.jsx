@@ -19,6 +19,11 @@ export const Detail = ({ setAddOpen, addOpen }) => {
     const [events, setEvents] = useState([]); // 이벤트 상태
     const [selectedEvent, setSelectedEvent] = useState(null); // 캘린더 (일정/일정추가) 선택된 이벤트 상태
 
+    // 내 일정을 수정하는 걸 관리해주는 상태 
+    const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태 추가
+    const [editedTitle, setEditedTitle] = useState('');
+    const [editedContents, setEditedContents] = useState('');
+
 
     // 인쇄
     const handlePrint = () => {
@@ -43,6 +48,9 @@ export const Detail = ({ setAddOpen, addOpen }) => {
     };
     // 모달창 [해당 이벤트 클릭 시 상세 정보 보기]
     const handleEventClick = (info) => {
+
+        //console.log("info:"+JSON.stringify(info.event));
+
         setSelectedEvent(info.event); // 선택한 이벤트 저장
         setModalOpen(true); // 상세보기 모달 열기
         setAddOpen(false); // 일정 추가 모달 닫기
@@ -114,12 +122,47 @@ export const Detail = ({ setAddOpen, addOpen }) => {
     };
 
 
+    // 내 일정을 수정하는 기능
+    const updateBtn = () => {
+        setIsEditing(true); // 편집 모드로 전환
+        setEditedTitle(selectedEvent.title); // 선택된 이벤트의 제목을 편집 제목 상태로 설정
+        setEditedContents(selectedEvent.extendedProps.contents || ''); // 선택된 이벤트의 내용을 편집 내용 상태로 설정
+    };
+
+    // };
+    const handleSaveClick = () => {
+        console.log();
+        console.log(selectedEvent.extendedProps.seq + ":" + editedTitle + ":" +editedContents);
+
+        const updateData = {
+            seq: selectedEvent.extendedProps.seq,
+            calendarTitle: editedTitle,
+            contents: editedContents
+        };
+    
+        axios.put(`${host}/calendar`, updateData)
+            .then((resp) => {
+                console.log(resp.data + " 수정 완료");
+    
+                selectedEvent.setProp('title', editedTitle);
+                selectedEvent.setExtendedProp('contents', editedContents);
+    
+                setIsEditing(false); // 편집 모드 종료
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    };
+    
+
+
     //캘린더 목록 출력
     useEffect(() => {
         axios.get(`${host}/calendar`)
             .then((resp) => {
                 // console.log(resp.data + "목록 출력");
                 const eventList = resp.data.map(event => ({
+                    seq: event.seq,
                     title: event.calendarTitle,
                     start: event.start_date,
                     end: event.end_date,
@@ -170,18 +213,37 @@ export const Detail = ({ setAddOpen, addOpen }) => {
                     {selectedEvent ? ( // 이벤트가 선택된 경우
                         <>
                             <h2>일정 상세보기</h2>
-                            <div className={styles.modalInner}>
-                                <div className={styles.detail}>
-                                    <p>제목 : {selectedEvent.title}</p>
-                                    <p>시작 : {selectedEvent.start.toLocaleString()}</p>
-                                    <p>종료 : {selectedEvent.end ? selectedEvent.end.toLocaleString() : '없음'}</p>
-                                    <p>내용 : {selectedEvent.extendedProps.contents || '없음'}</p>
-                                    <div className={styles.detailBtn}>
-                                        <button onClick={closeModal}>닫기</button>
-                                        <button>수정</button>
+                            {isEditing ? ( //수정 누르면 수정
+                                <div className={styles.modalInner}>
+                                    <div className={styles.detail}>
+                                        <p>
+                                            제목 : <input type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
+                                        </p>
+                                        <p>시작 : {selectedEvent.start.toLocaleString()}</p>
+                                        <p>종료 : {selectedEvent.end ? selectedEvent.end.toLocaleString() : '없음'}</p>
+                                        <p>
+                                            내용 : <input type="text" value={editedContents} onChange={(e) => setEditedContents(e.target.value)} />
+                                        </p>
+                                        <div className={styles.detailBtn}>
+                                            <button onClick={() => setIsEditing(false)}>취소</button>
+                                            <button onClick={handleSaveClick}>저장</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            ) : ( // 수정 누르기 전 
+                                <div className={styles.modalInner}>
+                                    <div className={styles.detail}>
+                                        <p>제목 : {selectedEvent.title}</p>
+                                        <p>시작 : {selectedEvent.start.toLocaleString()}</p>
+                                        <p>종료 : {selectedEvent.end ? selectedEvent.end.toLocaleString() : '없음'}</p>
+                                        <p>내용 : {selectedEvent.extendedProps.contents || '없음'}</p>
+                                        <div className={styles.detailBtn}>
+                                            <button onClick={closeModal}>닫기</button>
+                                            <button onClick={updateBtn}>수정</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </>
                     ) : ( // 이벤트가 선택되지 않은 경우, 일정 추가
                         <>

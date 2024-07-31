@@ -36,10 +36,15 @@ public class CalendarService {
     	return list;
     }
     
-    //내 캘린더의 이름 (공유/개인)
-    public List<ScheduleTitleDTO> scheduleName() throws Exception{
-    	return cdao.scheduleName();
+    //수정
+    public void update (CalendarDTO dto) throws Exception {
+    	cdao.update(dto);
     }
+    
+//    //내 캘린더의 이름 (공유/개인)
+//    public List<ScheduleTitleDTO> scheduleName() throws Exception{
+//    	return cdao.scheduleName();
+//    }
 
 
 }
