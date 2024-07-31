@@ -3,10 +3,11 @@ import axios from 'axios';
 import { host } from '../../../../config/config'
 import { useState, useEffect, useContext } from 'react';
 import { ChatsContext } from './../../../../Context/ChatsContext';
+import { useCheckList } from './../../../../store/store';
 
 const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch, chatRef, divRef }) => {
     const [count, setCount] = useState();
-    const {chatSeq} =useContext(ChatsContext)
+    const {chatSeq} =useCheckList();
 
     useEffect(() => {
         // console.log("셋팅")
