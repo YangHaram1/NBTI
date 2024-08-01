@@ -102,15 +102,19 @@ export const Detail = () => {
     const handleReplyAdd = () => {
         const requestBody = { board_seq: boardSeq, board_code: code, contents: replyContents };
         axios.post(`${host}/reply`, requestBody).then((resp) => {
-            setReply((prev) => {
-                if (prev.length > 0) {
-                    return [resp.data, ...prev];
+            if (resp.data !== '') {
+                setReply((prev) => {
+                    if (prev.length > 0) {
+                        return [resp.data, ...prev];
+                    }
+                    return [resp.data];
+                })
+                if (inputRef.current) {
+                    inputRef.current.innerHTML = ''; // div 내용 비우기
+                    setReplyContents('');
                 }
-                return [resp.data];
-            })
-            if (inputRef.current) {
-                inputRef.current.innerHTML = ''; // div 내용 비우기
             }
+
         });
     }
 

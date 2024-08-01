@@ -31,10 +31,14 @@ public class ReplyController {
 	// 댓글 입력
 	@PostMapping
 	public ResponseEntity<ReplyDTO> insert(@RequestBody ReplyDTO dto) {
-		String member_id = (String) session.getAttribute("loginID");
-		dto.setMember_id(member_id);
-
-		return ResponseEntity.ok(rserv.insert(dto));
+		if(dto.getContents().equals("")) {
+			return ResponseEntity.ok(null);
+		}
+		else {
+			String member_id = (String) session.getAttribute("loginID");
+			dto.setMember_id(member_id);
+			return ResponseEntity.ok(rserv.insert(dto));
+		}
 	}
 	
 	// 댓글 출력
