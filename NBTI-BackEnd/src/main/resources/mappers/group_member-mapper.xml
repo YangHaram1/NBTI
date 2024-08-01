@@ -39,6 +39,10 @@
 		update group_member set last_chat_seq =${last_chat_seq} where group_seq=${group_seq} and member_id=#{member_id}
 	</update>
 	
+	<update id="update_name">
+		update group_member set name =#{name} where group_seq=${group_seq} and member_id=#{member_id}
+	</update>
+	
 	
 	<delete id="delete">
 		delete from group_member where group_seq=${group_seq} and member_id=#{member_id}
