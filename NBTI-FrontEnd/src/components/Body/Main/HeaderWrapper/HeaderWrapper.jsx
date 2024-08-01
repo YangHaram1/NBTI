@@ -92,7 +92,7 @@ export const HeaderWrapper = () => {
                             <i className="fa-solid fa-briefcase fa-xl"></i>
                         </div>
                     </div>
-                    <div className={styles.circle_name} onClick={() => { handleNavi("workProcessing") }}>
+                    <div className={styles.circle_name} onClick={() => { handleNavi("attendance") }}>
                         <p>근무현황</p>
                     </div>
                 </div>
