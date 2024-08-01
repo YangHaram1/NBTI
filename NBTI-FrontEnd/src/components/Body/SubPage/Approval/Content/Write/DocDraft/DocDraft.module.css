@@ -21,97 +21,20 @@
 }
 
 .header{
-    flex:2;
+    flex:2.2;
     width: 100%;
     display: flex;
 }
 
-.left{
-    flex:3.5;
-    display: flex;
-    flex-direction: column;
-    margin-left: 20px;
-}
-
-.writer_data{
-    flex:1;
-    display: flex;
-    width: 70%;
-    justify-content: start;
-    border: 1px solid black;
-}
-
-.writer_title{
-    flex:3;
-    text-indent: 15px;
-    background-color: #CCE3DE;
-    display: flex;
-    align-items: center;
-}
-
-.writer_content{
-    flex:7;
-    text-indent: 15px;
-    display: flex;
-    align-items: center;
-}
-
-.mid{
-    flex:3.5;
-}
-
-.right{
-    flex:4;
-    display: flex;
-    justify-content: end;
-    text-align: center;
-}
-
-.approval_box{
-    width: 130px;
-    height: 100%;
-    display: flex;
-    margin-right: 20px;
-    border: 1px solid black;
-}
-
-.approval_box_side{
-    flex:2;
-    word-break: break-all;
-    display: flex;
-    text-align: center;
-    padding-top: 10px;
-    border-right: 1px solid black;
-}
-
-.approval_box_main{
-    flex:8;
-    display: flex;
-    flex-direction: column;
-}
-
-.approval_job{
-    flex:1;
-    border-bottom: 1px solid black;
-}
-
-.approval_member{
-    flex:3.5;
-    border-bottom: 1px solid black;
-}
-
-.approval_date{
-    flex:0.5;
-}
-
 .submain{
     border: 1px solid black;
-    flex:0.5;
+    flex:0.7;
     margin-top: 15px;
     /* width: 97.5%; */
-    width: 80%;
+    width: 96%;
     display: flex;
     margin-left: 20px;
+    background-color: white;
 }
 
 /* .submain_box{
@@ -121,36 +44,52 @@
     flex:2.5;
     background-color: #CCE3DE;
     text-indent: 15px;
+    display: flex;
+    align-items: center;
 }
 .submain_content{
     flex:7.5;
     text-indent: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.submain input{
+    text-indent: 5px;
+    width: 100%;
+    font-size: 13px;
+    font-weight: 700;
 }
 
 
 .subtitle{
-    flex:0.5;
-    width: 100%;
+    flex:0.7;
     margin-left: 20px;
     display: flex;
-    width: 80%;
+    width: 96%;
     border: 1px solid black;
+    background-color: white;
 }
 
 .subtitle_title{
     flex:1.25;
     background-color: #CCE3DE;
     text-indent: 15px;
+    display: flex;
+    align-items: center;
 }
 
 .subtitle_content{
     flex:8.75;
     text-indent: 15px;
+    display: flex;
+    align-items: center;
 }
 
 .content{
-    flex:6;
+    flex:5.5;
     width: 100%;
     margin-left: 20px;
+    z-index: 3;
 }
 

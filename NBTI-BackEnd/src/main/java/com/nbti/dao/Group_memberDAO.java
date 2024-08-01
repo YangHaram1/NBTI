@@ -45,6 +45,13 @@ public class Group_memberDAO {
 		return mybatis.selectList("Group_member.members",group_seq);
 
 	}
+	
+	public Group_memberDTO member(int group_seq,String member_id) throws Exception{
+		Map<String, Object> map = new HashMap<>();
+		map.put("group_seq", group_seq);
+		map.put("member_id", member_id);
+		return mybatis.selectOne("Group_member.member",map);
+	}
 
 	public void delete(int group_seq, String member_id) throws Exception {
 		Map<String, String> map = new HashMap<>();
@@ -60,5 +67,29 @@ public class Group_memberDAO {
 		map.put("last_chat_seq", String.valueOf(last_chat_seq));
 		mybatis.delete("Group_member.update_check", map);
 	}
+	
+	public void update_name(int group_seq,String member_id,String name) throws Exception{
+		Map<String, String> map = new HashMap<>();
+		map.put("group_seq", String.valueOf(group_seq));
+		map.put("member_id", member_id);
+		map.put("name", name);
+		mybatis.delete("Group_member.update_name", map);
+	}
+	
+	public void update_alarm(int group_seq,String member_id) throws Exception{
+		Map<String, String> map = new HashMap<>();
+		map.put("group_seq", String.valueOf(group_seq));
+		map.put("member_id", member_id);
+		mybatis.delete("Group_member.update_alarm", map);
+	}
+	
+	public void update_bookmark(int group_seq,String member_id) throws Exception{
+		Map<String, String> map = new HashMap<>();
+		map.put("group_seq", String.valueOf(group_seq));
+		map.put("member_id", member_id);
+		mybatis.delete("Group_member.update_bookmark", map);
+	}
+	
+	
 
 }
