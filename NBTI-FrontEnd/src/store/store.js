@@ -1,6 +1,4 @@
 import { create } from 'zustand';
-import { host } from '../config/config';
-import axios from 'axios';
 
 /*공통*/
 export const useAuthStore = create((set) => {
