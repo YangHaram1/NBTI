@@ -2,6 +2,7 @@ import styles from './Detail.module.css';
 import { host } from '../../../../../../config/config';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useCalendarTitle } from "../../../../../../store/store";
 
 import FullCalendar from '@fullcalendar/react'; // FullCalendar 컴포넌트
 import dayGridPlugin from '@fullcalendar/daygrid'; // 월 보기 플러그인
@@ -12,6 +13,12 @@ import { default as koLocale } from '@fullcalendar/core/locales/ko'; // 한국�
 
 
 export const Detail = ({ setAddOpen, addOpen }) => {
+    // const [events, setEvents] = useState([]);
+    const selectedItem = useCalendarTitle(state => state.selectedItem); // 선택된 항목 상태 가져오기
+    
+
+
+
     // const calendarRef = useRef(); // 캘린더 내용 참조를 위한 ref
     const [modalOpen, setModalOpen] = useState(false); // 모달창 열기/닫기 상태
     const [selectedDate, setSelectedDate] = useState(null); // 선택한 날짜
@@ -23,6 +30,17 @@ export const Detail = ({ setAddOpen, addOpen }) => {
     const [isEditing, setIsEditing] = useState(false); // 편집 모드 상태 추가
     const [editedTitle, setEditedTitle] = useState('');
     const [editedContents, setEditedContents] = useState('');
+
+    // useEffect(() => {
+    //     let endpoint = `${host}/calendar`; 
+    //     if (selectedItem === '내 캘린더') {
+    //         endpoint += "?type=my"; 
+    //     } else if (selectedItem === '공유 캘린더') {
+    //         endpoint += "?type=shared"; 
+    //     }
+        
+    //     // API 호출
+    // }, [selectedItem]);
 
     // 인쇄
     const handlePrint = () => {
@@ -150,7 +168,38 @@ export const Detail = ({ setAddOpen, addOpen }) => {
     };
     
 
-
+    // useEffect(() => {
+    //     const endpoint = `${host}/calendar`;
+    //     axios.get(endpoint)
+    //         .then((resp) => {
+    //             const filteredEvents = resp.data.filter(event => {
+    //                 // 선택된 항목에 따라 필터링
+    //                 if (selectedItem === 1) {
+    //                     return event.scheduleTitle_name === '내 캘린더'; // '내 캘린더'에 해당하는 경우
+    //                 } else if (selectedItem === 2) {
+    //                     return event.scheduleTitle_name === '공유 캘린더'; // '공유 캘린더'에 해당하는 경우
+    //                 }
+    //                 return true; // 기본값 (모든 항목)
+    //             });
+    
+    //             const eventList = filteredEvents.map(event => ({
+    //                 seq: event.seq,
+    //                 title: event.calendarTitle,
+    //                 start: event.start_date,
+    //                 end: event.end_date,
+    //                 extendedProps: {
+    //                     contents: event.contents,
+    //                     scheduleTitle_name: event.scheduleTitle_name
+    //                 }
+    //             }));
+    
+    //             setEvents(eventList);
+    //         })
+    //         .catch((error) => {
+    //             console.error('Error fetching events:', error);
+    //         });
+    // }, [selectedItem]);
+    
     // 캘린더 목록 출력
     useEffect(() => {
         axios.get(`${host}/calendar`)
@@ -171,8 +220,7 @@ export const Detail = ({ setAddOpen, addOpen }) => {
             .catch((error) => {
                 console.error('Error', error);
             });
-    }, []);
-    
+    }, [selectedItem]); // selectedItem이 변경될 때마다 호출
 
     // 상세 내용 보기 
     const handleEventClick = (info) => {
