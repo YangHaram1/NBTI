@@ -1,5 +1,7 @@
 .container {
-    width: 80%;
+    width: 96%;
     height: 100%;
+    margin-bottom: 15px;
+    z-index: 10;
   }
   

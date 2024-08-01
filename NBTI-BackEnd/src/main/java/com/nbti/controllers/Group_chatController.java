@@ -53,13 +53,12 @@ public class Group_chatController {
 		boolean check=mserv.check(list);
 		
 		if(!check) {
-			int seq=serv.insert(name);
-			
+			int seq=serv.insert(name);	
 			List<Group_memberDTO> member_list=new ArrayList<>();
-			for(int i=0; i<list.size();i++) {
-				Group_memberDTO dto= new Group_memberDTO(seq,list.get(i),0,"","");
-				member_list.add(dto);
-			}
+			Group_memberDTO dto= new Group_memberDTO(seq,list.get(0),0,"","",list.get(1));
+			member_list.add(dto);
+			dto= new Group_memberDTO(seq,list.get(1),0,"","",list.get(0));
+			member_list.add(dto);
 			
 			mserv.insert(member_list);
 		}
@@ -72,9 +71,9 @@ public class Group_chatController {
 	public ResponseEntity<List<Group_chatSizeDTO>> get() throws Exception{
 		String loginID= (String) session.getAttribute("loginID");
 		List<Group_memberDTO> list= new ArrayList<>();
-		list=mserv.list(loginID);
+		list=mserv.list(loginID); //그멤버가 가지고있는 group_seq 뽑기
 		
-		List<Group_chatDTO> chatList=serv.getList(list);
+		List<Group_chatDTO> chatList=serv.getList(list); //group_chat 목록 뽑기 seq에 맞게..사실 지금은 필없지만 나중에 group_chat에 컬럼 생기면 유용함
 		List<Group_chatSizeDTO> result=new ArrayList<>();
 
 		if(chatList==null) {
@@ -84,14 +83,14 @@ public class Group_chatController {
 		for(int i=0;i<chatList.size();i++) {
 			int size=0;
 			Group_chatDTO dto = chatList.get(i);
-			for (Group_memberDTO MembetDTO : list) {
-				if(MembetDTO.getGroup_seq()==dto.getSeq()) {
-					size=mserv.members(MembetDTO.getGroup_seq()).size();
+			for (Group_memberDTO MemberDTO : list) {
+				if(MemberDTO.getGroup_seq()==dto.getSeq()) {
+					size=mserv.members(MemberDTO.getGroup_seq()).size();
+					ChatDTO cdto=cserv.getLastDTO(dto.getSeq());
+					result.add(new Group_chatSizeDTO(dto.getSeq(),MemberDTO.getName(),MemberDTO.getAlarm(),MemberDTO.getBookmark(),size,cdto));
 					break;
 				}
 			}
-			ChatDTO cdto=cserv.getLastDTO(dto.getSeq());
-			result.add(new Group_chatSizeDTO(dto.getSeq(),dto.getName(),dto.getAlarm(),dto.getBookmark(),size,cdto));
 		}
 		
 		if(list!=null)

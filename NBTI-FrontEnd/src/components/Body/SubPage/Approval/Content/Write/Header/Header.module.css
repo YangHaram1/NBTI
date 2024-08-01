@@ -1,0 +1,84 @@
+.left{
+    flex:4;
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+.writer_data{
+    flex:1;
+    display: flex;
+    width: 85%;
+    justify-content: start;
+    border: 1px solid black;
+}
+
+.writer_title{
+    flex:3;
+    text-indent: 15px;
+    background-color: #CCE3DE;
+    display: flex;
+    align-items: center;
+}
+
+.writer_content{
+    flex:7;
+    text-indent: 15px;
+    display: flex;
+    align-items: center;
+    background-color: white;
+}
+
+.mid{
+    flex:2;
+}
+
+.right{
+    flex:4;
+    display: flex;
+    justify-content: end;
+    text-align: center;
+}
+
+.approval_box{
+    width: 130px;
+    height: 100%;
+    display: flex;
+    margin-right: 20px;
+    border: 1px solid black;
+}
+
+.approval_box_side{
+    flex:2;
+    word-break: break-all;
+    display: flex;
+    text-align: center;
+    padding-top: 10px;
+    border-right: 1px solid black;
+    background-color: #CCE3DE;
+}
+
+.approval_box_main{
+    flex:8;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+
+.approval_job{
+    flex:1;
+    border-bottom: 1px solid black;
+}
+
+.approval_member{
+    flex:3.5;
+    border-bottom: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.approval_date{
+    flex:0.5;
+    min-height: 18px;
+}

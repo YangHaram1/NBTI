@@ -14,17 +14,22 @@ public class AttendanceService {
 	@Autowired
 	private AttendanceDAO aDao;
 	
-    public void clockIn(String memberId) {
-    	AttendanceDTO dto = new AttendanceDTO();
-        dto.setMember_id(memberId);
-        
-        // 현재 시간을 LocalDateTime으로 가져옴
-        LocalDateTime now = LocalDateTime.now();
-        // LocalDateTime을 Timestamp로 변환
-        Timestamp timestamp = Timestamp.valueOf(now);
-        
-        dto.setToday(timestamp);
-        dto.setStart_date(timestamp);
-        aDao.insert(dto);
+	public int clockIn(String memberId) {
+	    AttendanceDTO dto = new AttendanceDTO();
+	    dto.setMember_id(memberId);
+
+	    // 현재 시간을 LocalDateTime으로 가져옴
+	    LocalDateTime now = LocalDateTime.now();
+	    // LocalDateTime을 Timestamp로 변환
+	    Timestamp timestamp = Timestamp.valueOf(now);
+
+	    dto.setToday(timestamp);
+	    dto.setStart_date(timestamp);
+
+	    AttendanceDTO resultDto = aDao.insert(dto); // insert 메소드 호출 후 결과 DTO 반환
+	    return resultDto.getSeq(); // 자동 생성된 seq 값 반환
+	}
+    public void clockOut(int seq, Timestamp end_date) {
+        aDao.updateClockOut(seq, end_date);
     }
 }

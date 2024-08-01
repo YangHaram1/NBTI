@@ -74,6 +74,11 @@ public boolean login(MembersDTO dto) {
 	public List<MembersDTO> searchMembers(String team){
 		return mybatis.selectList("Member.searchMembers",team);
 	}
+	
+	// 아이디에 따른 이름, 팀코드, 팀명, 부서코드, 부서명, 관리자 권한 코드, 관리자 권한명 추출
+	public Map<String, Object> memberData(String id){
+		return mybatis.selectOne("Member.memberData", id);
+	}
 
 
 }

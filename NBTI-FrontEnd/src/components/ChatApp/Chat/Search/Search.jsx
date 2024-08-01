@@ -39,8 +39,10 @@ const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch, cha
                     chatRef.current[temp].classList.add(styles.shake);
                    
                     setTimeout(() => {
-                        chatRef.current[temp].classList.remove(styles.shake);
-                      }, 1000); // 애니메이션 지속 시간과 동일하게 설정하게 설정
+                        if (chatRef.current && chatRef.current[temp]) {
+                            chatRef.current[temp].classList.remove(styles.shake);
+                        }   
+                      }, 500); // 애니메이션 지속 시간과 동일하게 설정하게 설정
                     return temp;
                 }
                 else{
