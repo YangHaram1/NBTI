@@ -56,7 +56,7 @@
 		update group_member set bookmark = case
                 when bookmark = 'Y' then 'N'
                 when bookmark = 'N' then 'Y'
-                else 'N'
+                else 'Y'
             end
 		where group_seq=${group_seq} and member_id=#{member_id}
 	</update>

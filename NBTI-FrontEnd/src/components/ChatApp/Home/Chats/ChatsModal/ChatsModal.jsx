@@ -5,7 +5,7 @@ import NameModal from '../NameModal/NameModal';
 import React, { useState, useEffect } from 'react';
 
 axios.defaults.withCredentials = true;
-const ChatsModal = ({ modalRef, index, item, setGroup_chats }) => {
+const ChatsModal = ({ modalRef, index, item, setGroup_chats ,setCountBookmark}) => {
     const group_seq = item.seq;
     const [nameModal, setNameModal] = useState(false);
 
@@ -48,7 +48,25 @@ const ChatsModal = ({ modalRef, index, item, setGroup_chats }) => {
 
     }
     const handleBookmark = () => {
-
+        axios.patch(`${host}/group_member?group_seq=${group_seq}&&type=bookmark`).then((resp) => {
+            let check=true;
+            setGroup_chats((prev) => {
+                return (
+                    prev.map((temp) => {
+                        if (temp.seq === group_seq) {
+                            if(check){
+                                setCountBookmark((prevBookmark)=>{
+                                    return  temp.bookmark === 'Y' ? prevBookmark-1 : prevBookmark+1;
+                                })
+                                check=false;
+                            }         
+                            return {...temp,bookmark: temp.bookmark === 'Y' ? 'N' : 'Y'}
+                        }
+                        return temp;
+                    })
+                );
+            })
+        })
     }
 
     return (
@@ -58,7 +76,7 @@ const ChatsModal = ({ modalRef, index, item, setGroup_chats }) => {
                     이름 변경
                 </div>
                 <div className={styles.content} onClick={handleAlarm} >
-                    알림 끄기
+                   {item.alarm==='Y'?'알림 끄기':'알림 켜기'} 
                 </div>
                 <div className={styles.content} onClick={handleBookmark} >
                     즐겨찾기 등록
