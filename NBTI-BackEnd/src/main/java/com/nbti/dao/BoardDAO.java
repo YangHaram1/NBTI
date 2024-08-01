@@ -42,9 +42,9 @@ public class BoardDAO {
 	}
 	
 	// 조회수 증가
-//	public void updateViewCount(int code) {
-//		mybatis.update("Board.update", code);
-//	}
+	public void updateViewCount(HashMap<String, Integer> map) {
+		mybatis.update("Board.updateViewCount", map);
+	}
 	
 	
 }
