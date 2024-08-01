@@ -77,6 +77,11 @@ public class MembersService {
 		return mdao.searchMembers(team);
 	}
 	
+	// 아이디에 따른 이름, 팀코드, 팀명, 부서코드, 부서명, 관리자 권한 코드, 관리자 권한명 추출
+	public Map<String, Object> memberData(String id){
+		return mdao.memberData(id);
+	}
+	
 
 	
 	

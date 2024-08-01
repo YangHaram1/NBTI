@@ -18,7 +18,7 @@ public class Group_chatDAO {
 	
 	public int insert(String member_id ) throws Exception{
 		Group_chatDTO dto =new Group_chatDTO();
-		dto.setName(member_id);
+		//dto.setName(member_id);
 		mybatis.insert("Group_chat.insert",dto);
 		return dto.getSeq();
 	}

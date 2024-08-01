@@ -188,5 +188,18 @@ public class MembersController {
         List<MembersDTO> selectMembers = mServ.searchMembers(team);
         return ResponseEntity.ok(selectMembers);
     }
+    
+    // 작성일 24.08.1 
+ 	// 작성자 김지연
+ 	// 아이디에 따른 이름, 팀코드, 팀명, 부서코드, 부서명, 관리자 권한 코드, 관리자 권한명 추출
+     @GetMapping("/docData")
+     public ResponseEntity<Map<String, Object>> docData(){
+    	 
+    	 String id = (String)session.getAttribute("loginID");
+         Map<String, Object> memberData = mServ.memberData(id);
+         
+         
+         return ResponseEntity.ok(memberData);
+     }
 	
 }

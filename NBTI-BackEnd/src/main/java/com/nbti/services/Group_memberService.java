@@ -33,11 +33,20 @@ public class Group_memberService {
 		return dao.members(group_seq);
 	}
 	
+	
+	public Group_memberDTO member(int group_seq,String member_id) throws Exception{
+		return dao.member(group_seq,member_id);
+	}
+	
 	public void delete(int group_seq,String member_id) throws Exception{
 		dao.delete(group_seq,member_id);
 	}
 	
 	public void update_check(int group_seq,String member_id,int last_chat_seq) throws Exception{
 		dao.update_check(group_seq,member_id,last_chat_seq);
+	}
+	
+	public void update_name(int group_seq,String member_id,String name) throws Exception{
+		dao.update_name(group_seq,member_id,name);
 	}
 }

@@ -60,10 +60,10 @@ const Chat = () => {
       const { chatSeq } = useCheckList.getState();
 
       if (chatSeq !== 0) {
-        axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {
+        axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {//채팅목록 가저오기
           setChats(resp.data);
           console.log("채팅목록가저오기");
-          if (resp.data.length > 0)
+          if (resp.data.length > 0) //멤버 last_chat_seq 업데이트
             axios.patch(`${host}/group_member?group_seq=${chatSeq}&&last_chat_seq=${resp.data[resp.data.length - 1].seq}`).then((resp) => {
               ws.current.send("updateMember");
             })
@@ -104,8 +104,7 @@ const Chat = () => {
 
               return [...prev, chat]
             })
-            //console.log(chatNavi);
-            if ((chatSeq !== 0)) {
+            if ((chatSeq !== 0)) { //이것도 멤버 last_chat_seq 업데이트
               axios.patch(`${host}/group_member?group_seq=${chatSeq}&&last_chat_seq=${chat.seq}`).then((resp) => {
                 setUpdateMember((prev) => {
                   return !prev;
@@ -323,7 +322,7 @@ const Chat = () => {
 
   useEffect(() => {
     axios.get(`${host}/group_member?group_seq=${chatSeq}`).then((resp) => {
-      // console.log(resp.data);
+       console.log(resp.data);
       setChatCheck(resp.data);
     })
   }, [invite, updateMember, chatNavi])
