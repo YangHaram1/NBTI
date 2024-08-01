@@ -24,22 +24,15 @@ export const List = () => {
     }, [boardType]);
 
 
-    // const handleTitleClick = async (seq) => {
-    //     const requestBox = { seq: seq, board_code: code };
-    //     try {
-    //         await axios.put(`${host}/board`, requestBox);
-    //         setBoardSeq(seq);
-    //         navi("/board/detail");
-    //     } catch (err) {
-    //         console.error("조회수 증가 실패:", err);
-    //     }
-    // };
+    // 조회수 증가 
+    const handleTitleClick = (seq) => {
+        const requestBox = { seq: seq, board_code: code };
+        axios.put(`${host}/board/viewCount`, requestBox).then((resp) => {
+            setBoardSeq(seq);
+            navi("/board/detail");
+        });
 
-
-
-    //   const handleViewCount = (seq) => {
-    //     axios.post(`${host}/board`);
-    //   };
+    };
 
     // 페이지네이션
     useEffect(() => { }, []);
@@ -88,17 +81,7 @@ export const List = () => {
                                 <p>{item.seq}</p>
                             </div>
                             <div className={styles.title}>
-                                {/* <p onClick={() => { handleTitleClick(item.seq) }}>{item.title}</p> */}
-                                <p
-                                    onClick={() => {
-                                        navi("/board/detail");
-                                        setBoardSeq(item.seq);
-                                        // handleViewCount(item.seq);
-                                    }}
-                                >
-                                    {item.title}
-                                </p>
-
+                                <p onClick={() => { handleTitleClick(item.seq) }}>{item.title}</p>
                             </div>
                             <div className={styles.writer}>
                                 <p>{item.member_id}</p>
