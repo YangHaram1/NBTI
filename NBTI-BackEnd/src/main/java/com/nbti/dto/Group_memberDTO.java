@@ -4,8 +4,9 @@ public class Group_memberDTO {
 	private int group_seq;
 	private String member_id;
 	private int last_chat_seq;
-	private String file_path;
-	private String chat_path;
+	private String alarm="N";
+	private String bookmark="N";
+	private String name ;
 	public int getGroup_seq() {
 		return group_seq;
 	}
@@ -24,29 +25,40 @@ public class Group_memberDTO {
 	public void setLast_chat_seq(int last_chat_seq) {
 		this.last_chat_seq = last_chat_seq;
 	}
-	public String getFile_path() {
-		return file_path;
+	public String getAlarm() {
+		return alarm;
 	}
-	public void setFile_path(String file_path) {
-		this.file_path = file_path;
+	public void setAlarm(String alarm) {
+		this.alarm = alarm;
 	}
-	public String getChat_path() {
-		return chat_path;
+	public String getBookmark() {
+		return bookmark;
 	}
-	public void setChat_path(String chat_path) {
-		this.chat_path = chat_path;
+	public void setBookmark(String bookmark) {
+		this.bookmark = bookmark;
 	}
-	public Group_memberDTO(int group_seq, String member_id, int last_chat_seq, String file_path, String chat_path) {
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Group_memberDTO(int group_seq, String member_id, int last_chat_seq, String alarm, String bookmark,
+			String name) {
 		super();
 		this.group_seq = group_seq;
 		this.member_id = member_id;
 		this.last_chat_seq = last_chat_seq;
-		this.file_path = file_path;
-		this.chat_path = chat_path;
+		this.alarm = alarm;
+		this.bookmark = bookmark;
+		this.name = name;
 	}
 	public Group_memberDTO() {
 		super();
 	}
+	
+	
+	
 	
 	
 	

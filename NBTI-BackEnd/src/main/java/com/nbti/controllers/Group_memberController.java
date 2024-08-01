@@ -36,7 +36,7 @@ public class Group_memberController {
 		int group_seq=(int)session.getAttribute("group_seq");
 		
 		for(int i=0;i<members.length;i++) {
-			Group_memberDTO dto = new Group_memberDTO(group_seq,members[i],0,"","");
+			Group_memberDTO dto = new Group_memberDTO(group_seq,members[i],0,"","","새채팅방");
 			serv.insert(dto);
 		}
 		
