@@ -77,11 +77,12 @@ function App() {
           newestOnTop={true}
           closeOnClick
           rtl={false}
-          pauseOnFocusLoss
+          pauseOnFocusLoss={false}
           draggable
           //pauseOnHover
           limit={maxCount}
           transition={Slide}
+          
         />
       </Router>
     </ChatsProvider>

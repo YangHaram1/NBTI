@@ -50,3 +50,12 @@
     display: flex;
 }
 
+.alarm{
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+.line{
+    width: 350px;
+    border: 2px solid gray;
+}

@@ -27,7 +27,6 @@ export const List = () => {
     const params = { code: code, target: target, keyword: keyword, start: start, end: end };
     useEffect(() => {
         axios.get(`${host}/board/list`, { params }).then((resp) => {
-            console.log("게시판 : " + resp.data);
             setBoardList(resp.data);
         });
     }, [boardType, search]);

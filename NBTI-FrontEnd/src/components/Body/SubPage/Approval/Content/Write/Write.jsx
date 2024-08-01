@@ -5,7 +5,7 @@ import { DocVacation } from './DocVacation/DocVacation';
 import styles from './Write.module.css';
 import { host } from '../../../../../../config/config';
 import axios from 'axios';
-import { useReferLine } from '../../../../../../store/store';
+import { useApprovalLine, useReferLine } from '../../../../../../store/store';
 
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import {faPenToSquare} from '@fortawesome/free-solid-svg-icons';
@@ -13,12 +13,14 @@ import { useReferLine } from '../../../../../../store/store';
 export const Write = ({setlist})=>{
 
     const [userdata, setUserData] = useState({}); 
-    const [docdata, setDocData] = useState({effective_date:'', cooperation_dept:'', title:'', content:''});
+    const [docdata, setDocData] = useState({effective_date:'', cooperation_dept:'', title:'', content:'', emergency:''});
     const [content, setContent] = useState('');
     const [date, setDate] = useState('');
     const [dept, setDept] = useState('');
     const [title, setTitle] = useState('');
+    // const [emergency, setEmergency] = useState(false);
     const { referLine } = useReferLine();
+    const { approvalLine } = useApprovalLine();
 
     // ===== 아이콘 =====
     useEffect(() => {
@@ -40,9 +42,31 @@ export const Write = ({setlist})=>{
     }
 
     const approvalSubmit = () =>{
+
+        let result = window.confirm("긴급 문서로 하시겠습니까?");
         console.log("개별", date, dept, title, content);
-        setDocData({effective_date:'', cooperation_dept:'', title:'', content:''});
-        console.log("토탈",docdata);
+    
+        const requestData = {
+            docData: {
+                effective_date: date,
+                cooperation_dept: dept,
+                title: title,
+                content: content,
+                emergency: result
+            },
+            approvalLine: approvalLine,
+            referLine: referLine
+        };
+    
+        axios.post(`${host}/approval`, requestData)
+            .then(response => {
+                console.log("문서 제출 성공:", response);
+            })
+            .catch(error => {
+                console.error("문서 제출 실패:", error);
+            });
+
+
     }
 
     useEffect(()=>{

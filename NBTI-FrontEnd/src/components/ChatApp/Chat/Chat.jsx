@@ -35,7 +35,7 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
-  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage ,setWebSocketCheck} = useCheckList();
+  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage, setWebSocketCheck } = useCheckList();
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
   const [updateMember, setUpdateMember] = useState(false);
@@ -85,7 +85,7 @@ const Chat = () => {
       };
 
       ws.current.onmessage = (e) => {
-        
+
         if (e.data === "updateMember") {
           console.log(e.data);
           setUpdateMember((prev) => {
@@ -96,9 +96,22 @@ const Chat = () => {
           const { chatSeq } = useCheckList.getState();
           // alert("메세지옴");
           let chat = JSON.parse(e.data);
-          if (chat.member_id !== loginID) {
-            notify(chat);
-          }
+
+          //메세지 온거에 맞게 group_seq 사용해서 멤버 list받기 이건 chatSeq 없이 채팅 꺼저있을떄를 위해서 해놈
+          axios.get(`${host}/group_member?group_seq=${chat.group_seq}`).then((resp) => {
+            if (chat.member_id !== loginID) {
+              resp.data.forEach((temp) => {
+                if (temp.member_id === loginID) {
+                  if (temp.alarm === 'Y') notify(chat);
+                }
+              })
+            }
+          })
+
+          //////
+
+
+
           if (chat.group_seq === chatSeq) {
             setChats((prev) => {
 
@@ -261,7 +274,7 @@ const Chat = () => {
         //--------------------------------------------------//
         const chatCheckCount = chatCheck.filter((temp) => {
           if ((temp.last_chat_seq < item.seq) && temp.member_id !== item.member_id) {
-          //  console.log(temp.member_id);
+            //  console.log(temp.member_id);
             return true;
           }
 
@@ -322,7 +335,7 @@ const Chat = () => {
 
   useEffect(() => {
     axios.get(`${host}/group_member?group_seq=${chatSeq}`).then((resp) => {
-       console.log(resp.data);
+      console.log(resp.data);
       setChatCheck(resp.data);
     })
   }, [invite, updateMember, chatNavi])
