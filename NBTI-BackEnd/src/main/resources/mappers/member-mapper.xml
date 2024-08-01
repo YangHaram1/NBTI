@@ -96,6 +96,19 @@ WHERE m.team_code = #{teamCode}
 	<select id="searchMembers" resultType="com.nbti.dto.MembersDTO">
 		select * from members where team_code = #{team}
 	</select>
+	
+	<select id ="memberData" resultType="map">
+		select 
+			m.id, m.name, 
+			m.team_code, t.team_name, 
+			m.job_code, j.job_name, 
+			t.dept_code, d.dept_name 
+		from members m 
+		left outer join team t on m.team_code = t.team_code
+		left outer join job j on m.job_code = j.job_code
+		left outer join department d on t.dept_code = d.dept_code
+		where id = #{id}
+	</select>
 
 
 </mapper>

@@ -1,24 +1,23 @@
 import { Editor } from "@tinymce/tinymce-react";
 import { useRef, useState, useEffect } from "react";
-import axios from "axios";
+// import axios from "axios";
 import styles from "./ApprovalEditor.module.css";
 import { api } from "../../../../../../../config/config";
 
-export const ApprovalEditor = ({ setBoard, contents }) => {
-  const [content, setContent] = useState(contents);
+
+export const ApprovalEditor = ({setContent, content}) => {
+
+  // const [updatecontent, setUpdateContent] = useState(content);
   const editorRef = useRef();
   const inputRef = useRef(null);
 
-  const handleEditorChange = (content) => {
-    setContent(content); // 상태 업데이트
-    setBoard((prev) => {
-      return { ...prev, contents: content };
-    });
+  const handleEditorChange = (contents) => {
+    setContent(contents);
   };
 
-  useEffect(() => {
-    setContent(contents); // 컴포넌트가 마운트될 때 contents를 초기값으로 설정
-  }, [contents]); // contents가 변경될 때마다 업데이트
+  // useEffect(() => {
+  //   setContent(contents); // 컴포넌트가 마운트될 때 contents를 초기값으로 설정
+  // }, [updatecontent]); // contents가 변경될 때마다 업데이트
 
   // const handleUpload = () => {
   //   inputRef.current.click();
@@ -49,7 +48,7 @@ export const ApprovalEditor = ({ setBoard, contents }) => {
           editorRef.current = editor;
         }}
         init={{
-          height: 500,
+          height: 470,
           menubar: true,
           plugins: "wordcount anchor code image", //image
           toolbar:
