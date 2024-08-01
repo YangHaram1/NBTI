@@ -17,6 +17,11 @@ export const useMemberStore = create((set) => ({
     setSelectedMember: (member) => set({ selectedMember: member }),
   }));
 
+/*은미*/
+export const useCalendarTitle = create((set) => ({
+    selectedItem: null, // 선택된 항목 상태
+    setSelectedItem: (item) => set({ selectedItem: item }), // 선택된 항목 업데이트 함수
+  }));
 
 /*하람*/
 export const useCheckList = create((set) => ({

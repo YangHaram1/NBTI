@@ -14,34 +14,24 @@ public class CalendarService {
 	@Autowired
 	private CalendarDAO cdao;
 	
-	//캘린더 입력
+	// 입력
 	public void insert (CalendarDTO dto)  throws Exception {
 		cdao.insert(dto);
 	}
-
-//	// 캘린더 제목 수정
-//    public void editTitle(CalendarDTO dto)  throws Exception {
-//        cdao.editTitle(dto); 
-//    }
-//
-//    // 캘린더 제목 업데이트 (Optional)
-//    public void updateCalendarTitle(CalendarDTO dto)  throws Exception {
-//        cdao.updateCalendarTitle(dto); 
-//    }
     
-	// 현재 등록된 캘린더 전체 목록
+	// 목록
     public List<CalendarDTO> list () throws Exception{
     	
     	List<CalendarDTO> list = cdao.list();
     	return list;
     }
     
-    //수정
+    // 수정
     public void update (CalendarDTO dto) throws Exception {
     	cdao.update(dto);
     }
     
-    //삭제 
+    // 삭제 
     public void delete (int seq) {
     	cdao.delete(seq);
     }
@@ -50,6 +40,15 @@ public class CalendarService {
 //    public List<ScheduleTitleDTO> scheduleName() throws Exception{
 //    	return cdao.scheduleName();
 //    }
+//	// 캘린더 제목 수정
+//  public void editTitle(CalendarDTO dto)  throws Exception {
+//      cdao.editTitle(dto); 
+//  }
+//
+//  // 캘린더 제목 업데이트 (Optional)
+//  public void updateCalendarTitle(CalendarDTO dto)  throws Exception {
+//      cdao.updateCalendarTitle(dto); 
+//  }
 
 
 }
