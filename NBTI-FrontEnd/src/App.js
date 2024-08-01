@@ -78,7 +78,7 @@ function App() {
           rtl={false}
           pauseOnFocusLoss
           draggable
-          pauseOnHover
+          //pauseOnHover
           limit={maxCount}
           transition={Slide}
         />

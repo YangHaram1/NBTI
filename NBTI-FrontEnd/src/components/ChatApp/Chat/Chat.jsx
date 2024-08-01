@@ -261,7 +261,7 @@ const Chat = () => {
         const chatCheckCount = chatCheck.filter((temp) => {
           if ((temp.last_chat_seq < item.seq) && temp.member_id !== item.member_id) {
 
-            console.log(temp.member_id);
+          //  console.log(temp.member_id);
             return true;
           }
 
