@@ -31,7 +31,7 @@ const ChatApp = ({websocketRef}) => {
 
         <div className={styles.container} ref={chatAppRef}>
             {chatNavi==='home' && <Home/>}
-            {chatNavi==='chat' && <Chat/>}
+            {chatNavi===('chat') && <Chat/>}
         </div>
     );
 
