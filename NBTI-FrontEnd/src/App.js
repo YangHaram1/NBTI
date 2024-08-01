@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom
 import { Header } from './components/Header/Header';
 import { Body } from './components/Body/Body';
 import axios from 'axios';
-import { useAuthStore, useMemberStore, useNotification } from './store/store';
+import { useAuthStore, useMemberStore, useNotification, useCheckList } from './store/store';
 import { useEffect, useContext } from 'react';
 import ChatApp from './components/ChatApp/ChatApp';
 import { ChatsProvider ,ChatsContext} from './Context/ChatsContext';
@@ -20,6 +20,7 @@ function App() {
   const { setMembers } = useMemberStore();
   const websocketRef=useRef(null);
   const {maxCount,count} =useNotification();
+  const {webSocketCheck} =useCheckList();
 
 
 
@@ -57,7 +58,7 @@ function App() {
         websocketRef.current.close();
       }
     };
-  },[loginID]);
+  },[loginID,webSocketCheck]);
 
 
   return (

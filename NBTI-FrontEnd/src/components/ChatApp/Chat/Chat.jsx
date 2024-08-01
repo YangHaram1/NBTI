@@ -35,7 +35,7 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
-  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage } = useCheckList();
+  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage ,setWebSocketCheck} = useCheckList();
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
   const [updateMember, setUpdateMember] = useState(false);
@@ -75,10 +75,12 @@ const Chat = () => {
       updateSearchPosition();
       ws.current.onclose = () => {
         console.log('Disconnected from WebSocket');
+        setWebSocketCheck();
       };
 
       ws.current.onerror = (error) => {
         console.log('WebSocket error observed:', error);
+        setWebSocketCheck();
         // 오류 처리 로직을 추가할 수 있습니다.
       };
 
@@ -260,7 +262,6 @@ const Chat = () => {
         //--------------------------------------------------//
         const chatCheckCount = chatCheck.filter((temp) => {
           if ((temp.last_chat_seq < item.seq) && temp.member_id !== item.member_id) {
-
           //  console.log(temp.member_id);
             return true;
           }

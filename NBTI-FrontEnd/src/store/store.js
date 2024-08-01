@@ -22,6 +22,7 @@ export const useMemberStore = create((set) => ({
 
 /*하람*/
 export const useCheckList = create((set) => ({
+    webSocketCheck:false,
     chatSeq:0,
     onMessage:false,
     emoticonDisplay: false,
@@ -30,6 +31,7 @@ export const useCheckList = create((set) => ({
     setSearchDisplay: (search) => set({ searchDisplay: search }),
     setChatSeq:(seq)=>set({chatSeq:seq}),
     setOnmessage:() => set((state) => ({ onMessage: !state.onMessage  })),
+    setWebSocketCheck:() => set((state) => ({ webSocketCheck: !state.webSocketCheck}))
 }));
 
 export const useNotification =create((set)=>({
