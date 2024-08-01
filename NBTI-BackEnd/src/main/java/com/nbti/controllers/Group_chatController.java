@@ -55,9 +55,9 @@ public class Group_chatController {
 		if(!check) {
 			int seq=serv.insert(name);	
 			List<Group_memberDTO> member_list=new ArrayList<>();
-			Group_memberDTO dto= new Group_memberDTO(seq,list.get(0),0,"","",list.get(1));
+			Group_memberDTO dto= new Group_memberDTO(seq,list.get(0),0,"Y","N",list.get(1));
 			member_list.add(dto);
-			dto= new Group_memberDTO(seq,list.get(1),0,"","",list.get(0));
+			dto= new Group_memberDTO(seq,list.get(1),0,"Y","N",list.get(0));
 			member_list.add(dto);
 			
 			mserv.insert(member_list);
