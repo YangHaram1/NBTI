@@ -31,5 +31,12 @@ public class ReplyService {
 		return rdao.selectReply(params);
 	}
 	
+	// 댓글 삭제
+	public void delete(int seq) {
+		rdao.delete(seq);
+	}
+	
+	
+	
 	
 }

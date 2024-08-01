@@ -10,31 +10,35 @@ import BoardEditor from "../../../../BoardEditor/BoardEditor";
 
 
 export const Detail = () => {
+    const navi = useNavigate();
 
     const { boardSeq, boardType } = useBoardStore();
     const [detail, setDetail] = useState({}); // 게시글의 detail 정보
     const [board, setBoard] = useState({ title: '', contents: '', board_code: 1 });
+    const [currentUser, setCurrentUser] = useState(null); // 로그인된 사용자 정보 상태
 
-    const navi = useNavigate();
+    // 게시판 코드
+    let code = 1;
+    if (boardType === "자유") code = 1;
+    else if (boardType === "공지") code = 2;
 
     // 게시글 날짜 타입 변경
     const date = new Date(detail.write_date);
     const currentDate = !isNaN(date) ? format(date, 'yyyy-MM-dd HH:mm') : 'Invalid Date';
 
     useEffect(() => {
-        let code = 1;
-        if (boardType === "자유") code = 1;
-        else if (boardType === "공지") code = 2;
-
-        if (boardSeq === -1) navi('/board');
-
+        if (boardSeq === -1) navi('/board'); // detail 화면에서 f5 -> 목록으로 이동
         if (boardSeq !== -1) {
-            axios.get(`${host}/board/${boardSeq}/${code}`).then((resp) => {
+            axios.get(`${host}/board/${boardSeq}/${code}`).then((resp) => { // 게시글 출력
                 setDetail(resp.data); // 취소 시 원본 데이터
                 setBoard(resp.data);
             })
         }
 
+        // 로그인 한 사용자 정보
+        axios.get(`${host}/members`).then((resp) => {
+            setCurrentUser(resp.data);
+        })
 
         // 외부 스타일시트를 동적으로 추가
         const link = document.createElement("link");
@@ -52,7 +56,7 @@ export const Detail = () => {
     const handleDelBtn = () => {
         if (window.confirm("정말 삭제하시겠습니까?")) {
             if (boardSeq !== -1) {
-                axios.delete(`${host}/board/${detail.seq}`).then(resp => {
+                axios.delete(`${host}/board/${detail.seq}`).then((resp) => {
                     navi('/board/free');
                 })
             }
@@ -87,43 +91,54 @@ export const Detail = () => {
     // ==========[댓 글]==========
     const [replyContents, setReplyContents] = useState('');
     const [reply, setReply] = useState([]);
-    const inputRef = useRef(null); // ref 추가
+    const inputRef = useRef(null);
 
     const handleInputReply = (e) => {
-        const textContent = e.target.innerText;
-        setReplyContents(textContent);
+        const htmlContent = e.target.innerHTML;
+        setReplyContents(htmlContent);
     }
 
+    // 댓글 입력 및 추가
     const handleReplyAdd = () => {
-        console.log('Reply:', replyContents);
-        console.log("게시판 seq : ", detail.seq)
-
-        let code = 1;
-        if (boardType === "자유") code = 1;
-        else if (boardType === "공지") code = 2;
-
         const requestBody = { board_seq: boardSeq, board_code: code, contents: replyContents };
-
         axios.post(`${host}/reply`, requestBody).then((resp) => {
             setReply((prev) => {
                 if (prev.length > 0) {
-                    return [...prev, resp.data];
+                    return [resp.data, ...prev];
                 }
                 return [resp.data];
             })
             if (inputRef.current) {
-                inputRef.current.innerText = ''; // div 내용 비우기
+                inputRef.current.innerHTML = ''; // div 내용 비우기
             }
         });
     }
 
+    // 댓글 전체 출력
+    useEffect(() => {
+        axios.get(`${host}/reply/${boardSeq}/${code}`).then((resp) => {
+            setReply(resp.data);
+        })
+    }, [])
 
-    // useEffect(() => {
-    //     axios.get(`${host}/board/${detail.seq}/${detail.board_code}`).then((resp) => {
-    //         console.log("댓글 : " + resp.data);
-    //     })
-    // }, [])
+    // 댓글 삭제 
+    const handleDelReplyBtn = (replySeq) => {
+        console.log(replySeq);
 
+        axios.delete(`${host}/reply/${replySeq}`).then((resp) => {
+            setReply((prev) => {
+                return (
+                    prev.filter((item) => item.seq !== replySeq)
+                )
+            })
+        })
+    }
+
+
+
+
+
+    //======================================================================================
 
     return (
         <div className={styles.container}>
@@ -132,7 +147,7 @@ export const Detail = () => {
                     <i className="fa-regular fa-star"></i>
                 </div>
                 <div className={styles.right}>
-                    {!isEditing ? (
+                    {currentUser && detail.member_id === currentUser.id && !isEditing ? (
                         <>
                             <p onClick={handleEditBtn}>수정</p>
                             <p onClick={handleDelBtn}>삭제</p>
@@ -179,14 +194,14 @@ export const Detail = () => {
                 {isEditing ? (
                     <BoardEditor setBoard={setBoard} contents={board.contents} />
                 ) : (
-                    <span>{detail.contents}</span>
+                    <div dangerouslySetInnerHTML={{ __html: detail.contents }}></div>
                 )}
             </div>
 
             {/* --------------[ 댓글 작성 ]------------ */}
             <div className={styles.reply}>
                 <div className={styles.count}>
-                    <span>0</span>
+                    <span>{reply.length}</span>
                     <span>개의 댓글</span>
                 </div>
                 <div className={styles.replyInput}>
@@ -217,20 +232,24 @@ export const Detail = () => {
                                             <span>{item.member_id}</span>
                                             <span>{reply_currentDate}</span>
                                         </div>
-                                        <span>{item.contents}</span>
+                                        <div
+                                            className={styles.replyContent}
+                                            dangerouslySetInnerHTML={{ __html: item.contents }}
+                                        />
                                     </div>
                                     <div className={styles.likes}>
                                         <i className="fa-regular fa-heart fa-lg" />
                                         <p>5</p>
                                     </div>
-                                    <button>X</button>
+                                    {currentUser && currentUser.id === item.member_id && (
+                                        <button onClick={() => { handleDelReplyBtn(item.seq) }}>X</button>
+                                    )}
                                 </div>
                             )
                         })
-
                     }
                 </div>
             </div>
-        </div>
+        </div >
     )
 }

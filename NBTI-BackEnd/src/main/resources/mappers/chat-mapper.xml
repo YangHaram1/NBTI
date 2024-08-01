@@ -21,6 +21,10 @@
 		where message like '%'||#{content}||'%' and group_seq=#{group_seq}
 		order by seq
 	</select>
+	
+	<select id="getLastDto" resultType="com.nbti.dto.ChatDTO">
+		select *from chat where seq=(select max(seq) from chat where group_seq = ${group_seq})
+	</select>
 
 
 	<select id="date" resultType="java.sql.Timestamp">

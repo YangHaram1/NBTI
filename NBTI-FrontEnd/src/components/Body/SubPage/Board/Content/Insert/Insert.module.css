@@ -17,9 +17,14 @@ div {
   align-items: flex-end;
   font-size: 0.7rem;
   margin-right: 10px;
+  pointer-events: none;
 }
 .container .box > p {
   cursor: pointer;
+  pointer-events: auto;
+}
+.container .box > p:hover {
+  color: #536d62;
 }
 
 .container .top {

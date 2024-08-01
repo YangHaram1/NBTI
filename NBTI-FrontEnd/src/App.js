@@ -65,9 +65,9 @@ function App() {
     <ChatsProvider>
       <Router>
         <div className="container">
-          <Header />
+          {(loginID!=null)&& <Header />}
           <Body />
-          <ChatApp websocketRef={websocketRef}></ChatApp>
+          {(loginID!=null)&&<ChatApp websocketRef={websocketRef}></ChatApp>}
         </div>
         <ToastContainer
           position="top-right"

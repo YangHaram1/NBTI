@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +36,7 @@ public class Group_memberController {
 		int group_seq=(int)session.getAttribute("group_seq");
 		
 		for(int i=0;i<members.length;i++) {
-			Group_memberDTO dto = new Group_memberDTO(group_seq,members[i],"N","","");
+			Group_memberDTO dto = new Group_memberDTO(group_seq,members[i],0,"","");
 			serv.insert(dto);
 		}
 		
@@ -56,5 +57,14 @@ public class Group_memberController {
 		
 		
 		return ResponseEntity.ok(serv.members(group_seq));
+	}
+	
+	@PatchMapping
+	public ResponseEntity<Void> patch(int group_seq,int last_chat_seq) throws Exception{
+		//System.out.println("업데이트 멤버 check");
+		String loginID= (String) session.getAttribute("loginID");
+		serv.update_check(group_seq,loginID,last_chat_seq);
+		return ResponseEntity.ok().build();
+		
 	}
 }

@@ -1,12 +1,11 @@
 import axios from "axios";
 import BoardEditor from "../../../../BoardEditor/BoardEditor";
 import styles from "./Insert.module.css";
-import { useState } from 'react';
-import { host } from '../../../../../../config/config'
+import { useState } from "react";
+import { host } from "../../../../../../config/config";
 import { useNavigate } from "react-router-dom";
 
 export const Insert = () => {
-
   // 팝업 창의 열림/닫힘 상태를 관리하는 상태
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
@@ -22,38 +21,47 @@ export const Insert = () => {
 
   const navi = useNavigate();
 
-  const [board, setBoard] = useState({ title: '', contents: '', board_code: 1 });
+  const [board, setBoard] = useState({
+    title: "",
+    contents: "",
+    board_code: 1,
+  });
 
   const handleInput = (e) => {
     const { name, value } = e.target;
-    // console.log(name, value);
     setBoard((prev) => {
-      return (
-        { ...prev, [name]: value }
-      )
-    })
-  }
+      return { ...prev, [name]: value };
+    });
+  };
 
   const handleAddBtn = () => {
-    console.log(board);
+    if (board.title.trim() === "" || board.contents.trim() === "") {
+      alert("제목, 내용을 작성해주세요");
+      return; // 유효성 검사 통과하지 못하면 함수 종료
+    }
 
     axios.post(`${host}/board`, board).then((resp) => {
       alert("글이 작성되었습니다.");
-      navi('/board/free')
-    })
-
-  }
+      navi("/board/free");
+    });
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.box} onClick={openPopup}>
         <p>임시보관 된 게시물 ( 0 )</p>
-        {/* <a href="#">임시보관 된 게시물 ( )</a> */}
+        {/* <a href="#">임시보관 된 게시물 ( 0 )</a> */}
       </div>
       <div className={styles.top}>
         <div className={styles.left}>
           <p>제목</p>
-          <input type="text" name="title" value={board.title} placeholder="제목을 입력하세요." onChange={handleInput} />
+          <input
+            type="text"
+            name="title"
+            value={board.title}
+            placeholder="제목을 입력하세요."
+            onChange={handleInput}
+          />
           <p className={styles.tempSave}>임시저장 : 2024-07-26-17:13</p>
         </div>
         <div className={styles.right}>
@@ -88,7 +96,8 @@ export const Insert = () => {
               </div>
             </div>
             <span>
-              저장된 글은 최대 10개까지 저장되며, 가장 오래된 순서대로 삭제됩니다. <br />
+              저장된 글은 최대 10개까지 저장되며, 가장 오래된 순서대로
+              삭제됩니다. <br />
               첨부한 이미지나 파일은 저장되지 않습니다.
             </span>
             <button onClick={closePopup}>닫기</button>

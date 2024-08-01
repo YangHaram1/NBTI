@@ -7,7 +7,6 @@
     background-color: #EAF4F4;
     overflow: auto;
 }
-
 .header {
     display: flex;
     flex: 0.5;
@@ -148,6 +147,10 @@
     align-items: flex-end;
     font-weight: 600;
     font-size: 10px;
+}
+.check{
+    font-size: 10px;
+    color: red
 }
 
 /* 전체 스크롤바 스타일 */

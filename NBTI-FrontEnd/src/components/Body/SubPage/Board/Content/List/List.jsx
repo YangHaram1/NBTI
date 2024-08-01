@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./List.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 import { useBoardStore } from "../../../../../../store/store";
 import { host } from "../../../../../../config/config";
 
@@ -23,11 +23,26 @@ export const List = () => {
         });
     }, [boardType]);
 
-    // 페이지네이션 
-    useEffect(() => {
 
-    }, []);
+    // const handleTitleClick = async (seq) => {
+    //     const requestBox = { seq: seq, board_code: code };
+    //     try {
+    //         await axios.put(`${host}/board`, requestBox);
+    //         setBoardSeq(seq);
+    //         navi("/board/detail");
+    //     } catch (err) {
+    //         console.error("조회수 증가 실패:", err);
+    //     }
+    // };
 
+
+
+    //   const handleViewCount = (seq) => {
+    //     axios.post(`${host}/board`);
+    //   };
+
+    // 페이지네이션
+    useEffect(() => { }, []);
 
     return (
         <div className={styles.container}>
@@ -61,36 +76,46 @@ export const List = () => {
                         <p>조회수</p>
                     </div>
                 </div>
-                {
-                    boardList.map((item, index) => {
-                        const date = new Date(item.write_date);
-                        const currentDate = !isNaN(date) ? format(date, 'yyyy-MM-dd') : 'Invalid Date';
+                {boardList.map((item, index) => {
+                    const date = new Date(item.write_date);
+                    const currentDate = !isNaN(date)
+                        ? format(date, "yyyy-MM-dd")
+                        : "Invalid Date";
 
-                        return (
-                            <div className={styles.list} key={index}>
-                                <div className={styles.seq}>
-                                    <p>{item.seq}</p>
-                                </div>
-                                <div className={styles.title}>
-                                    {/* <p onClick={() => { handleDetail(item.seq) }}>{item.title}</p> */}
-                                    <p onClick={() => { navi("/board/detail"); setBoardSeq(item.seq) }}>{item.title}</p>
-                                </div>
-                                <div className={styles.writer}>
-                                    <p>{item.member_id}</p>
-                                </div>
-                                <div className={styles.writeDate}>
-                                    <p>{currentDate}</p>
-                                </div>
-                                <div className={styles.viewCount}>
-                                    <p>{item.view_count}</p>
-                                </div>
+                    return (
+                        <div className={styles.list} key={index}>
+                            <div className={styles.seq}>
+                                <p>{item.seq}</p>
                             </div>
-                        );
-                    })
-                }
-            </div>
-            <span className={styles.pagination}></span>
-        </div>
-    )
+                            <div className={styles.title}>
+                                {/* <p onClick={() => { handleTitleClick(item.seq) }}>{item.title}</p> */}
+                                <p
+                                    onClick={() => {
+                                        navi("/board/detail");
+                                        setBoardSeq(item.seq);
+                                        // handleViewCount(item.seq);
+                                    }}
+                                >
+                                    {item.title}
+                                </p>
 
-}
+                            </div>
+                            <div className={styles.writer}>
+                                <p>{item.member_id}</p>
+                            </div>
+                            <div className={styles.writeDate}>
+                                <p>{currentDate}</p>
+                            </div>
+                            <div className={styles.viewCount}>
+                                <p>{item.view_count}</p>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+            <div className={styles.pagination}>
+                <a href=""> 1 2 3 4 5 6 7 </a>
+            </div>
+        </div>
+    );
+};

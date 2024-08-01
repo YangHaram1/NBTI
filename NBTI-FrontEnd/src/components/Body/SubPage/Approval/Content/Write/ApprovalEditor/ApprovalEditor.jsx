@@ -1,10 +1,10 @@
 import { Editor } from "@tinymce/tinymce-react";
 import { useRef, useState, useEffect } from "react";
 import axios from "axios";
-import { host, api } from "./../../../config/config";
-import styles from "./BoardEditor.module.css";
+import styles from "./ApprovalEditor.module.css";
+import { api } from "../../../../../../../config/config";
 
-const BoardEditor = ({ setBoard, contents }) => {
+export const ApprovalEditor = ({ setBoard, contents }) => {
   const [content, setContent] = useState(contents);
   const editorRef = useRef();
   const inputRef = useRef(null);
@@ -96,4 +96,3 @@ const BoardEditor = ({ setBoard, contents }) => {
   );
 };
 
-export default BoardEditor;

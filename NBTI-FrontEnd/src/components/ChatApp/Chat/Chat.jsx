@@ -27,15 +27,15 @@ const Chat = () => {
   const divRef = useRef(null);
   const chatRef = useRef([]);
   const { loginID } = useAuthStore();
+  const [chatCheck, setChatCheck] = useState([]);
 
-
-  const { chats, setChats, ws, setChatNavi,chatAppRef ,chatNavi} = useContext(ChatsContext);
+  const { chats, setChats, ws, setChatNavi, chatAppRef, chatNavi } = useContext(ChatsContext);
   //const { maxCount,count, increment,decrement } = useNotification();
   let lastDate = null;
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
-  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq } = useCheckList();
+  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage } = useCheckList();
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
 
@@ -57,12 +57,20 @@ const Chat = () => {
     const url = host.replace(/^https?:/, '')
 
     if (loginID != null) {
-      const {chatSeq} =useCheckList.getState();
-      axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {
+      const { chatSeq } = useCheckList.getState();
 
-        setChats(resp.data);
-        console.log("채팅목록가저오기");
-      })
+      if (chatSeq !== 0) {
+        axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {
+          setChats(resp.data);
+          console.log("채팅목록가저오기");
+          if (resp.data.length > 0)
+            axios.patch(`${host}/group_member?group_seq=${chatSeq}&&last_chat_seq=${resp.data[resp.data.length - 1].seq}`).then((resp) => {
+              //  console.log("업데이트")
+            })
+        })
+
+      }
+
       updateSidebarPosition();
       updateSearchPosition();
       ws.current.onclose = () => {
@@ -86,6 +94,7 @@ const Chat = () => {
             return [...prev, chat]
           })
         }
+        setOnmessage();
         console.log("메세지보냄");
         /*toast("알림", {
           position: "top-left", // 위치 설정
@@ -139,7 +148,7 @@ const Chat = () => {
         rtl: false, // RTL 텍스트 지원 비활성화
         onClose: decrement,
         onOpen: increment,
-        onClick:()=>handleToastOnclick(item)
+        onClick: () => handleToastOnclick(item)
       });
     }
     //}
@@ -147,17 +156,17 @@ const Chat = () => {
   }, [chatSeq])
 
 
-  const handleToastOnclick=(item)=>{
-   
-    setChatNavi((prev)=>{
+  const handleToastOnclick = (item) => {
 
-      if(chatAppRef.current!=null)
-      chatAppRef.current.style.display="flex";
+    setChatNavi((prev) => {
+
+      if (chatAppRef.current != null)
+        chatAppRef.current.style.display = "flex";
       console.log(`on click toast:${item.group_seq} `);
       setChatSeq(item.group_seq);
       return 'chat'
     });
-    
+
   }
 
 
@@ -166,6 +175,11 @@ const Chat = () => {
       setChatSeq(0);
       return "home";
     });
+    if (chats.length > 0)
+      axios.patch(`${host}/group_member?group_seq=${chatSeq}&&last_chat_seq=${chats[chats.length - 1].seq}`).then((resp) => {
+        //  console.log("업데이트")
+      })
+
   }
   const handleInvite = () => {
     setInvite((prev) => {
@@ -226,6 +240,7 @@ const Chat = () => {
 
   const handleChatsData = useCallback(() => {
     let count = 0;
+
     setList(
       chats.map((item, index) => {
         const formattedTimestamp = format(new Date(item.write_date), 'a hh:mm').replace('AM', '오전').replace('PM', '오후');
@@ -248,6 +263,13 @@ const Chat = () => {
         }
 
         //--------------------------------------------------//
+        const chatCheckCount = chatCheck.filter((temp) => {
+          if ((temp.last_chat_seq <item.seq)&&temp.member_id!==item.member_id)
+            return true;
+          return false;
+        }).length;
+
+        //--------------------------------------------------//
         return (
           <React.Fragment key={index}>
             {isDateChanged && (
@@ -265,8 +287,11 @@ const Chat = () => {
                       if (el && check) {
                         chatRef.current[count++] = el;
                       }
-                    }} className={idCheck?styles.mboxReverse:styles.mbox}></div>
-                  <div className={styles.date}>{formattedTimestamp}</div>
+                    }} className={idCheck ? styles.mboxReverse : styles.mbox}></div>
+                  <div>
+                    <div className={styles.check}>{chatCheckCount || ''}</div>
+                    <div className={styles.date}>{formattedTimestamp}</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -296,6 +321,12 @@ const Chat = () => {
     scrollBottom();
   }, [scrollBottom])
 
+  useEffect(() => {
+    axios.get(`${host}/group_member?group_seq=${chatSeq}`).then((resp) => {
+      console.log(resp.data);
+      setChatCheck(resp.data);
+    })
+  }, [invite])
 
 
 
@@ -328,7 +359,7 @@ const Chat = () => {
         </div>
         <Search search={search} setSearch={setSearch} searchRef={searchRef} setSearchList={setSearchList} handleSearch={handleSearch} chatRef={chatRef} divRef={divRef}></Search>
         <Emoticon sidebarRef={sidebarRef} editorRef={editorRef} />
-        {invite && (<Invite setInvite={setInvite}></Invite>)}
+        {invite && (<Invite setInvite={setInvite} chatCheck={chatCheck}></Invite>)}
       </React.Fragment>
     );
   }

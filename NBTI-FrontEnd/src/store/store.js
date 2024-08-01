@@ -19,14 +19,17 @@ export const useMemberStore = create((set) => ({
     setSelectedMember: (member) => set({ selectedMember: member }),
   }));
 
+
 /*하람*/
 export const useCheckList = create((set) => ({
     chatSeq:0,
+    onMessage:false,
     emoticonDisplay: false,
     searchDisplay: true,
-    setEmoticonDisplay: (emt) => set((state) => ({ emoticonDisplay: !state.emoticonDisplay })),
+    setEmoticonDisplay: ()=>set((state) => ({ emoticonDisplay: !state.emoticonDisplay })),
     setSearchDisplay: (search) => set({ searchDisplay: search }),
-    setChatSeq:(seq)=>set({chatSeq:seq})
+    setChatSeq:(seq)=>set({chatSeq:seq}),
+    setOnmessage:() => set((state) => ({ onMessage: !state.onMessage  })),
 }));
 
 export const useNotification =create((set)=>({
@@ -59,4 +62,43 @@ export const useDocFormStore = create((set)=>{
             docForm : form
         }))
     }
-})
+});
+
+export const useApprovalLine = create((set)=>{
+    return{
+        approvalLine : [{}],
+        setApprovalLine : (approval)=>set((prev)=>{
+            const exist = prev.approvalLine.findIndex(line => line.order === approval.order);
+            let newApprovalLine;
+            if(exist !== -1){
+                newApprovalLine = prev.approvalLine.map((line, index)=>
+                    index === exist ? {...line, ...approval} : line
+            );} else{
+                newApprovalLine = [...prev.approvalLine, approval];
+            }
+            console.log("저장소", newApprovalLine);
+            return {approvalLine : newApprovalLine};
+        })
+    }
+});
+
+export const useReferLine = create((set)=>{
+    return{
+        referLine : [{}],
+        // setReferLine : (refer)=>set((prev)=>({
+        //     referLine: [...prev.referLine, refer]
+        // })), 
+        setReferLine : (refer) => set((prev)=>{
+            const exist = prev.referLine.findIndex(line => line.id === refer.id);
+            let newReferLine;
+            if(exist !== -1) {
+                newReferLine = prev.referLine.map((line, index)=>
+                index === exist ? {...line, ...refer} : line
+                );} else{
+                    newReferLine = [...prev.referLine, refer];
+                }
+                console.log("저장소", newReferLine);
+                return {referLine:newReferLine};
+        })
+    }
+});

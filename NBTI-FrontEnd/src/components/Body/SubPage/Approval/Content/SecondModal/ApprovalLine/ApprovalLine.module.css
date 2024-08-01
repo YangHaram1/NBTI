@@ -1,0 +1,34 @@
+.approval_box{
+    display: flex;
+    /* height: 100px; */
+    flex:1;
+    font-size: 18px;
+    margin-left: 20px;
+    text-indent: 10px;
+    align-items: center;
+}
+
+.approval_team select{
+    width: 100px;
+    height: 40%;
+}
+
+.approval_name select{
+    width: 100px;
+    height: 40%;
+}
+
+.approval_name button{
+    height: 27px;
+    margin-top: 5px;
+    margin-left: 10px;
+    background-color: #CCE3DE;
+    border: 0px;
+    border-radius: 5px;
+  }
+
+  .approval_name button:hover{
+    cursor: pointer;
+    background-color: #abc3be;
+  }
+

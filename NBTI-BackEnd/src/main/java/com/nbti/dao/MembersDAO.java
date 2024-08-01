@@ -70,5 +70,10 @@ public boolean login(MembersDTO dto) {
 		}else {return false;}
 	}
 	
+	// 팀 코드에 의한 사용자 검색
+	public List<MembersDTO> searchMembers(String team){
+		return mybatis.selectList("Member.searchMembers",team);
+	}
+
 
 }

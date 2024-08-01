@@ -47,5 +47,6 @@
 .write_date{
     color: gray;
     font-size: 10px;
+    display: flex;
 }
 
