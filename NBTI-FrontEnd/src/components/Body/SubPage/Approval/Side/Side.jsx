@@ -62,7 +62,7 @@ export const Side = () => {
   const handleFormSubmit = (event) => {
     event.preventDefault(); // 폼 제출 기본 동작 방지
 
-    if(docForm.name !== ''){
+    if(docForm.id !== ''){
       // 첫 번째 모달 닫기
       setIsModalOpen(false);
       // 두 번째 모달 열기

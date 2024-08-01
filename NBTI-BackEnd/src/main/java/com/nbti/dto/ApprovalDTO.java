@@ -8,7 +8,7 @@ public class ApprovalDTO {
 	private String member_id;
 	private Timestamp approval_date;
 	private int doc_sub_seq;
-	private String emergency, cancle_yn, approval_seq, doc_state;
+	private String emergency, cancle_yn, approval_seq, doc_state_code;
 	
 	
 	public ApprovalDTO() {
@@ -17,7 +17,7 @@ public class ApprovalDTO {
 
 
 	public ApprovalDTO(int temp_seq, String member_id, Timestamp approval_date, int doc_sub_seq, String emergency,
-			String cancle_yn, String approval_seq, String doc_state) {
+			String cancle_yn, String approval_seq, String doc_state_code) {
 		super();
 		this.temp_seq = temp_seq;
 		this.member_id = member_id;
@@ -26,7 +26,7 @@ public class ApprovalDTO {
 		this.emergency = emergency;
 		this.cancle_yn = cancle_yn;
 		this.approval_seq = approval_seq;
-		this.doc_state = doc_state;
+		this.doc_state_code = doc_state_code;
 	}
 
 
@@ -100,13 +100,13 @@ public class ApprovalDTO {
 	}
 
 
-	public String getDoc_state() {
-		return doc_state;
+	public String getDoc_state_code() {
+		return doc_state_code;
 	}
 
 
-	public void setDoc_state(String doc_state) {
-		this.doc_state = doc_state;
+	public void setDoc_state_code(String doc_state_code) {
+		this.doc_state_code = doc_state_code;
 	}
 	
 	
