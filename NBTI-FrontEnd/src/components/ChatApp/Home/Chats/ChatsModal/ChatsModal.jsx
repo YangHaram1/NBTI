@@ -33,6 +33,9 @@ const ChatsModal = ({ modalRef, index, item, setGroup_chats }) => {
         })
     }
     const handleAlarm = () => {
+        axios.patch(`${host}/group_member?group_seq=${group_seq}&&type=alarm`).then((resp)=>{
+
+        })
 
     }
     const handleBookmark = () => {
