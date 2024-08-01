@@ -17,8 +17,7 @@ const ChatApp = ({websocketRef}) => {
     ws.current=websocketRef.current;
     useEffect(()=>{
         if(loginID!==null){
-          setChatNavi('chat');
-          console.log("chat");
+          setChatNavi('chat1');
         }
     },[loginID])
  
@@ -31,6 +30,7 @@ const ChatApp = ({websocketRef}) => {
 
         <div className={styles.container} ref={chatAppRef}>
             {chatNavi==='home' && <Home/>}
+            {chatNavi===('chat1') && <Chat/>}
             {chatNavi===('chat') && <Chat/>}
         </div>
     );
