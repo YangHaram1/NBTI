@@ -22,7 +22,7 @@ const Chats = () => {
         axios.get(`${host}/group_chat`).then((resp) => {
             if (resp != null) {
                 if (resp.data !== '') {
-                    // console.log(resp.data);
+                     console.log(resp.data);
                     setGroup_chats(resp.data);
                 }
                 else {
@@ -104,7 +104,6 @@ const Chats = () => {
                                     </div>
                                     <div className={styles.alarm}>
                                         {item.alarm==='Y'?(<i className="fa-solid fa-bell"></i>):(<i className="fa-solid fa-bell-slash"></i>)}
-                                      
                                     </div>
                                 </div>
 
