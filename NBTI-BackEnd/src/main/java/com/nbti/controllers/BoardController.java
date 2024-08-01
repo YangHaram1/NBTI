@@ -69,7 +69,7 @@ public class BoardController {
 		return ResponseEntity.ok().build();
 	}
 	
-	
+	/*
 	// 조회수 증가
 	@PutMapping
 	public ResponseEntity<Void> updateViewCount(@RequestBody BoardDTO dto) {
@@ -82,7 +82,7 @@ public class BoardController {
 		return ResponseEntity.ok().build();
 	}
 	
-	
+	*/
 	
 	
 	
