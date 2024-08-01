@@ -1,0 +1,60 @@
+.container {
+    position: fixed;
+    top:200px;
+    right: 90px;
+    width: 350px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.input{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    width: 80%;
+    max-height: 250px;
+    margin: auto;
+    background-color: white;
+    flex-direction: column;
+}
+.input div{
+    flex: 1;
+    width: 100%;
+    height: 100%;
+}
+.div1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.div2{
+    border-bottom: 2px solid gray; 
+}
+.div2 input{
+    width: 100%;
+    height: 100%;
+    border: 0;
+    outline: none;
+}
+.div3 {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    align-items: flex-end;
+  
+}
+.div3 button{
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 15px;
+    width: 60px;
+    height: 30px;
+    cursor: pointer;
+}
+.div3 button:hover{
+    background-color: gray;
+}

@@ -45,4 +45,16 @@ public class Group_memberService {
 	public void update_check(int group_seq,String member_id,int last_chat_seq) throws Exception{
 		dao.update_check(group_seq,member_id,last_chat_seq);
 	}
+	
+	public void update_name(int group_seq,String member_id,String name) throws Exception{
+		dao.update_name(group_seq,member_id,name);
+	}
+	
+	public void update_alarm(int group_seq,String member_id) throws Exception{
+		dao.update_alarm(group_seq,member_id);
+	}
+	
+	public void update_bookmark(int group_seq,String member_id) throws Exception{
+		dao.update_bookmark(group_seq,member_id);
+	}
 }

@@ -5,9 +5,48 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Board">
 
+	<!-- <select id="getBoardCount" resultType="int" >
+		select count(*) from board
+		<if test="target=='title'">
+      		where title like '%'||#{keyword}||'%'
+   		</if>
+   		<if test="target=='contents'">
+      		where REGEXP_REPLACE(contents,'&lt;[^>]+&gt;', '') like '%'||#{keyword}||'%'
+   		</if>
+   		<if test="target=='id'">
+      		where member_id=#{keyword}
+   		</if>
+	</select> -->
+	
 	<!-- 목록 출력 -->
 	<select id="selectAll" resultType="com.nbti.dto.BoardDTO">
-		select *from board where board_code = ${board_code} order by seq desc 
+	    SELECT a.* 
+	    FROM (
+	        SELECT board.*, ROW_NUMBER() OVER (ORDER BY seq DESC) AS rown 
+	        FROM board
+	        <where>
+	            <!-- 기본 조건: 게시판 코드 -->
+	            AND board_code = ${board_code}
+	            
+	            <!-- 검색 조건: target이 특정 값일 때 -->
+	            <if test="target == 'title'">
+	                AND title LIKE '%' || #{keyword} || '%'
+	            </if>
+	            <if test="target == 'contents'">
+	                AND REGEXP_REPLACE(contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
+	            </if>
+	            <if test="target == 'member_id'">
+	                AND member_id = #{keyword}
+	            </if>
+	            <!-- 검색 조건: target이 빈 문자열일 때 -->
+	            <if test="target == ''">
+	                AND (title LIKE '%' || #{keyword} || '%'
+	                OR REGEXP_REPLACE(contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
+	                OR member_id = #{keyword})
+	            </if>
+	        </where>
+	    ) a 
+	    WHERE rown BETWEEN ${start} AND ${end}
 	</select>
 
 	<!-- 게시글 출력 -->

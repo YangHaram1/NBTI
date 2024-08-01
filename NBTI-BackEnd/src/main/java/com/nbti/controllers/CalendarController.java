@@ -2,7 +2,6 @@ package com.nbti.controllers;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,7 +28,7 @@ public class CalendarController {
 	private HttpSession session;
 
 
-    // 캘린더 입력
+    // 입력
     @PostMapping
     public ResponseEntity<Void> insert(@RequestBody CalendarDTO dto) throws Exception{
         //System.out.println(dto.getSeq() + " seq");
@@ -37,6 +36,33 @@ public class CalendarController {
         cserv.insert(dto);
         return ResponseEntity.ok().build();
     }
+
+    // 목록
+    @GetMapping
+    public ResponseEntity<List<CalendarDTO>> list () throws Exception {
+    	List<CalendarDTO> list = cserv.list();
+    	return ResponseEntity.ok(list);
+    }
+    
+    // 수정
+    @PutMapping
+    public ResponseEntity<Void> update (@RequestBody CalendarDTO dto) throws Exception{
+    	cserv.update(dto);
+    	return ResponseEntity.ok().build();
+    }
+    
+    // 삭제
+    @DeleteMapping("/{seq}")
+    public ResponseEntity<Void> delete (@PathVariable int seq){
+    	cserv.delete(seq);
+    	return ResponseEntity.ok().build();
+    }
+    
+    
+//    @GetMapping("/title")
+//    public ResponseEntity<List<ScheduleTitleDTO>> scheduleName() throws Exception{
+//    	return ResponseEntity.ok(cserv.scheduleName());
+//    }
     
     // 내 캘린더 제목 변경
 //    @PutMapping("/title")
@@ -45,33 +71,9 @@ public class CalendarController {
 //        cserv.editTitle(dto); 
 //        return ResponseEntity.ok().build();
 //    }
-
-    // 현재 등록된 캘린더 전체 목록
-    @GetMapping
-    public ResponseEntity<List<CalendarDTO>> list () throws Exception {
-    	List<CalendarDTO> list = cserv.list();
-    	return ResponseEntity.ok(list);
-    }
     
-//    @GetMapping("/title")
-//    public ResponseEntity<List<ScheduleTitleDTO>> scheduleName() throws Exception{
-//    	return ResponseEntity.ok(cserv.scheduleName());
-//    }
-
-    //수정하기 
-    @PutMapping
-    public ResponseEntity<Void> update (@RequestBody CalendarDTO dto) throws Exception{
-    	cserv.update(dto);
-    	return ResponseEntity.ok().build();
-    }
     
-    //삭제하기
-    @DeleteMapping("/{seq}")
-    public ResponseEntity<Void> delete (@PathVariable int seq){
-    	cserv.delete(seq);
-    	return ResponseEntity.ok().build();
-    }
-    
+  
     
     
     

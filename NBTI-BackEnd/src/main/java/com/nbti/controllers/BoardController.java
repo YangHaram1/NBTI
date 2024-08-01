@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nbti.dto.BoardDTO;
@@ -31,12 +32,33 @@ public class BoardController {
 	
 	
 	// 목록 출력
-	@GetMapping("/{code}")
-	public ResponseEntity<List<BoardDTO>> selectAll(@PathVariable int code){
-		System.out.println("게시판 코드 : " + code);
-		List<BoardDTO> list = bserv.selectAll(code);
+//	@GetMapping("/{code}")
+//	public ResponseEntity<List<BoardDTO>> selectAll(@PathVariable int code){
+//		System.out.println("게시판 코드 : " + code);
+//		List<BoardDTO> list = bserv.selectAll(code);
+//		return ResponseEntity.ok(list);
+//
+//	}
+	@GetMapping("/list")
+	public ResponseEntity<List<BoardDTO>> selectAll(
+			@RequestParam int code,
+	        @RequestParam(required = false) String target,
+	        @RequestParam(required = false) String keyword,
+	        @RequestParam int start,
+	        @RequestParam int end){
+		
+		Map<String, Object> map = new HashMap<>();
+	    map.put("board_code", code);
+	    map.put("target", target);
+	    map.put("keyword", keyword);
+	    map.put("start", start);
+	    map.put("end", end);
+	    
+	    List<BoardDTO> list = bserv.selectAll(map);
+	    for (BoardDTO boardDTO : list) {
+			System.out.println(boardDTO.getMember_id());
+		}
 		return ResponseEntity.ok(list);
-
 	}
 	
 	// 게시글 출력
@@ -78,9 +100,6 @@ public class BoardController {
 		
 		int seq = request.get("seq");
 		int board_code = request.get("board_code");
-		
-		System.out.println("seq : "+ seq);
-		System.out.println("boardCode : "+ board_code);
 		
 		HashMap<String, Integer> map = new HashMap<>();
 		map.put("seq", seq);

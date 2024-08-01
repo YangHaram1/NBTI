@@ -17,8 +17,11 @@ public class BoardService {
 	private BoardDAO bdao;
 	
 	// 목록 출력
-	public List<BoardDTO> selectAll(int code){
-		return bdao.selectAll(code);
+//	public List<BoardDTO> selectAll(int code){
+//		return bdao.selectAll(code);
+//	}
+	public List<BoardDTO> selectAll(Map<String, Object> map){
+		return bdao.selectAll(map);
 	}
 
 	// 게시글 출력

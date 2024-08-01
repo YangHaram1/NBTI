@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nbti.dto.Group_memberDTO;
-import com.nbti.dto.MembersDTO;
 import com.nbti.services.Group_memberService;
 
 import jakarta.servlet.http.HttpSession;
@@ -36,7 +36,7 @@ public class Group_memberController {
 		int group_seq=(int)session.getAttribute("group_seq");
 		
 		for(int i=0;i<members.length;i++) {
-			Group_memberDTO dto = new Group_memberDTO(group_seq,members[i],0,"","","새채팅방");
+			Group_memberDTO dto = new Group_memberDTO(group_seq,members[i],0,"Y","N","새채팅방");
 			serv.insert(dto);
 		}
 		
@@ -60,10 +60,25 @@ public class Group_memberController {
 	}
 	
 	@PatchMapping
-	public ResponseEntity<Void> patch(int group_seq,int last_chat_seq) throws Exception{
+	public ResponseEntity<Void> patch(int group_seq,@RequestParam(defaultValue = "0") int last_chat_seq,String name,String type) throws Exception{
 		//System.out.println("업데이트 멤버 check");
 		String loginID= (String) session.getAttribute("loginID");
-		serv.update_check(group_seq,loginID,last_chat_seq);
+		//System.out.println(last_chat_seq);
+		if(name!=null) {
+			serv.update_name(group_seq, loginID, name);
+		}
+		else if(last_chat_seq!=0){
+			
+			serv.update_check(group_seq,loginID,last_chat_seq);
+			
+		}
+		else if(type.equals("alarm")){
+			System.out.println("alarm");
+			serv.update_alarm(group_seq, loginID);
+		}
+		else if(type.equals("bookmark")) {
+			serv.update_bookmark(group_seq, loginID);
+		}
 		return ResponseEntity.ok().build();
 		
 	}
