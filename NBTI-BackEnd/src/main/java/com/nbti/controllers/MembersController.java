@@ -170,7 +170,7 @@ public class MembersController {
 	// 마이페이지 비밀번호 변경
 	@PostMapping("/changePw")
 	public ResponseEntity<Boolean> changePw(@RequestBody Map<String, String> request){
-		String pw = EncryptionUtils.getSHA512(request.get("pw"));
+		String pw = EncryptionUtils.getSHA512((String)request.get("pw"));
 		System.out.println("pw:" + pw);
 		String id = (String)session.getAttribute("loginID");
 		HashMap<String, String> map = new HashMap<String, String>();
