@@ -1,0 +1,89 @@
+/* src/components/MyAttendance/MyAttendance.module.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 가운데 정렬 */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.titleSection {
+    width: 100%;
+    text-align: left; /* 왼쪽 정렬 */
+    margin-bottom: 20px;
+}
+
+.titleSection h2 {
+    margin: 0;
+}
+
+.summarySection {
+    display: flex;
+    justify-content: space-between; /* 공간을 균등하게 분배 */
+    width: 100%;
+    gap: 20px; /* 요소들 사이의 간격 */
+}
+
+.attendanceSummary, .leaveSection {
+    flex: 1; /* 동일한 비율로 공간을 나눔 */
+}
+
+.summaryBox, .leaveBox {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 40px;
+    max-width: 500px; /* 크기 조정 */
+    box-sizing: border-box;
+}
+
+.clockAndWorkInfo {
+    display: flex;
+    justify-content: space-between; /* 두 div 사이의 공간을 자동으로 분배 */
+    width: 100%;
+    max-width: 800px; /* 최대 너비 제한 */
+    gap: 20px; /* 요소들 사이의 간격 */
+}
+
+.clockSection, .workInfo {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    width: 500px;
+    box-sizing: border-box;
+}
+
+.timeAndButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.timeDisplay {
+    margin-bottom: 20px;
+}
+
+.buttonsContainer {
+    display: flex;
+    gap: 10px;
+}
+
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    box-sizing: border-box;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}

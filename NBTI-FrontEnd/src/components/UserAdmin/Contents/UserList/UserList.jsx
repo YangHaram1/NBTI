@@ -45,7 +45,6 @@ const UserList = ({ setUserDetail }) => {
     const getLevelName = (levelSeq) => {
         return levelMap[levelSeq] || '권한 없음';
     };
-
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -53,20 +52,29 @@ const UserList = ({ setUserDetail }) => {
                     axios.get(`${host}/members/selectMembers`),
                     axios.get(`${host}/members/selectTeam`)
                 ]);
-
+    
+                // 콘솔에 출력
+                console.log('User Response Data:', userResponse.data);
+                console.log('Team Response Data:', teamResponse.data);
+    
                 const lowerCaseUsers = convertKeysToLowerCase(userResponse.data);
                 const lowerCaseTeams = convertKeysToLowerCase(teamResponse.data);
-
+    
+                // 더 낮은 수준으로 콘솔에 출력
+                console.log('Lower Case Users:', lowerCaseUsers);
+                console.log('Lower Case Teams:', lowerCaseTeams);
+    
                 setUsers(lowerCaseUsers);
                 setTeams(lowerCaseTeams);
                 setFilteredUsers(lowerCaseUsers); // Initially show all users
                 setLoading(false);
             } catch (err) {
+                console.error('Error fetching data:', err);
                 setError('데이터를 가져오는 데 실패했습니다.');
                 setLoading(false);
             }
         };
-
+    
         fetchData();
     }, []);
 

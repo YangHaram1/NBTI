@@ -1,4 +1,5 @@
 import { Approval } from "./Approval/Approval";
+import { Attendance } from './Attendance/Attendance';
 import { Board } from "./Board/Board";
 import { Calendar } from "./Calendar/Calendar";
 import { Reservation } from "./Reservation/Reservation"
@@ -17,6 +18,7 @@ export const SubPage = () => {
         {/* <Route path="/group" element={<Group  />} /> */}
         <Route path="/approval/*" element={<Approval  />} />
         {/* <Route path="/approval" element={<Approval  />} /> */}
+        <Route path="/attendance/*" element={<Attendance />} />
       </Routes>
     </div>
   );
