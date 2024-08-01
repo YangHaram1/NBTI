@@ -10,25 +10,26 @@ import { useCheckList } from './../../../../store/store';
 import { format } from 'date-fns';
 const Chats = () => {
     const { loginID } = useAuthStore();
-    const { setChatSeq ,onMessage} = useCheckList();
-    const {setChatNavi} = useContext(ChatsContext);
+    const { setChatSeq, onMessage } = useCheckList();
+    const { setChatNavi } = useContext(ChatsContext);
     const [group_chats, setGroup_chats] = useState([]);
+    const [alarm,setAlarm] =useState();
 
     const [modalDisplay, setModalDisplay] = useState(null);
     const modalRef = useRef([]);
 
     useEffect(() => {
         axios.get(`${host}/group_chat`).then((resp) => {
-            if(resp!=null){
+            if (resp != null) {
                 if (resp.data !== '') {
-                   // console.log(resp.data);
+                    // console.log(resp.data);
                     setGroup_chats(resp.data);
                 }
                 else {
                     setGroup_chats([]);
                 }
             }
-         
+
         })
     }, [onMessage])
 
@@ -73,8 +74,8 @@ const Chats = () => {
         <div className={styles.container} onClick={handleClick}>
             {
                 group_chats.map((item, index) => {
-                    let formattedTimestamp='' ;
-                    if(item.dto!=null){
+                    let formattedTimestamp = '';
+                    if (item.dto != null) {
                         formattedTimestamp = format(new Date(item.dto.write_date), 'yyyy-MM-dd');
                     }
                     return (
@@ -93,20 +94,27 @@ const Chats = () => {
                                         </div>
 
                                     </div>
-                                    <div className={styles.content} dangerouslySetInnerHTML= {{ __html: (item.dto!=null)?item.dto.message:'메세지가 없습니다'}}>
-                
+                                    <div className={styles.content} dangerouslySetInnerHTML={{ __html: (item.dto != null) ? item.dto.message : '메세지가 없습니다' }}>
+
                                     </div>
                                 </div>
-                                <div className={styles.write_date}>
-                                    {formattedTimestamp}
+                                <div>
+                                    <div className={styles.write_date}>
+                                        {formattedTimestamp}
+                                    </div>
+                                    <div className={styles.alarm}>
+                                        {item.alarm==='Y'?(<i className="fa-solid fa-bell"></i>):(<i className="fa-solid fa-bell-slash"></i>)}
+                                      
+                                    </div>
                                 </div>
+
                             </div>
                             <ChatsModal modalRef={modalRef} index={index} item={item} setGroup_chats={setGroup_chats}></ChatsModal>
                         </React.Fragment>
                     );
                 })
             }
-           
+
         </div>
     )
 

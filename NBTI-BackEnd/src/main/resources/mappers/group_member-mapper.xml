@@ -43,6 +43,25 @@
 		update group_member set name =#{name} where group_seq=${group_seq} and member_id=#{member_id}
 	</update>
 	
+	<update id="update_alarm">
+		update group_member set alarm = case
+                when alarm = 'Y' then 'N'
+                when alarm = 'N' then 'Y'
+                else 'N'
+            end
+		where group_seq=${group_seq} and member_id=#{member_id}
+	</update>
+	
+	<update id="update_bookmark">
+		update group_member set bookmark = case
+                when bookmark = 'Y' then 'N'
+                when bookmark = 'N' then 'Y'
+                else 'N'
+            end
+		where group_seq=${group_seq} and member_id=#{member_id}
+	</update>
+	
+	
 	
 	<delete id="delete">
 		delete from group_member where group_seq=${group_seq} and member_id=#{member_id}

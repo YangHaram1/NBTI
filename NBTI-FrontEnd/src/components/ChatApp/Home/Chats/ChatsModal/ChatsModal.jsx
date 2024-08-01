@@ -33,6 +33,22 @@ const ChatsModal = ({ modalRef, index, item, setGroup_chats }) => {
         })
     }
     const handleAlarm = () => {
+        axios.patch(`${host}/group_member?group_seq=${group_seq}&&type=alarm`).then((resp)=>{
+           
+            setGroup_chats((prev)=>{
+                console.log('update alarm');
+                return(
+                    prev.map((temp)=>{
+                        if(temp.seq===group_seq){
+                            if(temp.alarm==='Y')temp.alarm='N';
+                            else if(temp.alarm==='N')temp.alarm='Y';
+                          
+                        }
+                        return temp;
+                    })
+                );
+            })
+        })
 
     }
     const handleBookmark = () => {

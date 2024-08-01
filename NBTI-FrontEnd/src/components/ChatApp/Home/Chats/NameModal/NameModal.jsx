@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useState } from 'react';
 
 const NameModal = ({setNameModal,group_seq,setGroup_chats}) => {
-    const [name,setName]=useState();
+    const [name,setName]=useState('');
     
     const handleName=()=>{
         axios.patch(`${host}/group_member?group_seq=${group_seq}&&name=${name}`).then((resp)=>{

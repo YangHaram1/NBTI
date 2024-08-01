@@ -13,9 +13,9 @@ public class CalendarDAO {
 	@Autowired
 	private SqlSession mybatis;
 	
-	//캘린더 입력
+	// 입력
 	public void insert (CalendarDTO dto)  throws Exception {
-//		dto.setMember_id("test");
+		//dto.setMember_id("test");
 		System.out.println("dto seq : " + dto.getSeq());
 		System.out.println("dto member id : " + dto.getMember_id());
 		System.out.println("dto title : " + dto.getTitle());
@@ -28,25 +28,17 @@ public class CalendarDAO {
 		
 		System.out.println("dto seq : " + dto.getSeq());
 	}
-//    // 캘린더 제목 업데이트
-//    public void editTitle(CalendarDTO dto)  throws Exception {
-//        mybatis.update("Calendar.editTitle", dto);
-//    }
-//
-//    public void updateCalendarTitle(CalendarDTO dto)  throws Exception {
-//        mybatis.update("Calendar.updateCalendarTitle", dto);
-//    }
     
-    //List 불러오기
+    // 목록
     public List<CalendarDTO> list ()  throws Exception{
     	return mybatis.selectList("Calendar.list");
     }
     
-    //수정
+    // 수정
     public void update (CalendarDTO dto) throws Exception {
     	mybatis.update("Calendar.update",dto);
     }
-    //삭제 
+    // 삭제 
     public void delete (int seq) {
     	mybatis.delete("Calendar.delete",seq);
     }
@@ -54,6 +46,15 @@ public class CalendarDAO {
 //    public List<ScheduleTitleDTO> scheduleName() throws Exception {
 //        return mybatis.selectList("Calendar.scheduleName");
 //    }
+    
+//  // 캘린더 제목 업데이트
+//  public void editTitle(CalendarDTO dto)  throws Exception {
+//      mybatis.update("Calendar.editTitle", dto);
+//  }
+//
+//  public void updateCalendarTitle(CalendarDTO dto)  throws Exception {
+//      mybatis.update("Calendar.updateCalendarTitle", dto);
+//  }
 
 
 }
