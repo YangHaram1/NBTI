@@ -57,8 +57,23 @@ div {
     padding: 0;
     font-size: 0.9rem;
   }
+  .container .menus ul > li {
+    position: relative; background-color: #6b9080;
+  }
   .container .menus ul > li > i {
     margin-bottom: 20px;
+  }
+  /* 추가 버튼 */
+  .container .menus ul > li > #plus{
+    z-index: 99;
+    position: absolute; right: 0;
+    padding: 5px;
+    cursor: pointer;
+    transition: all ease-in 0.3s;
+    background-color: red;
+  }
+  .container .menus ul > li > #plus:hover{
+    color: white;
   }
   
   .container .menus ul > li > ul > li {
