@@ -33,6 +33,11 @@ public class Group_memberService {
 		return dao.members(group_seq);
 	}
 	
+	
+	public Group_memberDTO member(int group_seq,String member_id) throws Exception{
+		return dao.member(group_seq,member_id);
+	}
+	
 	public void delete(int group_seq,String member_id) throws Exception{
 		dao.delete(group_seq,member_id);
 	}

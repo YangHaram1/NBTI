@@ -68,7 +68,6 @@ public class CalendarController {
     //삭제하기
     @DeleteMapping("/{seq}")
     public ResponseEntity<Void> delete (@PathVariable int seq){
-    	System.out.println("!!");
     	cserv.delete(seq);
     	return ResponseEntity.ok().build();
     }

@@ -89,13 +89,14 @@ export const Detail = ({ setAddOpen, addOpen }) => {
     
         axios.post(`${host}/calendar`, postData)
             .then((resp) => {
-                console.log(resp);
+                // console.log(`${resp.data} 응답` );
 
                 // 캘린더에 이벤트 추가 (UI)
                 setEvents(prev => [
                     ...prev,
                     {
                         // color : title === 1 ? "#36F" : title === 2 ? "#FFCC00" : "#CCFF",
+                        // seq: seq,
                         title: calendarTitle, //제목
                         start: startDate, //사작
                         end: endDate, //끝
@@ -138,7 +139,7 @@ export const Detail = ({ setAddOpen, addOpen }) => {
             .then((resp) => {
                 console.log(resp.data + " 수정 완료");
     
-                selectedEvent.setProp('calendarTitle', editedTitle);
+                selectedEvent.setProp('title', editedTitle);
                 selectedEvent.setExtendedProp('contents', editedContents);
     
                 setIsEditing(false); // 편집 모드 종료
@@ -162,7 +163,7 @@ export const Detail = ({ setAddOpen, addOpen }) => {
                     end: event.end_date,
                     extendedProps: {
                         contents: event.contents,
-                        scheduleTitle_name :event.title
+                        scheduleTitle_name :event.scheduleTitle_name
                     }
                 }));
                 setEvents(eventList);
@@ -194,9 +195,9 @@ export const Detail = ({ setAddOpen, addOpen }) => {
 
     //삭제
     const delModal = () => {
+        console.log(JSON.stringify(selectedEvent) + ": del 콘솔찍기");
         const seq = selectedEvent.extendedProps.seq; // seq 가져오기
-        console.log(JSON.stringify(events));
-        console.log(seq);
+        console.log(seq + "del 테스트");
         
         axios.delete(`${host}/calendar/${seq}`)
             .then((resp) => {
@@ -250,6 +251,8 @@ export const Detail = ({ setAddOpen, addOpen }) => {
                             {isEditing ? ( //수정 누르면 수정
                                 <div className={styles.modalInner}>
                                     <div className={styles.detail}>
+                                        <p>{selectedEvent.extendedProps.scheduleTitle_name}</p>
+                                        <hr/>
                                         <p>
                                             제목 : <input type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
                                         </p>
@@ -267,7 +270,8 @@ export const Detail = ({ setAddOpen, addOpen }) => {
                             ) : ( // 수정 누르기 전 
                                 <div className={styles.modalInner}>
                                 <div className={styles.detail}>
-                                    <p>dd : {selectedEvent.scheduleTitle_name}</p>
+                                    <p>{selectedEvent.extendedProps.scheduleTitle_name}</p>
+                                    <hr/>
                                     <p>제목 : {selectedEvent.title}</p>
                                     <p>시작 : {selectedEvent.start.toLocaleString()}</p>
                                     <p>종료 : {selectedEvent.end ? selectedEvent.end.toLocaleString() : '없음'}</p>

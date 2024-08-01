@@ -22,9 +22,13 @@ const ChatsModal = ({ modalRef, index, item, setGroup_chats }) => {
         })
     }
 
+    const handleName=()=>{
+        
+    }
+
     return (
         <div className={styles.container} ref={el => modalRef.current[index] = el}>
-            <div className={styles.content}>
+            <div className={styles.content} onClick={handleName}>
                 이름 변경
             </div>
             <div className={styles.content} >

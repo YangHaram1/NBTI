@@ -6,7 +6,7 @@
 <mapper namespace="Group_member">
 	<insert id="insert">
 		insert into group_member
-		values(${group_seq},#{member_id},${last_chat_seq},#{file_path},#{chat_path})
+		values(${group_seq},#{member_id},${last_chat_seq},#{alarm},#{bookmark},#{name})
 	</insert>
 	
 	<select id="check" resultType="Integer">
@@ -29,6 +29,10 @@
 	
 	<select id="members"  resultType="com.nbti.dto.Group_memberDTO">
 		select * from group_member where group_seq=#{param}
+	</select>
+	
+	<select id="member" resultType="com.nbti.dto.Group_memberDTO">
+		select *from group_member where group_seq=#{group_seq} and member_id=#{member_id}
 	</select>
 	
 	<update id="update_check">

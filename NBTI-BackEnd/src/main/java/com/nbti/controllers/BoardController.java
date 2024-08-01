@@ -1,6 +1,8 @@
 package com.nbti.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -69,20 +71,27 @@ public class BoardController {
 		return ResponseEntity.ok().build();
 	}
 	
-	/*
+
 	// 조회수 증가
-	@PutMapping
-	public ResponseEntity<Void> updateViewCount(@RequestBody BoardDTO dto) {
+	@PutMapping("/viewCount")
+	public ResponseEntity<Void> updateViewCount(@RequestBody Map<String, Integer> request) {
 		
-		System.out.println("seq : "+ dto.getSeq());
-		System.out.println("boardCode : "+ dto.getBoard_code());
+		int seq = request.get("seq");
+		int board_code = request.get("board_code");
 		
+		System.out.println("seq : "+ seq);
+		System.out.println("boardCode : "+ board_code);
 		
-//		bserv.updateViewCount(dto);
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("seq", seq);
+		map.put("board_code", board_code);
+		
+		bserv.updateViewCount(map);
 		return ResponseEntity.ok().build();
+
 	}
 	
-	*/
+
 	
 	
 	

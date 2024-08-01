@@ -44,15 +44,20 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		HttpSession httpSession = (HttpSession) session.getAttributes().get("HTTPSESSIONID"); 
-		int group_seq=(int)httpSession.getAttribute("group_seq");																					
+		int group_seq=(int)httpSession.getAttribute("group_seq");		
 		String sender =(String) httpSession.getAttribute("loginID");
 		ChatDTO dto = new ChatDTO(0, sender, message.getPayload(), null, group_seq);
-		dto = chatService.insert(dto);
-		String json = gson.toJson(dto);
 		List<Group_memberDTO> list=memberService.members(group_seq);
-		broadcastMessage(json,list);
-		System.out.println(list.get(1).getMember_id());
-		System.out.println("메세지보냄");
+		if(message.getPayload().equals("updateMember")) {
+			broadcastMessage("updateMember",list);
+		}
+		else {																		
+			dto = chatService.insert(dto);
+			String json = gson.toJson(dto);
+			broadcastMessage(json,list);
+			System.out.println(list.get(1).getMember_id());
+			System.out.println("메세지보냄");
+		}
 	}
 
 	@Override

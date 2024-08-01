@@ -35,10 +35,10 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
-  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage } = useCheckList();
+  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage ,setWebSocketCheck} = useCheckList();
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
-
+  const [updateMember, setUpdateMember] = useState(false);
 
 
   const handleChats = useCallback(() => {
@@ -60,12 +60,12 @@ const Chat = () => {
       const { chatSeq } = useCheckList.getState();
 
       if (chatSeq !== 0) {
-        axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {
+        axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {//채팅목록 가저오기
           setChats(resp.data);
           console.log("채팅목록가저오기");
-          if (resp.data.length > 0)
+          if (resp.data.length > 0) //멤버 last_chat_seq 업데이트
             axios.patch(`${host}/group_member?group_seq=${chatSeq}&&last_chat_seq=${resp.data[resp.data.length - 1].seq}`).then((resp) => {
-              //  console.log("업데이트")
+              ws.current.send("updateMember");
             })
         })
 
@@ -75,48 +75,49 @@ const Chat = () => {
       updateSearchPosition();
       ws.current.onclose = () => {
         console.log('Disconnected from WebSocket');
+        setWebSocketCheck();
       };
 
       ws.current.onerror = (error) => {
         console.log('WebSocket error observed:', error);
+        setWebSocketCheck();
         // 오류 처리 로직을 추가할 수 있습니다.
       };
 
       ws.current.onmessage = (e) => {
-        // alert("메세지옴");
-        let chat = JSON.parse(e.data);
-        if (chat.member_id !== loginID) {
-          notify(chat);
+        
+        if (e.data === "updateMember") {
+          console.log(e.data);
+          setUpdateMember((prev) => {
+            return !prev;
+          });
+
+        } else {
+          const { chatSeq } = useCheckList.getState();
+          // alert("메세지옴");
+          let chat = JSON.parse(e.data);
+          if (chat.member_id !== loginID) {
+            notify(chat);
+          }
+          if (chat.group_seq === chatSeq) {
+            setChats((prev) => {
+
+              return [...prev, chat]
+            })
+            if ((chatSeq !== 0)) { //이것도 멤버 last_chat_seq 업데이트
+              axios.patch(`${host}/group_member?group_seq=${chatSeq}&&last_chat_seq=${chat.seq}`).then((resp) => {
+                setUpdateMember((prev) => {
+                  return !prev;
+                });
+              })
+            }
+
+          }
+          setOnmessage();
+          console.log("메세지보냄");
         }
-        if (chat.group_seq === chatSeq) {
-          setChats((prev) => {
-
-            return [...prev, chat]
-          })
-        }
-        setOnmessage();
-        console.log("메세지보냄");
-        /*toast("알림", {
-          position: "top-left", // 위치 설정
-          autoClose: 5000,       // 자동 닫힘 시간 (5초)
-          hideProgressBar: true, // 진행 바 숨기기
-        });*/
-
-
-
-        /*
-        // 알림 생성
-        const notificationTitle = "새 메시지";
-        const notificationOptions = {
-          body: chat,
-          icon: { avatar } // 알림 아이콘의 경로
-        };
-
-        if (Notification.permission === "granted") {
-          new Notification(notificationTitle, notificationOptions);
-        }
-        ///*/
       }
+
     }
 
 
@@ -175,11 +176,6 @@ const Chat = () => {
       setChatSeq(0);
       return "home";
     });
-    if (chats.length > 0)
-      axios.patch(`${host}/group_member?group_seq=${chatSeq}&&last_chat_seq=${chats[chats.length - 1].seq}`).then((resp) => {
-        //  console.log("업데이트")
-      })
-
   }
   const handleInvite = () => {
     setInvite((prev) => {
@@ -264,8 +260,11 @@ const Chat = () => {
 
         //--------------------------------------------------//
         const chatCheckCount = chatCheck.filter((temp) => {
-          if ((temp.last_chat_seq <item.seq)&&temp.member_id!==item.member_id)
+          if ((temp.last_chat_seq < item.seq) && temp.member_id !== item.member_id) {
+          //  console.log(temp.member_id);
             return true;
+          }
+
           return false;
         }).length;
 
@@ -300,7 +299,7 @@ const Chat = () => {
       })
     );
 
-  }, [chats, handleSearchData])
+  }, [chats, handleSearchData, chatCheck])
 
   useEffect(() => {
     chatRef.current = [];
@@ -323,10 +322,10 @@ const Chat = () => {
 
   useEffect(() => {
     axios.get(`${host}/group_member?group_seq=${chatSeq}`).then((resp) => {
-      console.log(resp.data);
+       console.log(resp.data);
       setChatCheck(resp.data);
     })
-  }, [invite])
+  }, [invite, updateMember, chatNavi])
 
 
 

@@ -45,6 +45,13 @@ public class Group_memberDAO {
 		return mybatis.selectList("Group_member.members",group_seq);
 
 	}
+	
+	public Group_memberDTO member(int group_seq,String member_id) throws Exception{
+		Map<String, Object> map = new HashMap<>();
+		map.put("group_seq", group_seq);
+		map.put("member_id", member_id);
+		return mybatis.selectOne("Group_member.member",map);
+	}
 
 	public void delete(int group_seq, String member_id) throws Exception {
 		Map<String, String> map = new HashMap<>();
