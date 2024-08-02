@@ -55,9 +55,9 @@ public class Group_chatController {
 		if(!check) {
 			int seq=serv.insert(name);	
 			List<Group_memberDTO> member_list=new ArrayList<>();
-			Group_memberDTO dto= new Group_memberDTO(seq,list.get(0),0,"","",list.get(1));
+			Group_memberDTO dto= new Group_memberDTO(seq,list.get(0),0,"Y","N",list.get(1));
 			member_list.add(dto);
-			dto= new Group_memberDTO(seq,list.get(1),0,"","",list.get(0));
+			dto= new Group_memberDTO(seq,list.get(1),0,"Y","N",list.get(0));
 			member_list.add(dto);
 			
 			mserv.insert(member_list);
@@ -85,9 +85,22 @@ public class Group_chatController {
 			Group_chatDTO dto = chatList.get(i);
 			for (Group_memberDTO MemberDTO : list) {
 				if(MemberDTO.getGroup_seq()==dto.getSeq()) {
-					size=mserv.members(MemberDTO.getGroup_seq()).size();
-					ChatDTO cdto=cserv.getLastDTO(dto.getSeq());
-					result.add(new Group_chatSizeDTO(dto.getSeq(),MemberDTO.getName(),MemberDTO.getAlarm(),MemberDTO.getBookmark(),size,cdto));
+					List<Group_memberDTO> memberList=  mserv.members(MemberDTO.getGroup_seq()); //seq에맞는 멤버 목록
+					size=memberList.size();
+					int last_chat_seq=0;
+					for (Group_memberDTO member : memberList) {
+						if(member.getMember_id().equals(loginID)) {
+							last_chat_seq=member.getLast_chat_seq();
+							
+							break;
+						}
+					}
+					ChatDTO cdto=cserv.getLastDTO(dto.getSeq()); //그룹채팅방에서 마지막 메세지 가저오는거고
+					int unread=0;
+					if(cdto!=null) {
+						unread = cserv.unread(dto.getSeq(), last_chat_seq, cdto.getSeq())-1;
+					}
+					result.add(new Group_chatSizeDTO(dto.getSeq(),MemberDTO.getName(),MemberDTO.getAlarm(),MemberDTO.getBookmark(),size,unread,cdto));
 					break;
 				}
 			}

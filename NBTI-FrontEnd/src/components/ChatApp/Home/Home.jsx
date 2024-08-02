@@ -72,7 +72,7 @@ const Home = () => {
             </div>
             <div className={styles.div3}>
                 {chatNaviBody === 'members' && <Members  setName={setName}/>}
-                {chatNaviBody === 'chats' && <Chats />}
+                <Chats />
                 {chatNaviBody === 'alarms' && <Alarms />}
             </div>
         </div>

@@ -4,21 +4,18 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="Calendar">
-  
-  
-  
-   <!-- resultMap 정의 -->
+    
+    <!-- 목록 -->
     <resultMap id="CalendarResultMap" type="com.nbti.dto.ScheduleTitleDTO">
         <result property="seq" column="schedule_seq"/>
         <result property="member_id" column="member_id"/>
-        <result property="scheduleTitle_name" column="scheduleTitle_name"/> <!-- title 필드를 scheduleTitle_name 컬럼에 매핑 -->
+        <result property="scheduleTitle_name" column="scheduleTitle_name"/>
         <result property="calendarTitle" column="calendarTitle"/>
         <result property="contents" column="contents"/>
         <result property="start_date" column="start_date"/>
         <result property="end_date" column="end_date"/>
     </resultMap>
 
-    <!-- 현재 등록된 캘린더 전체 목록 -->
     <select id="list" resultMap="CalendarResultMap">
         SELECT 
             s.seq AS schedule_seq,

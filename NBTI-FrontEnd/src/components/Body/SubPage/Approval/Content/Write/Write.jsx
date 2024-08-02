@@ -5,7 +5,7 @@ import { DocVacation } from './DocVacation/DocVacation';
 import styles from './Write.module.css';
 import { host } from '../../../../../../config/config';
 import axios from 'axios';
-import { useReferLine } from '../../../../../../store/store';
+import { useApprovalLine, useReferLine } from '../../../../../../store/store';
 
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import {faPenToSquare} from '@fortawesome/free-solid-svg-icons';
@@ -13,12 +13,14 @@ import { useReferLine } from '../../../../../../store/store';
 export const Write = ({setlist})=>{
 
     const [userdata, setUserData] = useState({}); 
-    const [docdata, setDocData] = useState({effective_date:'', cooperation_dept:'', title:'', content:''});
+    const [docdata, setDocData] = useState({effective_date:'', cooperation_dept:'', title:'', content:'', emergency:'' });
     const [content, setContent] = useState('');
     const [date, setDate] = useState('');
     const [dept, setDept] = useState('');
     const [title, setTitle] = useState('');
-    const { referLine } = useReferLine();
+    // const [emergency, setEmergency] = useState(false);
+    const { referLine, resetReferLine} = useReferLine();
+    const { approvalLine, resetApprovalLine } = useApprovalLine();
 
     // ===== 아이콘 =====
     useEffect(() => {
@@ -40,9 +42,40 @@ export const Write = ({setlist})=>{
     }
 
     const approvalSubmit = () =>{
+
+        let result = window.confirm("긴급 문서로 하시겠습니까?");
         console.log("개별", date, dept, title, content);
-        setDocData({effective_date:'', cooperation_dept:'', title:'', content:''});
-        console.log("토탈",docdata);
+        let requestData;
+
+        if(setlist === "업무기안서"){
+            // docData => 업무기안서 내용 => else if 시 다른 변수로 변경 필요
+            requestData = {
+                docDraft: {
+                    effective_date: date,
+                    cooperation_dept: dept,
+                    title: title,
+                    content: content,
+                    emergency: result,
+                    docType : setlist === '업무기안서'? 1 : setlist === '휴가신청서' ? 2:3 
+                },
+                approvalLine: approvalLine.slice(1),
+                referLine: referLine.slice(1)
+            };  
+        }else{
+            console.log("업무기안서 외 다른 데이터")
+        }
+    
+        axios.post(`${host}/approval`, requestData)
+            .then(response => {
+                resetApprovalLine();
+                resetReferLine();
+                console.log("문서 제출 성공:", response);
+                console.log("성공",approvalLine);
+                console.log("성공",referLine);
+            })
+            .catch(error => {
+                console.error("문서 제출 실패:", error);
+            });
     }
 
     useEffect(()=>{
@@ -73,7 +106,7 @@ export const Write = ({setlist})=>{
                     <div className={styles.write_box}>
                         {   
                         setlist === '휴가신청서' ?  <DocVacation userdata={userdata}/>
-                        : setlist === '휴직신청서' ? <DocLeave userdata={userdata}/>
+                        : setlist === '휴직신청서' ? <DocLeave userdata={userdata} setContent={setContent} content={content}/>
                         : <DocDraft userdata={userdata} setDocData={setDocData} setContent={setContent} content={content} setDate={setDate} setDept={setDept} setTitle={setTitle}/>
                         }   
                     </div>
@@ -82,13 +115,18 @@ export const Write = ({setlist})=>{
                     </div>
                 </div>
                 <div className={styles.content_right}>
+                    <div className={styles.content_right_title}>참조/열람자</div>
+                    <div className={styles.content_right_content}>
                     {
-                        referLine.map((refer)=>{
+                        referLine.slice(1).map((refer)=>{
                             return(
-                                <div className={styles.refer}> {refer.name}</div>
+                                <div className={styles.refer}>
+                                    {refer.name} 직급 / 다섯글자부 / 다섯글자부
+                                </div>
                             );
                         })
                     }
+                    </div>
                 </div>
             </div>
         </div>

@@ -83,7 +83,7 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
         {/* input hidden으로 order 값 부여하기 */}
         <div className={styles.approval_team}>
             <select onChange={handleTeamChange} value={selectTeam}>
-            <option defaultValue="">선택</option>
+            <option defaultValue="noen" disabled>선택</option>
                 {
                     teamCode.map((team) => {
                         return (<option key={team.team_code} value={team.team_code}>{team.team_name}</option>);

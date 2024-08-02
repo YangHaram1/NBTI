@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react';
-import { useApprovalLine, useAuthStore, useReferLine } from '../../../../../../../store/store';
+// import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useApprovalLine } from '../../../../../../../store/store';
 import styles from './Header.module.css';
-import axios from 'axios';
-import { host } from '../../../../../../../config/config';
 
 export const Header = ({userdata}) => {
 
     const { approvalLine } = useApprovalLine();
-    const { referLine } = useReferLine();
     const TimeData = new Date();
-    const Today = `${TimeData.getFullYear()}-${TimeData.getMonth() + 1}-${TimeData.getDate()}`;
-
+    const year = TimeData.getFullYear();
+    const month = (`0${TimeData.getMonth() + 1}`).slice(-2);
+    const day = (`0${TimeData.getDate()}`).slice(-2);
+    const Today = `${year}-${month}-${day}`;
 
     return (
         <>
@@ -26,6 +26,10 @@ export const Header = ({userdata}) => {
                 <div className={styles.writer_data}>
                     <div className={styles.writer_title}>기안일</div>
                     <div className={styles.writer_content}>{Today}</div>
+                </div>
+                <div className={styles.writer_data}>
+                    <div className={styles.writer_title}>문서번호</div>
+                    <div className={styles.writer_content}></div>
                 </div>
             </div>
             <div className={styles.mid}></div>

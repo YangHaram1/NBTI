@@ -17,6 +17,12 @@ export const useMemberStore = create((set) => ({
     setSelectedMember: (member) => set({ selectedMember: member }),
   }));
 
+/*은미*/
+/*side - 캘린더 List*/
+export const useCalendarList = create((set) => ({
+    selectedItem: [], // 선택된 항목 상태
+    setSelectedItem: (item) => set({ selectedItem: item }), // 선택된 항목 업데이트 함수
+  }));
 
 /*하람*/
 export const useCheckList = create((set) => ({
@@ -78,7 +84,8 @@ export const useApprovalLine = create((set)=>{
             }
             console.log("저장소", newApprovalLine);
             return {approvalLine : newApprovalLine};
-        })
+        }),
+        resetApprovalLine: ()=>set({approvalLine:[{}]})
     }
 });
 
@@ -99,6 +106,7 @@ export const useReferLine = create((set)=>{
                 }
                 console.log("저장소", newReferLine);
                 return {referLine:newReferLine};
-        })
+        }),
+        resetReferLine: ()=>set({referLine:[{}]})
     }
 });

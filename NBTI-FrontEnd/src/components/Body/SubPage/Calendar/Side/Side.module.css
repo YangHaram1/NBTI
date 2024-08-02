@@ -1,9 +1,8 @@
 div {
     /* border: 1px solid black; */
   }
-  
   .container {
-    background-color: #cce3de;
+    background-color: #fefefe;
     width: 250px;
     display: flex;
     flex-direction: column;
@@ -23,8 +22,9 @@ div {
   }
   
   .container .mainBtn button {
-    background-color: #6b9080;
-    color: white;
+    background-color: #a1d3bc;
+    color: black;
+    font-weight: 500;
     font-size: medium;
     width: 100%;
     height: 40px;
@@ -36,9 +36,9 @@ div {
     align-items: center;
     transition-duration: 0.4s;
   }
-  
+
   .container .mainBtn button:hover {
-    background-color: #6b9080cc;
+    background-color: #a1d3bc78;
   }
   
   .container .mainBtn button i {
@@ -57,8 +57,24 @@ div {
     padding: 0;
     font-size: 0.9rem;
   }
+  .container .menus ul > li {
+    position: relative; border: 1px solid rgb(219, 219, 219);
+    border-radius: 5px; padding-right: 0;
+    padding: 0 0 0 10px;
+  }
   .container .menus ul > li > i {
     margin-bottom: 20px;
+  }
+  /* 추가 버튼 */
+  .container .menus ul > li > #plus{
+    z-index: 99;
+    position: absolute; right: 0;
+    padding: 5px;
+    cursor: pointer;
+    transition: all ease-in 0.3s; 
+  }
+  .container .menus ul > li > #plus:hover{
+    color: white;
   }
   
   .container .menus ul > li > ul > li {
@@ -119,10 +135,18 @@ div {
 
 
 
-
+/* 
 .editBox {background-color: red;width: 100%;display: flex;justify-content: space-between;}
 .editBox > input {background-color: aqua; width: 100px;}
 
 .editBox > span {background-color: yellow;}
 .editBox > button {background-color: #ccc;}
+ */
 
+/* 사이드 미니 캘린더 */
+.mini{
+  width: 100%;
+  height: auto;
+  margin-bottom: 10%;
+  font-size: 12px;
+}

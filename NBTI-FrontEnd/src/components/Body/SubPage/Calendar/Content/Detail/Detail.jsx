@@ -2,16 +2,23 @@ import styles from './Detail.module.css';
 import { host } from '../../../../../../config/config';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useCalendarTitle } from "../../../../../../store/store";
 
 import FullCalendar from '@fullcalendar/react'; // FullCalendar 컴포넌트
 import dayGridPlugin from '@fullcalendar/daygrid'; // 월 보기 플러그인
 import timeGridPlugin from '@fullcalendar/timegrid'; // 주 및 일 보기 플러그인
 import interactionPlugin from '@fullcalendar/interaction'; // 클릭 이벤트를 위한 플러그인
 import { default as koLocale } from '@fullcalendar/core/locales/ko'; // 한국어 로케일
+import { useCalendarList } from '../../../../../../store/store';
 
 
 
-export const Detail = ({ setAddOpen, addOpen }) => {
+
+
+export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModalOpen}) => {
+
+    const { selectedItem, setSelectedItem  } = useCalendarList();
+
     // const calendarRef = useRef(); // 캘린더 내용 참조를 위한 ref
     const [modalOpen, setModalOpen] = useState(false); // 모달창 열기/닫기 상태
     const [selectedDate, setSelectedDate] = useState(null); // 선택한 날짜
@@ -72,7 +79,7 @@ export const Detail = ({ setAddOpen, addOpen }) => {
     
         // Date 객체를 ISO 형식의 문자열로 변환하고, 이를 Timestamp로 변환
         if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-            console.error('Invalid date or time value');
+            console.error('time');
             return;
         }
     
@@ -95,7 +102,8 @@ export const Detail = ({ setAddOpen, addOpen }) => {
                 setEvents(prev => [
                     ...prev,
                     {
-                        // color : title === 1 ? "#36F" : title === 2 ? "#FFCC00" : "#CCFF",
+                    
+                        color : title == '내 프로젝트' ? "rgba(164, 195, 178, 0.4)" : title === 2 ? "rgba(255, 178, 44, 0.4)" : "rgba(255, 178, 44, 0.8)",
                         // seq: seq,
                         title: calendarTitle, //제목
                         start: startDate, //사작
@@ -123,8 +131,6 @@ export const Detail = ({ setAddOpen, addOpen }) => {
         setEditedTitle(selectedEvent.calendarTitle); // 선택된 이벤트의 제목을 편집 제목 상태로 설정
         setEditedContents(selectedEvent.extendedProps.contents || ''); // 선택된 이벤트의 내용을 편집 내용 상태로 설정
     };
-
-    // };
     const handleSaveClick = () => {
         console.log(JSON.stringify(selectedEvent));
         // console.log(selectedEvent.extendedProps.seq + ":" + editedTitle + ":" +editedContents);
@@ -148,31 +154,38 @@ export const Detail = ({ setAddOpen, addOpen }) => {
                 console.error('Error:', error);
             });
     };
-    
-
 
     // 캘린더 목록 출력
     useEffect(() => {
         axios.get(`${host}/calendar`)
             .then((resp) => {
                 console.log(JSON.stringify(resp.data) + "목록 출력!");
-                const eventList = resp.data.map(event => ({
-                    seq: event.seq,
-                    title: event.calendarTitle,
-                    start: event.start_date,
-                    end: event.end_date,
-                    extendedProps: {
-                        contents: event.contents,
-                        scheduleTitle_name :event.scheduleTitle_name
+                const eventList = resp.data.map(event => {
+                    let color = '';
+                    if(event.scheduleTitle_name == '내 프로젝트' ){
+                        color='rgba(164, 195, 178, 0.4)';
+                    }else{
+                        color='rgba(255, 178, 44, 0.4)';
                     }
-                }));
+
+                    return {
+                        seq: event.seq,
+                        title: event.calendarTitle,
+                        start: event.start_date,
+                        end: event.end_date,
+                        extendedProps: {
+                            contents: event.contents,
+                            scheduleTitle_name :event.scheduleTitle_name
+                        },
+                        color : color,
+                    }
+                });
                 setEvents(eventList);
             })
             .catch((error) => {
                 console.error('Error', error);
             });
-    }, []);
-    
+    }, []); // selectedItem이 변경될 때마다 호출
 
     // 상세 내용 보기 
     const handleEventClick = (info) => {
@@ -211,7 +224,54 @@ export const Detail = ({ setAddOpen, addOpen }) => {
             });
     }
     
+    // 캘린더 추가 버튼 클릭 핸들러
+    const handleCalendarAddClick = () => {
 
+        setCalendarModalOpen(true); // 모달 열기
+    };
+
+    // 캘린더 추가 모달
+    const handleCloseModal = () => {
+        axios.get(`${host}/calendarList`)
+        .then((resp) => {
+            console.log(resp.data + " List 가져오기");
+            setSelectedItem(resp.data);
+        })
+        .catch((error) => {
+            console.error("Error", error);
+        });
+        setCalendarModalOpen(false); // 모달 닫기
+    };
+
+    //사이드 캘린더 추가
+    const [calendarName, setCalendarName] = useState(''); // 캘린더 이름 상태
+    const handleCalendarNameChange = (e) => {
+        setCalendarName(e.target.value); // 입력값을 상태에 저장
+    };
+
+
+
+    const handleAddCalendar = () => {
+        const postData = {
+            name: calendarName, 
+            type: 'private', 
+        };
+    
+        axios.post(`${host}/calendarList`, postData)
+            .then((resp) => {
+                console.log("캘린더 추가 성공:", resp.data);
+                // 모달 닫기 및 상태 초기화
+                // setCalendarList([...calendarList, resp.data])
+                setCalendarName(''); // 상태 초기화
+                handleCloseModal(); // 모달 닫기
+            })
+            .catch((error) => {
+                console.error("캘린더 추가 실패:", error);
+            });
+    };
+
+
+    
 
     return (
         <div className={styles.calender}>
@@ -223,15 +283,17 @@ export const Detail = ({ setAddOpen, addOpen }) => {
                     locales={[koLocale]} // 한국어 로케일 설정
                     locale="ko" 
                     selectable="true" //달력 드래그 
-                
+                    dayMaxEventRows={3} // 각 날짜 셀에 표시되는 이벤트를 5개로 제한
+                    moreLinkText="..." // "+n more" 링크에 표시되는 텍스트
+                    
                     headerToolbar={{
-                        left: 'prev,next today print', // 전/후 달로 이동, 오늘로 이동, 인쇄
+                        left: 'print dayGridMonth,dayGridWeek,dayGridDay', // 전/후 달로 이동, 오늘로 이동, 인쇄
                         center: 'title',
-                        right: 'dayGridMonth,dayGridWeek,dayGridDay' // 월 주 일
+                        right: 'prev,today,next' // 월 주 일
                     }}
                     customButtons={{
                         print: {
-                            text: '인쇄',
+                            text: '인쇄하기',
                             click: handlePrint // 인쇄 함수 연결
                         }
                     }}
@@ -241,8 +303,8 @@ export const Detail = ({ setAddOpen, addOpen }) => {
                     eventClick={handleEventClick} // 이벤트 클릭 시 상세 정보 보기
                 />
             </div>
-
-            {(addOpen || modalOpen) && (
+            {/* 일정추가 모달창과 제목수정 서로 충돌방지 조건 */}
+            {(addOpen || modalOpen) && !calendarModalOpen &&(
                 <div className={styles.modalOverlay} onClick={closeModal}>
                     <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                     {selectedEvent ? ( // 이벤트가 선택된 경우
@@ -330,6 +392,24 @@ export const Detail = ({ setAddOpen, addOpen }) => {
                     </div>
                 </div>
             )}
+            {/* 캘린더 추가 모달 */}
+            {calendarModalOpen && (
+                <div className={styles.modalOverlay} onClick={handleCloseModal}>
+                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                        <h2>캘린더 추가</h2>
+                        <input 
+                        type="text" 
+                        placeholder="캘린더 이름" 
+                        value={calendarName} // 상태와 연결
+                        onChange={handleCalendarNameChange} // 핸들러 연결
+                    />
+
+                        <button onClick={handleAddCalendar}>추가</button>
+                        <button onClick={handleCloseModal}>닫기</button>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };

@@ -3,8 +3,20 @@ import styles from "./Side.module.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { host } from "../../../../../config/config";
+import { useCalendarList } from "../../../../../store/store";
+import FullCalendar from '@fullcalendar/react'; // FullCalendar 컴포넌트
+import dayGridPlugin from '@fullcalendar/daygrid'; // 월 보기 플러그인
+import { default as koLocale } from '@fullcalendar/core/locales/ko'; // 한국어 로케일
 
-export const Side = ({setAddOpen}) => {
+export const Side = ({ setAddOpen , setCalendarModalOpen }) => {
+
+  const handleCalendarAddClick = () => {
+    console.log("캘린더 추가 버튼 클릭됨");
+    setCalendarModalOpen(true); // 모달 열기
+};
+  
+const { selectedItem, setSelectedItem  } = useCalendarList();
+
   // ===== 메뉴 토글 =====
   const [FreeBoard, setFreeBoard] = useState(false);
   const [NoticeBoard, setNoticeBoard] = useState(false);
@@ -54,54 +66,26 @@ export const Side = ({setAddOpen}) => {
   };
   // === /모달창 ===
 
+  const fetchCalendarList = () => {
+    axios.get(`${host}/calendarList`)
+        .then((resp) => {
+            console.log(JSON.stringify(resp.data) + " List 가져오기");
+            setCalendarList(resp.data); // 응답 데이터를 상태에 저장
+            setSelectedItem(resp.data);
+        })
+        .catch((error) => {
+            console.error("Error", error);
+        });
+};
+
+    const [calendarList, setCalendarList] = useState([]); // 캘린더 목록 상태
+    useEffect(() => {
+      // 목록 가져오기
+      
+      fetchCalendarList(); // 데이터 가져오기 함수 호출
+  }, []); // 빈 배열을 주면 컴포넌트가 처음 마운트될 때만 실행
 
 
-  // 내 캘린더 수정하기
-  const [isEditing, setIsEditing] = useState(false); // 수정 버튼 누르면 보이는 input 창 열고 닫기
-  const [value, setValue] = useState('내 프로젝트'); // <span>의 초기 값
-  const [seq, setSeq] = useState(1); // 수정할 항목의 seq
-
-  // 수정 버튼을 누르면 수정 모드로 전환
-  const edit = () => {
-    setIsEditing(true);
-  };
-
-  // 입력 값 변경
-  const handleChange = (e) => {
-    console.log(e.target.value + "입력 값")
-    console.log(e.target + "입력 값")
-    setValue(e.target.value);
-  };
-
-  // 수정 완료
-  const handleBlur = () => {
-    console.log(`${seq} : "seq" : ${value}`)
-    const dataToSend = {
-      seq: seq, // 수정할 schedule seq 값
-      title: value, // 수정할 캘린더 제목
-      scheduleTitle: {
-        seq: 1, // 수정할 scheduleTitle의 seq 값
-        scheduleTitle_name: value // 수정할 제목
-      }
-    };
-
-    // API 호출
-    axios.put(`${host}/calendar/title`, dataToSend) // PUT 요청을 보낼 API 경로를 수정
-      .then((resp) => {
-        console.log(resp);
-        setIsEditing(false);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        setIsEditing(false);
-      });
-    };
-
-    // axios.get(`${host}/calendar/title`).then((resp)=>{
-    //   console.log(resp)
-    // })
-
-  
 
   return (
     <div className={styles.container}>
@@ -111,29 +95,41 @@ export const Side = ({setAddOpen}) => {
           <p>일정추가</p>
         </button>
       </div>
+      <div className={styles.mini}>
+        <FullCalendar
+          plugins={[dayGridPlugin]}
+          initialView="dayGridWeek"
+          headerToolbar={false}
+          locales={[koLocale]}
+          locale="ko"
+          selectable={true}
+          height="auto"
+          color="#FFCC00"
+        />
+      </div>
 
       <div className={styles.menus}>
         <ul>
           <li onClick={toggleFreeBoard}>
-            <i className="fa-solid fa-user-large"></i>  내 캘린더
+            <i className="fa-solid fa-user-large"></i>내 캘린더 <i className="fa-solid fa-plus" id={styles.plus} onClick={handleCalendarAddClick}/>
             <ul
               className={`${styles.submenu} ${FreeBoard ? styles.open : ""}`}
               onClick={preventPropagation}
             >
-              <div className={styles.editBox}>
-                  {isEditing ? (
-                      <input
-                          type="text"
-                          value={value}
-                          onChange={handleChange}
-                          onBlur={handleBlur} // 입력 필드에서 포커스가 벗어날 때 handleBlur 호출
-                          autoFocus
-                      />
-                  ) : (
-                      <span>{value}</span>
-                  )}
-                  <button onClick={edit}>수정</button>
-              </div>
+               {/* <li>
+                <span>
+                  <i className="fa-solid fa-star fa-sm"></i>
+                </span>
+                <span>내 프로젝트</span>
+              </li> */}
+              {selectedItem.map((item) => ( 
+            <li key={item.seq}> {/* seq는 고유 식별자로 사용 */}
+              <span>
+                <i className="fa-solid fa-star fa-sm"></i>
+              </span>
+              <span>{item.name}</span> 
+            </li>
+          ))}
             </ul>
           </li>
         </ul>
@@ -148,18 +144,15 @@ export const Side = ({setAddOpen}) => {
                 <span>
                   <i className="fa-solid fa-star fa-sm"></i>
                 </span>
-                <span>1</span>
+                <span>공유 프로젝트</span>
               </li>
-              <li>
-                <span>
-                  <i className="fa-solid fa-star fa-sm"></i>
-                </span>
-                <span>2</span>
-              </li>
+
+
             </ul>
           </li>
         </ul>
-      </div>           
+      </div>     
+   
     </div>
   );
 };

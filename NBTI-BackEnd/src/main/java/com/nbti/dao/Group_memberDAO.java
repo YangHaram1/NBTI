@@ -76,6 +76,20 @@ public class Group_memberDAO {
 		mybatis.delete("Group_member.update_name", map);
 	}
 	
+	public void update_alarm(int group_seq,String member_id) throws Exception{
+		Map<String, String> map = new HashMap<>();
+		map.put("group_seq", String.valueOf(group_seq));
+		map.put("member_id", member_id);
+		mybatis.delete("Group_member.update_alarm", map);
+	}
+	
+	public void update_bookmark(int group_seq,String member_id) throws Exception{
+		Map<String, String> map = new HashMap<>();
+		map.put("group_seq", String.valueOf(group_seq));
+		map.put("member_id", member_id);
+		mybatis.delete("Group_member.update_bookmark", map);
+	}
+	
 	
 
 }
