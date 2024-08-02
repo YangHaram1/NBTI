@@ -2,6 +2,13 @@
     width: 96%;
     height: 100%;
     margin-bottom: 15px;
-    z-index: 10;
   }
-  
+/*   
+  .tox.tox-tinymce-aux {
+    z-index: 1;
+  }
+
+  .tinymce-container {
+    position: fixed; 상대 위치를 설정하여 z-index가 적용되도록 합니다.
+    z-index: 1; 모달 창보다 낮은 z-index를 설정합니다.
+  } */
