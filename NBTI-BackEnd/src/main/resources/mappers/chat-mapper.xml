@@ -31,4 +31,8 @@
 		select write_date from chat where
 		seq= ${param}
 	</select>
+	
+	<select id="unread" resultType="int">
+		select count(seq) from chat where group_seq=${group_seq} and seq between ${last_chat_seq} and ${seq}
+	</select>
 </mapper>
