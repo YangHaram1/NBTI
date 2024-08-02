@@ -38,4 +38,7 @@ public class ChatService {
 		return dao.unread(group_seq, last_chat_seq, seq);
 	
 	}
+	public int unreadTotl(int group_seq,String member_id)throws Exception {
+		return dao.unreadTotl(group_seq, member_id);
+	}
 }

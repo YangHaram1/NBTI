@@ -1,0 +1,13 @@
+.unread{
+    position: fixed;
+    border: 1px solid black;
+    background-color: red;
+    color: white;
+    border-radius: 20px;
+    top: 5px;
+    right: 105px;
+    width: 35px;
+    display: flex;
+    justify-content: center;
+    z-index: 999;
+}

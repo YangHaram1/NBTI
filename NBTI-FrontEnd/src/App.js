@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { Header } from './components/Header/Header';
 import { Body } from './components/Body/Body';
@@ -11,7 +11,7 @@ import { ChatsProvider ,ChatsContext} from './Context/ChatsContext';
 import { host } from './config/config';
 import { Slide, ToastContainer } from'react-toastify';
 import { useRef } from 'react';
-
+import styles from './App.module.css';
 
 axios.defaults.withCredentials = true;
 
@@ -20,8 +20,8 @@ function App() {
   const { setMembers } = useMemberStore();
   const websocketRef=useRef(null);
   const {maxCount,count} =useNotification();
-  const {webSocketCheck} =useCheckList();
-
+  const {webSocketCheck,onMessage} =useCheckList();
+  const [unread,setUnread] =useState();
 
 
   useEffect(() => {
@@ -44,7 +44,6 @@ function App() {
     if (loginID !== null) {
       const url=host.replace(/^https?:/, '')
       websocketRef.current = new WebSocket(`${url}/chatWebsocket`);
-      
     }
     if(websocketRef.current!=null){
       websocketRef.current.onopen = () => {
@@ -60,15 +59,23 @@ function App() {
     };
   },[loginID,webSocketCheck]);
 
+  useEffect(()=>{
+    if(loginID!=null){
+      axios.get(`${host}/chat/unread`).then((resp)=>{
+        console.log(resp.data);
+        setUnread(parseInt(resp.data));
+      })
+    }
 
+  },[onMessage,loginID])
   return (
-
     <ChatsProvider>
       <Router>
         <div className="container">
           {(loginID!=null)&& <Header />}
           <Body />
           {(loginID!=null)&&<ChatApp websocketRef={websocketRef}></ChatApp>}
+          
         </div>
         <ToastContainer
           position="top-right"
@@ -82,9 +89,9 @@ function App() {
           //pauseOnHover
           limit={maxCount}
           transition={Slide}
-          
         />
       </Router>
+      {(unread>0)&&(<div className={styles.unread}>{unread}+</div>)}
     </ChatsProvider>
   );
 }

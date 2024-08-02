@@ -33,6 +33,28 @@
     border: 1px solid black;
     margin-top: 65px;
     height: 785px;
+    display: flex;
+    flex-direction: column;
+}
+
+.content_right_title{
+    flex:0.5;
+    background-color: #a8cebd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content_right_content{
+    flex:9.5;
+}
+
+.refer{
+    height: 40px;
+    display: flex;
+    align-items: center;
+    text-indent: 10px;
+    border: 1px solid;
 }
 
 .btns{

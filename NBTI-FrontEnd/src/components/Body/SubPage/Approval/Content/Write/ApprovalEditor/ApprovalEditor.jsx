@@ -57,6 +57,7 @@ export const ApprovalEditor = ({setContent, content}) => {
           statusbar: false,
           file_picker_types: "file image media",
           file_picker_callback: (callback, value, meta) => {},
+          zIndex:1,
           setup: (editor) => {
             editor.on("PastePreProcess ", (e) => {
               // 임시 div 요소에 붙여넣기된 콘텐츠를 삽입

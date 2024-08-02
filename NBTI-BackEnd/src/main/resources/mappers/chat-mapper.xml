@@ -13,17 +13,20 @@
 	</insert>
 
 	<select id="list" resultType="com.nbti.dto.ChatDTO">
-		select *from chat where group_seq=#{param}  order by seq
+		select *from chat where
+		group_seq=#{param} order by seq
 	</select>
 
 	<select id="search" resultType="com.nbti.dto.ChatDTO">
 		select *from chat
-		where message like '%'||#{content}||'%' and group_seq=#{group_seq}
+		where message
+		like '%'||#{content}||'%' and group_seq=#{group_seq}
 		order by seq
 	</select>
-	
+
 	<select id="getLastDto" resultType="com.nbti.dto.ChatDTO">
-		select *from chat where seq=(select max(seq) from chat where group_seq = ${group_seq})
+		select *from chat where
+		seq=(select max(seq) from chat where group_seq = ${group_seq})
 	</select>
 
 
@@ -31,8 +34,18 @@
 		select write_date from chat where
 		seq= ${param}
 	</select>
-	
+
 	<select id="unread" resultType="int">
-		select count(seq) from chat where group_seq=${group_seq} and seq between ${last_chat_seq} and ${seq}
+		select count(seq) from chat where
+		group_seq=${group_seq} and seq between ${last_chat_seq} and ${seq}
 	</select>
+
+	<select id="unreadTotal" resultType="int">
+		select count(seq) from chat where group_seq=${group_seq} 
+		and seq between
+		(select last_chat_seq from group_member where group_seq=${group_seq} and member_id=#{member_id})
+		and (select seq from chat where seq=(select max(seq) from chat where group_seq = ${group_seq} ))
+	</select>
+
+
 </mapper>

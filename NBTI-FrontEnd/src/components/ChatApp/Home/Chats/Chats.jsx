@@ -20,6 +20,7 @@ const Chats = () => {
     const [countTotal,setCountTotal]= useState(0); //unread total
     useEffect(() => {
         axios.get(`${host}/group_chat`).then((resp) => {
+          //  console.log(resp);
             if (resp != null) {
                 if (resp.data !== '') {
                     console.log(resp.data);
@@ -110,7 +111,7 @@ const Chats = () => {
 
    
 
-    if(chatNaviBody==='chats')
+    //if(chatNaviBody==='chats')
     return (
         <div className={styles.container} onClick={handleClick}>
             {
@@ -175,13 +176,14 @@ const Chats = () => {
             {(countTotal>0)&&(<div className={styles.fixed}>{countTotal}+</div>)}
         </div>
     )
+    /*
     else {
         return(
             <React.Fragment>
                  {(countTotal>0)&&(<div className={styles.fixed}>{countTotal}+</div>)}
             </React.Fragment>
         );
-    }
+    }*/
 
 }
 export default Chats;
