@@ -12,10 +12,10 @@ import com.nbti.dto.AttendanceDTO;
 
 @Repository
 public class AttendanceDAO {
-    
+
     @Autowired
     private SqlSession mybatis;
-    
+
     public AttendanceDTO insert(AttendanceDTO dto) {
         mybatis.insert("Attendance.insert", dto);
         return dto; // DTO 객체에는 삽입 후 자동 생성된 seq 값이 포함되어 있음
@@ -27,7 +27,13 @@ public class AttendanceDAO {
         params.put("end_date", endDate); // Map의 키가 매퍼의 파라미터 이름과 일치해야 함
         mybatis.update("Attendance.updateClockOut", params);
     }
-    
+
+    public void markAsAbsent(int seq) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("seq", seq);
+        mybatis.update("Attendance.markAsAbsent", params);
+    }
+
     public AttendanceDTO getCurrentStatus(String memberId) {
         return mybatis.selectOne("Attendance.getCurrentStatus", memberId);
     }
