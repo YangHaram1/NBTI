@@ -38,7 +38,7 @@ const Chats = () => {
 
     const handleRightClick = (index) => (e) => {
         const { clientX: x, clientY: y } = e;
-       // console.log(`${x}:${y}`);
+        // console.log(`${x}:${y}`);
         e.preventDefault();
         setModalDisplay((prev) => {
             if (prev != null) {
@@ -111,6 +111,14 @@ const Chats = () => {
                     if (item.dto != null) {
                         formattedTimestamp = format(new Date(item.dto.write_date), 'yyyy-MM-dd');
                     }
+
+                    let truncatedText;
+                    if ((item.dto != null) && (item.dto.message.length > 10)) {
+                        truncatedText = item.dto.message.slice(0, 10) + '...';
+                    }
+                    else if ((item.dto != null)) {
+                        truncatedText = item.dto.message;
+                    }
                     return (
                         <React.Fragment key={index}>
                             <div className={styles.room} onContextMenu={handleRightClick(index)} onDoubleClick={handleDoubleClick(item.seq)}>
@@ -130,9 +138,14 @@ const Chats = () => {
                                         </div>
 
                                     </div>
-                                    <div className={styles.content} dangerouslySetInnerHTML={{ __html: (item.dto != null) ? item.dto.message : '메세지가 없습니다' }}>
-
+                                    <div style={{ display: "flex" }}>
+                                        <div className={styles.content} dangerouslySetInnerHTML={{ __html: (item.dto != null) ? truncatedText : '메세지가 없습니다' }}>
+                                        </div>
+                                        <div className={styles.unread}>
+                                            <span>{item.unread}+</span>
+                                        </div>
                                     </div>
+
                                 </div>
                                 <div>
                                     <div className={styles.write_date}>
