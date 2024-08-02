@@ -8,7 +8,6 @@
     position: relative;
     overflow-y: auto;  /* 내부 내용이 많을 경우 스크롤 가능하도록 설정 */
     box-sizing: border-box; /* padding을 포함한 크기 계산 */
-    border: 1px solid red;
     background-color: #a1d3bc;
 }
 .innerCalender{
@@ -18,7 +17,6 @@
     box-shadow: 1px 1px 3px #818181;
     border-radius: 20px;
     height: 100%;
-    border: 1px solid red;
 
 }
 /* 툴바 배경색 설정 */
@@ -191,3 +189,6 @@
     justify-content: space-evenly; 
     align-items: center;
 }
+
+
+
