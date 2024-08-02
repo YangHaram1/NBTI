@@ -36,4 +36,12 @@ public class ChatDAO {
 	public ChatDTO getLastDTO(int group_seq) throws Exception{
 		return mybatis.selectOne("Chat.getLastDto",group_seq);
 	}
+	
+	public int unread(int group_seq,int last_chat_seq,int seq)throws Exception {
+		Map<String, Integer> maps=new HashMap<>();
+		maps.put("group_seq", group_seq);
+		maps.put("last_chat_seq", last_chat_seq);
+		maps.put("seq", seq);
+		return mybatis.selectOne("Chat.unread",maps);
+	}
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="Approval">
+ 
+ 	<insert id="insert">
+ 		insert into approval values(temp_seq.nextval, #{member_id}, sysdate, #{doc_sub_seq}, #{emergency}, 'n', '', 'i')
+ 		<selectKey resultType="int" order="AFTER" keyProperty="temp_seq">
+ 			select temp_seq.currval from dual
+ 		</selectKey>
+ 	</insert>
+  
+ </mapper>

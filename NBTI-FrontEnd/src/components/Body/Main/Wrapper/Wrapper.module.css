@@ -50,9 +50,10 @@
   flex-direction: column;
 }
 .container .board .notice_board {
-  flex: 1;
+  /* flex: 1; */
+  height: auto;
   margin: 20px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   border-radius: 8px;
   display: flex;
   justify-content: center;
