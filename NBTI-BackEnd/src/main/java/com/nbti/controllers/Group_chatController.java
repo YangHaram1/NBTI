@@ -98,8 +98,7 @@ public class Group_chatController {
 					ChatDTO cdto=cserv.getLastDTO(dto.getSeq()); //그룹채팅방에서 마지막 메세지 가저오는거고
 					int unread=0;
 					if(cdto!=null) {
-						
-						unread = cdto.getSeq()-last_chat_seq;
+						unread = cserv.unread(dto.getSeq(), last_chat_seq, cdto.getSeq())-1;
 					}
 					result.add(new Group_chatSizeDTO(dto.getSeq(),MemberDTO.getName(),MemberDTO.getAlarm(),MemberDTO.getBookmark(),size,unread,cdto));
 					break;

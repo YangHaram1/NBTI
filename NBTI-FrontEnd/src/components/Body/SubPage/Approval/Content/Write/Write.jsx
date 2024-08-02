@@ -13,7 +13,7 @@ import { useApprovalLine, useReferLine } from '../../../../../../store/store';
 export const Write = ({setlist})=>{
 
     const [userdata, setUserData] = useState({}); 
-    const [docdata, setDocData] = useState({effective_date:'', cooperation_dept:'', title:'', content:'', emergency:''});
+    const [docdata, setDocData] = useState({effective_date:'', cooperation_dept:'', title:'', content:'', emergency:'' });
     const [content, setContent] = useState('');
     const [date, setDate] = useState('');
     const [dept, setDept] = useState('');
@@ -45,18 +45,25 @@ export const Write = ({setlist})=>{
 
         let result = window.confirm("긴급 문서로 하시겠습니까?");
         console.log("개별", date, dept, title, content);
-    
-        const requestData = {
-            docData: {
-                effective_date: date,
-                cooperation_dept: dept,
-                title: title,
-                content: content,
-                emergency: result
-            },
-            approvalLine: approvalLine,
-            referLine: referLine
-        };
+        let requestData;
+
+        if(setlist === "업무기안서"){
+            // docData => 업무기안서 내용 => else if 시 다른 변수로 변경 필요
+            requestData = {
+                docDraft: {
+                    effective_date: date,
+                    cooperation_dept: dept,
+                    title: title,
+                    content: content,
+                    emergency: result,
+                    docType : setlist === '업무기안서'? 1 : setlist === '휴가신청서' ? 2:3 
+                },
+                approvalLine: approvalLine.slice(1),
+                referLine: referLine.slice(1)
+            };  
+        }else{
+            console.log("업무기안서 외 다른 데이터")
+        }
     
         axios.post(`${host}/approval`, requestData)
             .then(response => {

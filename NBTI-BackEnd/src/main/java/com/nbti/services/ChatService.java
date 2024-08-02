@@ -33,4 +33,9 @@ public class ChatService {
 	public ChatDTO getLastDTO(int group_seq) throws Exception{
 		return dao.getLastDTO(group_seq);
 	}
+	
+	public int unread(int group_seq,int last_chat_seq,int seq) throws Exception {
+		return dao.unread(group_seq, last_chat_seq, seq);
+	
+	}
 }

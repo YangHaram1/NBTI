@@ -11,21 +11,25 @@ import { format } from 'date-fns';
 const Chats = () => {
     const { loginID } = useAuthStore();
     const { setChatSeq, onMessage } = useCheckList();
-    const { setChatNavi } = useContext(ChatsContext);
+    const { setChatNavi,chatNaviBody } = useContext(ChatsContext);
     const [group_chats, setGroup_chats] = useState([]);
 
     const [modalDisplay, setModalDisplay] = useState(null);
     const modalRef = useRef([]);
     const [countBookmark, setCountBookmark] = useState(-1);
+    const [countTotal,setCountTotal]= useState(0); //unread total
     useEffect(() => {
         axios.get(`${host}/group_chat`).then((resp) => {
             if (resp != null) {
                 if (resp.data !== '') {
                     console.log(resp.data);
                     let count = -1;
+                    let countUnread=0;
                     (resp.data).forEach((temp) => {
                         if (temp.bookmark === 'Y') count++;
+                        countUnread+=temp.unread;
                     })
+                    setCountTotal(countUnread);
                     setCountBookmark(count);
                     setGroup_chats(resp.data);
                 }
@@ -103,9 +107,14 @@ const Chats = () => {
         return sortedItems;
     }, [group_chats])
 
+
+   
+
+    if(chatNaviBody==='chats')
     return (
         <div className={styles.container} onClick={handleClick}>
             {
+                
                 handleSort().map((item, index) => {
                     let formattedTimestamp = '';
                     if (item.dto != null) {
@@ -142,7 +151,7 @@ const Chats = () => {
                                         <div className={styles.content} dangerouslySetInnerHTML={{ __html: (item.dto != null) ? truncatedText : '메세지가 없습니다' }}>
                                         </div>
                                         <div className={styles.unread}>
-                                            <span>{item.unread}+</span>
+                                            {item.unread>0&&(<span>{item.unread}+</span>)}
                                         </div>
                                     </div>
 
@@ -163,9 +172,16 @@ const Chats = () => {
                     );
                 })
             }
-
+            {(countTotal>0)&&(<div className={styles.fixed}>{countTotal}+</div>)}
         </div>
     )
+    else {
+        return(
+            <React.Fragment>
+                 {(countTotal>0)&&(<div className={styles.fixed}>{countTotal}+</div>)}
+            </React.Fragment>
+        );
+    }
 
 }
 export default Chats;
