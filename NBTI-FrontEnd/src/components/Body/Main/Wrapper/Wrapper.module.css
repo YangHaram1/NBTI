@@ -1,10 +1,5 @@
-/* div {
-  border: 1px solid black;
-} */
-
 .container {
-  /* background-color: #ecd7ff; */
-  height: 100%;
+  height: auto;
   min-height: 640px;
   display: flex;
   position: relative;
@@ -17,7 +12,7 @@
 }
 
 .container .side .work_time {
-  flex: 1;
+  height: 120px;
   border: 1px solid black;
   border-radius: 8px;
   margin: 10px;
@@ -26,7 +21,7 @@
   align-items: center;
 }
 .container .side .approval {
-  flex: 1;
+  height: 120px;
   border: 1px solid black;
   border-radius: 8px;
   margin: 10px;
@@ -35,7 +30,7 @@
   align-items: center;
 }
 .container .side .calendar {
-  flex: 2.5;
+  height: 300px;
   border: 1px solid black;
   border-radius: 8px;
   margin: 10px;
@@ -50,7 +45,6 @@
   flex-direction: column;
 }
 .container .board .notice_board {
-  /* flex: 1; */
   height: auto;
   margin: 20px;
   /* border: 1px solid black; */
@@ -60,9 +54,9 @@
   align-items: center;
 }
 .container .board .free_board {
-  flex: 1.4;
+  height: auto;
   margin: 0 20px 20px 20px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   border-radius: 8px;
   display: flex;
   justify-content: center;
