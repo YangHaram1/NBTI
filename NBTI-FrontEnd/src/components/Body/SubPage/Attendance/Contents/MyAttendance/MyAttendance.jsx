@@ -9,31 +9,34 @@ export const MyAttendance = () => {
     const [currentClockOut, setCurrentClockOut] = useState(null);
     const [clockedIn, setClockedIn] = useState(false);
     const [clockedOut, setClockedOut] = useState(false);
+    const [isLate, setIsLate] = useState(false);
+    const [isAbsent, setIsAbsent] = useState(false);
+    const [isEarlyLeave, setIsEarlyLeave] = useState(false);
 
-    // 세션 스토리지에서 로그인 ID를 가져옵니다
     const memberId = sessionStorage.getItem('loginID');
-
-    // 오늘 날짜를 가져옵니다
     const today = new Date().toISOString().split('T')[0];
 
     const fetchAttendanceStatus = useCallback(async () => {
-        if (!memberId) return; // 로그인 ID가 없으면 상태를 가져오지 않음
+        if (!memberId) return;
         try {
             const response = await axios.get(`${host}/attendance/status`, {
                 params: { memberId },
                 withCredentials: true
             });
-            const { start_date, end_date, clockedIn, clockedOut } = response.data;
+            const { start_date, end_date, clockedIn, clockedOut, isLate } = response.data;
 
             const startDate = start_date ? new Date(start_date) : null;
             const endDate = end_date ? new Date(end_date) : null;
 
-            // 출근 및 퇴근 시간이 오늘 날짜와 일치하는지 확인합니다
             const isClockInToday = startDate && startDate.toISOString().split('T')[0] === today;
             const isClockOutToday = endDate && endDate.toISOString().split('T')[0] === today;
 
             setClockedIn(clockedIn);
             setClockedOut(clockedOut);
+            setIsLate(isLate);
+            setIsAbsent(!isClockInToday && !clockedIn); // 출근 기록이 없는 경우 결근
+            setIsEarlyLeave(endDate && endDate.getHours() < 18); // 18시 이전에 퇴근하면 조기퇴근
+
             setCurrentClockIn(isClockInToday ? format(startDate, 'HH:mm:ss') : null);
             setCurrentClockOut(isClockOutToday ? format(endDate, 'HH:mm:ss') : null);
         } catch (err) {
@@ -52,10 +55,12 @@ export const MyAttendance = () => {
                 params: { memberId },
                 withCredentials: true
             });
-            const { seq, start_date } = response.data;
+            const { seq, start_date, isLate } = response.data;
             setCurrentClockIn(format(new Date(start_date), 'HH:mm:ss'));
             setClockedIn(true);
-            alert('출근 기록이 저장되었습니다.');
+            setIsLate(isLate);
+            setIsAbsent(false); // 출근 기록이 저장되면 결근 상태를 초기화
+            alert(isLate ? '지각 기록이 저장되었습니다.' : '출근 기록이 저장되었습니다.');
         } catch (err) {
             console.error('출근 기록에 실패했습니다.', err.response ? err.response.data : err);
             alert('출근 기록에 실패했습니다.');
@@ -72,6 +77,7 @@ export const MyAttendance = () => {
             if (response.status === 200) {
                 setCurrentClockOut(format(new Date(), 'HH:mm:ss'));
                 setClockedOut(true);
+                setIsEarlyLeave(true); // 퇴근 시간 업데이트 시 조기퇴근 상태를 업데이트
                 alert('퇴근 기록이 저장되었습니다.');
             } else {
                 alert('퇴근 기록 저장 실패');
@@ -91,13 +97,14 @@ export const MyAttendance = () => {
                 <div className={styles.clockSection}>
                     <div className={styles.timeAndButtons}>
                         <div className={styles.timeDisplay}>
-                            <p>출근 시간: {currentClockIn || '출근 기록 없음'}</p>
+                            <p>출근 시간: {currentClockIn || '출근 기록 없음'} {isLate && <span>(지각)</span>}</p>
+                            {isAbsent && <p>오늘 출근하지 않아 결근 처리되었습니다.</p>}
                         </div>
                         <div className={styles.buttonsContainer}>
                             <button
                                 onClick={handleClockIn}
-                                className={`${styles.button} ${clockedIn || currentClockIn ? styles.disabled : ''}`}
-                                disabled={clockedIn || currentClockIn}
+                                className={`${styles.button} ${clockedIn ? styles.disabled : ''}`}
+                                disabled={clockedIn}
                             >
                                 출근
                             </button>
@@ -107,13 +114,13 @@ export const MyAttendance = () => {
                 <div className={styles.clockSection}>
                     <div className={styles.timeAndButtons}>
                         <div className={styles.timeDisplay}>
-                            <p>퇴근 시간: {currentClockOut || '퇴근 기록 없음'}</p>
+                            <p>퇴근 시간: {currentClockOut || '퇴근 기록 없음'} {isEarlyLeave && <span>(조기 퇴근)</span>}</p>
                         </div>
                         <div className={styles.buttonsContainer}>
                             <button
                                 onClick={handleClockOut}
-                                className={`${styles.button} ${clockedOut || currentClockOut ? styles.disabled : ''}`}
-                                disabled={clockedOut || !clockedIn || currentClockOut}
+                                className={`${styles.button} ${clockedOut || !clockedIn ? styles.disabled : ''}`}
+                                disabled={clockedOut || !clockedIn}
                             >
                                 퇴근
                             </button>

@@ -2,7 +2,6 @@ package com.nbti.controllers;
 
 import java.sql.Timestamp;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,45 +21,44 @@ import jakarta.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/attendance")
 public class AttendanceController {
-    
+
     @Autowired
     private AttendanceService aServ;
 
     @PostMapping("/clock-in")
     public ResponseEntity<Map<String, Object>> clockIn(HttpServletRequest request) {
-        String memberId = (String) request.getSession().getAttribute("loginID"); // 세션에서 memberId 가져오기
+        String memberId = (String) request.getSession().getAttribute("loginID");
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("error", "로그인 상태가 아닙니다."));
         }
         try {
-            int seq = aServ.clockIn(memberId);
-            Map<String, Object> response = new HashMap<>();
-            response.put("seq", seq);
-            response.put("start_date", new Timestamp(System.currentTimeMillis()).toString()); // 디버깅용
+            Map<String, Object> response = aServ.clockIn(memberId);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
+            e.printStackTrace(); // 로그에 자세한 오류 메시지 출력
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "출근 기록 저장 중 오류가 발생했습니다."));
         }
     }
 
     @PutMapping("/clock-out")
-    public ResponseEntity<String> clockOut(HttpServletRequest request) {
-        String memberId = (String) request.getSession().getAttribute("loginID"); // 세션에서 memberId 가져오기
+    public ResponseEntity<Map<String, Object>> clockOut(HttpServletRequest request) {
+        String memberId = (String) request.getSession().getAttribute("loginID");
         if (memberId == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 상태가 아닙니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("error", "로그인 상태가 아닙니다."));
         }
         Timestamp endDate = new Timestamp(System.currentTimeMillis());
         try {
             aServ.clockOut(memberId, endDate);
-            return ResponseEntity.ok("퇴근 시간이 기록되었습니다.");
+            return ResponseEntity.ok(Collections.singletonMap("message", "퇴근 시간이 기록되었습니다."));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("퇴근 시간 기록 중 오류가 발생했습니다.");
+            e.printStackTrace(); // 로그에 자세한 오류 메시지 출력
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "퇴근 시간 기록 중 오류가 발생했습니다."));
         }
     }
 
     @GetMapping("/status")
     public ResponseEntity<Map<String, Object>> getStatus(HttpServletRequest request) {
-        String memberId = (String) request.getSession().getAttribute("loginID"); // 세션에서 memberId 가져오기
+        String memberId = (String) request.getSession().getAttribute("loginID");
         if (memberId == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("error", "로그인 상태가 아닙니다."));
         }
@@ -72,5 +70,4 @@ public class AttendanceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "출근 기록 조회 중 오류가 발생했습니다."));
         }
     }
-
 }
