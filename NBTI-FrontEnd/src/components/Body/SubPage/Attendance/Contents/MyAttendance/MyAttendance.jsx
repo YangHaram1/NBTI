@@ -1,58 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import styles from './MyAttendance.module.css';
-import { host } from '../../../../../../config/config';
+import { host } from '../../../../../../config/config'; // 수정된 경로
+import { format } from 'date-fns';
 
 export const MyAttendance = () => {
     const [currentClockIn, setCurrentClockIn] = useState(null);
-    const [clockedIn, setClockedIn] = useState(false);
     const [currentClockOut, setCurrentClockOut] = useState(null);
+    const [clockedIn, setClockedIn] = useState(false);
     const [clockedOut, setClockedOut] = useState(false);
-    const [attendanceSeq, setAttendanceSeq] = useState(null);
 
-    useEffect(() => {
-        // 로컬 스토리지에서 출근 기록 시퀀스와 출근 상태를 가져옵니다.
-        const storedSeq = localStorage.getItem('attendanceSeq');
-        const storedClockIn = localStorage.getItem('currentClockIn');
-        const storedClockOut = localStorage.getItem('currentClockOut');
-        const storedClockedIn = localStorage.getItem('clockedIn') === 'true';
-        const storedClockedOut = localStorage.getItem('clockedOut') === 'true';
+    // 세션 스토리지에서 로그인 ID를 가져옵니다
+    const memberId = sessionStorage.getItem('loginID');
 
-        if (storedSeq) {
-            setAttendanceSeq(Number(storedSeq));
-        }
-        if (storedClockIn) {
-            setCurrentClockIn(storedClockIn);
-        }
-        if (storedClockOut) {
-            setCurrentClockOut(storedClockOut);
-        }
-        setClockedIn(storedClockedIn);
-        setClockedOut(storedClockedOut);
-    }, []);
+    // 오늘 날짜를 가져옵니다
+    const today = new Date().toISOString().split('T')[0];
 
-    const handleClockIn = async () => {
+    const fetchAttendanceStatus = useCallback(async () => {
+        if (!memberId) return; // 로그인 ID가 없으면 상태를 가져오지 않음
         try {
-            console.log(`Sending POST request to ${host}/attendance/clock-in`);
-            const response = await axios.post(`${host}/attendance/clock-in`, null, {
+            const response = await axios.get(`${host}/attendance/status`, {
+                params: { memberId },
                 withCredentials: true
             });
-            console.log('Response:', response);
-            const { seq } = response.data;
-            if (seq) {
-                setAttendanceSeq(seq);
-                setCurrentClockIn(new Date().toLocaleTimeString());
-                setClockedIn(true);
-                
-                // 로컬 스토리지에 출근 기록 시퀀스와 출근 시간을 저장합니다.
-                localStorage.setItem('attendanceSeq', seq);
-                localStorage.setItem('currentClockIn', new Date().toLocaleTimeString());
-                localStorage.setItem('clockedIn', 'true');
-                
-                alert('출근 기록이 저장되었습니다.');
-            } else {
-                alert('출근 기록 저장 실패: seq 값이 없습니다.');
-            }
+            const { start_date, end_date, clockedIn, clockedOut } = response.data;
+
+            const startDate = start_date ? new Date(start_date) : null;
+            const endDate = end_date ? new Date(end_date) : null;
+
+            // 출근 및 퇴근 시간이 오늘 날짜와 일치하는지 확인합니다
+            const isClockInToday = startDate && startDate.toISOString().split('T')[0] === today;
+            const isClockOutToday = endDate && endDate.toISOString().split('T')[0] === today;
+
+            setClockedIn(clockedIn);
+            setClockedOut(clockedOut);
+            setCurrentClockIn(isClockInToday ? format(startDate, 'HH:mm:ss') : null);
+            setCurrentClockOut(isClockOutToday ? format(endDate, 'HH:mm:ss') : null);
+        } catch (err) {
+            console.error('출근 기록을 가져오는데 실패했습니다.', err.response ? err.response.data : err);
+        }
+    }, [memberId, today]);
+
+    useEffect(() => {
+        fetchAttendanceStatus();
+    }, [fetchAttendanceStatus]);
+
+    const handleClockIn = async () => {
+        if (!memberId) return;
+        try {
+            const response = await axios.post(`${host}/attendance/clock-in`, null, {
+                params: { memberId },
+                withCredentials: true
+            });
+            const { seq, start_date } = response.data;
+            setCurrentClockIn(format(new Date(start_date), 'HH:mm:ss'));
+            setClockedIn(true);
+            alert('출근 기록이 저장되었습니다.');
         } catch (err) {
             console.error('출근 기록에 실패했습니다.', err.response ? err.response.data : err);
             alert('출근 기록에 실패했습니다.');
@@ -60,27 +63,19 @@ export const MyAttendance = () => {
     };
 
     const handleClockOut = async () => {
-        if (!attendanceSeq) {
-            alert('출근 기록이 없습니다.');
-            return;
-        }
-
+        if (!memberId) return;
         try {
-            const endDate = new Date().toISOString();
-            console.log(`Sending PUT request to ${host}/attendance/clock-out`);
             const response = await axios.put(`${host}/attendance/clock-out`, null, {
-                params: { seq: attendanceSeq },
+                params: { memberId },
                 withCredentials: true
             });
-            console.log('Response:', response);
-            setCurrentClockOut(new Date().toLocaleTimeString());
-            setClockedOut(true);
-
-            // 로컬 스토리지에 퇴근 시간을 저장합니다.
-            localStorage.setItem('currentClockOut', new Date().toLocaleTimeString());
-            localStorage.setItem('clockedOut', 'true');
-            
-            alert('퇴근 기록이 저장되었습니다.');
+            if (response.status === 200) {
+                setCurrentClockOut(format(new Date(), 'HH:mm:ss'));
+                setClockedOut(true);
+                alert('퇴근 기록이 저장되었습니다.');
+            } else {
+                alert('퇴근 기록 저장 실패');
+            }
         } catch (err) {
             console.error('퇴근 기록에 실패했습니다.', err.response ? err.response.data : err);
             alert('퇴근 기록에 실패했습니다.');
@@ -99,10 +94,10 @@ export const MyAttendance = () => {
                             <p>출근 시간: {currentClockIn || '출근 기록 없음'}</p>
                         </div>
                         <div className={styles.buttonsContainer}>
-                            <button 
-                                onClick={handleClockIn} 
-                                className={`${styles.button} ${clockedIn ? styles.disabled : ''}`} 
-                                disabled={clockedIn}
+                            <button
+                                onClick={handleClockIn}
+                                className={`${styles.button} ${clockedIn || currentClockIn ? styles.disabled : ''}`}
+                                disabled={clockedIn || currentClockIn}
                             >
                                 출근
                             </button>
@@ -115,10 +110,10 @@ export const MyAttendance = () => {
                             <p>퇴근 시간: {currentClockOut || '퇴근 기록 없음'}</p>
                         </div>
                         <div className={styles.buttonsContainer}>
-                            <button 
-                                onClick={handleClockOut} 
-                                className={`${styles.button} ${clockedOut ? styles.disabled : ''}`} 
-                                disabled={clockedOut}
+                            <button
+                                onClick={handleClockOut}
+                                className={`${styles.button} ${clockedOut || currentClockOut ? styles.disabled : ''}`}
+                                disabled={clockedOut || !clockedIn || currentClockOut}
                             >
                                 퇴근
                             </button>
