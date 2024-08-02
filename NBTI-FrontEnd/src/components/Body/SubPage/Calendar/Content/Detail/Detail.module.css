@@ -1,20 +1,63 @@
-
+:root {
+    --fc-today-bg-color: #a1d3bc47 !important;
+    --fc-border-color: #6B9080;
+}
 .calender {
     flex: 8;
     padding: 5%;
     position: relative;
     overflow-y: auto;  /* 내부 내용이 많을 경우 스크롤 가능하도록 설정 */
     box-sizing: border-box; /* padding을 포함한 크기 계산 */
+    border: 1px solid red;
+    background-color: #a1d3bc;
 }
 .innerCalender{
     background-color: white;
-    padding: 5%;
+    padding: 5%; 
     border: 5px solid white;
     box-shadow: 1px 1px 3px #818181;
     border-radius: 20px;
     height: 100%;
+    border: 1px solid red;
 
 }
+/* 툴바 배경색 설정 */
+.fc-toolbar {
+    background-color: #f0f0f0; /* 원하는 배경색으로 설정 */
+    padding: 10px; /* 패딩 조정 */
+}
+
+/* 툴바 버튼 스타일 */
+.fc-button {
+    background-color: #6B9080; /* 버튼 배경색 */
+    color: white; /* 버튼 텍스트 색상 */
+    border: none; /* 테두리 없애기 */
+    padding: 10px 15px; /* 버튼 패딩 */
+    border-radius: 5px; /* 둥근 모서리 */
+}
+
+/* 버튼 호버 시 스타일 */
+.fc-button:hover {
+    background-color: #4A6D6F; /* 호버 시 배경색 */
+}
+
+/* 타이틀 스타일 */
+.fc-toolbar h2 {
+    font-size: 24px; /* 타이틀 폰트 크기 */
+    margin: 0; /* 기본 마진 없애기 */
+    color: #333; /* 타이틀 색상 */
+}
+
+/* 오늘 버튼과 인쇄 버튼 추가 스타일 */
+.fc-button-today,
+.fc-button-print {
+    margin-left: 5px; /* 버튼 간격 조정 */
+}
+
+
+
+/*.fc-scrollgrid {height: 100% !important; 캘린더 높이를 100%로 설정 */
+/*.fc-daygrid-event {white-space: nowrap; 일정이 줄바꿈되지 않도록 설정 */
 
 /* ========================== */
 /* 날짜 클릭시 나오는 일정 추가 모달창 */
@@ -148,4 +191,3 @@
     justify-content: space-evenly; 
     align-items: center;
 }
-
