@@ -19,8 +19,8 @@ export const Write = ({setlist})=>{
     const [dept, setDept] = useState('');
     const [title, setTitle] = useState('');
     // const [emergency, setEmergency] = useState(false);
-    const { referLine } = useReferLine();
-    const { approvalLine } = useApprovalLine();
+    const { referLine, resetReferLine} = useReferLine();
+    const { approvalLine, resetApprovalLine } = useApprovalLine();
 
     // ===== 아이콘 =====
     useEffect(() => {
@@ -67,13 +67,15 @@ export const Write = ({setlist})=>{
     
         axios.post(`${host}/approval`, requestData)
             .then(response => {
+                resetApprovalLine();
+                resetReferLine();
                 console.log("문서 제출 성공:", response);
+                console.log("성공",approvalLine);
+                console.log("성공",referLine);
             })
             .catch(error => {
                 console.error("문서 제출 실패:", error);
             });
-
-
     }
 
     useEffect(()=>{
@@ -104,7 +106,7 @@ export const Write = ({setlist})=>{
                     <div className={styles.write_box}>
                         {   
                         setlist === '휴가신청서' ?  <DocVacation userdata={userdata}/>
-                        : setlist === '휴직신청서' ? <DocLeave userdata={userdata}/>
+                        : setlist === '휴직신청서' ? <DocLeave userdata={userdata} setContent={setContent} content={content}/>
                         : <DocDraft userdata={userdata} setDocData={setDocData} setContent={setContent} content={content} setDate={setDate} setDept={setDept} setTitle={setTitle}/>
                         }   
                     </div>
@@ -113,13 +115,18 @@ export const Write = ({setlist})=>{
                     </div>
                 </div>
                 <div className={styles.content_right}>
+                    <div className={styles.content_right_title}>참조/열람자</div>
+                    <div className={styles.content_right_content}>
                     {
-                        referLine.map((refer)=>{
+                        referLine.slice(1).map((refer)=>{
                             return(
-                                <div className={styles.refer}> {refer.name}</div>
+                                <div className={styles.refer}>
+                                    {refer.name} 직급 / 다섯글자부 / 다섯글자부
+                                </div>
                             );
                         })
                     }
+                    </div>
                 </div>
             </div>
         </div>

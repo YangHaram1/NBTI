@@ -84,7 +84,8 @@ export const useApprovalLine = create((set)=>{
             }
             console.log("저장소", newApprovalLine);
             return {approvalLine : newApprovalLine};
-        })
+        }),
+        resetApprovalLine: ()=>set({approvalLine:[{}]})
     }
 });
 
@@ -105,6 +106,7 @@ export const useReferLine = create((set)=>{
                 }
                 console.log("저장소", newReferLine);
                 return {referLine:newReferLine};
-        })
+        }),
+        resetReferLine: ()=>set({referLine:[{}]})
     }
 });
