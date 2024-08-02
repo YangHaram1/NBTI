@@ -32,5 +32,12 @@ public class ReplyDAO {
 		mybatis.delete("Reply.delete", seq);
 	}
 	
+	//============================[ 메 인 ]=============================
+	// 자유게시판 댓글 출력
+	public List<ReplyDTO> selectFreeReply(int seq){
+		return mybatis.selectList("Reply.selectFreeReply", seq);
+	}
+	
+	
 	
 }

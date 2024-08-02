@@ -1,5 +1,6 @@
 package com.nbti.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nbti.dto.BoardDTO;
+import com.nbti.dto.ReplyDTO;
 import com.nbti.services.BoardService;
+import com.nbti.services.ReplyService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -28,17 +31,12 @@ public class BoardController {
 	@Autowired
 	private BoardService bserv;
 	@Autowired
+	private ReplyService rserv;
+	@Autowired
 	private HttpSession session;
 	
 	
 	// 목록 출력
-//	@GetMapping("/{code}")
-//	public ResponseEntity<List<BoardDTO>> selectAll(@PathVariable int code){
-//		System.out.println("게시판 코드 : " + code);
-//		List<BoardDTO> list = bserv.selectAll(code);
-//		return ResponseEntity.ok(list);
-//
-//	}
 	@GetMapping("/list")
 	public ResponseEntity<List<BoardDTO>> selectAll(
 			@RequestParam int code,
@@ -110,7 +108,39 @@ public class BoardController {
 	}
 	
 
+	//============================[ 메 인 ]=============================
+	// 공지 게시판 출력
+	@GetMapping("/noticeBoard")
+	public ResponseEntity<List<BoardDTO>> selectNotice(){
+		
+		List<BoardDTO> list = bserv.selectNotice();
+		return ResponseEntity.ok(list);
+
+	}
 	
+	// 자유 게시판 출력
+	@GetMapping("/freeBoard")
+	public ResponseEntity<Map<String, List>> selectFree(){
+		
+		List<BoardDTO> list = bserv.selectFree();
+		
+		List<List<ReplyDTO>> rlist = new ArrayList<>();
+		
+		for (BoardDTO dto : list) {
+			int seq = dto.getSeq();
+			rlist.add(rserv.selectFreeReply(seq));
+		}
+		
+		
+		Map<String, List> map = new HashMap<>();
+		map.put("list", list);
+		map.put("rlist", rlist);
+		
+		
+		
+		return ResponseEntity.ok(map);
+		
+	}
 	
 	
 	

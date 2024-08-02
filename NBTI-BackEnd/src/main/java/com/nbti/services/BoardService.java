@@ -17,9 +17,6 @@ public class BoardService {
 	private BoardDAO bdao;
 	
 	// 목록 출력
-//	public List<BoardDTO> selectAll(int code){
-//		return bdao.selectAll(code);
-//	}
 	public List<BoardDTO> selectAll(Map<String, Object> map){
 		return bdao.selectAll(map);
 	}
@@ -53,5 +50,20 @@ public class BoardService {
 	public void updateViewCount(HashMap<String, Integer> map) {
 		bdao.updateViewCount(map);
 	}
+	
+	
+	//============================[ 메 인 ]=============================
+	// 공지 게시판 출력
+	public List<BoardDTO> selectNotice(){
+		return bdao.selectNotice();
+	}
+	
+	// 자유 게시판 출력
+	public List<BoardDTO> selectFree(){
+		return bdao.selectFree();
+	}
+	
+	
+	
 	
 }
