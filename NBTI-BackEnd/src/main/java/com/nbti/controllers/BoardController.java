@@ -56,7 +56,6 @@ public class BoardController {
 	    
 	    List<BoardDTO> list = bserv.selectAll(map);
 	    for (BoardDTO boardDTO : list) {
-			System.out.println(boardDTO.getMember_id());
 		}
 		return ResponseEntity.ok(list);
 	}
