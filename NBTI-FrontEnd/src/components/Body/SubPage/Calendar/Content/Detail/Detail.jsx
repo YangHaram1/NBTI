@@ -2,7 +2,7 @@ import styles from './Detail.module.css';
 import { host } from '../../../../../../config/config';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useCalendarTitle } from "../../../../../../store/store";
+// import { useCalendarTitle } from "../../../../../../store/store";
 
 import FullCalendar from '@fullcalendar/react'; // FullCalendar 컴포넌트
 import dayGridPlugin from '@fullcalendar/daygrid'; // 월 보기 플러그인
@@ -12,11 +12,16 @@ import { default as koLocale } from '@fullcalendar/core/locales/ko'; // 한국�
 
 
 
-export const Detail = ({ setAddOpen, addOpen }) => {
-    // const [events, setEvents] = useState([]);
-    const selectedItem = useCalendarTitle(state => state.selectedItem); // 선택된 항목 상태 가져오기
-    
+export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModalOpen}) => {
+    // 캘린더 추가 버튼 클릭 핸들러
+    const handleCalendarAddClick = () => {
+        setCalendarModalOpen(true); // 모달 열기
+    };
 
+    // 캘린더 추가 모달
+    const handleCloseModal = () => {
+        setCalendarModalOpen(false); // 모달 닫기
+    };
 
 
     // const calendarRef = useRef(); // 캘린더 내용 참조를 위한 ref
@@ -220,7 +225,7 @@ export const Detail = ({ setAddOpen, addOpen }) => {
             .catch((error) => {
                 console.error('Error', error);
             });
-    }, [selectedItem]); // selectedItem이 변경될 때마다 호출
+    }, []); // selectedItem이 변경될 때마다 호출
 
     // 상세 내용 보기 
     const handleEventClick = (info) => {
@@ -260,6 +265,30 @@ export const Detail = ({ setAddOpen, addOpen }) => {
     }
     
 
+    const [calendarName, setCalendarName] = useState(''); // 캘린더 이름 상태
+    const handleCalendarNameChange = (e) => {
+        setCalendarName(e.target.value); // 입력값을 상태에 저장
+    };
+    const handleAddCalendar = () => {
+        const postData = {
+            name: calendarName, 
+            type: 'private', 
+        };
+    
+        axios.post(`${host}/calendarList`, postData)
+            .then((resp) => {
+                console.log("캘린더 추가 성공:", resp.data);
+                // 모달 닫기 및 상태 초기화
+                setCalendarName(''); // 상태 초기화
+                handleCloseModal(); // 모달 닫기
+            })
+            .catch((error) => {
+                console.error("캘린더 추가 실패:", error);
+            });
+    };
+
+
+    
 
     return (
         <div className={styles.calender}>
@@ -289,8 +318,8 @@ export const Detail = ({ setAddOpen, addOpen }) => {
                     eventClick={handleEventClick} // 이벤트 클릭 시 상세 정보 보기
                 />
             </div>
-
-            {(addOpen || modalOpen) && (
+            {/* 일정추가 모달창과 제목수정 서로 충돌방지 조건 */}
+            {(addOpen || modalOpen) && !calendarModalOpen &&(
                 <div className={styles.modalOverlay} onClick={closeModal}>
                     <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                     {selectedEvent ? ( // 이벤트가 선택된 경우
@@ -378,6 +407,24 @@ export const Detail = ({ setAddOpen, addOpen }) => {
                     </div>
                 </div>
             )}
+            {/* 캘린더 추가 모달 */}
+            {calendarModalOpen && (
+                <div className={styles.modalOverlay} onClick={handleCloseModal}>
+                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                        <h2>캘린더 추가</h2>
+                        <input 
+                        type="text" 
+                        placeholder="캘린더 이름" 
+                        value={calendarName} // 상태와 연결
+                        onChange={handleCalendarNameChange} // 핸들러 연결
+                    />
+
+                        <button onClick={handleAddCalendar}>추가</button>
+                        <button onClick={handleCloseModal}>닫기</button>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };

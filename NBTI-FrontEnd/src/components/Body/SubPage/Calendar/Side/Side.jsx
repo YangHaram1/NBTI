@@ -5,22 +5,13 @@ import axios from "axios";
 import { host } from "../../../../../config/config";
 import { useCalendarTitle } from "../../../../../store/store";
 
-export const Side = ({setAddOpen}) => {
+export const Side = ({ setAddOpen , setCalendarModalOpen }) => {
 
-  const { setSelectedItem } = useCalendarTitle(); // 상태 업데이트 함수 가져오기
-
-
-    
-
-  const handleMyCalendarClick = () => {
-    console.log("클릭")
-    setSelectedItem('내 프로젝트'); // '내 프로젝트' 선택
-  };
-
-  const handleSharedCalendarClick = () => {
-    console.log("클릭")
-    setSelectedItem('공유 프로젝트'); // '공유 프로젝트' 선택
-  };
+  const handleCalendarAddClick = () => {
+    console.log("캘린더 추가 버튼 클릭됨");
+    setCalendarModalOpen(true); // 모달 열기
+};
+  
 
 
   // ===== 메뉴 토글 =====
@@ -74,52 +65,25 @@ export const Side = ({setAddOpen}) => {
 
 
 
-  // 내 캘린더 수정하기
-  // const [isEditing, setIsEditing] = useState(false); // 수정 버튼 누르면 보이는 input 창 열고 닫기
-  // const [value, setValue] = useState('내 프로젝트'); // <span>의 초기 값
-  // const [seq, setSeq] = useState(1); // 수정할 항목의 seq
 
-  // // 수정 버튼을 누르면 수정 모드로 전환
-  // const edit = () => {
-  //   setIsEditing(true);
-  // };
+    const [calendarList, setCalendarList] = useState([]); // 캘린더 목록 상태
+    useEffect(() => {
+      // 목록 가져오기
+      const fetchCalendarList = () => {
+          axios.get(`${host}/calendarList`)
+              .then((resp) => {
+                  console.log(resp.data + " List 가져오기");
+                  setCalendarList(resp.data); // 응답 데이터를 상태에 저장
+              })
+              .catch((error) => {
+                  console.error("Error", error);
+              });
+      };
 
-  // // 입력 값 변경
-  // const handleChange = (e) => {
-  //   console.log(e.target.value + "입력 값")
-  //   console.log(e.target + "입력 값")
-  //   setValue(e.target.value);
-  // };
+      fetchCalendarList(); // 데이터 가져오기 함수 호출
+  }, []); // 빈 배열을 주면 컴포넌트가 처음 마운트될 때만 실행
 
-  // // 수정 완료
-  // const handleBlur = () => {
-  //   console.log(`${seq} : "seq" : ${value}`)
-  //   const dataToSend = {
-  //     seq: seq, // 수정할 schedule seq 값
-  //     title: value, // 수정할 캘린더 제목
-  //     scheduleTitle: {
-  //       seq: 1, // 수정할 scheduleTitle의 seq 값
-  //       scheduleTitle_name: value // 수정할 제목
-  //     }
-  //   };
 
-  //   // API 호출
-  //   axios.put(`${host}/calendar/title`, dataToSend) // PUT 요청을 보낼 API 경로를 수정
-  //     .then((resp) => {
-  //       console.log(resp);
-  //       setIsEditing(false);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error:', error);
-  //       setIsEditing(false);
-  //     });
-  //   };
-
-    // axios.get(`${host}/calendar/title`).then((resp)=>{
-    //   console.log(resp)
-    // })
-
-  
 
   return (
     <div className={styles.container}>
@@ -133,17 +97,25 @@ export const Side = ({setAddOpen}) => {
       <div className={styles.menus}>
         <ul>
           <li onClick={toggleFreeBoard}>
-            <i className="fa-solid fa-user-large"></i>내 캘린더
+            <i className="fa-solid fa-user-large"></i>내 캘린더 <i className="fa-solid fa-plus" id={styles.plus} onClick={handleCalendarAddClick}/>
             <ul
               className={`${styles.submenu} ${FreeBoard ? styles.open : ""}`}
               onClick={preventPropagation}
             >
-               <li>
+               {/* <li>
                 <span>
                   <i className="fa-solid fa-star fa-sm"></i>
                 </span>
-                <span onClick={handleMyCalendarClick}>내 프로젝트</span>
-              </li>
+                <span>내 프로젝트</span>
+              </li> */}
+              {calendarList.map((item) => ( 
+            <li key={item.seq}> {/* seq는 고유 식별자로 사용 */}
+              <span>
+                <i className="fa-solid fa-star fa-sm"></i>
+              </span>
+              <span>{item.name}</span> 
+            </li>
+          ))}
             </ul>
           </li>
         </ul>
@@ -158,8 +130,10 @@ export const Side = ({setAddOpen}) => {
                 <span>
                   <i className="fa-solid fa-star fa-sm"></i>
                 </span>
-                <span onClick={handleSharedCalendarClick}>공유 프로젝트</span>
+                <span>공유 프로젝트</span>
               </li>
+
+
             </ul>
           </li>
         </ul>

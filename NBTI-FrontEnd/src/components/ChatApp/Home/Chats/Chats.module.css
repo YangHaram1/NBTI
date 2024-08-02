@@ -43,6 +43,7 @@
 .content{
     color: gray;
     font-size: 14px;
+    flex: 1;
 }
 .write_date{
     color: gray;
@@ -54,4 +55,24 @@
     display: flex;
     justify-content: center;
     align-items: flex-end;
+}
+.line{
+    width: 350px;
+    border: 2px solid gray;
+}
+
+.unread{
+    flex: 1;
+}
+.unread span{
+    font-size: 12px;
+    border: 1px solid black;
+    border-radius: 15px;
+    padding: 7px;
+    background-color: red;
+    color: white;
+    display: flex;
+    width: 30%;
+    justify-content: center;
+    align-items: center;
 }
