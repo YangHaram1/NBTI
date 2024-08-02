@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 const Chats = () => {
     const { loginID } = useAuthStore();
     const { setChatSeq, onMessage } = useCheckList();
-    const { setChatNavi } = useContext(ChatsContext);
+    const { setChatNavi,chatNaviBody } = useContext(ChatsContext);
     const [group_chats, setGroup_chats] = useState([]);
 
     const [modalDisplay, setModalDisplay] = useState(null);
@@ -107,6 +107,10 @@ const Chats = () => {
         return sortedItems;
     }, [group_chats])
 
+
+   
+
+    if(chatNaviBody==='chats')
     return (
         <div className={styles.container} onClick={handleClick}>
             {
@@ -171,6 +175,13 @@ const Chats = () => {
             {(countTotal>0)&&(<div className={styles.fixed}>{countTotal}+</div>)}
         </div>
     )
+    else {
+        return(
+            <React.Fragment>
+                 {(countTotal>0)&&(<div className={styles.fixed}>{countTotal}+</div>)}
+            </React.Fragment>
+        );
+    }
 
 }
 export default Chats;
