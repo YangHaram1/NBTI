@@ -1,3 +1,4 @@
+import { FreeBoard } from "./FreeBoard/FreeBoard";
 import { NoticeBoard } from "./NoticeBoard/NoticeBoard";
 import styles from "./Wrapper.module.css";
 // import React, { useEffect } from "react";
@@ -26,7 +27,7 @@ export const Wrapper = () => {
       </div>
       <div className={styles.board}>
         <div className={styles.notice_board}><NoticeBoard /></div>
-        <div className={styles.free_board}>자유게시판</div>
+        <div className={styles.free_board}><FreeBoard /></div>
       </div>
       {/* <div className={styles.up_btn}>
         <button>
