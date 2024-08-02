@@ -44,4 +44,11 @@ public class ChatDAO {
 		maps.put("seq", seq);
 		return mybatis.selectOne("Chat.unread",maps);
 	}
+	
+	public int unreadTotl(int group_seq,String member_id)throws Exception {
+		Map<String, Object> maps=new HashMap<>();
+		maps.put("group_seq", group_seq);
+		maps.put("member_id", member_id);
+		return mybatis.selectOne("Chat.unreadTotal",maps);
+	}
 }

@@ -91,6 +91,7 @@ const Chat = () => {
           setUpdateMember((prev) => {
             return !prev;
           });
+          setOnmessage();
 
         } else {
           const { chatSeq } = useCheckList.getState();
@@ -98,7 +99,9 @@ const Chat = () => {
           let chat = JSON.parse(e.data);
 
           //메세지 온거에 맞게 group_seq 사용해서 멤버 list받기 이건 chatSeq 없이 채팅 꺼저있을떄를 위해서 해놈
+          if(chatSeq===0)
           axios.get(`${host}/group_member?group_seq=${chat.group_seq}`).then((resp) => {
+            setOnmessage();
             if (chat.member_id !== loginID) {
               resp.data.forEach((temp) => {
                 if (temp.member_id === loginID) {
@@ -119,6 +122,7 @@ const Chat = () => {
             })
             if ((chatSeq !== 0)) { //이것도 멤버 last_chat_seq 업데이트
               axios.patch(`${host}/group_member?group_seq=${chatSeq}&&last_chat_seq=${chat.seq}`).then((resp) => {
+                setOnmessage();
                 setUpdateMember((prev) => {
                   return !prev;
                 });
@@ -126,7 +130,7 @@ const Chat = () => {
             }
 
           }
-          setOnmessage();
+         
           console.log("메세지보냄");
         }
       }

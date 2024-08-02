@@ -15,7 +15,7 @@ const Home = () => {
     const [color, setColor] = useState({ member: false, chat: false, alarm: false });
     const [name ,setName] =useState();
     const { loginID, setLoginID } = useAuthStore();
-    const { setChatNavi, chatNaviBody, setChatNaviBody } = useContext(ChatsContext);
+    const { setChatNavi, chatNaviBody, setChatNaviBody,chatNavi } = useContext(ChatsContext);
     const handleMemberList = (e) => {
         setColor((prev) => {
             return { member: true, chat: false, alarm: false };
@@ -41,6 +41,7 @@ const Home = () => {
     const handleCancel = () => {
         setChatNavi('');
     }
+   // if(chatNavi==='home')
     return (
         <div className={styles.container}>
             <div className={styles.div1}>
@@ -72,10 +73,17 @@ const Home = () => {
             </div>
             <div className={styles.div3}>
                 {chatNaviBody === 'members' && <Members  setName={setName}/>}
-                <Chats />
+                {chatNaviBody === 'chats' && <Chats/>}
                 {chatNaviBody === 'alarms' && <Alarms />}
             </div>
         </div>
     );
+    
+    /*
+    else {
+       return(
+        <Chats />
+       );
+    }*/
 }
 export default Home;
