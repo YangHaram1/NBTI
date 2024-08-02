@@ -103,7 +103,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                     ...prev,
                     {
                     
-                        color : title == '내 프로젝트' ? "#A4C3B2" : title === 2 ? "#FFB22C" : "#FFB22C",
+                        color : title == '내 프로젝트' ? "rgba(164, 195, 178, 0.4)" : title === 2 ? "rgba(255, 178, 44, 0.4)" : "rgba(255, 178, 44, 0.8)",
                         // seq: seq,
                         title: calendarTitle, //제목
                         start: startDate, //사작
@@ -163,9 +163,9 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                 const eventList = resp.data.map(event => {
                     let color = '';
                     if(event.scheduleTitle_name == '내 프로젝트' ){
-                        color='#A4C3B2';
+                        color='rgba(164, 195, 178, 0.4)';
                     }else{
-                        color='#FFB22C';
+                        color='rgba(255, 178, 44, 0.4)';
                     }
 
                     return {
@@ -283,6 +283,8 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                     locales={[koLocale]} // 한국어 로케일 설정
                     locale="ko" 
                     selectable="true" //달력 드래그 
+                    dayMaxEventRows={3} // 각 날짜 셀에 표시되는 이벤트를 5개로 제한
+                    moreLinkText="..." // "+n more" 링크에 표시되는 텍스트
                     
                     headerToolbar={{
                         left: 'print dayGridMonth,dayGridWeek,dayGridDay', // 전/후 달로 이동, 오늘로 이동, 인쇄
