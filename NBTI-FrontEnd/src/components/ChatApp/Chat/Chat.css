@@ -2,6 +2,11 @@
     z-index: 9999 !important;
     position: fixed !important;
 }
+
+.tox-toolbar__overflow{
+    left: 570px !important;
+    top: -520px !important;
+}
 /* styles.css */
 .my-toast {
     background-color: #333 !important;
