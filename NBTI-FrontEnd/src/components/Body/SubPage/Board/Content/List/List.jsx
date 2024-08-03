@@ -40,7 +40,6 @@ export const List = () => {
     };
 
 
-
     // 조회수 증가 및 상세 페이지로 이동 
     const handleTitleClick = (seq) => {
         const requestBox = { seq: seq, board_code: code };

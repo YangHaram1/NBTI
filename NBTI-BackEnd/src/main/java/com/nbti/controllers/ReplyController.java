@@ -37,6 +37,10 @@ public class ReplyController {
 		else {
 			String member_id = (String) session.getAttribute("loginID");
 			dto.setMember_id(member_id);
+			
+			System.out.println("댓글 : " + dto.getContents());
+			
+			
 			return ResponseEntity.ok(rserv.insert(dto));
 		}
 	}
@@ -50,7 +54,7 @@ public class ReplyController {
 	
 	// 댓글 삭제 
 	@DeleteMapping("/{seq}")
-	public ResponseEntity<Void> delete(@PathVariable int seq){
+	public ResponseEntity<Integer> delete(@PathVariable int seq){
 		rserv.delete(seq);
 		return ResponseEntity.ok().build();
 	}
