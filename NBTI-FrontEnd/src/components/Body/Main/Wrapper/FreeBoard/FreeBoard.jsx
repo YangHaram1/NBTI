@@ -23,6 +23,8 @@ export const FreeBoard = () => {
             // setBoard(resp.data);
 
             console.log("aaa : ", resp.data)
+
+
             // axios.get(`${host}/reply/freeBoard`).then((resp) => {
             //     console.log("댓글 : ", resp.data);
             // })

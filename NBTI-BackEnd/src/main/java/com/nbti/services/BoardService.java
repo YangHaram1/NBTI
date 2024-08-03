@@ -1,5 +1,6 @@
 package com.nbti.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,13 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nbti.dao.BoardDAO;
+import com.nbti.dao.ReplyDAO;
 import com.nbti.dto.BoardDTO;
+import com.nbti.dto.ReplyDTO;
 
 @Service
 public class BoardService {
 	
 	@Autowired
 	private BoardDAO bdao;
+	@Autowired
+	private ReplyDAO rdao;
 	
 	// 목록 출력
 	public List<BoardDTO> selectAll(Map<String, Object> map){
@@ -58,10 +63,39 @@ public class BoardService {
 		return bdao.selectNotice();
 	}
 	
-	// 자유 게시판 출력
-	public List<BoardDTO> selectFree(){
-		return bdao.selectFree();
+	
+	
+	// 자유 게시판 & 댓글 출력
+	public Map<String, Object> selectFree(){
+	
+		List<BoardDTO> list = bdao.selectFree();
+		
+		List<List<ReplyDTO>> rlist = new ArrayList<>();
+		
+		for (BoardDTO dto : list) {
+			int seq = dto.getSeq();
+			
+			rlist.add(rdao.selectFreeReply(seq));
+		}
+			
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", list);
+		map.put("rlist", rlist);
+		
+		return map;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

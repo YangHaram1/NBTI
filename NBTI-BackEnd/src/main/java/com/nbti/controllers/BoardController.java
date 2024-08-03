@@ -118,27 +118,37 @@ public class BoardController {
 
 	}
 	
-	// 자유 게시판 출력
+	// 자유 게시판 & 댓글 출력
+//	@GetMapping("/freeBoard")
+//	public ResponseEntity<Map<String, List>> selectFree(){
+//		
+//		List<BoardDTO> list = bserv.selectFree();
+//		
+//		List<List<ReplyDTO>> rlist = new ArrayList<>();
+//		
+//		for (BoardDTO dto : list) {
+//			int seq = dto.getSeq();
+//			rlist.add(rserv.selectFreeReply(seq));
+//		}
+//		
+//		
+//		Map<String, List> map = new HashMap<>();
+//		map.put("list", list);
+//		map.put("rlist", rlist);
+//		
+//		
+//		
+//		return ResponseEntity.ok(map);
+//		
+//	}
+	
 	@GetMapping("/freeBoard")
-	public ResponseEntity<Map<String, List>> selectFree(){
+	public ResponseEntity<Map<String, Object>> selectFree(){
 		
-		List<BoardDTO> list = bserv.selectFree();
+	Map<String, Object> list = bserv.selectFree();
+
 		
-		List<List<ReplyDTO>> rlist = new ArrayList<>();
-		
-		for (BoardDTO dto : list) {
-			int seq = dto.getSeq();
-			rlist.add(rserv.selectFreeReply(seq));
-		}
-		
-		
-		Map<String, List> map = new HashMap<>();
-		map.put("list", list);
-		map.put("rlist", rlist);
-		
-		
-		
-		return ResponseEntity.ok(map);
+		return ResponseEntity.ok(list);
 		
 	}
 	
