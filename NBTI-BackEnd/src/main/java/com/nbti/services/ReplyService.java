@@ -32,8 +32,8 @@ public class ReplyService {
 	}
 	
 	// 댓글 삭제
-	public void delete(int seq) {
-		rdao.delete(seq);
+	public int delete(int seq) {
+		return rdao.delete(seq);
 	}
 	
 	//============================[ 메 인 ]=============================

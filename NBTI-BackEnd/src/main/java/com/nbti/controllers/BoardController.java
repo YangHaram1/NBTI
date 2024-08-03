@@ -145,9 +145,7 @@ public class BoardController {
 	@GetMapping("/freeBoard")
 	public ResponseEntity<Map<String, Object>> selectFree(){
 		
-	Map<String, Object> list = bserv.selectFree();
-
-		
+		Map<String, Object> list = bserv.selectFree();
 		return ResponseEntity.ok(list);
 		
 	}

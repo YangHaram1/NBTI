@@ -59,7 +59,8 @@ export const Insert = () => {
             type="text"
             name="title"
             value={board.title}
-            placeholder="제목을 입력하세요."
+            maxLength={30}
+            placeholder="30자 이하의 제목을 입력하세요."
             onChange={handleInput}
           />
           <p className={styles.tempSave}>임시저장 : 2024-07-26-17:13</p>

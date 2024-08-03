@@ -28,8 +28,8 @@ public class ReplyDAO {
 	}
 	
 	// 댓글 삭제
-	public void delete(int seq) {
-		mybatis.delete("Reply.delete", seq);
+	public int delete(int seq) {
+		return mybatis.delete("Reply.delete", seq);
 	}
 	
 	//============================[ 메 인 ]=============================
