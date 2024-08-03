@@ -36,7 +36,12 @@ public class ReplyService {
 		rdao.delete(seq);
 	}
 	
-	
+	//============================[ 메 인 ]=============================
+	// 자유게시판 댓글 출력
+	public List<ReplyDTO> selectFreeReply(int seq){
+
+		return rdao.selectFreeReply(seq);
+	}
 	
 	
 }

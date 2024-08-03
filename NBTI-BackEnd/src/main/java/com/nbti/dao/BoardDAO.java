@@ -17,9 +17,6 @@ public class BoardDAO {
 	private SqlSession mybatis;
 	
 	// 목록 출력
-//	public List<BoardDTO> selectAll(int code) {
-//		return mybatis.selectList("Board.selectAll",code);
-//	}
 	public List<BoardDTO> selectAll(Map<String, Object> map) {
 		return mybatis.selectList("Board.selectAll",map);
 	}
@@ -48,6 +45,20 @@ public class BoardDAO {
 	public void updateViewCount(HashMap<String, Integer> map) {
 		mybatis.update("Board.updateViewCount", map);
 	}
+	
+	//============================[ 메 인 ]=============================
+	// 공지 게시판 출력
+	public List<BoardDTO> selectNotice() {
+		return mybatis.selectList("Board.selectNotice");
+	}
+	
+	// 자유 게시판 출력
+	public List<BoardDTO> selectFree() {
+		return mybatis.selectList("Board.selectFree");
+	}
+	
+	
+	
 	
 	
 }
