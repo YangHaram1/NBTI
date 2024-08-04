@@ -5,11 +5,10 @@
 }
 
 .container > h3 {
-  padding: 0 8px 8px 0;
+  padding: 0 0 8px 3px;
   margin: 0;
   font-size: 15px;
   color: #6b9080;
-  text-align: right;
 }
 
 .container .boardList {
@@ -44,6 +43,7 @@
   align-items: center;
   margin-right: 15px;
   font-size: 15px;
+  padding-bottom: 7px;
 }
 .container .boardList .header .writeDate {
   /* width: 0px; */
@@ -52,6 +52,7 @@
   align-items: center;
   font-size: 10px;
   color: #959595;
+  padding-bottom: 5px;
 }
 
 .container .boardList .body {
@@ -61,9 +62,11 @@
 .container .boardList .body .board {
   background-color: #ffffff;
   min-height: 60px;
+  max-height: 160px;
+  overflow: hidden;
   margin-bottom: 5px;
   border: 1px solid #6b908061;
-  padding: 8px 5px 5px 8px;
+  padding: 8px 5px 10px 8px;
   border-radius: 4px;
   cursor: pointer;
 }
@@ -72,11 +75,12 @@
 }
 
 .container .boardList .body .board .boardTitle {
-  font-size: 13px;
+  font-size: 15px;
+  font-weight: 600;
 }
 .container .boardList .body .board .boardContents {
   font-size: 12px;
-  margin: 3px 5px 0 5px;
+  margin: 10px 5px 5px 5px;
 }
 
 /* =================[ 댓 글 ]================ */
@@ -89,7 +93,7 @@
   flex-direction: column;
 }
 .container .boardList .body .reply .replyInput {
-  height: 60px;
+  min-height: 60px;
   display: flex;
   align-items: center;
   padding: 10px;
@@ -164,7 +168,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  margin-top: 3px;
 }
 .replyOutputWrap .replyOutput .likes i {
   /* margin-bottom: 10px; */
