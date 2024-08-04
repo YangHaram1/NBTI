@@ -39,6 +39,7 @@ public class FilesService {
 				map.put("upload_seq", upload_seq);
 				map.put("oriname", oriName);
 				map.put("sysname", sysName);
+				map.put("code", code);
 				uploadList.add(map);
 			}
 		}		

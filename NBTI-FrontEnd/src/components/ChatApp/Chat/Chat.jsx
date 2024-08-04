@@ -14,7 +14,7 @@ import './Chat.css';
 import { Slide, toast } from 'react-toastify';
 import avatar from '../../../images/user.jpg'
 import Invite from './Invite/Invite.jsx';
-
+import sanitizeHtml from 'sanitize-html';
 import 'react-toastify/dist/ReactToastify.css'
 axios.defaults.withCredentials = true;
 const Chat = () => {
@@ -247,8 +247,28 @@ const Chat = () => {
   }, [searchList]);
 
 
-  const [list, setList] = useState();
+  //다운로드 컨트롤
+  const handleDownload=(e)=>{
+    e.preventDefault();
+    const userConfirmed = window.confirm("다운로드를 진행하시겠습니까?");
+    if (userConfirmed) {
+      // 사용자가 확인 버튼을 클릭한 경우, 다운로드를 진행
+      window.location.href = e.currentTarget.href;
+    }
+  }
 
+  const safeHtml=(html)=>{
+    const sanitizedHtml = sanitizeHtml(html, {
+      allowedTags: ['a', 'p', 'b', 'i', 'u'],
+      allowedAttributes: {
+       // 'a': ['href', 'download'],
+      },
+    });
+
+    return sanitizedHtml;
+  }
+
+  const [list, setList] = useState();
   const handleChatsData = useCallback(() => {
     let count = 0;
 
@@ -265,6 +285,9 @@ const Chat = () => {
         let check = false;
         if (temp !== '') {
           check = true;
+        }
+        else{
+
         }
         
         //--------------------------------------------------// 내가쓴글인지 아닌지
@@ -289,7 +312,15 @@ const Chat = () => {
         if(item.upload_seq!==0){
           const split=item.message.split(' ');
           fileCheck=true;
-          file=`<a href=${host}/files/downloadChat?oriname=${split[0]}&&sysname=${split[1]} download=${split[0]}><p>${split[0]}</p></a>`;          
+          if(split[2]==='2'){
+            file=`<a href=${host}/files/downloadChat?oriname=${split[0]}&&sysname=${split[1]} download=${split[0]}  onClick="return confirm('다운로드를 진행하시겠습니까?');"><p>${split[0]}</p></a>`; 
+          }
+          else if(split[2]==='1'){
+            file=`<a href=${host}/files/downloadChat?oriname=${split[0]}&&sysname=${split[1]} download=${split[0]} onClick="return confirm('다운로드를 진행하시겠습니까?');">
+            <p><img src=${host}/images/chat/${split[1]} alt=downloadImage></img></p>
+            </a>`; 
+          }        
+         
         }
         //--------------------------------------------------//
         return (
