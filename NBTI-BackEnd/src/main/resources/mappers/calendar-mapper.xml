@@ -6,11 +6,12 @@
   <mapper namespace="Calendar">
     
     <!-- 목록 -->
-    <resultMap id="CalendarResultMap" type="com.nbti.dto.ScheduleTitleDTO">
+<!--     <resultMap id="CalendarResultMap" type="com.nbti.dto.ScheduleDTO">
         <result property="seq" column="schedule_seq"/>
         <result property="member_id" column="member_id"/>
-        <result property="scheduleTitle_name" column="scheduleTitle_name"/>
-        <result property="calendarTitle" column="calendarTitle"/>
+        <result property="calendar_title_code" column="calendar_title_code"/>
+        <result property="name" column="name"/>
+        <result property="title" column="title"/>
         <result property="contents" column="contents"/>
         <result property="start_date" column="start_date"/>
         <result property="end_date" column="end_date"/>
@@ -18,83 +19,48 @@
 
     <select id="list" resultMap="CalendarResultMap">
         SELECT 
-            s.seq AS schedule_seq,
+            s.seq,
             s.member_id,
-            st.scheduleTitle_name,
-            s.calendarTitle,
+            s.calendar_title_code,
+            st.name,
+            s.title,
             s.contents,
             s.start_date,
             s.end_date
         FROM 
-            schedule s
+            calendar s
         JOIN 
-            scheduleTitle st ON s.title = st.seq
-    </select>
+            calendar_title st ON s.calendar_title_code = st.code;
+    </select> -->
+    <select id="list" resultType="com.nbti.dto.CalendarDTO" >
+        SELECT 
+            *
+        FROM 
+            calendar
+    </select> 
+    
     
     
   <!-- 캘린더 입력 -->
 	<insert id="insert">
-       insert into schedule 
-   	   values(schedule_seq.nextval, #{member_id}, #{title}, #{calendarTitle}, #{contents}, #{start_date}, #{end_date})
+       insert into calendar 
+   	   values(calendar_seq.nextval, #{member_id}, #{calendar_title_code}, #{title}, #{contents}, #{start_date}, #{end_date})
        <selectKey resultType="int" order="AFTER" keyProperty="seq"> 
-            select schedule_seq.currval from dual
+            select calendar_seq.currval from dual
       </selectKey>
     </insert>
-    
-    <!-- 현재 등록된 캘린더 전체 목록 -->
-<!--     <select id="list" resultType="com.nbti.dto.ScheduleTitleDTO">
-        SELECT 
-            s.seq AS schedule_seq,
-            s.member_id,
-            st.scheduleTitle_name,
-            s.calendarTitle,
-            s.contents,
-            s.start_date,
-            s.end_date
-        FROM 
-            schedule s
-        JOIN 
-            scheduleTitle st ON s.title = st.seq
-    </select> -->
-    
+
     <update id="update">
-    	update schedule set calendarTitle=#{calendarTitle}, contents=#{contents}  where seq = #{seq}
+    	update calendar set title=#{title}, contents=#{contents}  where seq = #{seq}
     </update>
     
     <delete id="delete">
-    	delete schedule where seq = #{seq}
+    	delete calendar where seq = #{seq}
     </delete>
     
-<!--     <select id="scheduleName" resultType="com.nbti.dto.ScheduleTitleDTO">
-
-		SELECT 
-		    st.scheduleTitle_name, st.seq
-		FROM 
-		    schedule s
-		JOIN 
-		    scheduleTitle st ON s.title = st.seq;
-
+    <select id="listAll" resultType="com.nbti.dto.CalendarDTO">
+    	SELECT * from calendar
     </select>
-	 -->
-	
-	
-	
-<!-- 캘린더 제목 업데이트 -->
-<!--     <update id="editTitle">
-        UPDATE schedule
-        SET title = (SELECT seq FROM scheduleTitle WHERE scheduleTitle_name = #{calendarTitle})
-        WHERE seq = #{seq};
-    </update>
-
-    <update id="updateCalendarTitle">
-        UPDATE schedule
-        SET calendarTitle = #{calendarTitle}
-        WHERE seq = #{seq};
-    </update> -->
-    
-
-	
-    
     
 </mapper>
 

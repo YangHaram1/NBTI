@@ -1,6 +1,10 @@
 package com.nbti.services;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +21,10 @@ public class FilesService {
 	@Autowired
 	private Chat_uploadDAO dao;
 	
-	public void upload(String realpath,MultipartFile[] files,int group_seq,String member_id) throws Exception {
+	public List<Map<String, Object>> upload(String realpath,MultipartFile[] files,int group_seq,String member_id) throws Exception {
 		File realPathFile =new File(realpath);
 		if(!realPathFile.exists()) {realPathFile.mkdir();}
-		
+		List<Map<String, Object>> uploadList= new ArrayList<>();
 		if(files!=null) {
 			for(MultipartFile file:files) {
 				if(file.getSize()==0) {
@@ -30,9 +34,16 @@ public class FilesService {
 				String sysName= UUID.randomUUID() +"_"+ oriName;
 				file.transferTo(new File(realpath+"/"+sysName));
 				int code=processFile(file);
-				dao.insert(new Chat_uploadDTO(0,oriName,sysName,group_seq,member_id,code));
+				int upload_seq=dao.insert(new Chat_uploadDTO(0,oriName,sysName,group_seq,member_id,code));
+				Map<String, Object> map=new HashMap<>();
+				map.put("upload_seq", upload_seq);
+				map.put("oriname", oriName);
+				map.put("sysname", sysName);
+				map.put("code", code);
+				uploadList.add(map);
 			}
 		}		
+		return uploadList;
 	}
 	
 	

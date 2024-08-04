@@ -2,27 +2,24 @@ import styles from './Detail.module.css';
 import { host } from '../../../../../../config/config';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useCalendarTitle } from "../../../../../../store/store";
+import { useCalendarList } from '../../../../../../store/store';
 
 import FullCalendar from '@fullcalendar/react'; // FullCalendar 컴포넌트
 import dayGridPlugin from '@fullcalendar/daygrid'; // 월 보기 플러그인
 import timeGridPlugin from '@fullcalendar/timegrid'; // 주 및 일 보기 플러그인
 import interactionPlugin from '@fullcalendar/interaction'; // 클릭 이벤트를 위한 플러그인
 import { default as koLocale } from '@fullcalendar/core/locales/ko'; // 한국어 로케일
-import { useCalendarList } from '../../../../../../store/store';
-
-
 
 
 
 export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModalOpen}) => {
-
-    const { selectedItem, setSelectedItem  } = useCalendarList();
+    // 사이드 바 메뉴 공유 일정 상태
+    const { setSelectedItem , setCalendarList , calendarSelectList } = useCalendarList();
 
     // const calendarRef = useRef(); // 캘린더 내용 참조를 위한 ref
     const [modalOpen, setModalOpen] = useState(false); // 모달창 열기/닫기 상태
     const [selectedDate, setSelectedDate] = useState(null); // 선택한 날짜
-    const [insert, setInsert] = useState({ title: 0, calendarTitle : '', contents: '', start_date: '', start_time: '', end_date: '', end_time: '' }); // 입력 데이터 상태
+    const [insert, setInsert] = useState({ title: '', calendar_title_code : '', contents: '', start_date: '', start_time: '', end_date: '', end_time: '' }); // 입력 데이터 상태
     const [events, setEvents] = useState([]); // 이벤트 상태
     const [selectedEvent, setSelectedEvent] = useState(null); // 캘린더 (일정/일정추가) 선택된 이벤트 상태
 
@@ -59,16 +56,17 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
         const { name, value } = e.target;
         setInsert((prev) => ({
             ...prev,
-            [name]: name === 'title' ? Number(value) : value // title은 number 타입으로 변환
+            [name]: name === 'calendar_title_code' ? Number(value) : value // title은 number 타입으로 변환
         }));
     };
 
     // 일정 추가
     const handleSave = () => {
+        console.log(JSON.stringify(insert));
         // 사용자가 입력한 시작 날짜, 시작 시간, 종료 날짜, 종료 시간, 제목 등 가져와서
-        const { start_date, start_time, end_date, end_time, calendarTitle, title, contents } = insert;
+        const { start_date, start_time, end_date, end_time, calendar_title_code, title, contents } = insert;
         // 모두 입력되었는지 확인
-        if (!start_date || !start_time || !end_date || !end_time || !calendarTitle || !title) {
+        if (!start_date || !start_time || !end_date || !end_time || !calendar_title_code || !title) {
             alert('모든 필드를 입력!');
             return;
         }
@@ -85,9 +83,8 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
     
         // 서버에 데이터 전송
         const postData = {
-            member_id: sessionStorage.getItem("loginID"), 
             title: title, 
-            calendarTitle: calendarTitle, 
+            calendar_title_code: calendar_title_code, 
             contents: contents || '', 
             start_date: startDate, 
             end_date: endDate 
@@ -103,9 +100,9 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                     ...prev,
                     {
                     
-                        color : title == '내 프로젝트' ? "rgba(164, 195, 178, 0.4)" : title === 2 ? "rgba(255, 178, 44, 0.4)" : "rgba(255, 178, 44, 0.8)",
+                        color : calendar_title_code == 1 ? "rgba(164, 195, 178, 0.4)" : calendar_title_code === 2 ? "rgba(255, 178, 44, 0.4)" : "rgba(255, 178, 44, 0.8)",
                         // seq: seq,
-                        title: calendarTitle, //제목
+                        title: title, //제목
                         start: startDate, //사작
                         end: endDate, //끝
                         extendedProps: { //내용
@@ -115,7 +112,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                 ]);
 
                 // 모달 상태 초기화
-                setInsert({ title: 0, calendarTitle: '', contents: '', start_date: '', start_time: '', end_date: '', end_time: '' });
+                setInsert({ title: '', calendar_title_code: '', contents: '', start_date: '', start_time: '', end_date: '', end_time: '' });
                 setModalOpen(false);
                 setAddOpen(false);
             })
@@ -162,7 +159,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                 console.log(JSON.stringify(resp.data) + "목록 출력!");
                 const eventList = resp.data.map(event => {
                     let color = '';
-                    if(event.scheduleTitle_name == '내 프로젝트' ){
+                    if(event.calendar_title_code == 1 ){
                         color='rgba(164, 195, 178, 0.4)';
                     }else{
                         color='rgba(255, 178, 44, 0.4)';
@@ -170,17 +167,19 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
 
                     return {
                         seq: event.seq,
-                        title: event.calendarTitle,
+                        title: event.calendar_title_code,
                         start: event.start_date,
                         end: event.end_date,
                         extendedProps: {
                             contents: event.contents,
-                            scheduleTitle_name :event.scheduleTitle_name
+                            calendar_title_code :event.calendar_title_code
                         },
                         color : color,
                     }
                 });
                 setEvents(eventList);
+                setCalendarList(eventList); //사이드 목록
+                
             })
             .catch((error) => {
                 console.error('Error', error);
@@ -205,7 +204,6 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
     }, [selectedEvent]);
     
     
-
     //삭제
     const delModal = () => {
         console.log(JSON.stringify(selectedEvent) + ": del 콘솔찍기");
@@ -234,8 +232,8 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
     const handleCloseModal = () => {
         axios.get(`${host}/calendarList`)
         .then((resp) => {
-            console.log(resp.data + " List 가져오기");
-            setSelectedItem(resp.data);
+            // console.log(resp.data + " List 가져오기");
+            setSelectedItem(resp.data); //추가된 "공유 일정 상태"
         })
         .catch((error) => {
             console.error("Error", error);
@@ -254,7 +252,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
     const handleAddCalendar = () => {
         const postData = {
             name: calendarName, 
-            type: 'private', 
+            type: 'public', 
         };
     
         axios.post(`${host}/calendarList`, postData)
@@ -270,8 +268,10 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
             });
     };
 
-
-    
+    useEffect(()=>{
+        console.log("useEffect"+calendarSelectList);
+        setEvents(calendarSelectList)
+    },[calendarSelectList]) 
 
     return (
         <div className={styles.calender}>
@@ -313,7 +313,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                             {isEditing ? ( //수정 누르면 수정
                                 <div className={styles.modalInner}>
                                     <div className={styles.detail}>
-                                        <p>{selectedEvent.extendedProps.scheduleTitle_name}</p>
+                                        <p>{selectedEvent.extendedProps.calendar_title_code === 1 ? '내 캘린더' : '공유 캘린더'}</p>
                                         <hr/>
                                         <p>
                                             제목 : <input type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
@@ -332,7 +332,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                             ) : ( // 수정 누르기 전 
                                 <div className={styles.modalInner}>
                                 <div className={styles.detail}>
-                                    <p>{selectedEvent.extendedProps.scheduleTitle_name}</p>
+                                    <p>{selectedEvent.extendedProps.calendar_title_code === 1 ? '내 캘린더' : '공유 캘린더'}</p>
                                     <hr/>
                                     <p>제목 : {selectedEvent.title}</p>
                                     <p>시작 : {selectedEvent.start.toLocaleString()}</p>
@@ -354,15 +354,15 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                             <div className={styles.modalInner}>
                                 <div>
                                     <p>캘린더</p>
-                                    <select value={insert.title} name="title" onChange={handleChange}>
-                                        <option value="">선택하세요</option>
-                                        <option value="1">어쩌고</option>
-                                        <option value="2">저쩌고</option>
+                                    <select value={insert.calendar_title_code} name="calendar_title_code" onChange={handleChange}>
+                                        <option value="0" >선택하세요</option>
+                                        <option value="1">내 캘린더</option>
+                                        <option value="2">공유 캘린더</option>
                                     </select>
                                 </div>
                                 <div>
                                     <p>제목</p>
-                                    <input type="text" value={insert.calendarTitle} name="calendarTitle" onChange={handleChange}/>
+                                    <input type="text" value={insert.title} name="title" onChange={handleChange}/>
                                 </div>
                                 <div>
                                     <p>시작</p>

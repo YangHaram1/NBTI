@@ -1,5 +1,8 @@
 package com.nbti.controllers;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,11 +28,11 @@ public class Chat_uploadController {
 	private FilesService fsev;
 	
 	@PostMapping
-	public ResponseEntity<Void> post(@RequestParam int group_seq ,@RequestParam MultipartFile[] files) throws Exception {
+	public ResponseEntity<List<Map<String, Object>>> post(@RequestParam int group_seq ,@RequestParam MultipartFile[] files) throws Exception {
 		String loginID=(String)session.getAttribute("loginID");
 		String realpath=RealpathConfig.realpath+"chat";
-		fsev.upload(realpath, files, group_seq, loginID);
-		return ResponseEntity.ok().build(); // 200
+		List<Map<String, Object>> uploadList=fsev.upload(realpath, files, group_seq, loginID);
+		return ResponseEntity.ok(uploadList); // 200
 	}
 	
 	
