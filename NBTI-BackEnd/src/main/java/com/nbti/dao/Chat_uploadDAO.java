@@ -12,7 +12,8 @@ public class Chat_uploadDAO {
 	private SqlSession mybatis;
 	
 	public int insert(Chat_uploadDTO dto) throws Exception{
-		return mybatis.insert("Chat_upload.insert",dto);
+		mybatis.insert("Chat_upload.insert",dto);
+		return dto.getSeq();
 	}
 	
 }

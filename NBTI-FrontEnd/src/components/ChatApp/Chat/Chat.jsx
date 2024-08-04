@@ -94,10 +94,8 @@ const Chat = () => {
           setOnmessage();
 
         } else {
-          const { chatSeq } = useCheckList.getState();
-          // alert("메세지옴");
           let chat = JSON.parse(e.data);
-
+          const { chatSeq } = useCheckList.getState();
           //메세지 온거에 맞게 group_seq 사용해서 멤버 list받기 이건 chatSeq 없이 채팅 꺼저있을떄를 위해서 해놈
           if(chatSeq===0)
           axios.get(`${host}/group_member?group_seq=${chat.group_seq}`).then((resp) => {
@@ -262,20 +260,20 @@ const Chat = () => {
         if (isDateChanged) {
           lastDate = currentDate;
         }
-        //---------------------------------------------//
+        //---------------------------------------------// 검색후 로직 추가
         const temp = handleSearchData(item);
         let check = false;
         if (temp !== '') {
           check = true;
         }
-
-        //--------------------------------------------------//
+        
+        //--------------------------------------------------// 내가쓴글인지 아닌지
         let idCheck = false;
         if (item.member_id === loginID) {
           idCheck = true;
         }
 
-        //--------------------------------------------------//
+        //--------------------------------------------------//여기는 채팅 읽은표시
         const chatCheckCount = chatCheck.filter((temp) => {
           if ((temp.last_chat_seq < item.seq) && temp.member_id !== item.member_id) {
             //  console.log(temp.member_id);
@@ -285,6 +283,14 @@ const Chat = () => {
           return false;
         }).length;
 
+        //--------------------------------------------------// 여기가 파일쪽 로직 처리
+        let fileCheck=false;
+        let file='';
+        if(item.upload_seq!==0){
+          const split=item.message.split(' ');
+          fileCheck=true;
+          file=`<a href=${host}/files/downloadChat?oriname=${split[0]}&&sysname=${split[1]} download=${split[0]}><p>${split[0]}</p></a>`;          
+        }
         //--------------------------------------------------//
         return (
           <React.Fragment key={index}>
@@ -298,10 +304,10 @@ const Chat = () => {
               <div>
                 <div className={idCheck ? styles.nameReverse : styles.name}>{item.member_id}</div>
                 <div className={idCheck ? styles.contentReverse : styles.content}>
-                  <div dangerouslySetInnerHTML={{ __html: (check ? temp : item.message) }}
+                  <div dangerouslySetInnerHTML={{ __html: (check ? temp : (fileCheck? file:item.message)) }}
                     ref={el => {
                       if (el && check) {
-                        chatRef.current[count++] = el;
+                        chatRef.current[count++] = el; //검색한것만 ref 추가
                       }
                     }} className={idCheck ? styles.mboxReverse : styles.mbox}></div>
                   <div style={{display:"flex"}}>
@@ -319,7 +325,7 @@ const Chat = () => {
   }, [chats, handleSearchData, chatCheck])
 
   useEffect(() => {
-    chatRef.current = [];
+    chatRef.current = []; //이거떄문에 class remove전에 닫으면 오류나는데 이부분 고민할필요가있다 
     handleChatsData();
   }, [handleChatsData])
 
@@ -333,18 +339,16 @@ const Chat = () => {
 
   }, [list]);
 
-  useEffect(() => {
+  useEffect(() => { //스크롤 
     scrollBottom();
   }, [scrollBottom])
 
-  useEffect(() => {
+  useEffect(() => {//group_seq에 맞는 member list 뽑기
     axios.get(`${host}/group_member?group_seq=${chatSeq}`).then((resp) => {
       console.log(resp.data);
       setChatCheck(resp.data);
     })
   }, [invite, updateMember, chatNavi])
-
-
 
 
   if (isLoading === true) {
