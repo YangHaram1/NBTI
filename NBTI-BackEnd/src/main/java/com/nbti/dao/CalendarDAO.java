@@ -18,8 +18,8 @@ public class CalendarDAO {
 		//dto.setMember_id("test");
 		System.out.println("dto seq : " + dto.getSeq());
 		System.out.println("dto member id : " + dto.getMember_id());
+		System.out.println("dto title : " + dto.getCalendar_title_code());
 		System.out.println("dto title : " + dto.getTitle());
-		System.out.println("dto title : " + dto.getCalendarTitle());
 		System.out.println("dto contents : " + dto.getContents());
 		System.out.println("dto start date : " + dto.getStart_date());
 		System.out.println("dto end date : " + dto.getEnd_date());
@@ -43,18 +43,9 @@ public class CalendarDAO {
     	mybatis.delete("Calendar.delete",seq);
     }
     
-//    public List<ScheduleTitleDTO> scheduleName() throws Exception {
-//        return mybatis.selectList("Calendar.scheduleName");
-//    }
-    
-//  // 캘린더 제목 업데이트
-//  public void editTitle(CalendarDTO dto)  throws Exception {
-//      mybatis.update("Calendar.editTitle", dto);
-//  }
-//
-//  public void updateCalendarTitle(CalendarDTO dto)  throws Exception {
-//      mybatis.update("Calendar.updateCalendarTitle", dto);
-//  }
-
+    //전체 목록
+    public List<CalendarDTO> listAll() throws Exception{
+    	return mybatis.selectList("Calendar.listAll");
+    }
 
 }

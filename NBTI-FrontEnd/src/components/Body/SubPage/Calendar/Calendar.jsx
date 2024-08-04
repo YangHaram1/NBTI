@@ -5,8 +5,10 @@ import { Side } from './Side/Side';
 
 export const Calendar = () => {
     
-  const [addOpen, setAddOpen] = useState(false); //일정 모달 상태 
-  const [calendarModalOpen, setCalendarModalOpen] = useState(false); // 추가 모달 상태
+  //일정 모달 상태 
+  const [addOpen, setAddOpen] = useState(false); 
+  // 사이드바 "공유일정" 추가 모달 상태
+  const [calendarModalOpen, setCalendarModalOpen] = useState(false); 
 
     return(
         <div className={styles.container}>
