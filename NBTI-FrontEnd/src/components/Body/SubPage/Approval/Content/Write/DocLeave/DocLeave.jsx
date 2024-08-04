@@ -2,20 +2,24 @@ import { useEffect, useState } from 'react';
 import { ApprovalEditor } from '../ApprovalEditor/ApprovalEditor';
 import { Header } from '../Header/Header';
 import styles from './DocLeave.module.css';
+import { useDocLeave } from '../../../../../../../store/store';
 
 export const DocLeave =({userdata})=>{
 
     // 저장소에 docleave 담는 거 하나 만들어서 저장시키기
-
+    const {docLeave, setDocLeave} = useDocLeave();
     const [start, setStart] = useState(null);
     const [end, setEnd] = useState(null);
     const [total, setTotal] = useState(null);
+    const [address,setAddress] = useState('');
+    const [reason,setReason] = useState('');
+    const [phone,setPhone] = useState('');
+
 
     const handleStartDate = (e) => {
         const startDate = e.target.value;
         console.log(startDate);
         setStart(startDate);
-        // Reset end date and total if start date changes
         setEnd(null);
         setTotal(null);
     };
@@ -37,17 +41,29 @@ export const DocLeave =({userdata})=>{
     
     const handleAdress = (e)=>{
         console.log(e.target.innerText);
-        // setDept(e.target.innerText);
+        setAddress(e.target.innerText);
     }
      
     const handlePhone = (e)=>{
         console.log(e.target.innerText);
-        // setTitle(e.target.innerText);
+        setPhone(e.target.innerText);
     }
     
     const handleReason = (e)=>{
         console.log(e.target.value);
+        setReason(e.target.value);
     }
+
+
+    useEffect(()=>{
+        setDocLeave({
+            start: start,
+            end: end,
+            reason: reason,
+            address: address,
+            phone: phone
+        });
+    },[start,end,phone,reason,address])
     
         return (
             <div className={styles.container}>
@@ -77,7 +93,7 @@ export const DocLeave =({userdata})=>{
                     <div className={styles.subtitle_title}>연락처</div>
                     <div className={`${styles.subtitle_content} ${styles.align}`} contentEditable="true" onInput={handlePhone} suppressContentEditableWarning='true'></div>
                 </div>
-                <div className={styles.text}> - 첨부서류: 휴직 사유에 대한 증빙 서류 (예 : 질병으로 인한 휴직인 경우 진단서 등)</div>
+                <div className={styles.text}> - 첨부서류: 휴가 사유에 대한 증빙 서류 (예 : 질병으로 인한 휴직인 경우 진단서 등)</div>
             </div>
         );
 }

@@ -76,10 +76,11 @@ export const useDocFormStore = create((set)=>{
     }
 });
 
-export const useApprovalLine = create((set)=>{
-    return{
-        approvalLine : [{}],
-        setApprovalLine : (approval)=>set((prev)=>{
+// 결재라인
+export const useApprovalLine = create((set) => {
+    return {
+        approvalLine: [{}],
+        setApprovalLine: (approval) => set((prev) => {
             const exist = prev.approvalLine.findIndex(line => line.order === approval.order);
             let newApprovalLine;
             if(exist !== -1){
@@ -91,13 +92,14 @@ export const useApprovalLine = create((set)=>{
             console.log("저장소", newApprovalLine);
             return {approvalLine : newApprovalLine};
         }),
-        resetApprovalLine: ()=>set({approvalLine:[{}]})
+        resetApprovalLine: () => set({ approvalLine: [] })
     }
 });
 
-export const useReferLine = create((set)=>{
-    return{
-        referLine : [{}],
+// 참조라인
+export const useReferLine = create((set) => {
+    return {
+        referLine: [{}],
         // setReferLine : (refer)=>set((prev)=>({
         //     referLine: [...prev.referLine, refer]
         // })), 
@@ -113,6 +115,26 @@ export const useReferLine = create((set)=>{
                 console.log("저장소", newReferLine);
                 return {referLine:newReferLine};
         }),
-        resetReferLine: ()=>set({referLine:[{}]})
+        resetReferLine: () => set({ referLine: [] })
+    }
+});
+
+// 휴가 신청서
+export const useDocVacation = create((set)=>{
+    return{
+        docVacation:{category:'', start:'', halfStart:'', halfStartAP:'' ,end:'',halfEnd:'', halfEndAP:'' },
+        setDocVacation:(vacation)=>set(()=>({
+            docVacation: vacation
+        }))
+    }
+});
+
+// 휴직 신청서
+export const useDocLeave = create((set)=>{
+    return{
+        docLeave:{start:null, end:null, reason:'', address:'', phone:''},
+        setDocLeave:(leave)=>set(()=>({
+            docLeave: leave
+        }))
     }
 });

@@ -196,7 +196,7 @@ public class MembersController {
      public ResponseEntity<Map<String, Object>> docData(){
     	 
     	 String id = (String)session.getAttribute("loginID");
-    	 System.out.println("데이터 여기까지는 넘어옴" + id);
+//    	 System.out.println("데이터 여기까지는 넘어옴" + id);
          Map<String, Object> memberData = mServ.memberData(id);
          
          

@@ -12,8 +12,8 @@ public class ApprovalService {
 	@Autowired
 	private ApprovalDAO adao;
 	
-	public int write(ApprovalDTO adto) {
-		return adao.write(adto);
-	}
+//	public int write(ApprovalDTO adto) {
+//		return adao.write(adto);
+//	}
 
 }

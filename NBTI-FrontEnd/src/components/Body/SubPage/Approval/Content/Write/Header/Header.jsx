@@ -35,7 +35,7 @@ export const Header = ({userdata}) => {
             <div className={styles.mid}></div>
             <div className={styles.right}>
                 {
-                    approvalLine.slice(1).map((approvaler) => {
+                    approvalLine.map((approvaler) => {
 
                         return (
                             <div className={styles.approval_box}>

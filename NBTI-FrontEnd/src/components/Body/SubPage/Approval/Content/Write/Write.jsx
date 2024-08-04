@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { DocDraft } from './DocDraft/DocDraft';
 import { DocLeave } from './DocLeave/DocLeave';
-import { DocVacation } from './DocVacation/DocVacation';
+import { DocVacation } from "./DocVacation/DocVacation";
 import styles from './Write.module.css';
 import { host } from '../../../../../../config/config';
 import axios from 'axios';
-import { useApprovalLine, useReferLine } from '../../../../../../store/store';
+import { useApprovalLine, useDocLeave, useDocVacation, useReferLine } from '../../../../../../store/store';
 
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import {faPenToSquare} from '@fortawesome/free-solid-svg-icons';
@@ -18,9 +18,10 @@ export const Write = ({setlist})=>{
     const [date, setDate] = useState('');
     const [dept, setDept] = useState('');
     const [title, setTitle] = useState('');
-    // const [emergency, setEmergency] = useState(false);
     const { referLine, resetReferLine} = useReferLine();
     const { approvalLine, resetApprovalLine } = useApprovalLine();
+    const { docLeave } = useDocLeave();
+    const { docVacation } = useDocVacation();
 
     // ===== 아이콘 =====
     useEffect(() => {
@@ -54,15 +55,38 @@ export const Write = ({setlist})=>{
                     effective_date: date,
                     cooperation_dept: dept,
                     title: title,
-                    content: content,
-                    emergency: result,
-                    docType : setlist === '업무기안서'? 1 : setlist === '휴가신청서' ? 2:3 
+                    content: content
                 },
-                approvalLine: approvalLine.slice(1),
-                referLine: referLine.slice(1)
+                approvalLine: approvalLine,
+                referLine: referLine,
+                emergency: result,
+                docType : setlist === '업무기안서'? 1 : setlist === '휴가신청서' ? 2:3
             };  
-        }else{
-            console.log("업무기안서 외 다른 데이터")
+        }else if(setlist === "휴가신청서"){
+            requestData = {
+                docVacation: docVacation,
+                approvalLine: approvalLine,
+                referLine: referLine,
+                emergency: result,
+                docType : setlist === '업무기안서'? 1 : setlist === '휴가신청서' ? 2:3
+            };
+            console.log("휴가",docVacation);
+            console.log("휴가 신청서");
+            console.log("휴가 결재",approvalLine);
+            console.log("휴가 참조",referLine);
+
+        }else if(setlist === "휴직신청서"){
+            requestData = {
+                docLeave: docLeave,
+                approvalLine: approvalLine,
+                referLine: referLine,
+                emergency: result,
+                docType : setlist === '업무기안서'? 1 : setlist === '휴가신청서' ? 2:3
+            };
+            console.log("휴직", docLeave);
+            console.log("휴직 신청서");
+            console.log("휴직 결재",approvalLine);
+            console.log("휴직 참조",referLine);
         }
     
         axios.post(`${host}/approval`, requestData)
