@@ -5,6 +5,8 @@ import styles from './DocLeave.module.css';
 
 export const DocLeave =({userdata})=>{
 
+    // 저장소에 docleave 담는 거 하나 만들어서 저장시키기
+
     const [start, setStart] = useState(null);
     const [end, setEnd] = useState(null);
     const [total, setTotal] = useState(null);
@@ -56,11 +58,11 @@ export const DocLeave =({userdata})=>{
                 <div className={styles.submain}>
                     {/* <div className={styles.submain_box}> */}
                     <div className={styles.submain_title}>휴직 기간</div>
-                <div className={styles.submain_content}>
-                    <input className={styles.submain_input} type="date" value={start || ''} onChange={handleStartDate}/>
-                    <div className={styles.inputtext_inner}>~</div>
-                    <input className={styles.submain_input} type="date" value={end || ''} min={start || ''} onChange={handleEndDate} disabled={!start}/>
-                    <div className={styles.submain_input}> {total !== null ? `${total} 개월` : '0개월'} </div>
+                        <div className={styles.submain_content}>
+                        <input className={styles.submain_input} type="date" value={start || ''} onChange={handleStartDate}/>
+                        <div className={styles.inputtext_inner}>~</div>
+                        <input className={styles.submain_input} type="date" value={end || ''} min={start || ''} onChange={handleEndDate} disabled={!start}/>
+                        <div className={styles.submain_input}> {total !== null ? `${total} 개월` : '0개월'} </div>
                 </div>
                 </div>
                 <div className={styles.content}>

@@ -80,5 +80,9 @@ public boolean login(MembersDTO dto) {
 		return mybatis.selectOne("Member.memberData", id);
 	}
 
+	public int selectPeriod(String id) {
+		int result = mybatis.selectOne("Member.selectPeriod",id);
+		return result;
+	}
 
 }
