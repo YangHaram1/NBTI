@@ -56,6 +56,15 @@ public class BoardService {
 		bdao.updateViewCount(map);
 	}
 	
+	// 페이지네이션
+	public List<BoardDTO> getList(){
+		return bdao.getList();
+	}
+	
+	
+	
+	
+	
 	
 	//============================[ 메 인 ]=============================
 	// 공지 게시판 출력

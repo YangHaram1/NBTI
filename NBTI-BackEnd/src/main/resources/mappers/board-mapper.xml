@@ -74,6 +74,13 @@
 		update board set view_count = view_count +1 where seq = ${seq} and board_code = ${board_code}
 	</update>
 
+	<!-- 페이지네이션 -->
+	<!-- <select id="getList" resultType="com.nbti.dto.BoardDTO">
+		select * from board 
+	</select> -->
+	
+
+
 
 	<!-- ========================[ 메 인 ]====================== -->
 	<!-- 공지 게시판 출력 -->

@@ -38,9 +38,6 @@ public class ReplyController {
 			String member_id = (String) session.getAttribute("loginID");
 			dto.setMember_id(member_id);
 			
-			System.out.println("댓글 : " + dto.getContents());
-			
-			
 			return ResponseEntity.ok(rserv.insert(dto));
 		}
 	}
@@ -59,10 +56,6 @@ public class ReplyController {
 		return ResponseEntity.ok().build();
 	}
 	
-	
-	//============================[ 메 인 ]=============================
-	// 자유게시판 댓글 출력
 
-	
 	
 }

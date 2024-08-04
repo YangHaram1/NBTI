@@ -85,7 +85,6 @@ public class BoardController {
 	// 게시글 수정
 	@PutMapping
 	public ResponseEntity<Void> modify(@RequestBody BoardDTO dto){
-		System.out.println("수정 : " +dto.getSeq() + " : " + dto.getTitle() + " : " + dto.getContents());
 		bserv.modify(dto); 
 		return ResponseEntity.ok().build();
 	}
@@ -105,6 +104,22 @@ public class BoardController {
 		bserv.updateViewCount(map);
 		return ResponseEntity.ok().build();
 
+	}
+	
+	// 페이지네이션
+	@GetMapping("/getList")
+	public ResponseEntity<List<BoardDTO>> getList(@RequestBody Map<String, Integer> request){
+		
+		int cpage = request.get("cpage");
+		int recordsPerPage = request.get("recordsPerPage");
+		
+		HashMap<String, Integer> map = new HashMap<>();
+		map.put("cpage", cpage);
+		map.put("recordsPerPage", recordsPerPage);
+		
+		List<BoardDTO> list = bserv.getList(map);
+		
+		return ResponseEntity.ok(list);
 	}
 	
 
