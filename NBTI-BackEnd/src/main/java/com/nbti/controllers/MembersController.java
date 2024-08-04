@@ -196,10 +196,22 @@ public class MembersController {
      public ResponseEntity<Map<String, Object>> docData(){
     	 
     	 String id = (String)session.getAttribute("loginID");
+    	 System.out.println("데이터 여기까지는 넘어옴" + id);
          Map<String, Object> memberData = mServ.memberData(id);
          
          
          return ResponseEntity.ok(memberData);
      }
 	
+    // 작성일 24.08.2
+  	// 작성자 김지연
+  	// 아이디에 따른 휴가일수 추출
+      @GetMapping("/selectVacation")
+      public ResponseEntity<String> selectVacation(){
+     	 
+     	 String id = (String)session.getAttribute("loginID");
+         String day = String.valueOf(mServ.selectPeriod(id)); 
+         return ResponseEntity.ok(day);
+         
+      }
 }

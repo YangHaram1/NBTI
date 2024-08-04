@@ -70,46 +70,8 @@ public class Group_chatController {
 	@GetMapping
 	public ResponseEntity<List<Group_chatSizeDTO>> get() throws Exception{
 		String loginID= (String) session.getAttribute("loginID");
-		List<Group_memberDTO> list= new ArrayList<>();
-		list=mserv.list(loginID); //그멤버가 가지고있는 group_seq 뽑기
-		
-		List<Group_chatDTO> chatList=serv.getList(list); //group_chat 목록 뽑기 seq에 맞게..사실 지금은 필없지만 나중에 group_chat에 컬럼 생기면 유용함
-		List<Group_chatSizeDTO> result=new ArrayList<>();
-
-		if(chatList==null) {
-			return ResponseEntity.ok(null);
-		}
-		
-		for(int i=0;i<chatList.size();i++) {
-			int size=0;
-			Group_chatDTO dto = chatList.get(i);
-			for (Group_memberDTO MemberDTO : list) {
-				if(MemberDTO.getGroup_seq()==dto.getSeq()) {
-					List<Group_memberDTO> memberList=  mserv.members(MemberDTO.getGroup_seq()); //seq에맞는 멤버 목록
-					size=memberList.size();
-					int last_chat_seq=0;
-					for (Group_memberDTO member : memberList) {
-						if(member.getMember_id().equals(loginID)) {
-							last_chat_seq=member.getLast_chat_seq();
-							
-							break;
-						}
-					}
-					ChatDTO cdto=cserv.getLastDTO(dto.getSeq()); //그룹채팅방에서 마지막 메세지 가저오는거고
-					int unread=0;
-					if(cdto!=null) {
-						unread = cserv.unread(dto.getSeq(), last_chat_seq, cdto.getSeq())-1;
-					}
-					result.add(new Group_chatSizeDTO(dto.getSeq(),MemberDTO.getName(),MemberDTO.getAlarm(),MemberDTO.getBookmark(),size,unread,cdto));
-					break;
-				}
-			}
-		}
-		
-		if(list!=null)
+		List<Group_chatSizeDTO> result =serv.getChatSizeDTOs(loginID);
 		return ResponseEntity.ok(result);
-		
-		return ResponseEntity.ok().build();
 	}
 	
 	

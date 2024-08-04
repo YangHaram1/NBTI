@@ -2,13 +2,14 @@ package com.nbti.dto;
 
 import java.sql.Timestamp;
 
-public class ChatDTO {
+public class ChatFileDTO {
 	private int seq;
 	private String member_id;
 	private String message;
 	private Timestamp write_date;
 	private int group_seq;
-	private int upload_seq;
+	private String oriname;
+	private String sysname;
 	
 	public int getSeq() {
 		return seq;
@@ -40,25 +41,32 @@ public class ChatDTO {
 	public void setGroup_seq(int group_seq) {
 		this.group_seq = group_seq;
 	}
-	public int getUpload_seq() {
-		return upload_seq;
+	public String getOriname() {
+		return oriname;
 	}
-	public void setUpload_seq(int upload_seq) {
-		this.upload_seq = upload_seq;
+	public void setOriname(String oriname) {
+		this.oriname = oriname;
 	}
-	public ChatDTO(int seq, String member_id, String message, Timestamp write_date, int group_seq, int upload_seq) {
+	public String getSysname() {
+		return sysname;
+	}
+	public void setSysname(String sysname) {
+		this.sysname = sysname;
+	}
+	public ChatFileDTO(int seq, String member_id, String message, Timestamp write_date, int group_seq, String oriname,
+			String sysname) {
 		super();
 		this.seq = seq;
 		this.member_id = member_id;
 		this.message = message;
 		this.write_date = write_date;
 		this.group_seq = group_seq;
-		this.upload_seq = upload_seq;
+		this.oriname = oriname;
+		this.sysname = sysname;
 	}
-	public ChatDTO() {
+	public ChatFileDTO() {
 		super();
 	}
 	
 	
-
 }

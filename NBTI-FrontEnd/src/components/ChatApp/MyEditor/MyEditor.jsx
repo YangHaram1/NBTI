@@ -13,11 +13,8 @@ import { host } from '../../../config/config'
 
 const MyEditor = ({ sidebarRef, editorRef }) => {
 
-  const {emoticonDisplay,setEmoticonDisplay} =useCheckList();
-
-
+  const {emoticonDisplay,setEmoticonDisplay,chatSeq} =useCheckList();
   const [content, setContent] = useState('');
-
   const inputRef = useRef(null);
   const { ws } = useContext(ChatsContext);
 
@@ -30,11 +27,21 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
     inputRef.current.click();
   }
   const handleOnchange = () => {
-    const file = inputRef.current.files[0];
+    const files = inputRef.current.files;
     const formData = new FormData();
-    formData.append("file", file);
-    axios.post(`${host}/chatUpload`, formData).then(response => { //쿼리 파라미터 형식으로 전송된다
-      console.log('Post successful:', response.data);
+    for (let index = 0; index < files.length; index++) {
+      formData.append("files", files[index]);
+    }
+    console.log("upload")
+    axios.post(`${host}/chat_upload?group_seq=${chatSeq}`, formData).then(resp => { //파일 로직 처리
+      const array=resp.data;
+      for (let index = 0; index < array.length; index++) {
+        const jsonString = JSON.stringify(array[index]);
+        ws.current.send(jsonString);    
+        //console.log(array[index]);
+      }
+     
+     
     }).catch(error => {
       console.error('There was an error posting the data!', error);
     });
@@ -134,9 +141,8 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
 
       />
       <div className={styles.hidden}>
-        <input type="file" className={styles.upload} name='file' ref={inputRef} onChange={handleOnchange} />
+        <input type="file" className={styles.upload} name='files' ref={inputRef} onChange={handleOnchange} multiple />
       </div>
-
 
 
     </div>);
