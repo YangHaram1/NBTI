@@ -7,6 +7,7 @@ public class Chat_uploadDTO {
 	private int group_seq;
 	private String member_id;
 	private int code;
+	
 	public int getSeq() {
 		return seq;
 	}
