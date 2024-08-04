@@ -25,8 +25,7 @@ public class User_histroyController {
 
 	@GetMapping
 	public ResponseEntity<List<User_historyDTO>> get() throws Exception{
-		String loginID= (String) session.getAttribute("loginID");
-		
-		return ResponseEntity.ok().build();
+		List<User_historyDTO> list =serv.list();
+		return ResponseEntity.ok(list);
 	}
 }

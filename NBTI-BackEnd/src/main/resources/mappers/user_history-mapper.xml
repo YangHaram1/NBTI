@@ -6,4 +6,8 @@
 	<insert id="insert">
 		insert into user_history values(user_history_seq.nextval,#{member_id},#{ip},sysdate)
 	</insert>
+	
+	<select id="list" resultType="com.nbti.dto.User_historyDTO">
+		select * from user_history order by seq desc
+	</select>
 </mapper>
