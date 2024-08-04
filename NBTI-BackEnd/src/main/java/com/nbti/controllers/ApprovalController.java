@@ -117,6 +117,7 @@ public class ApprovalController {
 	            }else {
 	            	dto.setMember_state_code("b");
 	            }
+	            dto.setApproval_order(order);
 	            approvalline.add(dto);
 	        }
 		

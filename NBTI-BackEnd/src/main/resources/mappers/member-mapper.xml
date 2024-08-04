@@ -109,7 +109,10 @@ WHERE m.team_code = #{team_code}
 		left outer join department d on t.dept_code = d.dept_code
 		where id = #{id}
 	</select>
-
+	
+	<select id="selectPeriod" resultType="int">
+		select vacation_period from members where id = #{id}
+	</select>
 
 </mapper>
 
