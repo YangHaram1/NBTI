@@ -33,8 +33,15 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
       formData.append("files", files[index]);
     }
     console.log("upload")
-    axios.post(`${host}/chat_upload?group_seq=${chatSeq}`, formData).then(response => { //
-      console.log('Post successful:', response.data);
+    axios.post(`${host}/chat_upload?group_seq=${chatSeq}`, formData).then(resp => { //파일 로직 처리
+      const array=resp.data;
+      for (let index = 0; index < array.length; index++) {
+        const jsonString = JSON.stringify(array[index]);
+        ws.current.send(jsonString);    
+        //console.log(array[index]);
+      }
+     
+     
     }).catch(error => {
       console.error('There was an error posting the data!', error);
     });

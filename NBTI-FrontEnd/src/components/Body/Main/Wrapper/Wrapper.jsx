@@ -1,3 +1,4 @@
+import { MainCalendar } from './Calendar/MainCalendar';
 import { FreeBoard } from "./FreeBoard/FreeBoard";
 import { NoticeBoard } from "./NoticeBoard/NoticeBoard";
 import styles from "./Wrapper.module.css";
@@ -23,7 +24,7 @@ export const Wrapper = () => {
       <div className={styles.side}>
         <div className={styles.work_time}>근무체크</div>
         <div className={styles.approval}>전자결재</div>
-        <div className={styles.calendar}>캘린더</div>
+        <div className={styles.calendar}><MainCalendar/></div>
       </div>
       <div className={styles.board}>
         <div className={styles.notice_board}><NoticeBoard /></div>

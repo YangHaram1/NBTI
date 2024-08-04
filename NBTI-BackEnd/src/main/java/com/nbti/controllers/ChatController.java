@@ -56,9 +56,9 @@ public class ChatController {
 		return ResponseEntity.ok(list);
 	}
 
-	@GetMapping("/unread")
+	@GetMapping("/unread") //채팅메세지 안읽은 갯수
 	public ResponseEntity<Integer> getUnreadTotal() throws Exception{
-		System.out.println("unread");
+		//System.out.println("unread");
 		int result=0;
 		List<Group_memberDTO> mlist= new ArrayList<>();
 		String loginID= (String) session.getAttribute("loginID");

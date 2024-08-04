@@ -50,6 +50,11 @@ export const Side = () => {
                 사용자 조회
             </li>
         </ul>
+        <ul>
+            <li onClick={() => { navi("/useradmin/security") }}>
+                보안
+            </li>
+        </ul>
       </div>
     </div>
   );

@@ -6,7 +6,7 @@
 <mapper namespace="Chat">
 	<insert id="insert">
 		insert into chat
-		values(chat_seq.nextval,#{member_id},#{message},sysdate,${group_seq})
+		values(chat_seq.nextval,#{member_id},#{message},sysdate,${group_seq},#{upload_seq})
 		<selectKey resultType="int" order="AFTER" keyProperty="seq">
 			select chat_seq.currval from dual
 		</selectKey>

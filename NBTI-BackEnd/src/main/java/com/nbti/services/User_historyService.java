@@ -1,5 +1,7 @@
 package com.nbti.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,5 +16,9 @@ public class User_historyService {
 	
 	public void insert(User_historyDTO dto) throws Exception{
 		dao.insert(dto);
+	}
+	
+	public List<User_historyDTO> list() throws Exception{
+		return dao.list();
 	}
 }

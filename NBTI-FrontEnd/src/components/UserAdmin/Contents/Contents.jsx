@@ -4,6 +4,7 @@ import Signup from './Signup/Signup';
 import UserList from './UserList/UserList';
 import UserDetail from './UserDetail/UserDetail';
 import { useState } from 'react';
+import Security from '../../Security/Security';
 
 export const Contents = () => {
   const [userDetail,setUserDetail] =useState();
@@ -14,6 +15,7 @@ export const Contents = () => {
                 <Route path='signup' element={<Signup />} />
                 <Route path='userlist' element={<UserList setUserDetail={setUserDetail} />} />
                 <Route path='userdetail/:id' element={<UserDetail/>} /> 
+                <Route path='security' element={<Security/>}/>
       </Routes>
     </div>
   );
