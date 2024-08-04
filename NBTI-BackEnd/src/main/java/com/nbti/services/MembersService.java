@@ -82,6 +82,10 @@ public class MembersService {
 		return mdao.memberData(id);
 	}
 	
+	
+	public int selectPeriod(String id) {
+		return mdao.selectPeriod(id);
+	}
 
 	
 	
