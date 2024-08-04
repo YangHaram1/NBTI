@@ -116,13 +116,22 @@
 }
 
 .innertext{
-    text-indent: 40px;
+    text-indent: 20px;
     border: 1px solid black;
     width: 96%;
     margin-left: 20px;
     height: 200px;
     background-color: #CCE3DE;
+    margin-top: 20px;
+    font-size: 15px;
+}
 
+.innertext p{
+    margin-top: 10px;
+}
+
+.empty{
+    margin-top: 0px;
 }
 
 .subtitle_content{
@@ -142,4 +151,17 @@
     padding-top: 0px;
 }
 
+.half_check{
+    margin-left: 20px;
+}
+
 .top{margin-top: 15px;}
+
+.vacation_day{
+    text-indent: 5px;
+}    
+
+.vacation_day_b{
+    text-indent: 5px;
+    font-weight: 700;
+}

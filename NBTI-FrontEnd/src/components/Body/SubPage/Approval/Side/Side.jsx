@@ -5,7 +5,7 @@ import Modal from "../Content/Modal/Modal";
 import SecondModal from "../Content/SecondModal/SecondModal";
 import DocTree from "../Content/Modal/DocTree/DocTree";
 import { FormDetail } from "../Content/FormDetail/FormDetial";
-import { useDocFormStore } from "../../../../../store/store";
+import { useApprovalLine, useDocFormStore, useReferLine } from "../../../../../store/store";
 
 export const Side = () => {
   // ===== 메뉴 토글 =====
@@ -16,6 +16,9 @@ export const Side = () => {
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false); // 두 번째 모달 상태
 
   const {docForm, setDocForm} = useDocFormStore();
+
+  const {resetReferLine} = useReferLine();
+  const {approvalLine, resetApprovalLine } = useApprovalLine();
 
   const toggleFreeBoard = () => {
     setFreeBoard(!FreeBoard);
@@ -45,10 +48,21 @@ export const Side = () => {
   };
 
   const handlePopupForm = () => {
-
-    setDocForm({name:"", id:"", period:""});
-    console.log(docForm.name);
-    setIsModalOpen(true); // 첫 번째 모달 열기
+    console.log(approvalLine.length);
+    // 결재 라인 1번에 이름이 없을 시 => 작서
+    if(approvalLine.length > 1){
+      // 알림창 이쁘게 바꾸기
+      const result = window.confirm("글 내용이 삭제됩니다.");
+      if(result){
+        resetApprovalLine();
+        resetReferLine();
+        setDocForm({name:"", id:"", period:""});
+        console.log(docForm.name);
+        setIsModalOpen(true); // 첫 번째 모달 열기
+      }
+    }else{
+      setIsModalOpen(true);
+    }
   };
 
   const closeFirstModal = () => {

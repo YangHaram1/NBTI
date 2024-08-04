@@ -1,20 +1,19 @@
 package com.nbti.dao;
 
 import org.apache.ibatis.session.SqlSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.nbti.dto.DocDraftDTO;
+import com.nbti.dto.DocLeaveDTO;
 
 @Repository
-public class DocDraftDAO {
+public class DocLeaveDAO {
 	
 	@Autowired
 	private SqlSession mybatis;
 	
-	public void insert(DocDraftDTO dddto) {
-		mybatis.insert("DocDraft.insert", dddto);
+	public void insert(DocLeaveDTO dldto) {
+		mybatis.insert("DocLeave.insert", dldto);
 	}
 
 }

@@ -68,6 +68,7 @@ export const useDocFormStore = create((set) => {
     }
 });
 
+// 결재라인
 export const useApprovalLine = create((set) => {
     return {
         approvalLine: [{}],
@@ -84,10 +85,11 @@ export const useApprovalLine = create((set) => {
             console.log("저장소", newApprovalLine);
             return { approvalLine: newApprovalLine };
         }),
-        resetApprovalLine: () => set({ approvalLine: [{}] })
+        resetApprovalLine: () => set({ approvalLine: [] })
     }
 });
 
+// 참조라인
 export const useReferLine = create((set) => {
     return {
         referLine: [{}],
@@ -107,6 +109,26 @@ export const useReferLine = create((set) => {
             console.log("저장소", newReferLine);
             return { referLine: newReferLine };
         }),
-        resetReferLine: () => set({ referLine: [{}] })
+        resetReferLine: () => set({ referLine: [] })
+    }
+});
+
+// 휴가 신청서
+export const useDocVacation = create((set)=>{
+    return{
+        docVacation:{category:'', start:'', halfStart:'', halfStartAP:'' ,end:'',halfEnd:'', halfEndAP:'' },
+        setDocVacation:(vacation)=>set(()=>({
+            docVacation: vacation
+        }))
+    }
+});
+
+// 휴직 신청서
+export const useDocLeave = create((set)=>{
+    return{
+        docLeave:{start:null, end:null, reason:'', address:'', phone:''},
+        setDocLeave:(leave)=>set(()=>({
+            docLeave: leave
+        }))
     }
 });
