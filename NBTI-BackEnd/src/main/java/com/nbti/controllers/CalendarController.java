@@ -18,6 +18,8 @@ import com.nbti.dto.CalendarDTO;
 import com.nbti.services.CalendarService;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/calendar")
@@ -31,7 +33,8 @@ public class CalendarController {
     // 입력
     @PostMapping
     public ResponseEntity<Void> insert(@RequestBody CalendarDTO dto) throws Exception{
-        //System.out.println(dto.getSeq() + " seq");
+        System.out.println(dto.getCalendar_title_code() + " getCalendar_title_code");
+        System.out.println(dto.getContents() + " getContents");
         dto.setMember_id((String) session.getAttribute("loginID"));
         cserv.insert(dto);
         return ResponseEntity.ok().build();
@@ -57,27 +60,7 @@ public class CalendarController {
     	cserv.delete(seq);
     	return ResponseEntity.ok().build();
     }
-    
-    
-//    @GetMapping("/title")
-//    public ResponseEntity<List<ScheduleTitleDTO>> scheduleName() throws Exception{
-//    	return ResponseEntity.ok(cserv.scheduleName());
-//    }
-    
-    // 내 캘린더 제목 변경
-//    @PutMapping("/title")
-//    public ResponseEntity<Void> editTitle(@RequestBody CalendarDTO dto) throws Exception {
-//        dto.setMember_id((String) session.getAttribute("loginID")); 
-//        cserv.editTitle(dto); 
-//        return ResponseEntity.ok().build();
-//    }
-    
-    
-  
-    
-    
-    
-    
+
     
 	@ExceptionHandler(Exception.class)
 	public String exceptionHandler(Exception e) {

@@ -1,6 +1,5 @@
 package com.nbti.services;
 
-import java.io.Console;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,20 +34,5 @@ public class CalendarService {
     public void delete (int seq) {
     	cdao.delete(seq);
     }
-    
-//    //내 캘린더의 이름 (공유/개인)
-//    public List<ScheduleTitleDTO> scheduleName() throws Exception{
-//    	return cdao.scheduleName();
-//    }
-//	// 캘린더 제목 수정
-//  public void editTitle(CalendarDTO dto)  throws Exception {
-//      cdao.editTitle(dto); 
-//  }
-//
-//  // 캘린더 제목 업데이트 (Optional)
-//  public void updateCalendarTitle(CalendarDTO dto)  throws Exception {
-//      cdao.updateCalendarTitle(dto); 
-//  }
-
 
 }

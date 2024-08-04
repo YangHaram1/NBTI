@@ -1,35 +1,24 @@
 import { useState, useEffect } from "react";
 import styles from "./Side.module.css";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { host } from "../../../../../config/config";
 import { useCalendarList } from "../../../../../store/store";
 import FullCalendar from '@fullcalendar/react'; // FullCalendar 컴포넌트
 import dayGridPlugin from '@fullcalendar/daygrid'; // 월 보기 플러그인
 import { default as koLocale } from '@fullcalendar/core/locales/ko'; // 한국어 로케일
 
+
 export const Side = ({ setAddOpen , setCalendarModalOpen }) => {
 
-  const handleCalendarAddClick = () => {
-    console.log("캘린더 추가 버튼 클릭됨");
-    setCalendarModalOpen(true); // 모달 열기
-};
-  
-const { selectedItem, setSelectedItem  } = useCalendarList();
-
-  // ===== 메뉴 토글 =====
+  // === 공통 메뉴 토글 ===
   const [FreeBoard, setFreeBoard] = useState(false);
   const [NoticeBoard, setNoticeBoard] = useState(false);
-
   const toggleFreeBoard = () => {
     setFreeBoard(!FreeBoard);
   };
-
   const toggleNoticeBoard = () => {
     setNoticeBoard(!NoticeBoard);
   };
 
-  // ===== 아이콘 =====
+  // === 아이콘 ===
   useEffect(() => {
     // 외부 스타일시트를 동적으로 추가
     const link = document.createElement("link");
@@ -43,17 +32,13 @@ const { selectedItem, setSelectedItem  } = useCalendarList();
       document.head.removeChild(link);
     };
   }, []);
-
   const preventPropagation = (e) => {
     e.stopPropagation();
   };
 
-  const navi = useNavigate();
-
-  // ==== 모달창/ ====
+  // === 모달창 ===
   // const [modalOpen, setModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
-
   //모달창 열기
   const handleDateClick = (arg) => {
       setSelectedDate(arg.dateStr);
@@ -64,28 +49,33 @@ const { selectedItem, setSelectedItem  } = useCalendarList();
     setAddOpen(false);
       setSelectedDate(null);
   };
-  // === /모달창 ===
-
-  const fetchCalendarList = () => {
-    axios.get(`${host}/calendarList`)
-        .then((resp) => {
-            console.log(JSON.stringify(resp.data) + " List 가져오기");
-            setCalendarList(resp.data); // 응답 데이터를 상태에 저장
-            setSelectedItem(resp.data);
-        })
-        .catch((error) => {
-            console.error("Error", error);
-        });
-};
-
-    const [calendarList, setCalendarList] = useState([]); // 캘린더 목록 상태
-    useEffect(() => {
-      // 목록 가져오기
-      
-      fetchCalendarList(); // 데이터 가져오기 함수 호출
-  }, []); // 빈 배열을 주면 컴포넌트가 처음 마운트될 때만 실행
 
 
+  // store
+  const { selectedItem, setSelectedItem , calendarList, setCalendarList , setCalendarSelectList } = useCalendarList();
+  
+  // 공유 일정 [+]
+    const handleCalendarAddClick = () => {
+      setCalendarModalOpen(true); // 모달 열기
+  };
+
+  //전체 캘린더
+  const fullCalendar = ()=>{
+    setCalendarSelectList(calendarList)
+    // console.log("calendarList: "+ JSON.stringify(calendarList));
+  }
+  
+  //내 캘린더
+  const myCalender = ()=>{
+      setCalendarSelectList(calendarList.filter((item)=>{
+        return item.title === 1
+      }))
+
+      // const arr = calendarList.filter((item)=>{
+      //   return item.title === 1
+      // })
+      // console.log("arr:"+JSON.stringify(arr));
+  }
 
   return (
     <div className={styles.container}>
@@ -96,6 +86,7 @@ const { selectedItem, setSelectedItem  } = useCalendarList();
         </button>
       </div>
       <div className={styles.mini}>
+        {/* 미니 주간 캘린더 */}
         <FullCalendar
           plugins={[dayGridPlugin]}
           initialView="dayGridWeek"
@@ -107,21 +98,37 @@ const { selectedItem, setSelectedItem  } = useCalendarList();
           color="#FFCC00"
         />
       </div>
-
+      {/* 사이드 메뉴 */}
       <div className={styles.menus}>
         <ul>
           <li onClick={toggleFreeBoard}>
-            <i className="fa-solid fa-user-large"></i>내 캘린더 <i className="fa-solid fa-plus" id={styles.plus} onClick={handleCalendarAddClick}/>
+            <i className="fa-solid fa-user-large"></i>캘린더
             <ul
               className={`${styles.submenu} ${FreeBoard ? styles.open : ""}`}
               onClick={preventPropagation}
             >
-               {/* <li>
+              <li onClick={fullCalendar}>
                 <span>
                   <i className="fa-solid fa-star fa-sm"></i>
                 </span>
-                <span>내 프로젝트</span>
-              </li> */}
+                <span>전체 캘린더</span>
+              </li>
+              <li onClick={myCalender}>
+                <span>
+                  <i className="fa-solid fa-star fa-sm"></i>
+                </span>
+                <span>내 캘린더</span>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <ul>
+          <li onClick={toggleNoticeBoard}>
+            <i className="fa-solid fa-people-group"></i>공유 일정 <i className="fa-solid fa-plus" id={styles.plus} onClick={handleCalendarAddClick}/>
+            <ul
+              className={`${styles.submenu} ${NoticeBoard ? styles.open : ""}`}
+              onClick={preventPropagation}
+            >
               {selectedItem.map((item) => ( 
             <li key={item.seq}> {/* seq는 고유 식별자로 사용 */}
               <span>
@@ -133,26 +140,7 @@ const { selectedItem, setSelectedItem  } = useCalendarList();
             </ul>
           </li>
         </ul>
-        <ul>
-          <li onClick={toggleNoticeBoard}>
-            <i className="fa-solid fa-people-group"></i>공유 일정
-            <ul
-              className={`${styles.submenu} ${NoticeBoard ? styles.open : ""}`}
-              onClick={preventPropagation}
-            >
-              <li>
-                <span>
-                  <i className="fa-solid fa-star fa-sm"></i>
-                </span>
-                <span>공유 프로젝트</span>
-              </li>
-
-
-            </ul>
-          </li>
-        </ul>
       </div>     
-   
     </div>
   );
 };
