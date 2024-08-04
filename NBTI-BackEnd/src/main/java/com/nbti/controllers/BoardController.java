@@ -107,21 +107,25 @@ public class BoardController {
 	}
 	
 	// 페이지네이션
-	@GetMapping("/getList")
-	public ResponseEntity<List<BoardDTO>> getList(@RequestBody Map<String, Integer> request){
-		
-		int cpage = request.get("cpage");
-		int recordsPerPage = request.get("recordsPerPage");
-		
-		HashMap<String, Integer> map = new HashMap<>();
-		map.put("cpage", cpage);
-		map.put("recordsPerPage", recordsPerPage);
-		
-		List<BoardDTO> list = bserv.getList(map);
-		
-		return ResponseEntity.ok(list);
-	}
-	
+//	@GetMapping("/getList")
+//	public ResponseEntity<List<BoardDTO>> getList(@RequestBody Map<String, Integer> request){
+//		
+//		
+//		
+//		
+//		
+//		int cpage = request.get("cpage");
+//		int recordsPerPage = request.get("recordsPerPage");
+//		
+//		HashMap<String, Integer> map = new HashMap<>();
+//		map.put("cpage", cpage);
+//		map.put("recordsPerPage", recordsPerPage);
+//		
+//		List<BoardDTO> list = bserv.getList(map);
+//		
+//		return ResponseEntity.ok(list);
+//	}
+//	
 
 	//============================[ 메 인 ]=============================
 	// 공지 게시판 출력

@@ -47,9 +47,9 @@ public class BoardDAO {
 	}
 	
 	// 페이지네이션
-	public List<BoardDTO> getList(){
-		return mybatis.selectList("Board.getList");
-	}
+//	public List<BoardDTO> getList(){
+//		return mybatis.selectList("Board.getList");
+//	}
 	
 	
 	

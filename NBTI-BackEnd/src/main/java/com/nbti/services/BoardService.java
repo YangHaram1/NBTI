@@ -57,11 +57,11 @@ public class BoardService {
 	}
 	
 	// 페이지네이션
-	public List<BoardDTO> getList(){
-		return bdao.getList();
-	}
-	
-	
+//	public List<BoardDTO> getList(){
+//		return bdao.getList();
+//	}
+//	
+//	
 	
 	
 	
