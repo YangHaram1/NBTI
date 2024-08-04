@@ -134,7 +134,7 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
 
       />
       <div className={styles.hidden}>
-        <input type="file" className={styles.upload} name='file' ref={inputRef} onChange={handleOnchange} />
+        <input type="file" className={styles.upload} name='files' ref={inputRef} onChange={handleOnchange} multiple />
       </div>
 
 
