@@ -46,6 +46,14 @@ public class BoardDAO {
 		mybatis.update("Board.updateViewCount", map);
 	}
 	
+	// 페이지네이션
+//	public List<BoardDTO> getList(){
+//		return mybatis.selectList("Board.getList");
+//	}
+	
+	
+	
+	
 	//============================[ 메 인 ]=============================
 	// 공지 게시판 출력
 	public List<BoardDTO> selectNotice() {

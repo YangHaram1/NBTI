@@ -5,6 +5,7 @@ import axios from "axios";
 import { format } from "date-fns";
 import { useBoardStore } from "../../../../../../store/store";
 import { host } from "../../../../../../config/config";
+import ReactPaginate from "react-paginate";
 
 export const List = () => {
     const navi = useNavigate();
@@ -50,7 +51,26 @@ export const List = () => {
     };
 
     // 페이지네이션
-    useEffect(() => { }, []);
+    // const [items, setItems] = useState([]);
+    // const [cpage, setCpage] = useState(1); // 현재 페이지
+    // const [recordsPerPage, setRecordsPerPage] = useState(15); // 한 페이지당 보여줄 게시글 개수
+
+
+    // const handlePageClick = (data) => {
+    //     setCpage(data.selected + 1); // 현재 페이지
+    // }
+
+
+    // useEffect(() => {
+    //     const params = { cpage: cpage, recordsPerPage: recordsPerPage };
+    //     axios.get(`${host}/board/getList`, { params }).then((resp) => {
+    //         console.log("뭐야 이거? : ", resp.data);
+    //         // setItems(resp.data);
+    //     })
+
+
+    // }, [cpage]);
+
 
     return (
         <div className={styles.container}>
@@ -118,7 +138,26 @@ export const List = () => {
                 })}
             </div>
             <div className={styles.pagination}>
-                <a href=""> 1 2 3 4 5 6 7 </a>
+                {/* <a href=""> 1 2 3 4 5 6 7 </a> */}
+                <ReactPaginate
+                    previousLabel={'<<'}
+                    nextLabel={">>"}
+                    breakLabel={'...'}
+                    pageCount={15}
+                    marginPagesDisplayed={3}
+                    pageRangeDisplayed={4}
+                    // onPageChange={handlePageClick}
+                    containerClassName={'pagination justify-Content-center'}
+                    pageClassName={'page-item'}
+                    pageLinkClassName={'page-link'}
+                    previousClassName={'page-item'}
+                    previousLinkClassName={'page-link'}
+                    nextClassName={'page-item'}
+                    nextLinkClassName={'page-link'}
+                    breakClassName={'page-item'}
+                    breakLinkClassName={'page-link'}
+                    activeClassName={'active'}
+                />
             </div>
         </div>
     );
