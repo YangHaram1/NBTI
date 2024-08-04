@@ -20,22 +20,17 @@ export const FreeBoard = () => {
     const [transform, setTransform] = useState(false);
 
 
-    const getList = () => {
+    useEffect(() => {
         // 자유 게시판 글 & 댓글 출력
         axios.get(`${host}/board/freeBoard`).then((resp) => {
             setBoard(resp.data.list);
             setReply(resp.data.rlist);
-        })
+        });
 
         // 로그인 한 사용자 정보
         axios.get(`${host}/members`).then((resp) => {
             setCurrentUser(resp.data);
         });
-    }
-
-    // 변화 감지 후 re-rendering 용도
-    useEffect(() => {
-        getList();
     }, [transform]);
 
     // 댓글 입력 감지
@@ -74,8 +69,6 @@ export const FreeBoard = () => {
             });
         });
     };
-
-
 
     return (
         <div className={styles.container}>
