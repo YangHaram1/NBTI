@@ -12,7 +12,7 @@ public class Chat_uploadDAO {
 	private SqlSession mybatis;
 	
 	public int insert(Chat_uploadDTO dto) throws Exception{
-		return mybatis.update("Chat_upload.insert",dto);
+		return mybatis.insert("Chat_upload.insert",dto);
 	}
 	
 }
