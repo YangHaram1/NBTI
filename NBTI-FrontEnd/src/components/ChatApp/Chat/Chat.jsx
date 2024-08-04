@@ -289,7 +289,15 @@ const Chat = () => {
         if(item.upload_seq!==0){
           const split=item.message.split(' ');
           fileCheck=true;
-          file=`<a href=${host}/files/downloadChat?oriname=${split[0]}&&sysname=${split[1]} download=${split[0]}><p>${split[0]}</p></a>`;          
+          if(split[2]==='2'){
+            file=`<a href=${host}/files/downloadChat?oriname=${split[0]}&&sysname=${split[1]} download=${split[0]}><p>${split[0]}</p></a>`; 
+          }
+          else if(split[2]==='1'){
+            file=`<a href=${host}/files/downloadChat?oriname=${split[0]}&&sysname=${split[1]} download=${split[0]}>
+            <p><img src=${host}/images/chat/${split[1]} alt=downloadImage></img></p>
+            </a>`; 
+          }        
+         
         }
         //--------------------------------------------------//
         return (

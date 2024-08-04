@@ -73,7 +73,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 			String jsonString=message.getPayload();
 			Type mapType = new TypeToken<Map<String, String>>() {}.getType();
 			Map<String, String> map = gson.fromJson(jsonString, mapType);
-			String fileMessage=map.get("oriname")+" "+map.get("sysname");
+			String fileMessage=map.get("oriname")+" "+map.get("sysname")+" "+map.get("code");
 			ChatDTO dto = new ChatDTO(0, sender,fileMessage, null, group_seq,Integer.parseInt(map.get("upload_seq")));
 			dto = chatService.insert(dto);
 			String json = gson.toJson(dto);
