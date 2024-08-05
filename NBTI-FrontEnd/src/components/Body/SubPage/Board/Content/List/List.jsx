@@ -13,9 +13,13 @@ export const List = () => {
     const { boardType, setBoardSeq } = useBoardStore();
     const [target, setTarget] = useState('');  // target 초기 값을 빈 문자열로 설정
     const [keyword, setKeyword] = useState('');     // keyword 초기 값
-    const [start, setStart] = useState(0); // 페이지네이션 시작 인덱스
-    const [end, setEnd] = useState(100); // 페이지네이션 종료 인덱스
     const [search, setSearch] = useState(false);
+
+    // 페이지네이션
+    const navi_count_per_page = 5;
+    const recordCountPerPage = 10; // 한페이지에 나오는 게시글 수
+    const [pageTotalCount, setPageTotalCount] = useState();
+    const [cpage, setCpage] = useState(1); // 현재 페이지
 
 
     // 1 : 자유 2: 공지
@@ -25,21 +29,42 @@ export const List = () => {
 
 
     // 게시판 목록 출력 
-    const params = { code: code, target: target, keyword: keyword, start: start, end: end };
     useEffect(() => {
+
+        const start = cpage * recordCountPerPage - (recordCountPerPage - 1); // 1
+        const end = cpage * recordCountPerPage; // 10
+        const params = { code: code, target: target, keyword: keyword, start: start, end: end };
+
         axios.get(`${host}/board/list`, { params }).then((resp) => {
-            setBoardList(resp.data);
+
+            setBoardList(resp.data.list); // 서버에서 list와 count 보낸 것 중 list만 담기
+
+            // 페이지네이션
+            const recordTotalCount = resp.data.count;
+            if (recordTotalCount % recordCountPerPage === 0) {
+                setPageTotalCount(Math.floor(recordTotalCount / recordCountPerPage));
+
+                console.log("if: ", Math.floor(recordTotalCount / recordCountPerPage));
+            }
+            else {
+                setPageTotalCount(Math.floor(recordTotalCount / recordCountPerPage) + 1);
+                console.log("else : ", Math.floor(recordTotalCount / recordCountPerPage) + 1)
+            }
         });
-    }, [boardType, search]);
+    }, [boardType, search, cpage]);
+
+    // 페이지네이션
+    const handlePageClick = (data) => {
+        setCpage(data.selected + 1); // 현재 페이지
+    }
+
 
     // 검색 버튼 클릭 핸들러
     const handleSearch = () => {
         setSearch((prev) => {
             return !prev;
         })
-        // setKeyword('');
     };
-
 
     // 조회수 증가 및 상세 페이지로 이동 
     const handleTitleClick = (seq) => {
@@ -49,27 +74,6 @@ export const List = () => {
             navi("/board/detail");
         });
     };
-
-    // 페이지네이션
-    // const [items, setItems] = useState([]);
-    // const [cpage, setCpage] = useState(1); // 현재 페이지
-    // const [recordsPerPage, setRecordsPerPage] = useState(15); // 한 페이지당 보여줄 게시글 개수
-
-
-    // const handlePageClick = (data) => {
-    //     setCpage(data.selected + 1); // 현재 페이지
-    // }
-
-
-    // useEffect(() => {
-    //     const params = { cpage: cpage, recordsPerPage: recordsPerPage };
-    //     axios.get(`${host}/board/getList`, { params }).then((resp) => {
-    //         console.log("뭐야 이거? : ", resp.data);
-    //         // setItems(resp.data);
-    //     })
-
-
-    // }, [cpage]);
 
 
     return (
@@ -138,25 +142,31 @@ export const List = () => {
                 })}
             </div>
             <div className={styles.pagination}>
-                {/* <a href=""> 1 2 3 4 5 6 7 </a> */}
                 <ReactPaginate
+                    containerClassName={styles.pagination}
+
                     previousLabel={'<<'}
-                    nextLabel={">>"}
-                    breakLabel={'...'}
-                    pageCount={15}
-                    marginPagesDisplayed={3}
-                    pageRangeDisplayed={4}
-                    // onPageChange={handlePageClick}
-                    containerClassName={'pagination justify-Content-center'}
-                    pageClassName={'page-item'}
-                    pageLinkClassName={'page-link'}
-                    previousClassName={'page-item'}
+                    previousClassName={styles.previous}
                     previousLinkClassName={'page-link'}
-                    nextClassName={'page-item'}
+
+                    nextLabel={">>"}
+                    nextClassName={styles.next}
                     nextLinkClassName={'page-link'}
+
+                    breakLabel={'...'}
                     breakClassName={'page-item'}
                     breakLinkClassName={'page-link'}
-                    activeClassName={'active'}
+
+                    pageCount={pageTotalCount}
+                    marginPagesDisplayed={1}
+                    pageRangeDisplayed={navi_count_per_page}
+
+                    pageClassName={'page-item'}
+                    pageLinkClassName={'page-link'}
+
+
+                    activeClassName={styles.active}
+                    onPageChange={handlePageClick}
                 />
             </div>
         </div>
