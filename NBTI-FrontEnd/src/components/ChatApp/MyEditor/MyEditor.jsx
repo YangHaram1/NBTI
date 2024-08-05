@@ -37,8 +37,8 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
       const array=resp.data;
       for (let index = 0; index < array.length; index++) {
         const jsonString = JSON.stringify(array[index]);
-        ws.current.send(jsonString);    
-        //console.log(array[index]);
+        ws.current.send(jsonString);  
+        inputRef.current.value='';  
       }
      
      
