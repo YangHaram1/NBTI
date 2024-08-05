@@ -6,49 +6,63 @@ import { format } from 'date-fns';
 import ReactPaginate from 'react-paginate';
 const Security = () => {
     const [history, setHistory] = useState([]);
-    const [cpage,setCpage]=useState(1);
-    const [page_total_count,setPage_total_count] =useState();
-    const [target,setTarget] =useState('');
-    const [keyword,setKeyword]=useState('');
-    const record_count_per_page=25;
-    const navi_count_per_page=5;
- 
+    const [cpage, setCpage] = useState(1);
+    const [page_total_count, setPage_total_count] = useState();
+    const [target, setTarget] = useState('');
+    const [keyword, setKeyword] = useState('');
+    const [search,setSearch] =useState('');
+    const record_count_per_page = 25;
+    const navi_count_per_page = 5;
+
 
     useEffect(() => {
-        const start=cpage*record_count_per_page -(record_count_per_page-1); //1
-        const end=cpage*record_count_per_page; //10
+        const start = cpage * record_count_per_page - (record_count_per_page - 1); //1
+        const end = cpage * record_count_per_page; //10
         axios.get(`${host}/user_history?start=${start}&&end=${end}&&target=${target}&&keyword=${keyword}`).then((resp) => {
             console.log(resp.data)
-            setHistory((prev)=>{
-                const record_total_count=resp.data.count;
-                if(record_total_count%record_count_per_page===0){
-                    setPage_total_count(Math.floor(record_total_count/record_count_per_page));
+            setHistory((prev) => {
+                const record_total_count = resp.data.count;
+                if (record_total_count % record_count_per_page === 0) {
+                    setPage_total_count(Math.floor(record_total_count / record_count_per_page));
                 }
-                else{
-                    setPage_total_count(Math.floor(record_total_count/record_count_per_page)+1);
+                else {
+                    setPage_total_count(Math.floor(record_total_count / record_count_per_page) + 1);
                 }
                 return resp.data.list;
             });
         })
     }, [cpage])
 
-    const handlePage=(selectedPage)=>{
-        setCpage(selectedPage.selected+1);
+    const handlePage = (selectedPage) => {
+        setCpage(selectedPage.selected + 1);
     }
 
-    const pageSetting=useCallback(()=>{
-       
-    },[history])
+    const pageSetting = useCallback(() => {
 
-    useEffect(()=>{
-        if(history.length>0){
+    }, [history])
+
+    useEffect(() => {
+        if (history.length > 0) {
             pageSetting();
         }
-    },[pageSetting])
+    }, [pageSetting])
+
+    const handleSearch=()=>{
+
+    }
 
 
     return (
         <div className={styles.container}>
+            <div className={styles.search}>
+                <select value={target} onChange={(e) => setTarget(e.target.value)}>
+                    <option value="">전체</option>
+                    <option value="id">ID</option>
+                    <option value="ip">IP</option>
+                </select>
+                <input type="text" value={keyword} onChange={(e) => setKeyword(e.target.value)} />
+                <button onClick={handleSearch}>검색</button>
+            </div>
             <div className={styles.header}>
                 <div>
                     Seq
@@ -70,7 +84,7 @@ const Security = () => {
                 {
                     history.map((item, index) => {
                         const currentDate = format(new Date(item.join_date), 'yyyy-MM-dd HH:mm:ss');
-                        const date=currentDate.split(" ");
+                        const date = currentDate.split(" ");
                         return (
                             <div className={styles.item} key={index}>
                                 <div>
