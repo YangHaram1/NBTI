@@ -3,30 +3,71 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace="Attendance">
-<insert id="insert" parameterType="com.nbti.dto.AttendanceDTO">
+
+<mapper namespace="Attendance">
+
+    <!-- Insert Attendance Record -->
+    <insert id="insert" parameterType="com.nbti.dto.AttendanceDTO">
         <selectKey keyProperty="seq" resultType="int" order="BEFORE">
-            SELECT attendance_seq.NEXTVAL
-            FROM dual
+            SELECT attendance_seq.NEXTVAL FROM dual
         </selectKey>
         INSERT INTO attendance (seq, member_id, today, start_date, end_date)
         VALUES (#{seq}, #{member_id}, SYSDATE, SYSDATE, NULL)
     </insert>
+
+    <!-- Update Clock Out Time -->
     <update id="updateClockOut" parameterType="map">
         UPDATE attendance
         SET end_date = #{end_date}
         WHERE seq = #{seq}
     </update>
+
+    <!-- Get Current Status -->
     <select id="getCurrentStatus" parameterType="string" resultType="com.nbti.dto.AttendanceDTO">
         SELECT * 
         FROM (
             SELECT * 
             FROM attendance
-            WHERE member_id = #{member_id} 
+            WHERE member_id = #{memberId}
             AND trunc(start_date) = trunc(sysdate)
             ORDER BY start_date DESC
         )
         WHERE ROWNUM = 1
     </select>
-    
-  </mapper>
+
+    <!-- Get Weekly Records -->
+    <select id="getWeeklyRecords" parameterType="string" resultType="com.nbti.dto.AttendanceDTO">
+        SELECT * 
+        FROM attendance
+        WHERE member_id = #{memberId}
+        AND trunc(start_date) >= trunc(sysdate) - 7
+        ORDER BY start_date DESC
+    </select>
+
+       <!-- Get Weekly Stats -->
+    <select id="getWeeklyStats" parameterType="string" resultType="map">
+        SELECT
+            COUNT(CASE 
+                WHEN trunc(start_date) >= trunc(sysdate) - 7 
+                AND start_date > trunc(start_date) + interval '09:00' hour to minute 
+                THEN 1 
+                ELSE NULL 
+            END) AS lateCount,
+            COUNT(CASE 
+                WHEN trunc(start_date) >= trunc(sysdate) - 7 
+                AND end_date IS NULL 
+                AND trunc(start_date) = trunc(sysdate) 
+                THEN 1 
+                ELSE NULL 
+            END) AS absentCount,
+            COUNT(CASE 
+                WHEN trunc(start_date) >= trunc(sysdate) - 7 
+                AND end_date IS NOT NULL 
+                AND end_date  &lt; trunc(start_date) + interval '18:00' hour to minute 
+                THEN 1 
+                ELSE NULL 
+            END) AS earlyLeaveCount
+        FROM attendance
+        WHERE member_id = #{memberId}
+    </select>
+</mapper>

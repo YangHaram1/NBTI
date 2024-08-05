@@ -2,6 +2,7 @@ package com.nbti.dao;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -24,17 +25,15 @@ public class AttendanceDAO {
     public void updateClockOut(int seq, Timestamp endDate) {
         Map<String, Object> params = new HashMap<>();
         params.put("seq", seq);
-        params.put("end_date", endDate); // Map의 키가 매퍼의 파라미터 이름과 일치해야 함
+        params.put("end_date", endDate);
         mybatis.update("Attendance.updateClockOut", params);
-    }
-
-    public void markAsAbsent(int seq) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("seq", seq);
-        mybatis.update("Attendance.markAsAbsent", params);
     }
 
     public AttendanceDTO getCurrentStatus(String memberId) {
         return mybatis.selectOne("Attendance.getCurrentStatus", memberId);
+    }
+
+    public List<AttendanceDTO> getWeeklyRecords(String memberId) {
+        return mybatis.selectList("Attendance.getWeeklyRecords", memberId);
     }
 }
