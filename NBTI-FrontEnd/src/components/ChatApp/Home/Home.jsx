@@ -7,6 +7,7 @@ import avatar from '../../../images/user.jpg';
 import axios from 'axios';
 import { useAuthStore } from '../../../store/store';
 import { ChatsContext } from './../../../Context/ChatsContext';
+import Setting from './Setting/Setting';
 axios.defaults.withCredentials = true;
 
 const Home = () => {
@@ -16,6 +17,7 @@ const Home = () => {
     const [name, setName] = useState();
     const { loginID, setLoginID } = useAuthStore();
     const { setChatNavi, chatNaviBody, setChatNaviBody, chatNavi } = useContext(ChatsContext);
+    const [settiing,setSetting]=useState(false);
     const handleMemberList = (e) => {
         setColor((prev) => {
             return { member: true, chat: false, file: false };
@@ -41,6 +43,11 @@ const Home = () => {
     const handleCancel = () => {
         setChatNavi('');
     }
+    const handleSetting=()=>{
+        setSetting((prev)=>{
+            return !prev;
+        })
+    }
     // if(chatNavi==='home')
     return (
         <div className={styles.container}>
@@ -57,7 +64,8 @@ const Home = () => {
                     </div>
                 </div>
                 <div className={styles.div1_3}>
-                    <button className={styles.button}><i class="fa-solid fa-gear fa-xl"></i></button>
+                    {settiing&&(<Setting setSetting={setSetting}/>)}
+                    <button className={styles.button} onClick={handleSetting}><i class="fa-solid fa-gear fa-xl"></i></button>
                     <button className={styles.button} onClick={handleCancel}>❌</button>
                 </div>
             </div>
