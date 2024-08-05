@@ -1,9 +1,13 @@
 package com.nbti.services;
 
 import java.sql.Timestamp;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,16 +52,12 @@ public class AttendanceService {
 
             // Check for early leave
             if (endDateTime.toLocalTime().isBefore(LocalTime.of(18, 0))) {
-                // Handle early leave logic here (e.g., log it, notify, etc.)
-                // You can add additional logic if needed, but no need to update the database schema
+                // Handle early leave logic
                 System.out.println("조기 퇴근 처리: " + memberId);
             }
-
-            // Check for absenteeism if the end date is not null
-            if (startDateTime.toLocalTime().isAfter(LocalTime.of(18, 0))) {
-                // Handle absenteeism logic here
-                System.out.println("결근 처리: " + memberId);
-            }
+        } else {
+            // Handle case where no current record is found
+            System.out.println("퇴근 기록이 없습니다: " + memberId);
         }
     }
 
@@ -82,6 +82,54 @@ public class AttendanceService {
             result.put("clockedOut", false);
             result.put("isLate", false);
         }
+        return result;
+    }
+
+    public Map<String, Integer> getWeeklyStats(String memberId) {
+        List<AttendanceDTO> records = aDao.getWeeklyRecords(memberId);
+
+        // Determine start and end of the current week
+        LocalDate today = LocalDate.now();
+        LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+        int lateCount = 0;
+        int absentCount = 0;
+        int earlyLeaveCount = 0;
+
+        for (AttendanceDTO record : records) {
+            Timestamp startDate = record.getStart_date();
+            Timestamp endDate = record.getEnd_date();
+
+            if (startDate != null) {
+                LocalDateTime startDateTime = startDate.toLocalDateTime();
+                if (startDateTime.toLocalDate().isAfter(startOfWeek.minusDays(1)) && startDateTime.toLocalDate().isBefore(endOfWeek.plusDays(1))) {
+                    // Check for lateness
+                    if (startDateTime.toLocalTime().isAfter(LocalTime.of(9, 0))) {
+                        lateCount++;
+                    }
+
+                    // Check for early leave
+                    if (endDate != null) {
+                        LocalDateTime endDateTime = endDate.toLocalDateTime();
+                        if (endDateTime.toLocalTime().isBefore(LocalTime.of(18, 0))) {
+                            earlyLeaveCount++;
+                        }
+                    } else {
+                        // Handle absenteeism
+                        if (startDateTime.toLocalDate().isEqual(today)) {
+                            absentCount++;
+                        }
+                    }
+                }
+            }
+        }
+
+        Map<String, Integer> result = new HashMap<>();
+        result.put("lateCount", lateCount);
+        result.put("absentCount", absentCount);
+        result.put("earlyLeaveCount", earlyLeaveCount);
+
         return result;
     }
 }
