@@ -5,18 +5,26 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Board">
 
-	<!-- <select id="getBoardCount" resultType="int" >
+	<!-- 게시글 총 개수 -->
+	<select id="getBoardCount" resultType="int" >
 		select count(*) from board
-		<if test="target=='title'">
-      		where title like '%'||#{keyword}||'%'
-   		</if>
-   		<if test="target=='contents'">
-      		where REGEXP_REPLACE(contents,'&lt;[^>]+&gt;', '') like '%'||#{keyword}||'%'
-   		</if>
-   		<if test="target=='id'">
-      		where member_id=#{keyword}
-   		</if>
-	</select> -->
+
+			<!-- 기본 조건: 게시판 코드 -->
+	            where board_code = ${board_code}
+		
+			<!-- 검색 조건: target이 특정 값일 때 -->
+			<if test="target=='title'">
+	      		and title like '%'||#{keyword}||'%'
+	   		</if>
+	   		<if test="target=='contents'">
+	      		and REGEXP_REPLACE(contents,'&lt;[^>]+&gt;', '') like '%'||#{keyword}||'%'
+	   		</if>
+	   		<if test="target=='id'">
+	      		and member_id=#{keyword}
+	   		</if>
+
+	</select>
+	
 	
 	<!-- 목록 출력 -->
 	<select id="selectAll" resultType="com.nbti.dto.BoardDTO">

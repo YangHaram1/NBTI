@@ -31,14 +31,12 @@ public class BoardController {
 	@Autowired
 	private BoardService bserv;
 	@Autowired
-	private ReplyService rserv;
-	@Autowired
 	private HttpSession session;
 	
 	
 	// 목록 출력
 	@GetMapping("/list")
-	public ResponseEntity<List<BoardDTO>> selectAll(
+	public ResponseEntity<Map<String, Object>> selectAll(
 			@RequestParam int code,
 	        @RequestParam(required = false) String target,
 	        @RequestParam(required = false) String keyword,
@@ -53,9 +51,13 @@ public class BoardController {
 	    map.put("end", end);
 	    
 	    List<BoardDTO> list = bserv.selectAll(map);
-	    for (BoardDTO boardDTO : list) {
-		}
-		return ResponseEntity.ok(list);
+	    
+	    // 클라이언트에게 보낼 값 ( 게시글 총 개수, 게시글 목록 )
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("count", bserv.getBoardCount(map) );
+	    result.put("list", list );
+	    
+		return ResponseEntity.ok(result);
 	}
 	
 	// 게시글 출력
