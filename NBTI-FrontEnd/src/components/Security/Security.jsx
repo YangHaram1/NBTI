@@ -10,7 +10,7 @@ const Security = () => {
     const [page_total_count, setPage_total_count] = useState();
     const [target, setTarget] = useState('');
     const [keyword, setKeyword] = useState('');
-    const [search,setSearch] =useState('');
+    const [search,setSearch] =useState(false);
     const record_count_per_page = 25;
     const navi_count_per_page = 5;
 
@@ -19,7 +19,7 @@ const Security = () => {
         const start = cpage * record_count_per_page - (record_count_per_page - 1); //1
         const end = cpage * record_count_per_page; //10
         axios.get(`${host}/user_history?start=${start}&&end=${end}&&target=${target}&&keyword=${keyword}`).then((resp) => {
-            console.log(resp.data)
+           // console.log(resp.data)
             setHistory((prev) => {
                 const record_total_count = resp.data.count;
                 if (record_total_count % record_count_per_page === 0) {
@@ -31,7 +31,7 @@ const Security = () => {
                 return resp.data.list;
             });
         })
-    }, [cpage])
+    }, [cpage,search])
 
     const handlePage = (selectedPage) => {
         setCpage(selectedPage.selected + 1);
@@ -48,7 +48,10 @@ const Security = () => {
     }, [pageSetting])
 
     const handleSearch=()=>{
-
+        setSearch((prev)=>{
+            setCpage(1);
+            return !prev;
+        })
     }
 
 
@@ -56,7 +59,7 @@ const Security = () => {
         <div className={styles.container}>
             <div className={styles.search}>
                 <select value={target} onChange={(e) => setTarget(e.target.value)}>
-                    <option value="">전체</option>
+                    <option value="">선택</option>
                     <option value="id">ID</option>
                     <option value="ip">IP</option>
                 </select>
