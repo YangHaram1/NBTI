@@ -1,25 +1,25 @@
 import axios from "axios";
 import BoardEditor from "../../../../BoardEditor/BoardEditor";
 import styles from "./Insert.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { host } from "../../../../../../config/config";
 import { useNavigate } from "react-router-dom";
 
 export const Insert = () => {
-  // 팝업 창의 열림/닫힘 상태를 관리하는 상태
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const navi = useNavigate();
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 창 열림/닫힘 상태 관리
+  const [isAdmin, setIsAdmin] = useState(false); // 권한 여부 상태
+  const [currentUser, setCurrentUser] = useState(null); // 로그인된 사용자 정보 상태
 
   // 팝업 창을 여는 함수
   const openPopup = () => {
     setIsPopupOpen(true);
   };
-
   // 팝업 창을 닫는 함수
   const closePopup = () => {
     setIsPopupOpen(false);
   };
-
-  const navi = useNavigate();
 
   const [board, setBoard] = useState({
     title: "",
@@ -27,6 +27,7 @@ export const Insert = () => {
     board_code: 1,
   });
 
+  // 글 입력
   const handleInput = (e) => {
     const { name, value } = e.target;
     setBoard((prev) => {
@@ -34,23 +35,50 @@ export const Insert = () => {
     });
   };
 
+  // 글 입력 추가버튼
   const handleAddBtn = () => {
     if (board.title.trim() === "" || board.contents.trim() === "") {
       alert("제목, 내용을 작성해주세요");
       return; // 유효성 검사 통과하지 못하면 함수 종료
     }
-
     axios.post(`${host}/board`, board).then((resp) => {
       alert("글이 작성되었습니다.");
       navi("/board/free");
     });
   };
 
+
+  // 로그인 한 사용자 정보 및 HR 권한 확인
+  useEffect(() => {
+    axios.get(`${host}/members`).then((resp) => {
+
+      // HR 권한 확인
+      axios.get(`${host}/members/selectLevel`).then((resp1) => {
+        const hrStatus = resp1.data[parseInt(resp.data.member_level) - 1]?.hr; // 배열의 n번째 요소에서 hr 확인
+
+        if (hrStatus === "Y") {
+          setIsAdmin(true); // Y일 때 true
+        }
+      });
+    });
+  }, []);
+
+
   return (
     <div className={styles.container}>
-      <div className={styles.box} onClick={openPopup}>
-        <p>임시보관 된 게시물 ( 0 )</p>
-        {/* <a href="#">임시보관 된 게시물 ( 0 )</a> */}
+      <div className={styles.box}>
+        <div>
+          {/* 관리자일 때 보이는 공지게시판 글쓰기용 체크박스 */}
+          {isAdmin && (
+            <label>
+              <input type="checkbox" />
+              <p>공지 게시판</p>
+            </label>
+          )}
+        </div>
+        <div>
+          <p onClick={openPopup}>임시보관 된 게시물 ( 0 )</p>
+        </div>
       </div>
       <div className={styles.top}>
         <div className={styles.left}>

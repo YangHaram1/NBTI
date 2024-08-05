@@ -52,7 +52,7 @@ public class BoardController {
 	    
 	    List<BoardDTO> list = bserv.selectAll(map);
 	    
-	    // 클라이언트에게 보낼 값 ( 게시글 총 개수, 게시글 목록 )
+	    // 클라이언트에게 보낼 값 ( 페이지네이션 : 게시글 총 개수, 게시글 목록 )
 	    Map<String, Object> result = new HashMap<>();
 	    result.put("count", bserv.getBoardCount(map) );
 	    result.put("list", list );
@@ -108,67 +108,20 @@ public class BoardController {
 
 	}
 	
-	// 페이지네이션
-//	@GetMapping("/getList")
-//	public ResponseEntity<List<BoardDTO>> getList(@RequestBody Map<String, Integer> request){
-//		
-//		
-//		
-//		
-//		
-//		int cpage = request.get("cpage");
-//		int recordsPerPage = request.get("recordsPerPage");
-//		
-//		HashMap<String, Integer> map = new HashMap<>();
-//		map.put("cpage", cpage);
-//		map.put("recordsPerPage", recordsPerPage);
-//		
-//		List<BoardDTO> list = bserv.getList(map);
-//		
-//		return ResponseEntity.ok(list);
-//	}
-//	
 
 	//============================[ 메 인 ]=============================
 	// 공지 게시판 출력
 	@GetMapping("/noticeBoard")
 	public ResponseEntity<List<BoardDTO>> selectNotice(){
-		
 		List<BoardDTO> list = bserv.selectNotice();
 		return ResponseEntity.ok(list);
-
 	}
-	
-	// 자유 게시판 & 댓글 출력
-//	@GetMapping("/freeBoard")
-//	public ResponseEntity<Map<String, List>> selectFree(){
-//		
-//		List<BoardDTO> list = bserv.selectFree();
-//		
-//		List<List<ReplyDTO>> rlist = new ArrayList<>();
-//		
-//		for (BoardDTO dto : list) {
-//			int seq = dto.getSeq();
-//			rlist.add(rserv.selectFreeReply(seq));
-//		}
-//		
-//		
-//		Map<String, List> map = new HashMap<>();
-//		map.put("list", list);
-//		map.put("rlist", rlist);
-//		
-//		
-//		
-//		return ResponseEntity.ok(map);
-//		
-//	}
+
 	
 	@GetMapping("/freeBoard")
 	public ResponseEntity<Map<String, Object>> selectFree(){
-		
 		Map<String, Object> list = bserv.selectFree();
 		return ResponseEntity.ok(list);
-		
 	}
 	
 	
