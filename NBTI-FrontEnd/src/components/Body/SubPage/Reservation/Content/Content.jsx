@@ -11,9 +11,10 @@ export const Content = () => {
         <div className={styles.container}>
             <Routes>
                 <Route path="/" element={<List/>}></Route>
-                <Route path="/meetingRoom" element={<MeetingRoom/>}></Route>
-                <Route path="/supplies" element={<Supplies/>}></Route>
-                <Route path="/car" element={<Car/>}></Route>
+                <Route path="list" element={<List/>}></Route>
+                <Route path="meetingRoom" element={<MeetingRoom/>}></Route>
+                <Route path="supplies" element={<Supplies/>}></Route>
+                <Route path="car" element={<Car/>}></Route>
             </Routes>
         </div>
     )
