@@ -1,0 +1,42 @@
+.container{
+    height: 100%;
+    overflow-y: hidden;
+}
+/* 나의 예약 목록 */
+.title {
+    position: relative;
+    padding: 20px 25px 0 23px;
+    min-width: 40px;
+    border-bottom: 1px solid #f2f4f3;
+}
+/* 나의 예약 목록 아래 테이블들 */
+.content {
+    height: 100%; 
+    padding-top: 2%;
+}
+.ReservationList{
+    /* border: 1px solid red; */
+}
+.waitingList{
+    /* border: 1px solid yellow; */
+}
+.ReservationList thead th, 
+.waitingList thead th {
+    background-color: #A4C3B2; 
+    color: white;
+    letter-spacing: 2px;
+    font-weight: 400;
+    text-shadow: 1px 1px 1px #9b9b9b;
+    padding: 14px 10px 14px 15px
+}
+.ReservationList tbody td, 
+.waitingList tbody td {
+    padding: 12px 10px 12px 15px
+}
+.list {
+    border: 1px solid gainsboro;
+    box-shadow: 3px 2px 4px gainsboro;
+    width: 100%;
+    border-radius: 5px;
+    padding: 5px;
+}
