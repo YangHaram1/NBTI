@@ -57,6 +57,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div className={styles.div1_3}>
+                    <button className={styles.button}><i class="fa-solid fa-gear fa-xl"></i></button>
                     <button className={styles.button} onClick={handleCancel}>❌</button>
                 </div>
             </div>
