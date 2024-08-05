@@ -30,7 +30,6 @@ export const List = () => {
 
     // 게시판 목록 출력 
     useEffect(() => {
-
         const start = cpage * recordCountPerPage - (recordCountPerPage - 1); // 1
         const end = cpage * recordCountPerPage; // 10
         const params = { code: code, target: target, keyword: keyword, start: start, end: end };
