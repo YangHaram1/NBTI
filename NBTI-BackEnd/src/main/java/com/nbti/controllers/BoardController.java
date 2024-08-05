@@ -105,8 +105,40 @@ public class BoardController {
 		
 		bserv.updateViewCount(map);
 		return ResponseEntity.ok().build();
-
 	}
+	
+	// 내 글 목록
+	@GetMapping("/myList")
+	public ResponseEntity<Map<String, Object>> selectMyList(
+			@RequestParam int code,
+	        @RequestParam(required = false) String target,
+	        @RequestParam(required = false) String keyword,
+	        @RequestParam int start,
+	        @RequestParam int end){
+		
+		String member_id = (String) session.getAttribute("loginID");
+		
+		Map<String, Object> map = new HashMap<>();
+	    map.put("board_code", code);
+	    map.put("target", target);
+	    map.put("keyword", keyword);
+	    map.put("start", start);
+	    map.put("end", end);
+	    map.put("member_id", member_id);
+	    
+	    List<BoardDTO> list = bserv.selectMyList(map);
+	    
+	  
+	    
+	    // 클라이언트에게 보낼 값 ( 페이지네이션 : 게시글 총 개수, 게시글 목록 )
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("count", bserv.getBoardCount(map) );
+	    result.put("list", list );
+	    
+		return ResponseEntity.ok(result);
+	}
+	
+	
 	
 
 	//============================[ 메 인 ]=============================

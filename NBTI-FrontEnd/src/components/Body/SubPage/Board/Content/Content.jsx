@@ -3,7 +3,7 @@ import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
 import { List } from "./List/List";
 import { Insert } from "./Insert/Insert";
 import { Detail } from "./Detail/Detail";
-import { useState } from "react";
+import { MyBoardList } from "./MyBoardList/MyBoardList";
 
 export const Content = () => {
   return (
@@ -14,6 +14,7 @@ export const Content = () => {
         <Route path="notice" element={<List />} />
         <Route path="insert" element={<Insert />} />
         <Route path="detail" element={<Detail />} />
+        <Route path="myBoardList" element={<MyBoardList />} />
       </Routes>
     </div>
   );

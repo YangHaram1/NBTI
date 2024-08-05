@@ -61,7 +61,7 @@ export const Side = () => {
                 </span>
                 <span>자유 게시판</span>
               </li>
-              <li onClick={() => { navi("detail"); }}>
+              <li onClick={() => { navi("myBoardList"); }}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
                 </span>

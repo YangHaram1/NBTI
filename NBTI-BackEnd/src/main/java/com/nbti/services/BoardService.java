@@ -58,10 +58,12 @@ public class BoardService {
 		bdao.updateViewCount(map);
 	}
 	
+	// 내 글 목록
+	public List<BoardDTO> selectMyList(Map<String, Object> map){
+		return bdao.selectMyList(map);
+	}
 	
-	
-	
-	
+
 	//============================[ 메 인 ]=============================
 	// 공지 게시판 출력
 	public List<BoardDTO> selectNotice(){
