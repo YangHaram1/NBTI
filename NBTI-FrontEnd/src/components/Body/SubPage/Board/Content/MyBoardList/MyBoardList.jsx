@@ -1,5 +1,6 @@
+import styles from "./MyBoardList.module.css";
+
 import { useNavigate } from "react-router-dom";
-import styles from "./List.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { format } from "date-fns";
@@ -7,7 +8,10 @@ import { useBoardStore } from "../../../../../../store/store";
 import { host } from "../../../../../../config/config";
 import ReactPaginate from "react-paginate";
 
-export const List = () => {
+
+
+export const MyBoardList = () => {
+
     const navi = useNavigate();
     const [boardList, setBoardList] = useState([]);
     const { boardType, setBoardSeq } = useBoardStore();
@@ -22,19 +26,15 @@ export const List = () => {
     const [cpage, setCpage] = useState(1); // 현재 페이지
 
 
-    // 1 : 자유 2: 공지
+    // 1 : 자유 
     let code = 1;
-    if (boardType === "자유") code = 1;
-    else if (boardType === "공지") code = 2;
-
-
     // 게시판 목록 출력 
     useEffect(() => {
         const start = cpage * recordCountPerPage - (recordCountPerPage - 1); // 1
         const end = cpage * recordCountPerPage; // 10
         const params = { code: code, target: target, keyword: keyword, start: start, end: end };
 
-        axios.get(`${host}/board/list`, { params }).then((resp) => {
+        axios.get(`${host}/board/myList`, { params }).then((resp) => {
 
             setBoardList(resp.data.list); // 서버에서 list와 count 보낸 것 중 list만 담기
 
@@ -47,13 +47,12 @@ export const List = () => {
                 setPageTotalCount(Math.floor(recordTotalCount / recordCountPerPage) + 1);
             }
         });
-    }, [boardType, search, cpage]);
+    }, [search, cpage]);
 
     // 페이지네이션
     const handlePageClick = (data) => {
         setCpage(data.selected + 1); // 현재 페이지
     }
-
 
     // 검색 버튼 클릭 핸들러
     const handleSearch = () => {
@@ -74,7 +73,7 @@ export const List = () => {
 
     return (
         <div className={styles.container}>
-            <h1>{boardType} 게시판</h1>
+            <h1>내 글 목록</h1>
             <div className={styles.searchBox}>
                 <div className={styles.dropdown}>
                     <select value={target} onChange={(e) => setTarget(e.target.value)}>
@@ -167,4 +166,4 @@ export const List = () => {
             </div>
         </div>
     )
-};
+}

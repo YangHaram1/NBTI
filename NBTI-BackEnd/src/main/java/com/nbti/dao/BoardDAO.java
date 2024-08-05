@@ -51,6 +51,10 @@ public class BoardDAO {
 		mybatis.update("Board.updateViewCount", map);
 	}
 
+	// 내 글 목록
+	public List<BoardDTO> selectMyList(Map<String, Object> map) {
+		return mybatis.selectList("Board.selectMyList",map);
+	}
 	
 	
 	

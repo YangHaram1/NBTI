@@ -81,7 +81,19 @@
 	<update id="updateViewCount"> 
 		update board set view_count = view_count +1 where seq = ${seq} and board_code = ${board_code}
 	</update>
-
+	
+	<!-- 내 글 목록 -->
+	<select id="selectMyList" resultType="com.nbti.dto.BoardDTO">
+		SELECT *
+			FROM (
+			    SELECT board.*, ROW_NUMBER() OVER (ORDER BY seq DESC) AS rown
+			    FROM board
+			    WHERE board_code = 1
+			    AND member_id = #{member_id}
+			) a
+			WHERE rown BETWEEN ${start} AND ${end}
+	</select>
+	
 
 	<!-- ========================[ 메 인 ]====================== -->
 	<!-- 공지 게시판 출력 -->
