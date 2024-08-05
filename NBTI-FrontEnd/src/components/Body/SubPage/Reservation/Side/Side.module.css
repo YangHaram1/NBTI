@@ -3,7 +3,7 @@ div {
   }
   
   .container {
-    background-color: #cce3de;
+    background-color: #EAF4F4;
     width: 250px;
     display: flex;
     flex-direction: column;
@@ -23,7 +23,7 @@ div {
   }
   
   .container .mainBtn button {
-    background-color: #6b9080;
+    background-color: #A4C3B2;
     color: white;
     font-size: medium;
     width: 100%;
@@ -118,4 +118,16 @@ div {
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
+}
+.title {
+  flex: 1; background-color: wheat;
+}
+.modalInner {
+  background-color: red; height: 100%
+}
+.modalInner > div {
+  padding-bottom: 5%;
+}
+.modalInner > div:nth-child(1) {
+  background-color: wheat; display: flex;
 }
