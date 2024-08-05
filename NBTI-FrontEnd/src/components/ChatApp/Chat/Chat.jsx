@@ -102,7 +102,7 @@ const Chat = () => {
           axios.get(`${host}/group_member?group_seq=${chat.group_seq}`).then((resp) => {
             setOnmessage();
             if (chat.member_id !== loginID) {
-              resp.data.forEach((temp) => {
+              resp.data.forEach((temp) => { //알림보내기 로직
                 if (temp.member_id === loginID) {
                   if (temp.alarm === 'Y') notify(chat);
                 }
