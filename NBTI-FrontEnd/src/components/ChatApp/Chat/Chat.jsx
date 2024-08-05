@@ -16,6 +16,7 @@ import avatar from '../../../images/user.jpg'
 import Invite from './Invite/Invite.jsx';
 import sanitizeHtml from 'sanitize-html';
 import 'react-toastify/dist/ReactToastify.css'
+import notice from '../../../images/notice.png';
 axios.defaults.withCredentials = true;
 const Chat = () => {
 
@@ -164,7 +165,8 @@ const Chat = () => {
         rtl: false, // RTL 텍스트 지원 비활성화
         onClose: decrement,
         onOpen: increment,
-        onClick: () => handleToastOnclick(item)
+        onClick: () => handleToastOnclick(item),
+        icon: <img src={notice}alt="custom-icon" className={styles.shake} /> 
       });
     }
     //}
