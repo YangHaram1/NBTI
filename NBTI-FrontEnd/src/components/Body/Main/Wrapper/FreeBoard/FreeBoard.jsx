@@ -48,7 +48,16 @@ export const FreeBoard = () => {
         };
 
         axios.post(`${host}/reply`, requestBody).then((resp) => {
-            setTransform(true);
+            // setTransform(true);
+
+            setTransform((prev) => !prev); // 트랜스폼 상태 변경하여 useEffect 재실행
+            // 댓글 입력 창 초기화
+            document.getElementById(`replyInput-${boardSeq}`).innerText = "";
+            setReplyContents("");
+
+
+
+
             // if (inputRef.current.id == resp.data.board_seq) {
             //     inputRef.current.innerHTML = ""; // div 내용 비우기
             //     setReplyContents("");
@@ -111,6 +120,7 @@ export const FreeBoard = () => {
                             <div className={styles.reply}>
                                 <div className={styles.replyInput}>
                                     <div
+                                        id={`replyInput-${item.seq}`} // 입력창 초기화하기 위해 부여하는 id
                                         className={styles.inputText}
                                         onInput={handleInput}
                                         contentEditable="true"
@@ -124,8 +134,6 @@ export const FreeBoard = () => {
                                             // 댓글 날짜 타입 변경
                                             const reply_date = new Date(ritem.write_date);
                                             const reply_currentDate = !isNaN(reply_date) ? format(reply_date, 'yyyy-MM-dd HH:mm:ss') : 'Invalid Date';
-
-                                            // console.log("댓글 몇개? : ", reply[i].length)
 
                                             return (
                                                 <div className={styles.replyOutput} key={index}>

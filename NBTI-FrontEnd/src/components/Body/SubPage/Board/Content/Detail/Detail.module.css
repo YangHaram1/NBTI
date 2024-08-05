@@ -162,6 +162,10 @@
   background-color: #6b9080cc;
 }
 
+.replyOutputWrap {
+  padding-bottom: 60px;
+}
+
 .replyOutputWrap .replyOutput {
   display: flex;
   padding: 10px 8px 20px 20px;
