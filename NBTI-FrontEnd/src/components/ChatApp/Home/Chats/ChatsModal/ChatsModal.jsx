@@ -79,7 +79,7 @@ const ChatsModal = ({ modalRef, index, item, setGroup_chats ,setCountBookmark}) 
                    {item.alarm==='Y'?'알림 끄기':'알림 켜기'} 
                 </div>
                 <div className={styles.content} onClick={handleBookmark} >
-                    즐겨찾기 등록
+                    {item.bookmark==='Y'?'즐겨찾기 해제':'즐겨찾기 등록'}
                 </div>
                 <div className={styles.content} onClick={handleDelete}>
                     나가기
