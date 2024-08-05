@@ -51,4 +51,8 @@ public class ChatDAO {
 		maps.put("member_id", member_id);
 		return mybatis.selectOne("Chat.unreadTotal",maps);
 	}
+	
+	public void deleteByUploadSeq(int upload_seq)throws Exception {
+		mybatis.delete("Chat.deleteByUpload_seq",upload_seq);
+	}
 }
