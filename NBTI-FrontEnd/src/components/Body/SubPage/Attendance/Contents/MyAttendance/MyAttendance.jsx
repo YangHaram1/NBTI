@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import styles from './MyAttendance.module.css';
-import { host } from '../../../../../../config/config'; // 수정된 경로
+import { host } from '../../../../../../config/config';
 import { format } from 'date-fns';
+import useWeeklyStats from './WeeklsyStats/useWeeklyStats';
+import WeeklyStats from './WeeklsyStats/WeeklyStats';
 
 export const MyAttendance = () => {
     const [currentClockIn, setCurrentClockIn] = useState(null);
@@ -15,6 +17,7 @@ export const MyAttendance = () => {
 
     const memberId = sessionStorage.getItem('loginID');
     const today = new Date().toISOString().split('T')[0];
+    const stats = useWeeklyStats(memberId);
 
     const fetchAttendanceStatus = useCallback(async () => {
         if (!memberId) return;
@@ -128,6 +131,7 @@ export const MyAttendance = () => {
                     </div>
                 </div>
             </div>
+            <WeeklyStats stats={stats} />
         </div>
     );
 };

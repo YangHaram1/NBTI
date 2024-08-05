@@ -1,0 +1,41 @@
+/* WeeklyStats.module.css */
+
+.statsContainer {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: #f9f9f9;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+h3 {
+    color: #333;
+    font-size: 1.5em;
+    margin-bottom: 16px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.statItem {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.statItem:last-child {
+    border-bottom: none;
+}
+
+.statLabel {
+    font-weight: bold;
+    color: #555;
+}
+
+.statValue {
+    color: #333;
+}
