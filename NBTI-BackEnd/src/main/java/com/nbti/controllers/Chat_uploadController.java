@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +35,19 @@ public class Chat_uploadController {
 		String realpath=RealpathConfig.realpath+"chat";
 		List<Map<String, Object>> uploadList=fsev.upload(realpath, files, group_seq, loginID);
 		return ResponseEntity.ok(uploadList); // 200
+	}
+	
+	@GetMapping
+	public ResponseEntity<List<Map<String, Object>>> getFileList() throws Exception {
+		String loginID=(String)session.getAttribute("loginID");
+		List<Map<String, Object>> result=fsev.fileListByGroup_seq(loginID);
+		return ResponseEntity.ok(result);
+	}
+	
+	@DeleteMapping
+	public ResponseEntity<Void> delete(@RequestParam int seq) throws Exception{
+		fsev.delete(seq);
+		return ResponseEntity.ok(null);
 	}
 	
 	

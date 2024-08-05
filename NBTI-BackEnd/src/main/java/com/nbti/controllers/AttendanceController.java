@@ -2,6 +2,7 @@ package com.nbti.controllers;
 
 import java.sql.Timestamp;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nbti.services.AttendanceService;
@@ -68,6 +68,26 @@ public class AttendanceController {
         } catch (Exception e) {
             e.printStackTrace(); // 로그에 자세한 오류 메시지 출력
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "출근 기록 조회 중 오류가 발생했습니다."));
+        }
+    }
+
+    @GetMapping("/weekly-stats")
+    public ResponseEntity<Map<String, Integer>> getWeeklyStats(HttpServletRequest request) {
+        String memberId = (String) request.getSession().getAttribute("loginID");
+        if (memberId == null) {
+            Map<String, Integer> errorResponse = new HashMap<>();
+            errorResponse.put("error", -1); // Error code for unauthorized
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+        }
+        try {
+            // 주간 통계 조회
+            Map<String, Integer> stats = aServ.getWeeklyStats(memberId);
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, Integer> errorResponse = new HashMap<>();
+            errorResponse.put("error", -2); // Error code for internal server error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 }

@@ -145,3 +145,40 @@
 .container .pagination > a {
   text-decoration-line: none;
 }
+
+.pagination {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pagination li {
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.pagination a {
+  text-decoration: none;
+  color: #6b9080;
+  /* padding: 0.5em 1em; */
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.pagination a:hover {
+  background-color: #f8f9fa;
+}
+
+.pagination .active a {
+  background-color: #6b9080;
+  color: white;
+}
+
+.previous {
+  display: none;
+}
+.next {
+  display: none;
+}

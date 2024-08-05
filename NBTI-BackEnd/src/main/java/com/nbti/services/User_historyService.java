@@ -1,6 +1,7 @@
 package com.nbti.services;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,12 @@ public class User_historyService {
 		dao.insert(dto);
 	}
 	
-	public List<User_historyDTO> list() throws Exception{
-		return dao.list();
+	public List<User_historyDTO> list(Map<String, Object> params) throws Exception{
+		return dao.list(params);
+	}
+	
+	public int getHistoryCount(Map<String, Object> params) throws Exception{
+		return dao.getHistoryCount(params);
+		
 	}
 }

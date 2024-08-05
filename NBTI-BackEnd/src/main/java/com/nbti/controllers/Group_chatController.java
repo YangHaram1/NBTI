@@ -59,7 +59,6 @@ public class Group_chatController {
 			member_list.add(dto);
 			dto= new Group_memberDTO(seq,list.get(1),0,"Y","N",list.get(0));
 			member_list.add(dto);
-			
 			mserv.insert(member_list);
 		}
 		

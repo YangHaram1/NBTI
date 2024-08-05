@@ -1,0 +1,28 @@
+.container{
+    width: 100%;
+    height: 100%;
+}
+.item{
+    display: flex;
+    gap: 10px;
+    font-size: 11.5px;
+   
+}
+.item div{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.delete{
+    color: red;
+    cursor: pointer;
+}
+.delete:hover{
+    background-color: black;
+    color: white;
+}
+
+.name{
+    color: gray;
+}
