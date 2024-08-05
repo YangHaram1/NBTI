@@ -4,10 +4,9 @@ import { host } from "../../../../../config/config";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBoardStore } from "../../../../../store/store";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
 export const NoticeBoard = () => {
-
     const navi = useNavigate();
     const [boardList, setBoardList] = useState([]);
     const { boardType, setBoardSeq } = useBoardStore();
@@ -19,7 +18,7 @@ export const NoticeBoard = () => {
         });
     }, []);
 
-    // 조회수 증가 및 상세 페이지로 이동 
+    // 조회수 증가 및 상세 페이지로 이동
     const handleTitleClick = (seq) => {
         console.log("게시글 번호 : ", seq);
 
@@ -40,9 +39,6 @@ export const NoticeBoard = () => {
                 <div>
                     <p>제목</p>
                 </div>
-                {/* <div>
-                    <p>작성자</p>
-                </div> */}
                 <div>
                     <p>작성일</p>
                 </div>
@@ -63,11 +59,14 @@ export const NoticeBoard = () => {
                                 <p>공지</p>
                             </div>
                             <div className={styles.title}>
-                                <p onClick={() => { handleTitleClick(item.seq) }}>{item.title}</p>
+                                <p
+                                    onClick={() => {
+                                        handleTitleClick(item.seq);
+                                    }}
+                                >
+                                    {item.title}
+                                </p>
                             </div>
-                            {/* <div className={styles.writer}>
-                                <p>{item.member_id}</p>
-                            </div> */}
                             <div className={styles.writeDate}>
                                 <p>{currentDate}</p>
                             </div>
@@ -75,12 +74,8 @@ export const NoticeBoard = () => {
                                 <p>{item.view_count}</p>
                             </div>
                         </div>
-                    )
-                })
-
-                }
-
-
+                    );
+                })}
             </div>
         </div>
     );
