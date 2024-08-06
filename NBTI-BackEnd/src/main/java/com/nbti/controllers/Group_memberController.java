@@ -24,29 +24,21 @@ public class Group_memberController {
 	
 	@Autowired
 	private Group_memberService serv;
-	//@RequestParamm(required=true)
+	//@RequestParam(required=true)
 	@Autowired
 	private HttpSession session;
 	
 	@PostMapping
 	public ResponseEntity<Void> post(@RequestBody String[] members) throws Exception {
-		for (String string : members) {
-			System.out.println(string);
-		}
 		int group_seq=(int)session.getAttribute("group_seq");
-		
-		for(int i=0;i<members.length;i++) {
-			Group_memberDTO dto = new Group_memberDTO(group_seq,members[i],0,"Y","N","새채팅방");
-			serv.insert(dto);
-		}
-		
+		String loginID= (String) session.getAttribute("loginID");
+		serv.insert(members,group_seq,loginID);
 		return ResponseEntity.ok().build(); // 200  	
 	} 
 	
 	@DeleteMapping()
 	public ResponseEntity<Void> delete(int group_seq) throws Exception{
 		System.out.println(group_seq);
-		//seq =group_seq
 		String loginID= (String) session.getAttribute("loginID");
 		serv.delete(group_seq,loginID);
 		return ResponseEntity.ok().build();
@@ -54,7 +46,6 @@ public class Group_memberController {
 	
 	@GetMapping
 	public ResponseEntity<List<Group_memberDTO>> get(int group_seq) throws Exception{
-		
 		
 		return ResponseEntity.ok(serv.members(group_seq));
 	}

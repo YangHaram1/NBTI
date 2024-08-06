@@ -3,8 +3,10 @@ import axios from 'axios';
 import styles from './MyAttendance.module.css';
 import { host } from '../../../../../../config/config';
 import { format } from 'date-fns';
-import useWeeklyStats from './WeeklsyStats/useWeeklyStats';
-import WeeklyStats from './WeeklsyStats/WeeklyStats';
+import useWeeklyStats from './WeeklsyStats/useWeeklyStats'; 
+import WeeklyStats from './WeeklsyStats/WeeklyStats'; 
+import YearlyStats from './YearStats/YearlyStats'; 
+import useYearlyStats from './YearStats/useYearlyStats';
 
 export const MyAttendance = () => {
     const [currentClockIn, setCurrentClockIn] = useState(null);
@@ -14,10 +16,11 @@ export const MyAttendance = () => {
     const [isLate, setIsLate] = useState(false);
     const [isAbsent, setIsAbsent] = useState(false);
     const [isEarlyLeave, setIsEarlyLeave] = useState(false);
-
+                                
     const memberId = sessionStorage.getItem('loginID');
     const today = new Date().toISOString().split('T')[0];
-    const stats = useWeeklyStats(memberId);
+    const { stats: weeklyStats, dailyStats } = useWeeklyStats(memberId);
+    const { stats: yearlyStats } = useYearlyStats(memberId);
 
     const fetchAttendanceStatus = useCallback(async () => {
         if (!memberId) return;
@@ -37,8 +40,8 @@ export const MyAttendance = () => {
             setClockedIn(clockedIn);
             setClockedOut(clockedOut);
             setIsLate(isLate);
-            setIsAbsent(!isClockInToday && !clockedIn); // 출근 기록이 없는 경우 결근
-            setIsEarlyLeave(endDate && endDate.getHours() < 18); // 18시 이전에 퇴근하면 조기퇴근
+            setIsAbsent(!isClockInToday && !clockedIn);
+            setIsEarlyLeave(endDate && endDate.getHours() < 18);
 
             setCurrentClockIn(isClockInToday ? format(startDate, 'HH:mm:ss') : null);
             setCurrentClockOut(isClockOutToday ? format(endDate, 'HH:mm:ss') : null);
@@ -62,7 +65,7 @@ export const MyAttendance = () => {
             setCurrentClockIn(format(new Date(start_date), 'HH:mm:ss'));
             setClockedIn(true);
             setIsLate(isLate);
-            setIsAbsent(false); // 출근 기록이 저장되면 결근 상태를 초기화
+            setIsAbsent(false);
             alert(isLate ? '지각 기록이 저장되었습니다.' : '출근 기록이 저장되었습니다.');
         } catch (err) {
             console.error('출근 기록에 실패했습니다.', err.response ? err.response.data : err);
@@ -80,7 +83,7 @@ export const MyAttendance = () => {
             if (response.status === 200) {
                 setCurrentClockOut(format(new Date(), 'HH:mm:ss'));
                 setClockedOut(true);
-                setIsEarlyLeave(true); // 퇴근 시간 업데이트 시 조기퇴근 상태를 업데이트
+                setIsEarlyLeave(true);
                 alert('퇴근 기록이 저장되었습니다.');
             } else {
                 alert('퇴근 기록 저장 실패');
@@ -93,6 +96,7 @@ export const MyAttendance = () => {
 
     return (
         <div className={styles.container}>
+            <YearlyStats stats={yearlyStats} /> {/* Ensure the props match the YearlyStats component's expectations */}
             <div className={styles.titleSection}>
                 <h2>금일 근무 현황</h2>
             </div>
@@ -131,7 +135,7 @@ export const MyAttendance = () => {
                     </div>
                 </div>
             </div>
-            <WeeklyStats stats={stats} />
+            <WeeklyStats stats={weeklyStats} dailyStats={dailyStats} /> {/* Pass both stats and dailyStats */}
         </div>
     );
 };

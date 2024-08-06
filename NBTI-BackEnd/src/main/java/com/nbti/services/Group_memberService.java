@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.nbti.dao.ChatDAO;
 import com.nbti.dao.Group_memberDAO;
+import com.nbti.dto.ChatDTO;
 import com.nbti.dto.Group_memberDTO;
 
 @Service
@@ -13,12 +16,34 @@ public class Group_memberService {
 	@Autowired
 	private Group_memberDAO dao;
 	
+	@Autowired
+	private ChatDAO cdao;
+	
 	public void insert(List<Group_memberDTO> list) throws Exception {
 		dao.insert(list);
 	}
 	
-	public void insert(Group_memberDTO dto) throws Exception {
-		dao.insert(dto);
+	@Transactional
+	public void insert(String [] members, int group_seq, String loginID) throws Exception {
+		for(int i=0;i<members.length;i++) {
+			Group_memberDTO dto = new Group_memberDTO(group_seq,members[i],0,"Y","N","새채팅방");
+			dao.insert(dto);
+		}
+		String result=loginID+"님이 ";
+		int index=0;
+		for (String str : members) {
+			if(index==members.length-1) {
+				result+=str+"님을 초대했습니다.";
+			}
+			else {
+				result+=str+"님, ";
+			}
+			index++;
+		}
+		
+		ChatDTO cdto=new ChatDTO(0,"system",result,null,group_seq,0);
+		cdao.insert(cdto);
+		
 	}
 	
 	public boolean check(List<String> list) throws Exception{
@@ -38,8 +63,11 @@ public class Group_memberService {
 		return dao.member(group_seq,member_id);
 	}
 	
+	@Transactional
 	public void delete(int group_seq,String member_id) throws Exception{
 		dao.delete(group_seq,member_id);
+		ChatDTO cdto=new ChatDTO(0,"system",member_id+"님이 퇴장하셨습니다",null,group_seq,0);
+		cdao.insert(cdto);
 	}
 	
 	public void update_check(int group_seq,String member_id,int last_chat_seq) throws Exception{

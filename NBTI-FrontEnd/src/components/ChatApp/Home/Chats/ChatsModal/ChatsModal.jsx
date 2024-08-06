@@ -2,15 +2,16 @@ import styles from './ChatsModal.module.css';
 import axios from 'axios';
 import { host } from '../../../../../config/config';
 import NameModal from '../NameModal/NameModal';
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
+import { ChatsContext } from '../../../../../Context/ChatsContext';
+import { useCheckList } from '../../../../../store/store';
 
 axios.defaults.withCredentials = true;
-const ChatsModal = ({ modalRef, index, item, setGroup_chats ,setCountBookmark}) => {
+const ChatsModal = ({ modalRef, index, item, setGroup_chats ,setCountBookmark,setCountTotal}) => {
     const group_seq = item.seq;
     const [nameModal, setNameModal] = useState(false);
-
-
-
+    const {ws} =useContext(ChatsContext);
+    const {setChatController} =useCheckList();
     const handleDelete = () => {
         axios.delete(`${host}/group_member?group_seq=${group_seq}`).then((resp) => {
             setGroup_chats((prev) => {
@@ -24,6 +25,12 @@ const ChatsModal = ({ modalRef, index, item, setGroup_chats ,setCountBookmark}) 
                 )
 
             });
+            ws.current.send("chatController");
+            setChatController();
+            setCountTotal((prev1)=>{
+                return prev1-item.unread;
+            })
+            
         })
     }
 

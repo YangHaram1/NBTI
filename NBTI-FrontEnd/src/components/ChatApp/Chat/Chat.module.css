@@ -198,7 +198,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-weight: 500;
+   
     font-size: 12px;
     border-radius: 20px;
     padding: 5px;
@@ -208,6 +208,6 @@
   @font-face {
     font-family: 'PTNoeulB';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/PTNoeulB.woff2') format('woff2');
-    font-weight: 700;
+    font-weight: 800;
     font-style: normal;
 }
