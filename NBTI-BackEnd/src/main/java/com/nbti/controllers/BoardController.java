@@ -128,11 +128,9 @@ public class BoardController {
 	    
 	    List<BoardDTO> list = bserv.selectMyList(map);
 	    
-	  
-	    
 	    // 클라이언트에게 보낼 값 ( 페이지네이션 : 게시글 총 개수, 게시글 목록 )
 	    Map<String, Object> result = new HashMap<>();
-	    result.put("count", bserv.getBoardCount(map) );
+	    result.put("count", bserv.getMyListCount(map) ); // 전체 게시글 수 계산
 	    result.put("list", list );
 	    
 		return ResponseEntity.ok(result);

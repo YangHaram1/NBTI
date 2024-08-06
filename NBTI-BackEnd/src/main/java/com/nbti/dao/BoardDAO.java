@@ -55,6 +55,10 @@ public class BoardDAO {
 	public List<BoardDTO> selectMyList(Map<String, Object> map) {
 		return mybatis.selectList("Board.selectMyList",map);
 	}
+	// 내 글 총 개수 (페이지네이션)
+	public int getMyListCount(Map<String, Object> map) {
+		return mybatis.selectOne("Board.getMyListCount", map);
+	}
 	
 	
 	
