@@ -106,12 +106,6 @@ export const Side = () => {
               className={`${styles.submenu} ${FreeBoard ? styles.open : ""}`}
               onClick={preventPropagation}
             >
-              <li onClick={()=>{navi("listAll")}}>
-                <span>
-                  <i className="fa-solid fa-clipboard fa-sm"></i>
-                </span>
-                <span>결재 전체</span>
-              </li>
               <li onClick={()=>{navi("listWait")}}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
@@ -123,6 +117,12 @@ export const Side = () => {
                   <i className="fa-solid fa-star fa-sm"></i>
                 </span>
                 <span>결재 예정</span>
+              </li>
+              <li onClick={()=>{navi("listAll")}}>
+                <span>
+                  <i className="fa-solid fa-clipboard fa-sm"></i>
+                </span>
+                <span>참조/열람 대기</span>
               </li>
             </ul>
           </li>
@@ -152,12 +152,12 @@ export const Side = () => {
                 </span>
                 <span>결재 문서함</span>
               </li>
-              <li onClick={()=>{navi("listDocReceive")}}>
+              {/* <li onClick={()=>{navi("listDocReceive")}}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
                 </span>
                 <span>수신 문서함</span>
-              </li>
+              </li> */}
               <li onClick={()=>{navi("listDocReference")}}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>

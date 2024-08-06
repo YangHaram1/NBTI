@@ -11,5 +11,64 @@
  			select temp_seq.currval from dual
  		</selectKey>
  	</insert>
+ 	
+ 	<select id="selectWriterIsMe" resultType="com.nbti.dto.ListDocDTO">
+ 		select 
+	 		a.temp_seq, 
+	 		a.member_id, 
+	 		a.approval_date, 
+	 		a.EMERGENCY, 
+	 		ds.DOC_SUB_NAME, 
+	 		a.APPROVAL_SEQ ,
+	 		a.DOC_STATE,
+	 		dd.TITLE 
+ 		from approval a 
+	 		left outer join doc_sub ds on a.DOC_SUB_SEQ = ds.DOC_FORM_SEQ
+	 		left outer join doc_draft dd on a.TEMP_SEQ = dd.DRAFT_SEQ
+	        left outer join DOC_LEAVE dl on a.temp_seq = dl.LEAVE_SEQ
+	        left outer join DOC_VACATION dv on a.temp_seq = dv.vacation_seq
+ 		where member_id = #{id} 
+ 		order by a.temp_seq desc
+ 	</select>
+ 	
+ 	<select id="selectReferIsMe" resultType="com.nbti.dto.ListDocDTO">
+ 		select 
+	        a.temp_seq, 
+	 		a.member_id, 
+	 		a.approval_date, 
+	 		a.EMERGENCY, 
+	 		ds.DOC_SUB_NAME, 
+	 		a.APPROVAL_SEQ ,
+	 		a.DOC_STATE,
+	        dd.TITLE
+        from approval a 
+	        left outer join REFER_LINE rl on a.temp_seq = rl.TEMP_SEQ
+	        left outer join doc_sub ds on a.DOC_SUB_SEQ = ds.DOC_FORM_SEQ
+	        left outer join doc_draft dd on a.TEMP_SEQ = dd.DRAFT_SEQ
+	        left outer join DOC_LEAVE dl on a.temp_seq = dl.LEAVE_SEQ
+	        left outer join DOC_VACATION dv on a.temp_seq = dv.vacation_seq
+ 		where referer = #{id} 
+ 		order by a.temp_seq desc
+ 	</select>
+ 	
+ 	<select id="selectApprovalIsMe" resultType="com.nbti.dto.ListDocDTO">
+	 	select 
+	        a.temp_seq, 
+	 		a.member_id, 
+	 		a.approval_date, 
+	 		a.EMERGENCY, 
+	 		ds.DOC_SUB_NAME, 
+	 		a.APPROVAL_SEQ ,
+	 		a.DOC_STATE,
+	        dd.TITLE
+	    from approval a 
+	        left outer join approval_LINE al on a.temp_seq = al.TEMP_SEQ
+	        left outer join doc_sub ds on a.DOC_SUB_SEQ = ds.DOC_FORM_SEQ
+	        left outer join doc_draft dd on a.TEMP_SEQ = dd.DRAFT_SEQ
+	        left outer join DOC_LEAVE dl on a.temp_seq = dl.LEAVE_SEQ
+	        left outer join DOC_VACATION dv on a.temp_seq = dv.vacation_seq
+	 	where approval_id = #{id} 
+	 	order by a.temp_seq desc
+ 	</select>
   
  </mapper>

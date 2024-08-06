@@ -142,7 +142,7 @@ export const Write = ({setlist})=>{
                     <div className={styles.content_right_title}>참조/열람자</div>
                     <div className={styles.content_right_content}>
                     {
-                        referLine.slice(1).map((refer)=>{
+                        referLine.map((refer)=>{
                             return(
                                 <div className={styles.refer}>
                                     {refer.name} 직급 / 다섯글자부 / 다섯글자부
