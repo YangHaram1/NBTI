@@ -152,9 +152,12 @@ public class AttendanceService {
         return result;
     }
 
-    public Map<String, Object> getYearlyStats(String memberId) {
+
+    public Map<String, Integer> getYearlyStats(String memberId) {
+        // DAO에서 연간 근태 기록을 가져옵니다.
         List<AttendanceDTO> records = aDao.getYearlyRecords(memberId);
 
+        // 현재 연도의 시작과 끝을 계산합니다.
         LocalDate today = LocalDate.now();
         LocalDate startOfYear = today.with(TemporalAdjusters.firstDayOfYear());
         LocalDate endOfYear = today.with(TemporalAdjusters.lastDayOfYear());
@@ -162,8 +165,6 @@ public class AttendanceService {
         int lateCount = 0;
         int absentCount = 0;
         int earlyLeaveCount = 0;
-        int workingDaysCount = 0;
-        long totalWorkedMinutes = 0;
 
         for (AttendanceDTO record : records) {
             Timestamp startDate = record.getStart_date();
@@ -185,12 +186,6 @@ public class AttendanceService {
                         if (endDateTime.toLocalTime().isBefore(LocalTime.of(18, 0))) {
                             earlyLeaveCount++;
                         }
-
-                        // 근무 시간 계산
-                        long minutesWorked = java.time.Duration.between(startDateTime, endDateTime).toMinutes();
-                        totalWorkedMinutes += minutesWorked;
-
-                        workingDaysCount++;
                     } else {
                         // 결근 체크
                         if (startDateTime.toLocalDate().isEqual(today)) {
@@ -201,12 +196,10 @@ public class AttendanceService {
             }
         }
 
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Integer> result = new HashMap<>();
         result.put("lateCount", lateCount);
         result.put("absentCount", absentCount);
         result.put("earlyLeaveCount", earlyLeaveCount);
-        result.put("workingDaysCount", workingDaysCount);
-        result.put("totalWorkedMinutes", totalWorkedMinutes);
 
         return result;
     }

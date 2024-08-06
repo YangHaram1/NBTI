@@ -3,8 +3,8 @@ import axios from 'axios';
 import styles from './MyAttendance.module.css';
 import { host } from '../../../../../../config/config';
 import { format } from 'date-fns';
-import useWeeklyStats from './WeeklsyStats/useWeeklyStats';
-import WeeklyStats from './WeeklsyStats/WeeklyStats';
+import useWeeklyStats from './WeeklsyStats/useWeeklyStats'; 
+import WeeklyStats from './WeeklsyStats/WeeklyStats'; 
 import YearlyStats from './YearStats/YearlyStats'; 
 import useYearlyStats from './YearStats/useYearlyStats';
 
@@ -16,7 +16,7 @@ export const MyAttendance = () => {
     const [isLate, setIsLate] = useState(false);
     const [isAbsent, setIsAbsent] = useState(false);
     const [isEarlyLeave, setIsEarlyLeave] = useState(false);
-                                
+
     const memberId = sessionStorage.getItem('loginID');
     const today = new Date().toISOString().split('T')[0];
     const { stats: weeklyStats, dailyStats, fetchWeeklyStats } = useWeeklyStats(memberId);
@@ -46,17 +46,13 @@ export const MyAttendance = () => {
             setCurrentClockIn(isClockInToday ? format(startDate, 'HH:mm:ss') : null);
             setCurrentClockOut(isClockOutToday ? format(endDate, 'HH:mm:ss') : null);
         } catch (err) {
-            console.error('출근 기록을 가져오는 데 실패했습니다.', err.response ? err.response.data : err);
+            console.error('출근 기록을 가져오는데 실패했습니다.', err.response ? err.response.data : err);
         }
     }, [memberId, today]);
 
     useEffect(() => {
         fetchAttendanceStatus();
     }, [fetchAttendanceStatus]);
-
-    useEffect(() => {
-        fetchYearlyStats();  // 연간 통계 업데이트
-    }, [fetchYearlyStats]);
 
     const handleClockIn = async () => {
         if (!memberId) return;
@@ -74,8 +70,8 @@ export const MyAttendance = () => {
             fetchWeeklyStats(); // 주간 통계 업데이트
             fetchYearlyStats(); // 연간 통계 업데이트
         } catch (err) {
-            console.error('출근 기록 저장에 실패했습니다.', err.response ? err.response.data : err);
-            alert('출근 기록 저장에 실패했습니다.');
+            console.error('출근 기록에 실패했습니다.', err.response ? err.response.data : err);
+            alert('출근 기록에 실패했습니다.');
         }
     };
 
@@ -97,8 +93,8 @@ export const MyAttendance = () => {
                 alert('퇴근 기록 저장 실패');
             }
         } catch (err) {
-            console.error('퇴근 기록 저장에 실패했습니다.', err.response ? err.response.data : err);
-            alert('퇴근 기록 저장에 실패했습니다.');
+            console.error('퇴근 기록에 실패했습니다.', err.response ? err.response.data : err);
+            alert('퇴근 기록에 실패했습니다.');
         }
     };
 
