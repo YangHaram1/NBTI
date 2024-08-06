@@ -81,6 +81,17 @@ public class TempBoardController {
 		return ResponseEntity.ok(result);
 	}
 	
+	// 임시저장 수정 (작성된 글 불러오기)
+	@GetMapping("/modify/{seq}")
+	public ResponseEntity<TempBoardDTO> modify(@PathVariable int seq){
+		
+		TempBoardDTO result = tserv.modify(seq);
+		return ResponseEntity.ok(result);
+	}
+	
+	
+	
+	
 	
 	
 }

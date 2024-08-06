@@ -35,6 +35,10 @@ public class TempBoardService {
 		return tdao.delete(seq);
 	}
 	
+	// 임시저장 수정 (작성된 글 불러오기)
+	public TempBoardDTO modify(int seq) {
+		return tdao.modify(seq);
+	}
 	
 	
 }

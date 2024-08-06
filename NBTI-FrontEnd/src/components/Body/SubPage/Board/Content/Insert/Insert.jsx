@@ -12,11 +12,13 @@ export const Insert = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false); // 임시저장 팝업 창 열림/닫힘 상태 관리
   const [isAdmin, setIsAdmin] = useState(false); // 권한 여부 상태
   const [isNotice, setIsNotice] = useState(false); // 체크박스 상태 관리
+  const { boardType, setBoardSeq } = useBoardStore();
 
   const [board, setBoard] = useState({ title: "", contents: "", board_code: 1 }); // 1: 자유게시판
   const [tempBoard, setTempBoard] = useState({ title: "", contents: "", board_code: 1 });
   const [tempBoardList, setTempBoardList] = useState([]);
-  const { boardType, setBoardSeq } = useBoardStore();
+  const [tempSaveTime, setTempSaveTime] = useState(""); // 임시 저장 시간 상태
+  // const [tempModify, setTempModify] = ({ title: "", contents: "", board_code: 1 });
   // const [transform, setTransform] = useState(false);
 
   // 1 : 자유 2: 공지
@@ -78,10 +80,10 @@ export const Insert = () => {
   // 팝업창 공통 함수
   // 임시 저장된 목록 출력
   const saveTempBoard = () => {
-    // axios.get(`${host}/tempBoard/tempList/${code}`).then((resp) => {
     axios.get(`${host}/tempBoard/tempList`).then((resp) => {
-      console.log(resp.data);
+      console.log("뭐야? : ", resp.data);
       setTempBoardList(resp.data);
+
     });
   }
 
@@ -103,13 +105,20 @@ export const Insert = () => {
     // 임시 저장 완료
     axios.post(`${host}/tempBoard/tempSave`, board).then((resp) => {
       console.log("임시저장 응답: ", resp.data);
-      if (resp.data === 1) alert("임시저장 되었습니다.");
+      if (resp.data === 1) {
+        const now = new Date();
+        setTempSaveTime(format(now, "yyyy-MM-dd HH:mm:ss"));
+        alert("임시저장 되었습니다.");
+
+      }
+
+
     }).catch((error) => {
       console.error("임시저장 오류: ", error);
       alert("임시저장에 실패했습니다.");
     });
-
   };
+
 
   // 임시저장 팝업 열기 + 임시 저장된 목록 출력
   const openPopup = () => {
@@ -141,7 +150,16 @@ export const Insert = () => {
   }
 
 
-  // 임시 저장 수정
+  // 임시 저장 수정 (작성된 글 불러오기)
+  const tempBoardModify = (seq) => {
+
+    axios.get(`${host}/tempBoard/modify/${seq}`).then((resp) => {
+      console.log("수정할 글 : ", resp.data);
+      setBoard(resp.data);
+      console.log(board.title);
+    })
+
+  }
 
 
 
@@ -181,7 +199,7 @@ export const Insert = () => {
             placeholder="30자 이하의 제목을 입력하세요."
             onChange={handleInput}
           />
-          <p className={styles.tempSave}>임시저장 : 2024-07-26-17:13</p>
+          <p className={styles.tempSave}>임시저장 : {tempSaveTime}</p>
         </div>
         <div className={styles.right}>
           <div className={styles.btns}>
@@ -196,7 +214,7 @@ export const Insert = () => {
         </div>
       </div>
       <div className={styles.contents}>
-        <BoardEditor setBoard={setBoard} />
+        <BoardEditor board={board} setBoard={setBoard} contents={board.contents} />
       </div>
 
       {/* 팝업 창 */}
@@ -220,7 +238,7 @@ export const Insert = () => {
                       <div className={styles.tempSaveTitle}>{item.title}</div>
                       <div className={styles.tempSaveTime}>{currentDate}</div>
                       <div className={styles.tempSaveBtns}>
-                        <button className={styles.mod}>수정</button>
+                        <button className={styles.mod} onClick={() => { tempBoardModify(item.seq) }}>수정</button>
                         <button className={styles.del} onClick={() => { handleTempSavaDel(item.seq) }}>삭제</button>
                       </div>
                     </div>

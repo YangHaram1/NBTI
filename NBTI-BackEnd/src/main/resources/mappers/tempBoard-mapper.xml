@@ -12,7 +12,7 @@
 	
 	<!-- 임시저장 목록 출력 -->
 	<select id="selectAll" resultType="com.nbti.dto.TempBoardDTO">
-		select * from temp_board where member_id = #{member_id}
+		select * from temp_board where member_id = #{member_id} order by seq desc
 	</select>
 	
 	<!-- 임시저장 삭제 -->
@@ -20,6 +20,9 @@
 		delete from temp_board where seq = ${seq}
 	</delete>
 
-
+	<!-- 임시저장 수정 (작성된 글 불러오기) -->
+	<select id="modify" resultType="com.nbti.dto.TempBoardDTO">
+		select * from temp_board where seq = ${seq}
+	</select>
 
 </mapper>
