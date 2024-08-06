@@ -82,34 +82,34 @@ AND start_date &lt; TRUNC(SYSDATE, 'IW') + 7;
     AND trunc(start_date) &lt; trunc(sysdate, 'YYYY') + interval '1' year
     ORDER BY start_date DESC
 </select>
-    <select id="getYearlyStats" parameterType="string" resultType="map">
-        SELECT
-            COUNT(CASE 
-                WHEN start_date >= TRUNC(SYSDATE, 'YYYY') 
-                     AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
-                     AND start_date &gt; TRUNC(start_date) + INTERVAL '09:00' HOUR TO MINUTE 
-                THEN 1 
-                ELSE NULL 
-            END) AS lateCount,
-            COUNT(CASE 
-                WHEN start_date >= TRUNC(SYSDATE, 'YYYY') 
-                     AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
-                     AND end_date IS NULL 
-                     AND TRUNC(start_date) = TRUNC(SYSDATE) 
-                THEN 1 
-                ELSE NULL 
-            END) AS absentCount,
-            COUNT(CASE 
-                WHEN start_date >= TRUNC(SYSDATE, 'YYYY') 
-                     AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
-                     AND end_date IS NOT NULL 
-                     AND end_date &lt; TRUNC(start_date) + INTERVAL '18:00' HOUR TO MINUTE 
-                THEN 1 
-                ELSE NULL 
-            END) AS earlyLeaveCount
-        FROM attendance
-        WHERE member_id = #{memberId}
-          AND start_date >= TRUNC(SYSDATE, 'YYYY')  
-          AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
-    </select>
+<select id="getYearlyStats" parameterType="string" resultType="map">
+    SELECT
+        COUNT(CASE 
+            WHEN start_date >= TRUNC(SYSDATE, 'YYYY') 
+                 AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
+                 AND start_date &gt; TRUNC(start_date) + INTERVAL '09:00' HOUR TO MINUTE 
+            THEN 1 
+            ELSE NULL 
+        END) AS lateCount,
+        COUNT(CASE 
+            WHEN start_date >= TRUNC(SYSDATE, 'YYYY') 
+                 AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
+                 AND end_date IS NULL 
+                 AND TRUNC(start_date) = TRUNC(SYSDATE) 
+            THEN 1 
+            ELSE NULL 
+        END) AS absentCount,
+        COUNT(CASE 
+            WHEN start_date >= TRUNC(SYSDATE, 'YYYY') 
+                 AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
+                 AND end_date IS NOT NULL 
+                 AND end_date &lt; TRUNC(start_date) + INTERVAL '18:00' HOUR TO MINUTE 
+            THEN 1 
+            ELSE NULL 
+        END) AS earlyLeaveCount
+    FROM attendance
+    WHERE member_id = #{memberId}
+      AND start_date >= TRUNC(SYSDATE, 'YYYY')  
+      AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
+</select>
 </mapper>

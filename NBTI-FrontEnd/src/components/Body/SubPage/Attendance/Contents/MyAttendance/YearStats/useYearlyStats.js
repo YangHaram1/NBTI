@@ -7,8 +7,6 @@ const useYearlyStats = (memberId) => {
         lateCount: 0,
         absentCount: 0,
         earlyLeaveCount: 0,
-        totalWorkDays: 0,
-        totalWorkHours: 0,
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -26,25 +24,15 @@ const useYearlyStats = (memberId) => {
                 params: { memberId },
                 withCredentials: true
             });
-            
-            // 콘솔 로그 추가
+
             console.log('API 응답 데이터:', response.data);
 
-            const { 
-                lateCount, 
-                absentCount, 
-                earlyLeaveCount, 
-                workingDaysCount, 
-                totalWorkedMinutes 
-            } = response.data;
+            const { lateCount, absentCount, earlyLeaveCount } = response.data;
 
-            // 변환하여 상태 업데이트
             setStats({
                 lateCount,
                 absentCount,
                 earlyLeaveCount,
-                totalWorkDays: workingDaysCount,
-                totalWorkHours: (totalWorkedMinutes / 60).toFixed(2) // 분을 시간으로 변환
             });
             setError(null);
         } catch (err) {

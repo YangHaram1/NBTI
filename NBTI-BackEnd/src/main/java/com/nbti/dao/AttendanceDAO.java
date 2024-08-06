@@ -36,16 +36,7 @@ public class AttendanceDAO {
     public List<AttendanceDTO> getWeeklyRecords(String memberId) {
         return mybatis.selectList("Attendance.getWeeklyRecords", memberId);
     }
-
     public List<AttendanceDTO> getYearlyRecords(String memberId) {
         return mybatis.selectList("Attendance.getYearlyRecords", memberId);
-    }
-
-    public Map<String, Integer> getWeeklyStats(String memberId) {
-        return mybatis.selectOne("Attendance.getWeeklyStats", memberId);
-    }
-
-    public Map<String, Integer> getYearlyStats(String memberId) {
-        return mybatis.selectOne("Attendance.getYearlyStats", memberId);
     }
 }
