@@ -33,5 +33,21 @@ public class ApprovalDAO {
 	public List<ListDocDTO> selectApprovalIsMe(String id){
 		return mybatis.selectList("Approval.selectApprovalIsMe", id);
 	}
+	
+	public List<ListDocDTO> selectApprovalWait(String id){
+		return mybatis.selectList("Approval.selectApprovalWait",id);
+	}
+	
+	public List<ListDocDTO> selectApprovalBook(String id){
+		return mybatis.selectList("Approval.selectApprovalBook",id);
+	}
+	
+	public List<ListDocDTO> selectReturn(String id){
+		return mybatis.selectList("Approval.selectReturn",id);
+	}
+	
+	public List<ListDocDTO> selectCancle(String id){
+		return mybatis.selectList("Approval.selectCancle",id);
+	}
 
 }

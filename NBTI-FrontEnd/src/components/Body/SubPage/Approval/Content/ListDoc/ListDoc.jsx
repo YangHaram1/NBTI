@@ -30,10 +30,14 @@ export const ListDoc = ({setlist}) => {
                 console.log("참조/열람 문서함");
                 url = `${host}/approval/getReferIsMe`
                 break;
-            // case '반려 문서함':
-            // case '상신취소 문서함':
-            //     // url = `http://${host}/approval/${setlist}`;
-            //     break;
+            case '반려 문서함':
+                console.log("반려 문서함");
+                url = `${host}/approval/getReturn`
+                break;
+            case '상신취소 문서함':
+                console.log("상신취소 문서함");
+                url = `${host}/approval/getCancle`
+                break;
             default:
                 return;
         }
@@ -46,6 +50,18 @@ export const ListDoc = ({setlist}) => {
                 console.error(error);
             });
     },[setlist])
+
+
+    const renderDocStateBadge = (docState) => {
+        switch (docState) {
+            case 'p':
+                return <div className={styles.state_badge_gray}>결재 완료</div>;
+            case 'r':
+                return <div className={styles.state_badge_red}>결재 반려</div>;
+            default:
+                return <div className={styles.state_badge_green}>결재진행중</div>;
+        }
+    };
 
 
     return(
@@ -62,12 +78,15 @@ export const ListDoc = ({setlist}) => {
                     <div className={styles.emergency}> 긴급</div>
                     <div className={styles.content_title}> 제목</div>
                     <div className={styles.file}> 첨부</div>
-                    <div className={styles.writer}> 기안자</div>
-                    <div className={styles.doc_number}> 문서번호</div>
-                    <div className={styles.doc_state}> 문서상태</div>
+                    {setlist !== '반려 문서함' && setlist !== '상신취소 문서함' ? (
+                        <>
+                        <div className={styles.writer}> 기안자</div>
+                        <div className={styles.doc_number}> 문서번호</div>
+                        <div className={styles.doc_state}> 문서상태</div>
+                        </>
+                    ) : null}
                 </div>
                 <div className={styles.body}>
-
                 { 
                     lists.map((list)=>{
                         return(
@@ -89,12 +108,16 @@ export const ListDoc = ({setlist}) => {
                                     }
                                 </div>
                                 <div className={styles.file}>Y</div>
+                                {setlist !== '반려 문서함' && setlist !== '상신취소 문서함' ? (
+                                <>
                                 <div className={styles.writer}> {list.member_id}</div>
                                 <div className={styles.doc_number}>{list.approval_seq}</div>
                                 <div className={styles.doc_state}>
-                                <div className={styles.state_badge}>결재진행중</div>
+                                    {renderDocStateBadge(list.doc_state)}
                                 </div>
-                                <div className={styles.temp_number}>문서 임시번호</div>
+                                </>
+                            ) : null}
+                            <div className={styles.temp_number}>{list.temp_seq}</div>
                             </div>
                         );
 

@@ -15,20 +15,39 @@ public class ApprovalService {
 	@Autowired
 	private ApprovalDAO adao;
 	
-	// 기안문서
+	// 기안문서(문서함)
 	public List<ListDocDTO> getWriterIsMe(String id) {
 		return adao.selectWriterIsMe(id);
 	}
 	
-	// 참조문서
+	// 참조문서(문서함)
 	public List<ListDocDTO> getReferIsMe(String id){
 		return adao.selectReferIsMe(id);
 	}
 	
-	// 결재문서
+	// 결재문서(문서함)
 	public List<ListDocDTO> getApprovalIsMe(String id){
 		return adao.selectApprovalIsMe(id);
 	}
 	
+	// 반려문서(문서함)
+	public List<ListDocDTO> getReturn(String id){
+		return adao.selectReturn(id);
+	}
+	
+	// 취소문서(문서함)
+	public List<ListDocDTO> getCancle(String id){
+		return adao.selectCancle(id);
+	}
+	
+	// 결재 대기 문서(결재하기)
+	public List<ListDocDTO> getApprovalWait(String id){
+		return adao.selectApprovalWait(id);
+	}
+	
+	// 결재 예정 문서(결재하기)
+	public List<ListDocDTO> getApprovalBook(String id){
+		return adao.selectApprovalBook(id);
+	}
 
 }

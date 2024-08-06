@@ -244,33 +244,57 @@ public class ApprovalController {
 	// 기안 문서함 목록 출력
 	@GetMapping("/getWriterIsMe")
 	public List<ListDocDTO> getWriterIsMe() {
-
 		String id = (String)session.getAttribute("loginID");
-		
-		List<ListDocDTO> list = aServ.getWriterIsMe(id);
-		
+		List<ListDocDTO> list = aServ.getWriterIsMe(id);		
 		return list;
 	}
 	
 	// 참조/열람 문서함 목록 출력
 	@GetMapping("/getReferIsMe")
-	public List<ListDocDTO> getReferIsMe(){
-		
+	public List<ListDocDTO> getReferIsMe(){	
 		String id = (String)session.getAttribute("loginID");
-		
 		List<ListDocDTO> list = aServ.getReferIsMe(id);
-		
 		return list;
 	}
 	
 	// 결재 문서함 목록 출력
 	@GetMapping("/getApprovalIsMe")
 	public List<ListDocDTO> getApprovalIsMe(){
-		
 		String id = (String)session.getAttribute("loginID");
-		
 		List<ListDocDTO> list = aServ.getApprovalIsMe(id);
-		
+		return list;
+	}
+	
+	// 반려 문서함 목록 출력
+	@GetMapping("/getReturn")
+	public List<ListDocDTO> getReturn(){
+		String id = (String)session.getAttribute("loginID");
+		List<ListDocDTO> list = aServ.getReturn(id);
+		return list;
+	}
+	
+	// 상신 취소 문서함 목록 출력
+	@GetMapping("/getCancle")
+	public List<ListDocDTO> getCancle() {
+		String id = (String)session.getAttribute("loginID");
+		List<ListDocDTO> list = aServ.getCancle(id);
+		return list;
+	}
+	
+	
+	// 결재 대기 목록 출력
+	@GetMapping("/getApprovalWait")
+	public List<ListDocDTO> getApprovalWait(){
+		String id = (String)session.getAttribute("loginID");
+		List<ListDocDTO> list = aServ.getApprovalWait(id);
+		return list;
+	}
+	
+	// 결재 예정 목록 출력
+	@GetMapping("/getApprovalBook")
+	public List<ListDocDTO> getApprovalBook(){
+		String id = (String)session.getAttribute("loginID");
+		List<ListDocDTO> list = aServ.getApprovalBook(id);
 		return list;
 	}
 	
