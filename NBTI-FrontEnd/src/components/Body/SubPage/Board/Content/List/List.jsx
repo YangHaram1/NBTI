@@ -36,7 +36,7 @@ export const List = () => {
 
         axios.get(`${host}/board/list`, { params }).then((resp) => {
 
-            setBoardList(resp.data.list); // 서버에서 list와 count 보낸 것 중 list만 담기
+            setBoardList(resp.data.list); // 서버에서 list와 count 보내준 것 중 list만 담기
 
             // 페이지네이션
             const recordTotalCount = resp.data.count;

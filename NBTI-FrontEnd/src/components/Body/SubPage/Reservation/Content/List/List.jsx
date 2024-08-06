@@ -1,6 +1,35 @@
 import styles from './List.module.css'
+import { useEffect, useState } from 'react';
+import { host } from '../../../../../../config/config';
+import axios from 'axios';
+import { useReservationList } from '../../../../../../store/store';
 
 export const List = ()=>{
+
+    const { reservations, setReservations } = useReservationList();
+
+    useEffect(() => {
+
+        // 예약 목록을 가져오는 함수
+        const fetchReservations = () => {
+            axios.get(`${host}/reserve`)
+                .then((response) => {
+                    setReservations(response.data); // 예약 목록 상태 업데이트
+                })
+                .catch((error) => {
+                    console.error('Error fetching reservations', error);
+                });
+        };
+
+        fetchReservations(); // 컴포넌트가 마운트될 때 예약 목록 가져오기
+    }, [setReservations]); // 의존성 배열에 추가
+    
+
+
+
+
+
+
     return(
         <div className={styles.container}>
             <div className={styles.title}>
@@ -45,12 +74,20 @@ export const List = ()=>{
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                                <td>test</td>
-                            </tr>
+                            {reservations.length > 0 ? (
+                                reservations.map((reservation) => (
+                                    <tr key={reservation.reservation_seq}>
+                                        <td>{reservation.reserve_title_code}</td>
+                                        <td>{reservation.reserve_title_code}</td>
+                                        <td>{`${new Date(reservation.start_time).toLocaleString()} ~ ${new Date(reservation.end_time).toLocaleString()}`}</td>
+                                        <td>{reservation.state === 'N' ? '승인 대기 중' : reservation.state}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={4}>리스트가 존재하지 않음</td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>

@@ -29,7 +29,7 @@ function App() {
   }, []); // 의존성 배열에 setMembers 추가
 
   useEffect(() => {
-    if (loginID !== null) {
+    if (loginID !== null && loginID!=='error') {
       axios.get(`${host}/members/selectAll`)
         .then((resp) => {
           const filteredMembers = resp.data.map(({ pw, ...rest }) => rest);
@@ -41,7 +41,7 @@ function App() {
 
   //웹소켓 전체 관리
   useEffect(()=>{
-    if (loginID !== null) {
+    if (loginID !== null&& loginID!=='error') {
       const url=host.replace(/^https?:/, '')
       websocketRef.current = new WebSocket(`${url}/chatWebsocket`);
     }
@@ -60,7 +60,7 @@ function App() {
   },[loginID,webSocketCheck]);
 
   useEffect(()=>{
-    if(loginID!=null){
+    if(loginID!=null&& loginID!=='error'){
       axios.get(`${host}/chat/unread`).then((resp)=>{
         console.log(resp.data);
         setUnread(parseInt(resp.data));
@@ -72,9 +72,9 @@ function App() {
     <ChatsProvider>
       <Router>
         <div className="container">
-          {(loginID!=null)&& <Header />}
+          {(loginID!=null&& loginID!=='error')&& <Header />}
           <Body />
-          {(loginID!=null)&&<ChatApp websocketRef={websocketRef}></ChatApp>}
+          {(loginID!=null&& loginID!=='error')&&<ChatApp websocketRef={websocketRef}></ChatApp>}
           
         </div>
         <ToastContainer
