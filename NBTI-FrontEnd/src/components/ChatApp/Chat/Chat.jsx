@@ -30,13 +30,13 @@ const Chat = () => {
   const { loginID } = useAuthStore();
   const [chatCheck, setChatCheck] = useState([]);
 
-  const { chats, setChats, ws, setChatNavi, chatAppRef, chatNavi } = useContext(ChatsContext);
+  const { chats, setChats, ws, setChatNavi, chatAppRef, chatNavi} = useContext(ChatsContext);
   //const { maxCount,count, increment,decrement } = useNotification();
   let lastDate = null;
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
-  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage, setWebSocketCheck } = useCheckList();
+  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage, setWebSocketCheck,chatController,setChatController } = useCheckList();
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
   const [updateMember, setUpdateMember] = useState(false);
@@ -57,21 +57,7 @@ const Chat = () => {
   useEffect(() => {
     const url = host.replace(/^https?:/, '')
 
-    if (loginID != null && loginID!=='error') {
-      const { chatSeq } = useCheckList.getState();
-
-      if (chatSeq !== 0) {
-        axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {//채팅목록 가저오기
-          setChats(resp.data);
-          console.log("채팅목록가저오기");
-          if (resp.data.length > 0) //멤버 last_chat_seq 업데이트
-            axios.patch(`${host}/group_member?group_seq=${chatSeq}&&last_chat_seq=${resp.data[resp.data.length - 1].seq}`).then((resp) => {
-              ws.current.send("updateMember");
-            })
-        })
-
-      }
-
+    if (loginID != null && loginID !== 'error') {
       updateSidebarPosition();
       updateSearchPosition();
       ws.current.onclose = () => {
@@ -86,8 +72,11 @@ const Chat = () => {
       };
 
       ws.current.onmessage = (e) => {
-
-        if (e.data === "updateMember") {
+        if(e.data==='chatController'){
+          console.log("delete");
+          setChatController();
+        }
+        else if (e.data === "updateMember") {
           console.log(e.data);
           setUpdateMember((prev) => {
             return !prev;
@@ -111,9 +100,6 @@ const Chat = () => {
             })
 
           //////
-
-
-
           if (chat.group_seq === chatSeq) {
             setChats((prev) => {
 
@@ -129,14 +115,11 @@ const Chat = () => {
             }
 
           }
-
           console.log("메세지보냄");
         }
       }
 
     }
-
-
     window.addEventListener('resize', updateSidebarPosition);
 
     return () => {
@@ -144,6 +127,22 @@ const Chat = () => {
     };
 
   }, [chatNavi]);
+
+  useEffect(() => {
+    if (loginID != null && loginID !== 'error') {
+      const { chatSeq } = useCheckList.getState();
+      if (chatSeq !== 0) {
+        axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {//채팅목록 가저오기
+          setChats(resp.data);
+          console.log("채팅목록가저오기");
+          if (resp.data.length > 0) //멤버 last_chat_seq 업데이트
+            axios.patch(`${host}/group_member?group_seq=${chatSeq}&&last_chat_seq=${resp.data[resp.data.length - 1].seq}`).then((resp) => {
+              ws.current.send("updateMember");
+            })
+        })
+      }
+    }
+  }, [chatNavi, invite,chatController])
 
 
   const notify = useCallback((item) => {
@@ -329,7 +328,7 @@ const Chat = () => {
         let systemCheck = false;
         if (item.member_id === 'system') {
           check = false;
-          systemCheck = true;    
+          systemCheck = true;
         }
 
         //--------------------------------------------------//
@@ -349,7 +348,7 @@ const Chat = () => {
                 <div>
                   <div className={idCheck ? styles.nameReverse : styles.name}>{item.member_id}</div>
                   <div className={idCheck ? styles.contentReverse : styles.content}>
-                    <div dangerouslySetInnerHTML={{ __html: (check ? temp : (fileCheck ? file :item.message)) }}
+                    <div dangerouslySetInnerHTML={{ __html: (check ? temp : (fileCheck ? file : item.message)) }}
                       ref={el => {
                         if (el && check) {
                           chatRef.current[count++] = el; //검색한것만 ref 추가

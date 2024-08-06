@@ -134,10 +134,9 @@ public class MembersController {
 	}
 	// 사용자목록 검색
 	@GetMapping("/searchUser")
-	public ResponseEntity<List<MembersDTO>> searchUser(@RequestParam String name){
-		System.out.println(name);
-		List<MembersDTO> user = mServ.searchUser(name);
-		return ResponseEntity.ok(user);
+	public ResponseEntity<List<Map<String, Object>>> searchUser(@RequestParam String name){
+	    List<Map<String, Object>> users = mServ.searchUser(name);
+	    return ResponseEntity.ok(users);
 	}
 	// 사용자목록 팀 조회
 	@GetMapping("/selectByTeam")

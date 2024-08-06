@@ -168,7 +168,7 @@ const Chats = () => {
 
                             </div>
                             {index === countBookmark && (<div className={styles.line}></div>)}
-                            <ChatsModal modalRef={modalRef} index={index} item={item} setGroup_chats={setGroup_chats} setCountBookmark={setCountBookmark}></ChatsModal>
+                            <ChatsModal modalRef={modalRef} index={index} item={item} setGroup_chats={setGroup_chats} setCountBookmark={setCountBookmark} setCountTotal={setCountTotal}></ChatsModal>
                         </React.Fragment>
                     );
                 })

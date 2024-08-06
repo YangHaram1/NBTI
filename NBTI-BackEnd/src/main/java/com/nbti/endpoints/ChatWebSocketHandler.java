@@ -60,13 +60,25 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 		if(message.getPayload().equals("updateMember")) {
 			broadcastMessage("updateMember",list);
 		}
-		else if(!jsonValidate){		
-			ChatDTO dto = new ChatDTO(0, sender, message.getPayload(), null, group_seq,0);
-			dto = chatService.insert(dto);
-			String json = gson.toJson(dto);
-			broadcastMessage(json,list);
-			System.out.println(list.get(1).getMember_id());
-			System.out.println("메세지보냄");
+		else if(message.getPayload().equals("chatController")) {
+			broadcastMessage("chatController",list);
+		}
+		else if(!jsonValidate){
+			boolean listCheck=false;
+			for (Group_memberDTO dto : list) { //만약 방나갓는데 채팅 보낼라고하면 막기
+				if(dto.getMember_id().equals(sender)) {
+					listCheck=true;
+					break;
+				}
+			}
+			if(listCheck) {
+				ChatDTO dto = new ChatDTO(0, sender, message.getPayload(), null, group_seq,0);
+				dto = chatService.insert(dto);
+				String json = gson.toJson(dto);
+				broadcastMessage(json,list);
+				System.out.println(list.get(1).getMember_id());
+				System.out.println("메세지보냄");
+			}	
 		}
 		else {
 			System.out.println("파일업로드 웹소켓");
@@ -100,7 +112,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 		
 	}
 
-	private void broadcastMessage(String message,List<Group_memberDTO> list) {
+	private void broadcastMessage(String message,List<Group_memberDTO> list) {// 그룹별 메세지 전송 로직
 		synchronized (clients) {
 			for (WebSocketSession client : clients) {
 				try {

@@ -44,11 +44,7 @@
 <delete id="deleteUser" >
 	delete from members where id = #{id}
 </delete>
-<select id="searchUser" resultType="com.nbti.dto.MembersDTO">
-	    SELECT * FROM members 
-    WHERE name LIKE '%' || #{name} || '%' 
-    ORDER BY name
-</select>
+
   <select id="selectMembers" resultType="map">
         SELECT 
             m.id,
@@ -96,7 +92,26 @@ WHERE m.team_code = #{team_code}
 	<select id="searchMembers" resultType="com.nbti.dto.MembersDTO">
 		select * from members where team_code = #{team}
 	</select>
-	
+<select id="searchUser" resultType="map">
+    SELECT 
+        m.id,
+        m.pw,
+        m.name,
+        m.email,
+        t.team_name,
+        j.job_name,
+        m.member_level,
+        m.member_call,
+        m.gender,
+        m.ent_yn,
+        m.vacation_period
+    FROM members m
+    LEFT JOIN team t ON m.team_code = t.team_code
+    LEFT JOIN job j ON m.job_code = j.job_code
+    WHERE m.name LIKE '%' || #{name} || '%'
+    ORDER BY m.name
+</select>
+
 	<select id ="memberData" resultType="map">
 		select 
 			m.id, m.name, 

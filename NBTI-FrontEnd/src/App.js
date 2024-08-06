@@ -20,7 +20,7 @@ function App() {
   const { setMembers } = useMemberStore();
   const websocketRef=useRef(null);
   const {maxCount,count} =useNotification();
-  const {webSocketCheck,onMessage} =useCheckList();
+  const {webSocketCheck,onMessage,chatController} =useCheckList();
   const [unread,setUnread] =useState();
 
 
@@ -67,7 +67,7 @@ function App() {
       })
     }
 
-  },[onMessage,loginID])
+  },[onMessage,loginID,chatController])
   return (
     <ChatsProvider>
       <Router>
@@ -91,7 +91,7 @@ function App() {
           transition={Slide}
         />
       </Router>
-      {(unread>0)&&(<div className={styles.unread}>{unread}+</div>)}
+      {(unread>0&&(loginID !== null && loginID!=='error'))&&(<div className={styles.unread}>{unread}+</div>)}
     </ChatsProvider>
   );
 }

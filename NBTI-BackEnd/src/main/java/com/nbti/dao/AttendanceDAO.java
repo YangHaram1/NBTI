@@ -36,4 +36,7 @@ public class AttendanceDAO {
     public List<AttendanceDTO> getWeeklyRecords(String memberId) {
         return mybatis.selectList("Attendance.getWeeklyRecords", memberId);
     }
+    public List<AttendanceDTO> getYearlyRecords(String memberId) {
+        return mybatis.selectList("Attendance.getYearlyRecords", memberId);
+    }
 }

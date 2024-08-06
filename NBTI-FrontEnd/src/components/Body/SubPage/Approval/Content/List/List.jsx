@@ -1,7 +1,45 @@
+import { useEffect, useState } from 'react';
 import styles from './List.module.css';
+import { format } from 'date-fns';
+import { host } from '../../../../../../config/config';
+import axios from 'axios';
 
 
 export const List = ({setlist}) => {
+
+
+    const [lists, setLists] = useState([]);
+
+    useEffect(()=>{
+        let url = '';
+        console.log(setlist);
+        switch (setlist) {
+            case '결재 대기':
+                console.log("결재대기");
+                url = `${host}/approval/getApprovalWait`;
+                break;
+            case '결재 예정':
+                console.log("결재 예정")
+                url = `${host}/approval/getApprovalBook`;
+                break;
+            // case '참조/열람 문서함':
+            //     console.log("참조/열람 문서함");
+            //     url = `${host}/approval/getReferIsMe`
+            //     break;
+            // case '반려 문서함':
+            default:
+                return;
+        }
+        axios.get(url)
+            .then((resp) => {
+                console.log(resp.data);
+                setLists(resp.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    },[setlist])
+
 
     return(
         <div className={styles.container}>
@@ -21,15 +59,32 @@ export const List = ({setlist}) => {
                 </div>
                 <div className={styles.body}>
 
-                    {/* 매핑으로 데이터 넣을 예정 */}
-                    <div className={styles.date}> 2024-07-29</div>
-                    <div className={styles.form}> 휴가신청서</div>
-                    <div className={styles.emergency}>
-                        <div className={styles.emergency_badge}>긴급</div>
-                    </div>
-                    <div className={styles.content_title}>휴가가 너무너무 가고싶어요</div>
-                    <div className={styles.file}>Y</div>
-                    <div className={styles.writer}> 기안자</div>
+                    {
+                        lists.map((list)=>{
+                            return(
+                            <div className={styles.lists}>
+                                <div className={styles.date}>
+                                {
+                                    format(new Date(list.approval_date),'yyyy-MM-dd')
+                                }
+                                </div>
+                                <div className={styles.form}> {list.doc_sub_name}</div>
+                                <div className={styles.emergency}>
+                                        {
+                                            list.emergency == "Y  " ?  <div className={styles.emergency_badge}>긴급</div> :"" 
+                                        }
+                                </div>
+                                <div className={styles.content_title}>
+                                     {
+                                        list.title !== null ? list.title : list.doc_sub_name 
+                                    }
+                                </div>
+                                <div className={styles.file}>Y</div>
+                                <div className={styles.writer}> {list.member_id}</div>
+                            </div>
+                            );
+                        })
+                    }
                 </div>
             </div>
         </div>

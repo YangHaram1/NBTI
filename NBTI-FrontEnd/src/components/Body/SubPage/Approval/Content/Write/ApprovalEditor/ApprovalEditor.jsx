@@ -5,7 +5,7 @@ import styles from "./ApprovalEditor.module.css";
 import { api } from "../../../../../../../config/config";
 
 
-export const ApprovalEditor = ({setContent, content}) => {
+const ApprovalEditor = ({setContent, content}) => {
 
   // const [updatecontent, setUpdateContent] = useState(content);
   const editorRef = useRef();
@@ -16,8 +16,8 @@ export const ApprovalEditor = ({setContent, content}) => {
   };
 
   // useEffect(() => {
-  //   setContent(contents); // 컴포넌트가 마운트될 때 contents를 초기값으로 설정
-  // }, [updatecontent]); // contents가 변경될 때마다 업데이트
+  //   setContent(""); // 컴포넌트가 마운트될 때 contents를 초기값으로 설정
+  // }, []); // contents가 변경될 때마다 업데이트
 
   // const handleUpload = () => {
   //   inputRef.current.click();
@@ -48,7 +48,7 @@ export const ApprovalEditor = ({setContent, content}) => {
           editorRef.current = editor;
         }}
         init={{
-          height: 470,
+          height: 450,
           menubar: true,
           plugins: "wordcount anchor code image", //image
           toolbar:
@@ -57,7 +57,6 @@ export const ApprovalEditor = ({setContent, content}) => {
           statusbar: false,
           file_picker_types: "file image media",
           file_picker_callback: (callback, value, meta) => {},
-          zIndex:1,
           setup: (editor) => {
             editor.on("PastePreProcess ", (e) => {
               // 임시 div 요소에 붙여넣기된 콘텐츠를 삽입
@@ -95,4 +94,7 @@ export const ApprovalEditor = ({setContent, content}) => {
     </div>
   );
 };
+
+
+export default ApprovalEditor;
 

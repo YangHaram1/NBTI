@@ -28,6 +28,7 @@ const UserList = ({ setUserDetail }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [teams, setTeams] = useState([]);
     const [selectedTeam, setSelectedTeam] = useState('');
+    const [filterType, setFilterType] = useState('name'); // 'name' or 'team'
 
     const setSelectedMember = useMemberStore((state) => state.setSelectedMember);
     const navigate = useNavigate();
@@ -45,6 +46,7 @@ const UserList = ({ setUserDetail }) => {
     const getLevelName = (levelSeq) => {
         return levelMap[levelSeq] || '권한 없음';
     };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -53,16 +55,8 @@ const UserList = ({ setUserDetail }) => {
                     axios.get(`${host}/members/selectTeam`)
                 ]);
     
-                // 콘솔에 출력
-                console.log('User Response Data:', userResponse.data);
-                console.log('Team Response Data:', teamResponse.data);
-    
                 const lowerCaseUsers = convertKeysToLowerCase(userResponse.data);
                 const lowerCaseTeams = convertKeysToLowerCase(teamResponse.data);
-    
-                // 더 낮은 수준으로 콘솔에 출력
-                console.log('Lower Case Users:', lowerCaseUsers);
-                console.log('Lower Case Teams:', lowerCaseTeams);
     
                 setUsers(lowerCaseUsers);
                 setTeams(lowerCaseTeams);
@@ -78,51 +72,63 @@ const UserList = ({ setUserDetail }) => {
         fetchData();
     }, []);
 
-    useEffect(() => {
-        const fetchFilteredUsers = async (teamCode) => {
-            try {
-                const response = await axios.get(`${host}/members/selectByTeam`, {
-                    params: { team_code: teamCode }
+    const fetchFilteredUsers = async () => {
+        try {
+            let response;
+            if (filterType === 'name' && searchTerm) {
+                console.log('Fetching users by name:', searchTerm);
+                response = await axios.get(`${host}/members/searchUser`, {
+                    params: { 
+                        name: searchTerm
+                    }
                 });
-                const lowerCaseData = convertKeysToLowerCase(response.data);
-                setFilteredUsers(lowerCaseData);
-            } catch (error) {
-                console.error('사용자 데이터를 가져오는 데 실패했습니다.', error);
+            } else if (filterType === 'team' && selectedTeam) {
+                console.log('Fetching users by team:', selectedTeam);
+                response = await axios.get(`${host}/members/selectByTeam`, {
+                    params: { team_code: selectedTeam }
+                });
+            } else {
+                console.log('Fetching all users');
+                response = { data: users };
             }
-        };
-
-        if (selectedTeam) {
-            fetchFilteredUsers(selectedTeam);
-        } else {
-            setFilteredUsers(users); // Show all users if no team is selected
+            
+            console.log('API Response:', response.data); // Add this line to check the response
+            
+            const lowerCaseData = convertKeysToLowerCase(response.data);
+            setFilteredUsers(lowerCaseData);
+        } catch (err) {
+            console.error('사용자 데이터를 가져오는 데 실패했습니다.', err);
         }
-    }, [selectedTeam, users]);
+    };
+
+    useEffect(() => {
+        // Initialize or reset filters here if needed
+    }, [users]);
 
     const handleUserClick = (userId) => {
         setSelectedMember(userId); // 상태에 사용자 ID 저장
         navigate(`/useradmin/userdetail/${userId}`); // 사용자 업데이트 페이지로 이동
     };
 
-    const handleSearch = async () => {
-        if (!searchTerm.trim()) {
+    const handleSearch = () => {
+        if (filterType === 'name' && !searchTerm.trim()) {
             alert('검색어를 입력해주세요.');
             return;
         }
-
-        try {
-            const response = await axios.get(`${host}/members/searchUser`, {
-                params: { name: searchTerm }
-            });
-            const lowerCaseData = convertKeysToLowerCase(response.data);
-            setFilteredUsers(lowerCaseData);
-        } catch (err) {
-            alert('검색 결과를 가져오는 데 실패했습니다.');
-        }
+        fetchFilteredUsers(); // 검색 버튼 클릭 시 검색 수행
     };
 
     const handleTeamChange = (e) => {
         const selectedTeamCode = e.target.value;
         setSelectedTeam(selectedTeamCode); // 선택한 팀 코드로 상태 업데이트
+    };
+
+    const handleFilterChange = (e) => {
+        const selectedFilter = e.target.value;
+        setFilterType(selectedFilter); // 선택한 필터 타입으로 상태 업데이트
+        setSearchTerm(''); // 검색어 초기화
+        setSelectedTeam(''); // 팀 선택 초기화
+        setFilteredUsers(users); // 전체 사용자 목록으로 초기화
     };
 
     if (loading) return <div className={styles.loading}>로딩 중...</div>;
@@ -132,12 +138,25 @@ const UserList = ({ setUserDetail }) => {
         <div className={styles.container}>
             <h2 className={styles.title}>사용자 목록</h2>
             <div className={styles.searchAndFilter}>
-                <SearchUser searchTerm={searchTerm} setSearchTerm={setSearchTerm} onSearch={handleSearch} />
-                <Team
-                    teams={teams}
-                    selectedTeam={selectedTeam}
-                    onTeamChange={handleTeamChange}
-                />
+                <select onChange={handleFilterChange} className={styles.filterSelect}>
+                    <option value="name">이름</option>
+                    <option value="team">팀</option>
+                </select>
+                {filterType === 'name' && (
+                    <SearchUser 
+                        searchTerm={searchTerm} 
+                        setSearchTerm={setSearchTerm} 
+                        onSearch={handleSearch} 
+                    />
+                )}
+                {filterType === 'team' && (
+                    <Team
+                        teams={teams}
+                        selectedTeam={selectedTeam}
+                        onTeamChange={handleTeamChange}
+                    />
+                )}
+                
             </div>
 
             {filteredUsers.length > 0 ? (
