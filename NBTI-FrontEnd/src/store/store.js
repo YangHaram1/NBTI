@@ -84,7 +84,7 @@ export const useDocFormStore = create((set)=>{
 // 결재라인
 export const useApprovalLine = create((set) => {
     return {
-        approvalLine: [{}],
+        approvalLine: [],
         setApprovalLine: (approval) => set((prev) => {
             const exist = prev.approvalLine.findIndex(line => line.order === approval.order);
             let newApprovalLine;
@@ -104,7 +104,7 @@ export const useApprovalLine = create((set) => {
 // 참조라인
 export const useReferLine = create((set) => {
     return {
-        referLine: [{}],
+        referLine: [],
         // setReferLine : (refer)=>set((prev)=>({
         //     referLine: [...prev.referLine, refer]
         // })), 

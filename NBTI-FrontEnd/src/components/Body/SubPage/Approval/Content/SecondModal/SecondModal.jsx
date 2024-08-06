@@ -56,7 +56,7 @@ const SecondModal = ({ isOpen, onClose }) => {
               <div className={styles.form_refer}>
                 <div className={styles.form_refer_box}>
                   {
-                    referLine.slice(1).map((refer)=>{
+                    referLine.map((refer)=>{
                       return(
                         <div key={refer.id} className={styles.refer_member}>{refer.name} 대리 / 품질관리팀</div>
                       );
