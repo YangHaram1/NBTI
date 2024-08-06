@@ -12,9 +12,9 @@ export const Content = ()=>{
                 <Route path="/" element={<Home />} />
                 <Route path="write" element={<Write />} />
                 <Route path="home/*" element={<Home />} />
-                <Route path="listAll/*" element={<List setlist={"결재 전체"}/>} />
                 <Route path="listWait/*" element={<List setlist={"결재 대기"} />} />
-                <Route path="listReserved/*" element={<List setlist={"결재 예약"} />}/>
+                <Route path="listReserved/*" element={<List setlist={"결재 예정"} />}/>
+                <Route path="listAll/*" element={<List setlist={"참조/열람 대기"}/>} />
                 <Route path="listDocAll/*" element={<ListDoc setlist={"전체 문서함"} />} />
                 <Route path="listDocWrite/*" element={<ListDoc setlist={"기안 문서함"} />} />
                 <Route path="listDocApproval/*" element={<ListDoc setlist={"결재 문서함"} />} />
