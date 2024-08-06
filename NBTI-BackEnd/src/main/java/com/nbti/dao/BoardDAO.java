@@ -20,11 +20,21 @@ public class BoardDAO {
 	public List<BoardDTO> selectAll(Map<String, Object> map) {
 		return mybatis.selectList("Board.selectAll",map);
 	}
-	
 	// 게시글 총 개수 (페이지네이션)
 	public int getBoardCount(Map<String, Object> map) {
 		return mybatis.selectOne("Board.getBoardCount", map);
 	}
+
+	// 내 글 목록
+	public List<BoardDTO> selectMyList(Map<String, Object> map) {
+		return mybatis.selectList("Board.selectMyList",map);
+	}
+	// 내 글 총 개수 (페이지네이션)
+	public int getMyListCount(Map<String, Object> map) {
+		return mybatis.selectOne("Board.getMyListCount", map);
+	}
+	
+	
 	
 	// 게시글 출력
 	public BoardDTO selectBoard(BoardDTO dto) {
@@ -51,14 +61,6 @@ public class BoardDAO {
 		mybatis.update("Board.updateViewCount", map);
 	}
 
-	// 내 글 목록
-	public List<BoardDTO> selectMyList(Map<String, Object> map) {
-		return mybatis.selectList("Board.selectMyList",map);
-	}
-	// 내 글 총 개수 (페이지네이션)
-	public int getMyListCount(Map<String, Object> map) {
-		return mybatis.selectOne("Board.getMyListCount", map);
-	}
 	
 	
 	

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TempBoard">	
+	
+	<!-- 임시저장 -->
+	<insert id="insert">
+		insert into temp_board values(temp_board_seq.nextval, #{title}, #{contents}, #{member_id}, sysdate, ${board_code})
+	</insert>
+	
+	<!-- 임시저장 목록 출력 -->
+	<select id="selectAll" resultType="com.nbti.dto.TempBoardDTO">
+		select * from temp_board where member_id = #{member_id}
+	</select>
+	
+	<!-- 임시저장 삭제 -->
+	<delete id="delete">
+		delete from temp_board where seq = ${seq}
+	</delete>
+
+
+
+</mapper>
