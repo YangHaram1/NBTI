@@ -3,7 +3,6 @@ import styles from './WeeklyStats.module.css';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import koLocale from '@fullcalendar/core/locales/ko';
-import useWeeklyStats from './useWeeklyStats';
 
 // 시간 포맷 함수
 const formatTime = (date) => {
@@ -17,12 +16,7 @@ const formatDate = (date) => new Date(date).toISOString().split('T')[0];
 // 요일 계산 함수 (월요일을 주의 시작일로 설정)
 const getDayOfWeek = (date) => (date.getDay() + 6) % 7; // 0 (월요일)부터 6 (일요일)
 
-const WeeklyStats = ({ memberId }) => {
-    const { stats, dailyStats } = useWeeklyStats(memberId);
-
-    console.log("Received stats:", stats); // 데이터 확인용 로그
-    console.log("Received dailyStats:", dailyStats); // 데이터 확인용 로그
-
+const WeeklyStats = ({ stats, dailyStats }) => {
     const { lateCount, absentCount, earlyLeaveCount } = stats;
 
     // FullCalendar 이벤트 데이터 생성
