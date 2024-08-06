@@ -37,14 +37,14 @@ public class Group_chatService {
 		boolean check=mdao.check(list);
 		
 		if(!check) {
-			int seq=dao.insert();	
+			int group_seq=dao.insert();	
 			List<Group_memberDTO> member_list=new ArrayList<>();
-			Group_memberDTO dto= new Group_memberDTO(seq,list.get(0),0,"Y","N",list.get(1));
+			Group_memberDTO dto= new Group_memberDTO(group_seq,list.get(0),0,"Y","N",list.get(1));
 			member_list.add(dto);
-			dto= new Group_memberDTO(seq,list.get(1),0,"Y","N",list.get(0));
+			dto= new Group_memberDTO(group_seq,list.get(1),0,"Y","N",list.get(0));
 			member_list.add(dto);
 			mdao.insert(member_list);
-			ChatDTO cdto=new ChatDTO(0,"system",member_id+"님과 "+loginID+"님이 입장하셨습니다!",null,seq,0);
+			ChatDTO cdto=new ChatDTO(0,"system",member_id+"님과 "+loginID+"님이 입장하셨습니다!",null,group_seq,0);
 			cdao.insert(cdto);
 		}
 		

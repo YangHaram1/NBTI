@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { ApprovalEditor } from '../ApprovalEditor/ApprovalEditor';
+
 import styles from './DocDraft.module.css';
 import { Header } from '../Header/Header';
+import ApprovalEditor from '../ApprovalEditor/ApprovalEditor';
 
 export const DocDraft = ({userdata, content ,setDocData, setContent, setDate, setDept, setTitle}) => {
 

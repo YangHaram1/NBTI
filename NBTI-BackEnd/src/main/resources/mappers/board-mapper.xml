@@ -55,31 +55,6 @@
 	      		and member_id=#{keyword}
 	   		</if>
 	</select>
-
-	<!-- 게시글 출력 -->
-	<select id="selectBoard" resultType="com.nbti.dto.BoardDTO">
-		select *from board where seq = ${seq} and board_code = ${board_code}
-	</select>
-	
-	<!-- 게시글 입력 -->
-	<insert id="insert">
-		insert into board values(board_seq.nextval, #{title}, #{contents}, #{member_id}, sysdate, 0, ${board_code})
-	</insert>
-	
-	<!-- 게시글 삭제 -->
-	<delete id="delete">
-		delete from board where seq = ${seq}
-	</delete>
-	
-	<!-- 게시글 수정 -->
-	<update id="modify">
-		update board set title = #{title}, contents = #{contents} where seq = ${seq} and board_code = ${board_code}
-	</update>
-	
-	<!-- 조회수 증가 -->
-	<update id="updateViewCount"> 
-		update board set view_count = view_count +1 where seq = ${seq} and board_code = ${board_code}
-	</update>
 	
 	<!-- 내 글 목록 -->
 	<select id="selectMyList" resultType="com.nbti.dto.BoardDTO">
@@ -109,26 +84,8 @@
 	    WHERE rown BETWEEN ${start} AND ${end}
 	</select>
 	
-	<!-- 내 글 총 개수 -->
+	<!-- 내 글 총 개수 -->	
 	<select id="getMyListCount" resultType="int" >
-		select count(*) from board
-			<!-- 기본 조건: 게시판 코드 -->
-	            where board_code = ${board_code}
-	            and member_id = #{member_id}
-		
-			<!-- 검색 조건: target이 특정 값일 때 -->
-			<if test="target=='title'">
-	      		and title like '%'||#{keyword}||'%'
-	   		</if>
-	   		<if test="target=='contents'">
-	      		and REGEXP_REPLACE(contents,'&lt;[^>]+&gt;', '') like '%'||#{keyword}||'%'
-	   		</if>
-	   		<if test="target=='id'">
-	      		and member_id=#{keyword}
-	   		</if>
-	</select>
-	
-	<!-- <select id="getMyListCount" resultType="int" >
 		SELECT COUNT(*)
 		   FROM board
 		   <trim prefix="WHERE" prefixOverrides="AND|OR">
@@ -153,8 +110,35 @@
 		        OR member_id = #{keyword})
 		    </if>
 		</trim>
-	</select> -->
+	</select>
 	
+
+	<!-- 게시글 출력 -->
+	<select id="selectBoard" resultType="com.nbti.dto.BoardDTO">
+		select *from board where seq = ${seq} and board_code = ${board_code}
+	</select>
+	
+	<!-- 게시글 입력 -->
+	<insert id="insert">
+		insert into board values(board_seq.nextval, #{title}, #{contents}, #{member_id}, sysdate, 0, ${board_code})
+	</insert>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="delete">
+		delete from board where seq = ${seq}
+	</delete>
+	
+	<!-- 게시글 수정 -->
+	<update id="modify">
+		update board set title = #{title}, contents = #{contents} where seq = ${seq} and board_code = ${board_code}
+	</update>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateViewCount"> 
+		update board set view_count = view_count +1 where seq = ${seq} and board_code = ${board_code}
+	</update>
+	
+
 
 	<!-- ========================[ 메 인 ]====================== -->
 	<!-- 공지 게시판 출력 -->
