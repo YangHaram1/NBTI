@@ -4,28 +4,26 @@ import styles from "./Insert.module.css";
 import { useState, useEffect } from "react";
 import { host } from "../../../../../../config/config";
 import { useNavigate } from "react-router-dom";
+import { useBoardStore } from "../../../../../../store/store";
+import { format } from "date-fns";
 
 export const Insert = () => {
   const navi = useNavigate();
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 창 열림/닫힘 상태 관리
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // 임시저장 팝업 창 열림/닫힘 상태 관리
   const [isAdmin, setIsAdmin] = useState(false); // 권한 여부 상태
   const [isNotice, setIsNotice] = useState(false); // 체크박스 상태 관리
-  const [currentUser, setCurrentUser] = useState(null);
 
-  // 팝업 창을 여는 함수
-  const openPopup = () => {
-    setIsPopupOpen(true);
-  };
-  // 팝업 창을 닫는 함수
-  const closePopup = () => {
-    setIsPopupOpen(false);
-  };
+  const [board, setBoard] = useState({ title: "", contents: "", board_code: 1 }); // 1: 자유게시판
+  const [tempBoard, setTempBoard] = useState({ title: "", contents: "", board_code: 1 });
+  const [tempBoardList, setTempBoardList] = useState([]);
+  const { boardType, setBoardSeq } = useBoardStore();
+  // const [transform, setTransform] = useState(false);
 
-  const [board, setBoard] = useState({
-    title: "",
-    contents: "",
-    board_code: 1, // 자유게시판
-  });
+  // 1 : 자유 2: 공지
+  let code = 1;
+  if (boardType === "자유") code = 1;
+  else if (boardType === "공지") code = 2;
+
 
   // 글 입력
   const handleInput = (e) => {
@@ -41,6 +39,8 @@ export const Insert = () => {
       alert("제목, 내용을 작성해주세요");
       return; // 유효성 검사 통과하지 못하면 함수 종료
     }
+
+    // 글 작성 완료
     axios.post(`${host}/board`, board).then((resp) => {
       alert("글이 작성되었습니다.");
       navi("/board/free");
@@ -71,6 +71,85 @@ export const Insert = () => {
     });
   };
 
+
+
+  //---------------------------------------------------------------임시저장
+
+  // 팝업창 공통 함수
+  // 임시 저장된 목록 출력
+  const saveTempBoard = () => {
+    // axios.get(`${host}/tempBoard/tempList/${code}`).then((resp) => {
+    axios.get(`${host}/tempBoard/tempList`).then((resp) => {
+      console.log(resp.data);
+      setTempBoardList(resp.data);
+    });
+  }
+
+  // 임시 저장 버튼
+  const handleTempSaveBtn = () => {
+    setTempBoard(board); // 작성한 내용을 tempBoard에 담기
+    saveTempBoard(); // 임시 저장된 게시물 목록 확인
+
+    if (tempBoardList.length >= 10) {
+      alert("임시 저장된 게시물이 최대 개수(10개)를 초과했습니다. \n기존 게시물을 삭제한 후 다시 시도해주세요.");
+      return; // 임시 저장 수행 X
+    }
+
+    if (board.title.trim() === "" || board.contents.trim() === "") {
+      alert("제목, 내용을 작성해주세요");
+      return; // 유효성 검사 통과하지 못하면 함수 종료
+    }
+
+    // 임시 저장 완료
+    axios.post(`${host}/tempBoard/tempSave`, board).then((resp) => {
+      console.log("임시저장 응답: ", resp.data);
+      if (resp.data === 1) alert("임시저장 되었습니다.");
+    }).catch((error) => {
+      console.error("임시저장 오류: ", error);
+      alert("임시저장에 실패했습니다.");
+    });
+
+  };
+
+  // 임시저장 팝업 열기 + 임시 저장된 목록 출력
+  const openPopup = () => {
+    setIsPopupOpen(true);
+    saveTempBoard();
+  };
+
+  // 임시 저장된 목록 출력 (컴포넌트 마운트 시)
+  useEffect(() => {
+    saveTempBoard();
+  }, [code]);
+
+  // 임시 저장 삭제
+  const handleTempSavaDel = (seq) => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+
+      axios.delete(`${host}/tempBoard/delete/${seq}`).then((resp) => {
+        if (resp.data === 1) {
+          setTempBoardList((prev) => {
+            return prev.filter((item) => item.seq !== seq);
+          })
+        }
+
+      }).catch((error) => {
+        console.error("임시저장 삭제 실패: ", error);
+        alert("삭제에 실패했습니다.");
+      });
+    }
+  }
+
+
+  // 임시 저장 수정
+
+
+
+  // 임시저장 팝업 닫기
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.box}>
@@ -88,7 +167,7 @@ export const Insert = () => {
           )}
         </div>
         <div>
-          <p onClick={openPopup}>임시보관 된 게시물 ( 0 )</p>
+          <p onClick={openPopup}>임시보관 된 게시물 ( {tempBoardList.length} )</p>
         </div>
       </div>
       <div className={styles.top}>
@@ -106,7 +185,7 @@ export const Insert = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.btns}>
-            <button>임시저장</button>
+            <button onClick={handleTempSaveBtn}>임시저장</button>
             <button onClick={handleAddBtn}>작성완료</button>
           </div>
         </div>
@@ -126,14 +205,28 @@ export const Insert = () => {
           <div className={styles.popup}>
             <h3>임시 저장된 글 목록</h3>
             <div className={styles.tempSaveList}>
-              <div>
-                <div className={styles.tempSaveTitle}>임시저장 예시 111</div>
-                <div className={styles.tempSaveTime}>2024-07-20 14:20</div>
-                <div className={styles.tempSaveBtns}>
-                  <button className={styles.mod}>수정</button>
-                  <button className={styles.del}>삭제</button>
-                </div>
-              </div>
+              {
+                tempBoardList.map((item, i) => {
+                  const date = new Date(item.write_date);
+                  const currentDate = !isNaN(date)
+                    ? format(date, "yyyy-MM-dd HH:mm:ss")
+                    : "Invalid Date";
+
+                  const boardCodeValue = item.board_code === 1 ? "자유" : item.board_code === 2 ? "공지" : "알 수 없음";
+
+                  return (
+                    <div key={i}>
+                      <div className={styles.tempSaveValue}>{boardCodeValue}</div>
+                      <div className={styles.tempSaveTitle}>{item.title}</div>
+                      <div className={styles.tempSaveTime}>{currentDate}</div>
+                      <div className={styles.tempSaveBtns}>
+                        <button className={styles.mod}>수정</button>
+                        <button className={styles.del} onClick={() => { handleTempSavaDel(item.seq) }}>삭제</button>
+                      </div>
+                    </div>
+                  )
+                })
+              }
             </div>
             <span>
               저장된 글은 최대 10개까지 저장되며, 가장 오래된 순서대로
