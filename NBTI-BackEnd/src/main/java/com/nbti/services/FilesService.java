@@ -1,13 +1,10 @@
 package com.nbti.services;
 
 import java.io.File;
-import java.util.List;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +15,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nbti.commons.ImageConfig;
 import com.nbti.dao.ApprovalDAO;
 import com.nbti.dao.ApprovalLineDAO;
+import com.nbti.dao.ChatDAO;
 import com.nbti.dao.Chat_uploadDAO;
 import com.nbti.dao.DocDraftDAO;
 import com.nbti.dao.DocLeaveDAO;
 import com.nbti.dao.DocVacationDAO;
+import com.nbti.dao.Group_memberDAO;
 import com.nbti.dao.ReferLineDAO;
 import com.nbti.dto.ApprovalDTO;
 import com.nbti.dto.ApprovalLineDTO;
@@ -29,6 +28,7 @@ import com.nbti.dto.Chat_uploadDTO;
 import com.nbti.dto.DocDraftDTO;
 import com.nbti.dto.DocLeaveDTO;
 import com.nbti.dto.DocVacationDTO;
+import com.nbti.dto.Group_memberDTO;
 import com.nbti.dto.ReferLineDTO;
 
 @Service
@@ -36,6 +36,12 @@ public class FilesService {
 	
 	@Autowired
 	private Chat_uploadDAO dao;
+	
+	@Autowired
+	private ChatDAO cdao;
+	
+	@Autowired
+	private Group_memberDAO mdao;
 	
 	@Autowired
 	private ApprovalLineDAO aldao;
@@ -55,9 +61,6 @@ public class FilesService {
 	@Autowired
 	private DocLeaveDAO dldao;
 	
-	
-	
-//	public void upload(String realpath,MultipartFile[] files,int group_seq,String member_id) throws Exception {
 	public List<Map<String, Object>> upload(String realpath,MultipartFile[] files,int group_seq,String member_id) throws Exception {
 
 		File realPathFile =new File(realpath);
@@ -111,6 +114,28 @@ public class FilesService {
             // 비 이미지 파일 처리 로직
             return ImageConfig.file;
         }
+    }
+    
+    public List<Map<String, Object>> fileListByGroup_seq(String member_id) throws Exception{
+    	 List<Map<String, Object>> list =new ArrayList<>();
+    	 List<Group_memberDTO> mlist= mdao.list(member_id);
+    	 for (Group_memberDTO dto : mlist) {
+    		 Map<String, Object> group_chatObject= new HashMap<>();
+    		 group_chatObject.put("group_seq",dto.getGroup_seq());
+    		 group_chatObject.put("name",dto.getName());
+    		 List<Chat_uploadDTO> ulist= dao.listByGroup_seq(dto.getGroup_seq());
+    		 group_chatObject.put("list",ulist);
+    		 list.add(group_chatObject);
+		}
+    	  	
+    	return list;
+    }
+    
+    
+    @Transactional
+    public void delete(int seq) throws Exception{
+    	dao.deleteBySeq(seq);
+    	cdao.deleteByUploadSeq(seq);
     }
 	
     // 작성일 24.08.4

@@ -11,4 +11,12 @@
 		</selectKey>
 	</insert>
 	
+	<select id="listByGroup_seq" resultType="com.nbti.dto.Chat_uploadDTO">
+		select *from chat_upload where group_seq = ${group_seq}
+	</select>
+	
+	<delete id="deleteBySeq">
+		delete from chat_upload where seq=${seq}
+	</delete>
+	
 </mapper>

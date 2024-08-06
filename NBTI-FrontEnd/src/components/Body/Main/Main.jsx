@@ -10,21 +10,22 @@ export const Main = () => {
   const { loginID } = useAuthStore();
 
   useEffect(() => {
-    if (loginID !== null) {
+    if (loginID !== null && loginID !== 'error') {
       setDisplayLogin(true);
     }
     else {
       setDisplayLogin(false);
     }
-  })
+  }, [loginID])
+
   return (
     <React.Fragment>
       {!displayLogin && (<Login></Login>)}
       {displayLogin && (
         <div className={styles.container}>
-        <HeaderWrapper />
-        <Wrapper />
-      </div>)}
+          <HeaderWrapper />
+          <Wrapper />
+        </div>)}
     </React.Fragment>
   );
 };

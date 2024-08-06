@@ -8,6 +8,28 @@
 	</insert>
 	
 	<select id="list" resultType="com.nbti.dto.User_historyDTO">
-		select * from user_history order by seq desc
+	 SELECT a.* 
+	    FROM (
+		select user_history.*, ROW_NUMBER() OVER (ORDER BY seq DESC) AS rown 
+		from user_history 
+		<if test="target=='ip'">
+      		where ip like '%'||#{keyword}||'%'
+   		</if>
+   		<if test="target=='id'">
+      		where member_id like '%'||#{keyword}||'%'
+   		</if>
+   		)a 
+   		where rown between ${start} AND ${end}
 	</select>
+	
+	<select id="getHistoryCount" resultType="int" >
+		select count(*) from user_history
+		<if test="target=='ip'">
+      		where ip like '%'||#{keyword}||'%'
+   		</if>
+   		<if test="target=='id'">
+      		where member_id='%'||#{keyword}||'%'
+   		</if>
+	</select>
+	
 </mapper>

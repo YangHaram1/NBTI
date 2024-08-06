@@ -1,6 +1,7 @@
 package com.nbti.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,12 @@ public class User_histroyDAO {
 		mybatis.insert("User_history.insert",dto);
 	}
 	
-	public List<User_historyDTO> list() throws Exception{
-		return mybatis.selectList("User_history.list");
+	public List<User_historyDTO> list(Map<String, Object> params) throws Exception{
+		return mybatis.selectList("User_history.list",params);
+	}
+	
+	public int getHistoryCount(Map<String, Object> params) throws Exception{
+		return mybatis.selectOne("User_history.getHistoryCount",params);
+		
 	}
 }

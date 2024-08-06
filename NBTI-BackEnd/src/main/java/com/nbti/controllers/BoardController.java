@@ -31,14 +31,12 @@ public class BoardController {
 	@Autowired
 	private BoardService bserv;
 	@Autowired
-	private ReplyService rserv;
-	@Autowired
 	private HttpSession session;
 	
 	
 	// 목록 출력
 	@GetMapping("/list")
-	public ResponseEntity<List<BoardDTO>> selectAll(
+	public ResponseEntity<Map<String, Object>> selectAll(
 			@RequestParam int code,
 	        @RequestParam(required = false) String target,
 	        @RequestParam(required = false) String keyword,
@@ -53,9 +51,13 @@ public class BoardController {
 	    map.put("end", end);
 	    
 	    List<BoardDTO> list = bserv.selectAll(map);
-	    for (BoardDTO boardDTO : list) {
-		}
-		return ResponseEntity.ok(list);
+	    
+	    // 클라이언트에게 보낼 값 ( 페이지네이션 : 게시글 총 개수, 게시글 목록 )
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("count", bserv.getBoardCount(map) );
+	    result.put("list", list );
+	    
+		return ResponseEntity.ok(result);
 	}
 	
 	// 게시글 출력
@@ -103,70 +105,53 @@ public class BoardController {
 		
 		bserv.updateViewCount(map);
 		return ResponseEntity.ok().build();
-
 	}
 	
-	// 페이지네이션
-//	@GetMapping("/getList")
-//	public ResponseEntity<List<BoardDTO>> getList(@RequestBody Map<String, Integer> request){
-//		
-//		
-//		
-//		
-//		
-//		int cpage = request.get("cpage");
-//		int recordsPerPage = request.get("recordsPerPage");
-//		
-//		HashMap<String, Integer> map = new HashMap<>();
-//		map.put("cpage", cpage);
-//		map.put("recordsPerPage", recordsPerPage);
-//		
-//		List<BoardDTO> list = bserv.getList(map);
-//		
-//		return ResponseEntity.ok(list);
-//	}
-//	
+	// 내 글 목록
+	@GetMapping("/myList")
+	public ResponseEntity<Map<String, Object>> selectMyList(
+			@RequestParam int code,
+	        @RequestParam(required = false) String target,
+	        @RequestParam(required = false) String keyword,
+	        @RequestParam int start,
+	        @RequestParam int end){
+		
+		String member_id = (String) session.getAttribute("loginID");
+		
+		Map<String, Object> map = new HashMap<>();
+	    map.put("board_code", code);
+	    map.put("target", target);
+	    map.put("keyword", keyword);
+	    map.put("start", start);
+	    map.put("end", end);
+	    map.put("member_id", member_id);
+	    
+	    List<BoardDTO> list = bserv.selectMyList(map);
+	    
+	    // 클라이언트에게 보낼 값 ( 페이지네이션 : 게시글 총 개수, 게시글 목록 )
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("count", bserv.getMyListCount(map) ); // 전체 게시글 수 계산
+	    result.put("list", list );
+	    
+		return ResponseEntity.ok(result);
+	}
+	
+	
+	
 
 	//============================[ 메 인 ]=============================
 	// 공지 게시판 출력
 	@GetMapping("/noticeBoard")
 	public ResponseEntity<List<BoardDTO>> selectNotice(){
-		
 		List<BoardDTO> list = bserv.selectNotice();
 		return ResponseEntity.ok(list);
-
 	}
-	
-	// 자유 게시판 & 댓글 출력
-//	@GetMapping("/freeBoard")
-//	public ResponseEntity<Map<String, List>> selectFree(){
-//		
-//		List<BoardDTO> list = bserv.selectFree();
-//		
-//		List<List<ReplyDTO>> rlist = new ArrayList<>();
-//		
-//		for (BoardDTO dto : list) {
-//			int seq = dto.getSeq();
-//			rlist.add(rserv.selectFreeReply(seq));
-//		}
-//		
-//		
-//		Map<String, List> map = new HashMap<>();
-//		map.put("list", list);
-//		map.put("rlist", rlist);
-//		
-//		
-//		
-//		return ResponseEntity.ok(map);
-//		
-//	}
+
 	
 	@GetMapping("/freeBoard")
 	public ResponseEntity<Map<String, Object>> selectFree(){
-		
 		Map<String, Object> list = bserv.selectFree();
 		return ResponseEntity.ok(list);
-		
 	}
 	
 	

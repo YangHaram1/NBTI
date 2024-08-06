@@ -25,12 +25,14 @@ public class BoardService {
 	public List<BoardDTO> selectAll(Map<String, Object> map){
 		return bdao.selectAll(map);
 	}
+	
+	// 게시글 총 개수 (페이지네이션)
+	public int getBoardCount(Map<String, Object> map) {
+		return bdao.getBoardCount(map);
+	}
 
 	// 게시글 출력
 	public BoardDTO selectBoard(int seq, int code) {
-//		Map<String, Integer> params = new HashMap<>();
-//		params.put("seq", seq);
-//		params.put("code", code);
 		
 		return bdao.selectBoard(new BoardDTO(seq, code));
 	}
@@ -56,16 +58,16 @@ public class BoardService {
 		bdao.updateViewCount(map);
 	}
 	
-	// 페이지네이션
-//	public List<BoardDTO> getList(){
-//		return bdao.getList();
-//	}
-//	
-//	
+	// 내 글 목록
+	public List<BoardDTO> selectMyList(Map<String, Object> map){
+		return bdao.selectMyList(map);
+	}
+	// 내 글 총 개수 (페이지네이션)
+	public int getMyListCount(Map<String, Object> map) {
+		return bdao.getMyListCount(map);
+	}
 	
-	
-	
-	
+
 	//============================[ 메 인 ]=============================
 	// 공지 게시판 출력
 	public List<BoardDTO> selectNotice(){

@@ -179,3 +179,35 @@
     /* 핸들에 마우스를 올렸을 때의 배경 색상 */
 }
 
+@keyframes shake {
+    0% { transform: translateX(5px); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(5px); }
+  }
+  
+  .shake {
+    animation: shake 0.5s ease-in-out;
+    animation-iteration-count: infinite;
+  }
+  .system{
+    background-color: rgba(181, 172, 172, 0.242);
+    color: gray;
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    font-size: 12px;
+    border-radius: 20px;
+    padding: 5px;
+    font-family: 'PTNoeulB';
+  }
+
+  @font-face {
+    font-family: 'PTNoeulB';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/PTNoeulB.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
