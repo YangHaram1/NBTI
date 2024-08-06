@@ -6,13 +6,11 @@ import { host } from "../../../../../../config/config";
 import { useNavigate } from "react-router-dom";
 
 export const Insert = () => {
-
   const navi = useNavigate();
   const [isPopupOpen, setIsPopupOpen] = useState(false); // 팝업 창 열림/닫힘 상태 관리
   const [isAdmin, setIsAdmin] = useState(false); // 권한 여부 상태
   const [isNotice, setIsNotice] = useState(false); // 체크박스 상태 관리
   const [currentUser, setCurrentUser] = useState(null);
-
 
   // 팝업 창을 여는 함수
   const openPopup = () => {
@@ -26,7 +24,7 @@ export const Insert = () => {
   const [board, setBoard] = useState({
     title: "",
     contents: "",
-    board_code: 1 // 자유게시판
+    board_code: 1, // 자유게시판
   });
 
   // 글 입력
@@ -49,12 +47,10 @@ export const Insert = () => {
     });
   };
 
-
   // 로그인 한 사용자 정보 및 HR 권한 확인
   useEffect(() => {
     axios.get(`${host}/members`).then((resp) => {
-
-      if (resp.data.member_level === 2 || resp.data.member_level === 3) {
+      if (resp.data.member_level === "2" || resp.data.member_level === "3") {
         // HR 권한 확인
         axios.get(`${host}/members/selectLevel`).then((resp1) => {
           const hrStatus = resp1.data[parseInt(resp.data.member_level) - 1]?.hr; // 배열의 n번째 요소에서 hr 확인
@@ -67,21 +63,13 @@ export const Insert = () => {
     });
   }, []);
 
-
-
   // 체크박스 변경 (공지 게시판)
   const handleCheckbox = (e) => {
     setIsNotice(e.target.checked);
     setBoard((prev) => {
-      // const data = { ...prev, board_code: e.target.checked ? 2 : 1 }
-      // console.log(data);
-      // return data;
-
-      return { ...prev, board_code: e.target.checked ? 2 : 1 }
-
+      return { ...prev, board_code: e.target.checked ? 2 : 1 };
     });
   };
-
 
   return (
     <div className={styles.container}>
@@ -90,7 +78,11 @@ export const Insert = () => {
           {/* 관리자일 때 보이는 공지게시판 글쓰기용 체크박스 */}
           {isAdmin && (
             <label>
-              <input type="checkbox" checked={isNotice} onClick={handleCheckbox} />
+              <input
+                type="checkbox"
+                checked={isNotice}
+                onClick={handleCheckbox}
+              />
               <p>공지 게시판</p>
             </label>
           )}

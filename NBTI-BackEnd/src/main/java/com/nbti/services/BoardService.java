@@ -62,6 +62,10 @@ public class BoardService {
 	public List<BoardDTO> selectMyList(Map<String, Object> map){
 		return bdao.selectMyList(map);
 	}
+	// 내 글 총 개수 (페이지네이션)
+	public int getMyListCount(Map<String, Object> map) {
+		return bdao.getMyListCount(map);
+	}
 	
 
 	//============================[ 메 인 ]=============================
