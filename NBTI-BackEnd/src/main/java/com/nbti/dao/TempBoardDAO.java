@@ -31,5 +31,13 @@ public class TempBoardDAO {
 		return mybatis.delete("TempBoard.delete", seq);
 	}
 	
+	// 임시저장 수정 (작성된 글 불러오기)
+	public TempBoardDTO modify(int seq) {
+		return mybatis.selectOne("TempBoard.modify", seq);
+	}
+	
+	
+	
+	
 	
 }
