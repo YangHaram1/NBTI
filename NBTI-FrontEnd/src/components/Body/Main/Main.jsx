@@ -10,13 +10,14 @@ export const Main = () => {
   const { loginID } = useAuthStore();
 
   useEffect(() => {
-    if (loginID !== null) {
+    if (loginID !== null && loginID!=='error') {
       setDisplayLogin(true);
     }
     else {
       setDisplayLogin(false);
     }
-  })
+  },[])
+  
   return (
     <React.Fragment>
       {!displayLogin && (<Login></Login>)}

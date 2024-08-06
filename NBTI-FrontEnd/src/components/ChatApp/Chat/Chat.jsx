@@ -57,7 +57,7 @@ const Chat = () => {
   useEffect(() => {
     const url = host.replace(/^https?:/, '')
 
-    if (loginID != null) {
+    if (loginID != null && loginID!=='error') {
       const { chatSeq } = useCheckList.getState();
 
       if (chatSeq !== 0) {
