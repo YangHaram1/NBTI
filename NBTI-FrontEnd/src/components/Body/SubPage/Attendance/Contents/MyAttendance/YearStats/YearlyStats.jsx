@@ -1,9 +1,22 @@
-// YearlyStats.js
 import React from 'react';
 import styles from './YearlyStats.module.css';
 
-const YearlyStats = ({ stats = { lateCount: 0, absentCount: 0, earlyLeaveCount: 0 } }) => {
-    const { lateCount, absentCount, earlyLeaveCount } = stats;
+const YearlyStats = ({
+    stats = {
+        lateCount: 0,
+        absentCount: 0,
+        earlyLeaveCount: 0,
+        totalWorkDays: 0,
+        totalWorkHours: 0,
+    }
+}) => {
+    const {
+        lateCount,
+        absentCount,
+        earlyLeaveCount,
+        totalWorkDays,
+        totalWorkHours,
+    } = stats;
 
     return (
         <div className={styles.statsContainer}>
@@ -20,6 +33,14 @@ const YearlyStats = ({ stats = { lateCount: 0, absentCount: 0, earlyLeaveCount: 
                 <li className={styles.statItem}>
                     <span className={styles.statLabel}>조기 퇴근 횟수:</span>
                     <span className={styles.statValue}>{earlyLeaveCount}</span>
+                </li>
+                <li className={styles.statItem}>
+                    <span className={styles.statLabel}>총 근무일:</span>
+                    <span className={styles.statValue}>{totalWorkDays}</span>
+                </li>
+                <li className={styles.statItem}>
+                    <span className={styles.statLabel}>총 근무 시간:</span>
+                    <span className={styles.statValue}>{totalWorkHours} 시간</span>
                 </li>
             </ul>
         </div>
