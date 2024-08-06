@@ -8,9 +8,10 @@ export const ChatsProvider = ({ children }) => {
    const chatAppRef=useRef(null);
    const [chatNavi,setChatNavi] =useState('');
    const [chatNaviBody,setChatNaviBody]=useState('chats');
+   const [chatController,setChatController] =useState(false);
 
     return (
-        <ChatsContext.Provider value={{ chats, setChats,ws,chatAppRef,chatNavi,setChatNavi,chatNaviBody,setChatNaviBody}}>
+        <ChatsContext.Provider value={{ chats, setChats,ws,chatAppRef,chatNavi,setChatNavi,chatNaviBody,setChatNaviBody,chatController,setChatController}}>
             {children}
         </ChatsContext.Provider>
     );

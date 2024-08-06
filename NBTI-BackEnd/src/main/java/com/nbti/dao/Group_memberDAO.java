@@ -26,7 +26,7 @@ public class Group_memberDAO {
 		mybatis.insert("Group_member.insert",dto);
 	}
 
-	public boolean check(List<String> list) throws Exception {
+	public boolean check(List<String> list) throws Exception { //채팅방 만들수있는지 없는지 검사
 		Map<String, Object> map = new HashMap<>();
 		map.put("list", list);
 		map.put("size", list.size());
