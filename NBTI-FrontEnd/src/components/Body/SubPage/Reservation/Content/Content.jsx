@@ -6,7 +6,7 @@ import { Supplies } from "./Supplies/Supplies";
 import { Car } from "./Car/Car";
 
 
-export const Content = () => {
+export const Content = ({reservations}) => {
     return(
         <div className={styles.container}>
             <Routes>

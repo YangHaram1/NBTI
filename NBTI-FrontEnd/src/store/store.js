@@ -29,6 +29,11 @@ export const useCalendarList = create((set) => ({
     calendarSelectList: [],
     setCalendarSelectList: (item) => set({ calendarSelectList: item }), // 캘린더 선택 목록 
 }));
+// 예약
+export const useReservationList = create((set) => ({
+    reservations: [],
+    setReservations: (items) => set({ reservations: items }),
+}));
 
 /*하람*/
 export const useCheckList = create((set) => ({

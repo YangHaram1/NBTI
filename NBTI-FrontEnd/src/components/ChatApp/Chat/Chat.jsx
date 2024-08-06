@@ -374,14 +374,13 @@ const Chat = () => {
 
   useEffect(() => { //스크롤 
     scrollBottom();
-  }, [scrollBottom])
+  }, [scrollBottom]);
 
   useEffect(() => {//group_seq에 맞는 member list 뽑기
     axios.get(`${host}/group_member?group_seq=${chatSeq}`).then((resp) => {
-      console.log(resp.data);
       setChatCheck(resp.data);
     })
-  }, [invite, updateMember, chatNavi])
+  }, [invite, updateMember, chatNavi]);
 
 
   if (isLoading === true) {

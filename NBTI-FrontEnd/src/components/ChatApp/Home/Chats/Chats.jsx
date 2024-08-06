@@ -23,7 +23,7 @@ const Chats = () => {
           //  console.log(resp);
             if (resp != null) {
                 if (resp.data !== '') {
-                    console.log(resp.data);
+                 //   console.log(resp.data);
                     let count = -1;
                     let countUnread=0;
                     (resp.data).forEach((temp) => {
