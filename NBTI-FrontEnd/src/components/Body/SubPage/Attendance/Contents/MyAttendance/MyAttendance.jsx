@@ -19,8 +19,8 @@ export const MyAttendance = () => {
                                 
     const memberId = sessionStorage.getItem('loginID');
     const today = new Date().toISOString().split('T')[0];
-    const { stats: weeklyStats, dailyStats } = useWeeklyStats(memberId);
-    const { stats: yearlyStats } = useYearlyStats(memberId);
+    const { stats: weeklyStats, dailyStats, fetchWeeklyStats } = useWeeklyStats(memberId);
+    const { stats: yearlyStats, fetchYearlyStats } = useYearlyStats(memberId);
 
     const fetchAttendanceStatus = useCallback(async () => {
         if (!memberId) return;
@@ -67,6 +67,8 @@ export const MyAttendance = () => {
             setIsLate(isLate);
             setIsAbsent(false);
             alert(isLate ? '지각 기록이 저장되었습니다.' : '출근 기록이 저장되었습니다.');
+            fetchWeeklyStats(); // 주간 통계 업데이트
+            fetchYearlyStats(); // 연간 통계 업데이트
         } catch (err) {
             console.error('출근 기록에 실패했습니다.', err.response ? err.response.data : err);
             alert('출근 기록에 실패했습니다.');
@@ -85,6 +87,8 @@ export const MyAttendance = () => {
                 setClockedOut(true);
                 setIsEarlyLeave(true);
                 alert('퇴근 기록이 저장되었습니다.');
+                fetchWeeklyStats(); // 주간 통계 업데이트
+                fetchYearlyStats(); // 연간 통계 업데이트
             } else {
                 alert('퇴근 기록 저장 실패');
             }
