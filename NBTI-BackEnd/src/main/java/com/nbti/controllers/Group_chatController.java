@@ -45,23 +45,9 @@ public class Group_chatController {
 	
 	@PostMapping
 	public ResponseEntity<Void> post(String member_id,String name) throws Exception {
-		List<String> list =new ArrayList<>();
+		
 		String loginID= (String) session.getAttribute("loginID");
-		
-		list.add(member_id);
-		list.add(loginID);
-		boolean check=mserv.check(list);
-		
-		if(!check) {
-			int seq=serv.insert(name);	
-			List<Group_memberDTO> member_list=new ArrayList<>();
-			Group_memberDTO dto= new Group_memberDTO(seq,list.get(0),0,"Y","N",list.get(1));
-			member_list.add(dto);
-			dto= new Group_memberDTO(seq,list.get(1),0,"Y","N",list.get(0));
-			member_list.add(dto);
-			mserv.insert(member_list);
-		}
-		
+		serv.insert(member_id, loginID);	
 		return ResponseEntity.ok().build(); // 200  	
 	} 
 	
