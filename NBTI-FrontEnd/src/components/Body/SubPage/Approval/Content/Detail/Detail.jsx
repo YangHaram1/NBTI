@@ -5,20 +5,24 @@ import { useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useApprovalLine, useDocLeave, useDocVacation, useReferLine } from '../../../../../../store/store';
 import html2pdf from 'html2pdf.js';
+import { DocLeave } from './DocLeave/DocLeave';
 
 export const Detail=()=>{
 
     const [userdata, setUserData] = useState({}); 
-    const [docdata, setDocData] = useState({effective_date:'', cooperation_dept:'', title:'', content:'', emergency:'' });
-
-    const { resetReferLine} = useReferLine();
-    const { resetApprovalLine } = useApprovalLine();
-
+    // const [docdata, setDocData] = useState({effective_date:'', cooperation_dept:'', title:'', content:'', emergency:'' });
     //useLoaction으로 값 받아오기 => 객체이기 때문에 구조분할로 받는것이 용이
     const location = useLocation();
     const { seq, setlist } = location.state || {};
     console.log("seq:", seq);
     console.log("setlist:", setlist);
+
+    const [approvalData, setApprovalData] = useState([]);
+    const [referData, setReferData] = useState([]); 
+    const [docCommonData, setDocCommonData] = useState({}); 
+    const [docLeave, setDocLeave] = useState({}); 
+    const [docVacation, setDocVacation] = useState({}); 
+    const [docDraft, setDocDraft] = useState({}); 
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -27,33 +31,43 @@ export const Detail=()=>{
         const fetchData = async () => {
             setLoading(true);
             try {
+                // 내 정보 받아오기 (이게 필요할까..?)
                 const userDataResponse = await axios.get(`${host}/members/docData`);
                 console.log("내정보",userDataResponse);
                 setUserData(userDataResponse.data);
-    
-                // 문서 공통 정보 출력
+
+                // 문서 공통 정보 받아오기
                 const docDataResponse = await axios.get(`${host}/approval/${seq}`)
                 console.log("문서공통정보",docDataResponse);
-                
-                // 문서양식 번호 뽑아서 내용 axios 돌릴 예정
+                setDocCommonData(docDataResponse.data);
+
+                // 문서양식 별 데이터 받아오기
                 if(docDataResponse.data.doc_sub_seq == 1){
                     // 업무기안
                     const docMainDataResponse = await axios.get(`${host}/docDraft/${seq}`);
                     console.log("업무기안서",docMainDataResponse);
+                    setDocDraft(docMainDataResponse.data);
                 }else if(docDataResponse.data.doc_sub_seq == 2){
                     // 휴가 신청서
                     const docMainDataResponse = await axios.get(`${host}/docVacation/${seq}`);
                     console.log("휴가신청서",docMainDataResponse);
+                    setDocVacation(docMainDataResponse.data);
                 }else if(docDataResponse.data.doc_sub_seq == 3){
                     // 휴직 신청서
                     const docMainDataResponse = await axios.get(`${host}/docLeave/${seq}`);
                     console.log("휴직신청서",docMainDataResponse);
+                    setDocLeave(docMainDataResponse.data);
                 }
-
+                // 결재라인 정보 받아오기
                 const approvalLineResponse = await axios.get(`${host}/approvalLine/${seq}`);
-                console.log("결재라인",approvalLineResponse);
+                setApprovalData(approvalLineResponse.data);
+                console.log("결재라인 체크",approvalLineResponse.data);
+
+                // 참조라인 정보 받아오기
                 const referLineResponse = await axios.get(`${host}/referLine/${seq}`);
-                console.log("참조라인",referLineResponse);
+                setReferData(referLineResponse.data);
+                console.log("참조라인확인",referLineResponse.data);
+
     
             } catch (error) {
                 setError(error);
@@ -67,45 +81,7 @@ export const Detail=()=>{
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error occurred: {error.message}</p>;
 
-    // useEffect(()=>{
-    //     axios.get(`${host}/members/docData`)
-    //     .then((resp)=>{
-    //         console.log("정보 받아오기",resp);
-    //         // console.log("테스트",resp.data.NAME);
-    //         setUserData(resp.data);
-    //     })
-    //     .catch((err)=>{
-    //         console.log(err);
-    //     })
-
-    //     axios.get(`${host}/approval/${seq}`)
-    //     .then((resp)=>{
-    //         console.log("공통정보 출력",resp);
-    //         // 여기에서 문서양식 번호 뽑아서 내용 axios 돌릴 예정
-    //     })
-    //     .catch((err)=>{
-    //         console.log(err);
-    //     })
-
-    //     axios.get(`${host}/approvalLine/${seq}`)
-    //     .then((resp)=>{
-    //         console.log("결재라인 출력",resp);
-    //     })
-    //     .catch((err)=>{
-    //         console.log(err);
-    //     })
-
-    //     axios.get(`${host}/referLine/${seq}`)
-    //     .then((resp)=>{
-    //         console.log("참조라인 출력",resp);
-
-    //     })
-    //     .catch((err)=>{
-    //         console.log(err);
-    //     })
-
-    // },[setlist,seq])
-
+    // 문서 다운로드 
     const handleDownload = () => {
         const element = document.getElementById('content-to-print');
         console.log("다운로드 클릭");
@@ -119,16 +95,6 @@ export const Detail=()=>{
 
         html2pdf().set(opt).from(element).save();
     };
-
-    
-    // 결재라인 받아오기
-
-    // 참조라인 받아오기
-
-    // 문서정보 받아오기
-
-    // 공통정보 받아오기
-
 
 
     // const approvalSubmit = () =>{
@@ -205,12 +171,12 @@ export const Detail=()=>{
                         <div className={`${styles.approval_change_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
                     </div>
                     <div className={styles.write_box}>
-                        문서 출력칸
                         {/* {   
                         setlist === '휴가신청서' ?  <DocVacation userdata={userdata}/>
                         : setlist === '휴직신청서' ? <DocLeave userdata={userdata} setContent={setContent} content={content}/>
                         : <DocDraft userdata={userdata} setDocData={setDocData} setContent={setContent} content={content} setDate={setDate} setDept={setDept} setTitle={setTitle}/>
                         }    */}
+                        <DocLeave setlist={setlist} userdata={userdata} docCommonData={docCommonData} approvalData={approvalData} referData={referData} docLeave={docLeave}/>
                     </div>
                     <div className={styles.files}>
                         첨부파일 넣기

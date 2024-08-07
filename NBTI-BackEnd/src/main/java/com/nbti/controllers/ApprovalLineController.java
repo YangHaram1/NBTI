@@ -1,6 +1,7 @@
 package com.nbti.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,8 @@ public class ApprovalLineController {
 	private HttpSession session;
 	
 	@GetMapping("/{seq}")
-	public List<ApprovalLineDTO> getApprovalLine(@PathVariable int seq){
-		List<ApprovalLineDTO> list = alServ.getApprovalLine(seq);
+	public List<Map<String,Object>> getApprovalLine(@PathVariable int seq){
+		List<Map<String,Object>> list = alServ.getApprovalLine(seq);
 		return list;
 	}
 

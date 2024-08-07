@@ -1,0 +1,28 @@
+.container{
+    margin-top: 10px;
+    margin-left: 10px;
+    border: 1px solid black;
+    width: 98%;
+    height: 95%;
+    display: flex;
+    flex-direction: column;
+}
+
+.title{
+    flex:1;
+    text-align: center;
+    font-size: 27px;
+    width: 100%;
+    padding-top: 10px;
+}
+
+.header{
+    flex:1.5;
+    display: flex;
+}
+
+.content{
+    flex:7.5;
+}
+
+
