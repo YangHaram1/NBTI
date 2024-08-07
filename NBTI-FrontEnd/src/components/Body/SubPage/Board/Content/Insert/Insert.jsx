@@ -149,19 +149,14 @@ export const Insert = () => {
     }
   }
 
-
   // 임시 저장 수정 (작성된 글 불러오기)
   const tempBoardModify = (seq) => {
-
     axios.get(`${host}/tempBoard/modify/${seq}`).then((resp) => {
       console.log("수정할 글 : ", resp.data);
       setBoard(resp.data);
       console.log(board.title);
     })
-
   }
-
-
 
   // 임시저장 팝업 닫기
   const closePopup = () => {
