@@ -16,7 +16,7 @@ export const MyAttendance = () => {
     const [isLate, setIsLate] = useState(false);
     const [isAbsent, setIsAbsent] = useState(false);
     const [isEarlyLeave, setIsEarlyLeave] = useState(false);
-                                
+
     const memberId = sessionStorage.getItem('loginID');
     const today = new Date().toISOString().split('T')[0];
     const { stats: weeklyStats, dailyStats, fetchWeeklyStats } = useWeeklyStats(memberId);
@@ -61,7 +61,7 @@ export const MyAttendance = () => {
                 params: { memberId },
                 withCredentials: true
             });
-            const { seq, start_date, isLate } = response.data;
+            const { start_date, isLate } = response.data;
             setCurrentClockIn(format(new Date(start_date), 'HH:mm:ss'));
             setClockedIn(true);
             setIsLate(isLate);
@@ -100,7 +100,7 @@ export const MyAttendance = () => {
 
     return (
         <div className={styles.container}>
-            <YearlyStats stats={yearlyStats} /> {/* Ensure the props match the YearlyStats component's expectations */}
+            <YearlyStats stats={yearlyStats} />
             <div className={styles.titleSection}>
                 <h2>금일 근무 현황</h2>
             </div>
@@ -139,7 +139,7 @@ export const MyAttendance = () => {
                     </div>
                 </div>
             </div>
-            <WeeklyStats stats={weeklyStats} dailyStats={dailyStats} /> {/* Pass both stats and dailyStats */}
+            <WeeklyStats stats={weeklyStats} dailyStats={dailyStats} />
         </div>
     );
 };
