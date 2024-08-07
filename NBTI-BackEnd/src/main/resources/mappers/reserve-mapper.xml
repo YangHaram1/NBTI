@@ -4,11 +4,13 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="Reserve">
   
+  	<!-- 예약하기 -->
   	<insert id="insert">
   		INSERT 
   		INTO reserve VALUES (reserve_seq.nextval, #{member_id},#{reserve_title_code} ,#{purpose},#{start_time}, #{end_time} , 'N')
   	</insert>
   	
+  	<!-- 승인 전 대기 목록 -->
   	<select id="waitingList" resultType="com.nbti.dto.ReserveDTO">
 		SELECT 
 		    r.seq,
@@ -30,11 +32,11 @@
 		ORDER BY 
 		    r.start_time
   	</select>
-
   	
-	<!-- 목록 -->
+  	
+	<!--  -->
 	<resultMap id="reserveResultMap" type="com.nbti.dto.ReserveDTO">
-        <id property="seq" column="reservation_seq"/>
+        <id property="seq" column="seq"/>
         <result property="member_id" column="name"/>
         <result property="reserve_title_code" column="reserve_title_code"/>
         <result property="purpose" column="purpose"/>
@@ -42,10 +44,11 @@
         <result property="end_time" column="end_time"/>
         <result property="state" column="state"/>
     </resultMap>
-
+    
+	<!-- 승인 관리 -> 대기 목록 출력 -->
     <select id="waitList" resultMap="reserveResultMap">
         SELECT 
-            r.seq AS reservation_seq,
+            r.seq,
             r.member_id,
             m.name,  
             CASE 
@@ -67,18 +70,135 @@
         ORDER BY 
             r.start_time
     </select>
-    
-	<!-- 예약 승인 Y 업데이트 -->
+
+	<!-- 승인 관리 -> 승인 목록 출력 -->
+	<select id="approveList" resultMap="reserveResultMap">
+		SELECT 
+		    r.seq,
+		    r.member_id,
+		    m.name,  
+		    CASE 
+		        WHEN r.reserve_title_code = '1' THEN '회의실'
+		        WHEN r.reserve_title_code = '2' THEN '비품'
+		        WHEN r.reserve_title_code = '3' THEN '차량'
+		        ELSE '기타' 
+		    END AS reserve_title_code,
+		    r.purpose,
+		    r.start_time,
+		    r.end_time,
+		    r.state
+		FROM 
+		    reserve r
+		JOIN 
+		    members m ON r.member_id = m.id 
+		WHERE 
+		    r.state = 'Y'
+		ORDER BY 
+		    r.seq
+	</select>
+
+	<!-- 승인 관리 -> 반려 목록 출력 -->
+	<select id="rejectList" resultMap="reserveResultMap">
+		SELECT 
+		    r.seq,
+		    r.member_id,
+		    m.name,  
+		    CASE 
+		        WHEN r.reserve_title_code = '1' THEN '회의실'
+		        WHEN r.reserve_title_code = '2' THEN '비품'
+		        WHEN r.reserve_title_code = '3' THEN '차량'
+		        ELSE '기타' 
+		    END AS reserve_title_code,
+		    r.purpose,
+		    r.start_time,
+		    r.end_time,
+		    r.state
+		FROM 
+		    reserve r
+		JOIN 
+		    members m ON r.member_id = m.id 
+		WHERE 
+		    r.state = 'R'
+		ORDER BY 
+		    r.seq
+	</select>
+	
+	<!-- 승인 Y 업데이트 -->
     <update id="updateReservationStatus" parameterType="map">
 	    UPDATE reserve 
 	    SET state = #{state} 
 	    WHERE seq = #{seq}
 	</update>
-
-
-
-
-
-
-  	
-  </mapper>
+	
+	<!-- 반려 R 업데이트 -->
+    <update id="reject" parameterType="map">
+	    UPDATE reserve 
+	    SET state = #{state} 
+	    WHERE seq = #{seq}
+	</update>
+	
+	<!-- 자동차 -->
+	<select id="carList" resultMap="reserveResultMap">
+		SELECT 
+		 	r.seq,
+		    r.member_id,
+		    m.name,  
+			r.reserve_title_code,
+		    r.purpose,
+		    r.start_time,
+		    r.end_time,
+		    r.state
+		FROM 
+		    reserve r
+		JOIN 
+		    members m ON r.member_id = m.id 
+		WHERE 
+		    r.state = 'Y'
+		    AND r.reserve_title_code = '3'
+		ORDER BY 
+		    r.seq
+	</select>
+	<!-- 비품 -->
+	<select id="suppliesList" resultMap="reserveResultMap">
+		SELECT 
+		 	r.seq,
+		    r.member_id,
+		    m.name,  
+			r.reserve_title_code,
+		    r.purpose,
+		    r.start_time,
+		    r.end_time,
+		    r.state
+		FROM 
+		    reserve r
+		JOIN 
+		    members m ON r.member_id = m.id 
+		WHERE 
+		    r.state = 'Y'
+		    AND r.reserve_title_code = '2'
+		ORDER BY 
+		    r.seq
+	</select>
+	<!-- 회의실 -->
+	<select id="meetingRoomList" resultMap="reserveResultMap">
+		SELECT 
+		 	r.seq,
+		    r.member_id,
+		    m.name,  
+			r.reserve_title_code,
+		    r.purpose,
+		    r.start_time,
+		    r.end_time,
+		    r.state
+		FROM 
+		    reserve r
+		JOIN 
+		    members m ON r.member_id = m.id 
+		WHERE 
+		    r.state = 'Y'
+		    AND r.reserve_title_code = '1'
+		ORDER BY 
+		    r.seq
+	</select>
+	
+</mapper>

@@ -47,22 +47,64 @@ public class ReserveController {
 		List<ReserveDTO> list = rserv.waitList();
 		return ResponseEntity.ok(list);
 	}
-	
-	//업데이트 N -> Y 
-    @PostMapping("/approve")
-    public ResponseEntity<Void> update(@RequestBody Map<String, Integer> request) {
-        Integer seq = request.get("seq");
-        if (seq != null) {
-            try {
-                rserv.update(seq); // 예약 상태 업데이트
-                return ResponseEntity.ok().build();
-            } catch (Exception e) {
-                e.printStackTrace(); // 예외를 로그에 기록
-                return ResponseEntity.status(500).build();
-            }
-        } else {
-            return ResponseEntity.badRequest().build(); 
-        }
+
+	//승인 N -> Y 
+	@PostMapping("/approve")
+	public ResponseEntity<Void> update(@RequestBody Map<String, Integer> request) throws Exception {
+	    Integer seq = request.get("seq");
+	    if (seq != null) {
+	        rserv.update(seq); // 예약 상태를 'Y'로 업데이트
+	        return ResponseEntity.ok().build();
+	    } else {
+	        return ResponseEntity.badRequest().build(); 
+	    }
+	}
+
+	//반려 N -> R 
+	@PostMapping("/reject")
+	public ResponseEntity<Void> reject(@RequestBody Map<String, Integer> request) throws Exception {
+	    Integer seq = request.get("seq");
+	    System.out.println("반려 seq :" + seq);
+	    if (seq != null) {
+	        rserv.reject(seq); // 예약 상태를 'R'로 업데이트
+	        return ResponseEntity.ok().build();
+	    } else {
+	        return ResponseEntity.badRequest().build(); 
+	    }
+	}
+
+    //승인 관리 - 승인 목록 출력
+    @GetMapping("/approveList")
+    public ResponseEntity<List<ReserveDTO>> ApproveList() throws Exception {
+        List<ReserveDTO> approveList = rserv.approveList();
+        return ResponseEntity.ok(approveList);
+    }
+    //승인 관리 - 반려 목록 출력
+    @GetMapping("/rejectList")
+    public ResponseEntity<List<ReserveDTO>> rejectList () throws Exception {
+    	List<ReserveDTO> rejectList = rserv.rejectList();
+//    	System.out.println(rejectList.size());
+    	return ResponseEntity.ok(rejectList);
+    }
+    
+    @GetMapping("/carList")
+    public ResponseEntity<List<ReserveDTO>> carList () throws Exception {
+    	List<ReserveDTO> carList = rserv.carList();
+//    	System.out.println(rejectList.size());
+    	return ResponseEntity.ok(carList);
+    }
+    //suppliesList
+    @GetMapping("/suppliesList")
+    public ResponseEntity<List<ReserveDTO>> suppliesList () throws Exception {
+    	List<ReserveDTO> suppliesList = rserv.suppliesList();
+//    	System.out.println(rejectList.size());
+    	return ResponseEntity.ok(suppliesList);
+    }
+    @GetMapping("/meetingRoomList")
+    public ResponseEntity<List<ReserveDTO>> meetingRoomList () throws Exception {
+    	List<ReserveDTO> meetingRoomList = rserv.meetingRoomList();
+//    	System.out.println(rejectList.size());
+    	return ResponseEntity.ok(meetingRoomList);
     }
 
 
