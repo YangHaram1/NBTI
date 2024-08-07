@@ -8,5 +8,9 @@
  	<insert id="insert">
  		insert into refer_line values(refer_line_seq.nextval, ${temp_seq}, #{referer})
  	</insert>
+ 	
+ 	<select id="selectLine" resultType='com.nbti.dto.ReferLineDTO'>
+ 		select * from refer_line where temp_seq=#{seq}
+ 	</select>
   
  </mapper>

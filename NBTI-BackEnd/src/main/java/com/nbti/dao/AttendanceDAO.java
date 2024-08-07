@@ -39,4 +39,11 @@ public class AttendanceDAO {
     public List<AttendanceDTO> getYearlyRecords(String memberId) {
         return mybatis.selectList("Attendance.getYearlyRecords", memberId);
     }
+    public List<AttendanceDTO> getMonthlyRecords(String memberId, int year, int month) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("memberId", memberId);
+        params.put("year", year);
+        params.put("month", month);
+        return mybatis.selectList("Attendance.getMonthlyRecords", params);
+    }
 }

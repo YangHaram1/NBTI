@@ -49,5 +49,9 @@ public class ApprovalDAO {
 	public List<ListDocDTO> selectCancle(String id){
 		return mybatis.selectList("Approval.selectCancle",id);
 	}
+	
+	public ApprovalDTO selectApproval(int seq){
+		return mybatis.selectOne("Approval.selectApproval",seq);
+	}
 
 }

@@ -86,6 +86,80 @@ public class AttendanceService {
         return result;
     }
 
+    public Map<String, Object> getMonthlyStats(String memberId, int year, int month) {
+        List<AttendanceDTO> records = aDao.getMonthlyRecords(memberId, year, month);
+
+        LocalDate startOfMonth = LocalDate.of(year, month, 1);
+        LocalDate endOfMonth = startOfMonth.with(TemporalAdjusters.lastDayOfMonth());
+
+        int lateCount = 0;
+        int absentCount = 0;
+        int earlyLeaveCount = 0;
+        double totalWorkHours = 0;
+
+        Map<String, Map<String, Object>> dailyStats = new HashMap<>();
+
+        for (AttendanceDTO record : records) {
+            Timestamp startDate = record.getStart_date();
+            Timestamp endDate = record.getEnd_date();
+
+            if (startDate != null) {
+                LocalDateTime startDateTime = startDate.toLocalDateTime();
+                LocalDate localDate = startDateTime.toLocalDate();
+                String dateString = localDate.toString();
+
+                if (!dailyStats.containsKey(dateString)) {
+                    dailyStats.put(dateString, new HashMap<>());
+                }
+
+                Map<String, Object> dateStats = dailyStats.get(dateString);
+                dateStats.put("startDate", startDate);
+                dateStats.put("endDate", endDate);
+
+                if (localDate.isEqual(LocalDate.now()) && endDate == null) {
+                    absentCount++;
+                    dateStats.put("absent", true);
+                } else {
+                    dateStats.put("absent", false);
+                }
+
+                if (!localDate.isBefore(startOfMonth) && !localDate.isAfter(endOfMonth)) {
+                    if (startDateTime.toLocalTime().isAfter(LocalTime.of(9, 0))) {
+                        lateCount++;
+                        dateStats.put("late", true);
+                    } else {
+                        dateStats.put("late", false);
+                    }
+
+                    if (endDate != null) {
+                        LocalDateTime endDateTime = endDate.toLocalDateTime();
+                        Duration workDuration = Duration.between(startDateTime, endDateTime);
+                        totalWorkHours += workDuration.toHours() + workDuration.toMinutes() / 60.0;
+
+                        if (endDateTime.toLocalTime().isBefore(LocalTime.of(18, 0))) {
+                            earlyLeaveCount++;
+                            dateStats.put("earlyLeave", true);
+                        } else {
+                            dateStats.put("earlyLeave", false);
+                        }
+                    }
+                }
+            }
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("lateCount", lateCount);
+        result.put("absentCount", absentCount);
+        result.put("earlyLeaveCount", earlyLeaveCount);
+        result.put("totalWorkHours", totalWorkHours);
+        result.put("dailyStats", dailyStats);
+
+        return result;
+    }
+
+    
+    
+    
     public Map<String, Object> getWeeklyStats(String memberId) {
         List<AttendanceDTO> records = aDao.getWeeklyRecords(memberId);
 
@@ -209,4 +283,6 @@ public class AttendanceService {
 
         return result;
     }
+    
+
 }
