@@ -25,7 +25,7 @@ export const NoticeBoard = () => {
         const requestBox = { seq: seq, board_code: 2 };
         axios.put(`${host}/board/viewCount`, requestBox).then((resp) => {
             setBoardSeq(seq);
-            navi("/board/detail");
+            navi("/board/detail/");
         });
     };
 

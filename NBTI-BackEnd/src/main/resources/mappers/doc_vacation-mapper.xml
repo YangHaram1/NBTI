@@ -7,4 +7,8 @@
  	<insert id="insert">
  		insert into doc_vacation values(#{vacation_seq}, #{vacation_category},#{vacation_start},#{start_half},#{start_half_ap},#{vacation_end},#{end_half},#{end_half_ap})
  	</insert>
+ 	
+ 	<select id="selectContent" resultType='com.nbti.dto.DocVacationDTO'>
+ 		select * from doc_vacation where vacation_seq = #{seq}
+ 	</select>
  </mapper>

@@ -1,0 +1,10 @@
+.reservationContent {
+    height: inherit;
+    overflow-y: none;
+}
+.customTitle {
+    text-align: left; /* 텍스트를 중앙 정렬 */
+    margin: 10px; /* 캘린더와의 간격 */
+    font-size: 1rem; /* 제목 크기 조정 */
+    font-weight: bold; /* 굵은 글씨 */
+}
