@@ -148,6 +148,10 @@
 		where a.member_id = #{id} and a.doc_state = 'c'
 		order by a.temp_seq desc
  	</select>
+ 	
+ 	<select id="selectApproval" resultType="com.nbti.dto.ApprovalDTO">
+ 		select * from approval where temp_seq = #{seq}
+ 	</select>
   
   	
   

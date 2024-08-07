@@ -49,5 +49,10 @@ public class ApprovalService {
 	public List<ListDocDTO> getApprovalBook(String id){
 		return adao.selectApprovalBook(id);
 	}
+	
+	// 디테일 페이지(공통정보 출력)
+	public ApprovalDTO getApproval(int seq){
+		return adao.selectApproval(seq);
+	}
 
 }

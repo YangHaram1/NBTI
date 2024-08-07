@@ -7,4 +7,8 @@
  	<insert id="insert">
  		insert into doc_draft values(#{draft_seq}, #{effective_date}, #{cooperation_dept}, #{title},#{content})
  	</insert>
+ 	
+ 	<select id="selectContent" resultType="com.nbti.dto.DocDraftDTO">
+ 		select * from doc_draft where draft_seq = #{seq}
+ 	</select>
  </mapper>

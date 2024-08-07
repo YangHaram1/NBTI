@@ -19,5 +19,9 @@ public class ReferLineService {
 			rldao.insert(dto);
 		}
 	}
+	
+	public List<ReferLineDTO> getReferLine(int seq){
+		return rldao.selectLine(seq);
+	}
 
 }
