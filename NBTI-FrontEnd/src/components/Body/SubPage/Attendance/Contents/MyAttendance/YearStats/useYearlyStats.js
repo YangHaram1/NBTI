@@ -7,6 +7,8 @@ const useYearlyStats = (memberId) => {
         lateCount: 0,
         absentCount: 0,
         earlyLeaveCount: 0,
+        statsDay : 0,
+        statsHours : 0
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -27,12 +29,14 @@ const useYearlyStats = (memberId) => {
 
             console.log('API 응답 데이터:', response.data);
 
-            const { lateCount, absentCount, earlyLeaveCount } = response.data;
+            const { lateCount, absentCount, earlyLeaveCount,statsDay,statsHours } = response.data;
 
             setStats({
                 lateCount,
                 absentCount,
                 earlyLeaveCount,
+                statsDay,
+                statsHours
             });
             setError(null);
         } catch (err) {
