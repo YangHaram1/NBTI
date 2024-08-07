@@ -34,7 +34,12 @@ const WeeklyStats = ({ stats, dailyStats }) => {
         // 시간 및 근무 시간 계산
         const startTime = startDate ? formatTime(startDate) : 'N/A';
         const endTime = endDate ? formatTime(endDate) : 'N/A';
-        const workingHours = startDate && endDate ? `${((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60)).toFixed(2)} 시간` : 'N/A';
+        const workingHours = startDate && endDate ? (() => {
+            const diffMs = new Date(endDate) - new Date(startDate);
+            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+            const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+            return `${diffHours}시간 ${diffMinutes}분`;
+        })() : 'N/A';
 
         const title = `출근: ${startTime}\n퇴근: ${endTime}\n근무 시간: ${workingHours}\n`;
 

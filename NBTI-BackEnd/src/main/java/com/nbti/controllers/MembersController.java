@@ -27,7 +27,7 @@ import com.nbti.services.DepartmentService;
 import com.nbti.services.JobService;
 import com.nbti.services.M_LevelService;
 import com.nbti.services.MembersService;
-import com.nbti.services.TeamService;
+import com.nbti.services.TeamsService;
 
 import jakarta.servlet.http.HttpSession;
 //import org.springframework.web.bind.annotation.RequestParam;
@@ -39,7 +39,7 @@ public class MembersController {
 	@Autowired
 	private DepartmentService dServ;
 	@Autowired
-	private TeamService tServ;
+	private TeamsService tServ;
 	@Autowired
 	private JobService jServ;
 	@Autowired

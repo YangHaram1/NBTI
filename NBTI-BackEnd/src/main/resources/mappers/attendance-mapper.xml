@@ -107,6 +107,15 @@ AND start_date &lt; TRUNC(SYSDATE, 'IW') + 7;
             THEN 1 
             ELSE NULL 
         END) AS earlyLeaveCount
+       COUNT(DISTINCT TRUNC(start_date)) AS statsDay, -- 근무일 수 계산
+        NVL(SUM(
+            CASE
+                WHEN end_date IS NOT NULL THEN
+                    (end_date - start_date) * 24 -- 총 근무 시간 계산
+                ELSE
+                    0
+            END
+        ), 0) AS statsHours
     FROM attendance
     WHERE member_id = #{memberId}
       AND start_date >= TRUNC(SYSDATE, 'YYYY')  
