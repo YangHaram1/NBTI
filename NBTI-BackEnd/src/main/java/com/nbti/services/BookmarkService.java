@@ -24,6 +24,9 @@ public class BookmarkService {
 		return bdao.delete(map);
 	}
 	
-	
+	// 게시글이 북마크 되었는지
+	public boolean isBookmarkStatus(Map<String, Object> map) {
+		return bdao.isBookmarkStatus(map);
+	}
 	
 }

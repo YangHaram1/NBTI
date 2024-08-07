@@ -67,7 +67,7 @@ export const Side = () => {
                 </span>
                 <span>작성한 게시글</span>
               </li>
-              <li onClick={() => { navi("bookmark") }}>
+              <li onClick={() => { navi("bookmark"); setBoardType('자유') }}>
                 <span>
                   <i className="fa-solid fa-star fa-sm"></i>
                 </span>
@@ -89,7 +89,7 @@ export const Side = () => {
                 </span>
                 <span>공지 게시판</span>
               </li>
-              <li onClick={() => { navi("bookmark") }}>
+              <li onClick={() => { navi("bookmark"); setBoardType('공지') }}>
                 <span>
                   <i className="fa-solid fa-star fa-sm"></i>
                 </span>

@@ -26,4 +26,9 @@ public class BookmarkDAO {
 		return mybatis.delete("Bookmark.delete", map);
 	}
 	
+	// 게시글이 북마크 되었는지
+	public boolean isBookmarkStatus(Map<String, Object> map) {
+		return mybatis.selectOne("Bookmark.isBookmarkStatus", map);
+	}
+	
 }

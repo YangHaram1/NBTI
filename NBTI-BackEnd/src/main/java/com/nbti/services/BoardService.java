@@ -67,7 +67,11 @@ public class BoardService {
 		bdao.updateViewCount(map);
 	}
 	
-
+	// 중요(북마크) 게시글 출력
+	public List<BoardDTO> bookmarkList(Map<String, Object> map){
+		return bdao.bookmarkList(map);
+	}
+	
 	
 
 	//============================[ 메 인 ]=============================
