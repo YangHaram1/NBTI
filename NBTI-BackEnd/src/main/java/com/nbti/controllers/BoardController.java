@@ -139,7 +139,6 @@ public class BoardController {
 	}
 
 
-
 	//============================[ 메 인 ]=============================
 	// 공지 게시판 출력
 	@GetMapping("/noticeBoard")

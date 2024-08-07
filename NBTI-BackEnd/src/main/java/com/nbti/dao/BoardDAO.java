@@ -34,8 +34,7 @@ public class BoardDAO {
 		return mybatis.selectOne("Board.getMyListCount", map);
 	}
 	
-	
-	
+
 	// 게시글 출력
 	public BoardDTO selectBoard(BoardDTO dto) {
 		return mybatis.selectOne("Board.selectBoard", dto);

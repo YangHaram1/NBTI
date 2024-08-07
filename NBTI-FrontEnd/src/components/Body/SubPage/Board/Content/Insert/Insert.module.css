@@ -103,6 +103,7 @@
 .container .files {
   height: 80px;
   width: 100%;
+  min-width: 890px;
   display: flex;
   align-items: center;
 }
