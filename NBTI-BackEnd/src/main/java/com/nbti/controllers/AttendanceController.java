@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nbti.services.AttendanceService;
@@ -94,21 +95,23 @@ public class AttendanceController {
         }
     }
     @GetMapping("/yearly-stats")
-    public ResponseEntity<Map<String, Integer>> getYearlyStats(HttpServletRequest request) {
-        String memberId = (String) request.getSession().getAttribute("loginID");
+    public ResponseEntity<Map<String, Object>> getYearlyStats(@RequestParam(value = "memberId", required = false) String memberId) {
         if (memberId == null) {
-            Map<String, Integer> errorResponse = new HashMap<>();
+            Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("error", -1); // Error code for unauthorized
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+            errorResponse.put("message", "Unauthorized: memberId is required");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
+
         try {
             // Fetch yearly stats
-            Map<String, Integer> stats = aServ.getYearlyStats(memberId);
+            Map<String, Object> stats = aServ.getYearlyStats(memberId);
             return ResponseEntity.ok(stats);
         } catch (Exception e) {
             e.printStackTrace();
-            Map<String, Integer> errorResponse = new HashMap<>();
+            Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("error", -2); // Error code for internal server error
+            errorResponse.put("message", "An internal server error occurred");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
