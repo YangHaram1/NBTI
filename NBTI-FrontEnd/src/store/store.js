@@ -36,6 +36,10 @@ export const useReservationList = create((set) => ({
     setReservations: (items) => set({ reservations: items }),
     wait: [],
     setWait: (items) => set({ wait: items }),
+    approve: [],
+    setApprove: (items) => set({ approve: items }),
+    reject: [],
+    setReject: (items) => set({ reject: items }),
 }));
 
 

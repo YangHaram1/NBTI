@@ -32,7 +32,7 @@ public class ReserveDAO {
 		return mybatis.selectList("Reserve.waitList");
 	}
 	
-	// 예약 상태 업데이트 메서드
+	// 승인
     public void update(int reservationSeq, String state) throws Exception {
         // 상태와 예약 번호를 이용하여 업데이트
         Map<String, Object> params = new HashMap<>();
@@ -40,7 +40,40 @@ public class ReserveDAO {
         params.put("state", state);
         mybatis.update("Reserve.updateReservationStatus", params); // 매퍼 호출
     }
+    
+    // 반려
+    public void reject(int reservationSeq, String state) throws Exception {
+    	// 상태와 예약 번호를 이용하여 업데이트
+    	Map<String, Object> params = new HashMap<>();
+    	params.put("seq", reservationSeq);
+    	params.put("state", state);
+    	mybatis.update("Reserve.reject", params); // 매퍼 호출
+    }
+    
+    //승인 관리 - 승인 목록 출력
+    public List<ReserveDTO> approveList () throws Exception {
+    	return mybatis.selectList("Reserve.approveList");
+    }
+    
+    //승인 관리 - 반려 목록 출력
+    public List<ReserveDTO> rejectList () throws Exception {
+    	return mybatis.selectList("Reserve.rejectList");
+    }
+    
+    //캘린더 car
+    public List<ReserveDTO> carList () throws Exception {
+    	return mybatis.selectList("Reserve.carList");
+    }
 
+    //캘린더 suppliesList
+    public List<ReserveDTO> suppliesList () throws Exception {
+    	return mybatis.selectList("Reserve.suppliesList");
+    }
+    
+    //캘린더 meetingRoomList
+    public List<ReserveDTO> meetingRoomList () throws Exception {
+    	return mybatis.selectList("Reserve.meetingRoomList");
+    }
 
 
 

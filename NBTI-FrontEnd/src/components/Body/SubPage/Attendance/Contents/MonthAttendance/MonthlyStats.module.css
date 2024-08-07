@@ -1,0 +1,29 @@
+/* MonthlyStats.module.css */
+.container {
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.stats {
+    margin-bottom: 20px;
+}
+
+.stats p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.minical {
+    /* 미니 월간 캘린더의 스타일 조정 */
+}
+
+/* 이벤트 스타일 */
+.eventContent {
+    white-space: normal; /* 줄바꿈 허용 */
+    overflow-wrap: break-word; /* 긴 단어 줄바꿈 */
+    font-size: 12px; /* 폰트 사이즈 조정 */
+    padding: 10px;
+    min-height: 120px; /* 최소 높이 설정 */
+    border-radius: 4px; /* 둥근 모서리 추가 */
+    text-align: center; /* 텍스트 정렬 */
+}

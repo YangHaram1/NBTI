@@ -5,27 +5,57 @@ import dayGridPlugin from '@fullcalendar/daygrid'; // 월 보기 플러그인
 import timeGridPlugin from '@fullcalendar/timegrid'; // 주 및 일 보기 플러그인
 import interactionPlugin from '@fullcalendar/interaction'; // 클릭 이벤트를 위한 플러그인
 import { default as koLocale } from '@fullcalendar/core/locales/ko'; // 한국어 로케일
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { host } from '../../../../../../config/config';
 
 export const Supplies = ()=>{
-    return(
+    const [events, setEvents] = useState([]); // 이벤트 상태
+
+    useEffect(() => {
+        axios.get(`${host}/reserve/suppliesList`)
+            .then((resp) => {
+                console.log("목록출력" + JSON.stringify(resp.data));
+                const list = resp.data.map(e => {
+                    return {
+                        seq: e.seq, 
+                        title: e.member_id,
+                        start: e.start_time, // ISO 형식
+                        end: e.end_time, // ISO 형식
+                        color: 'pink', 
+                    }
+                });
+                setEvents(list); // 이벤트 상태 업데이트
+            })
+            .catch((error) => {
+                console.error('Error fetching car list:', error);
+            });
+    }, []); // 컴포넌트가 마운트될 때 한 번만 실행
+
+    return (
         <div className={styles.container}>
-            <div className='reservationContent'>
+            <div className={styles.reservationContent}>
+                {/* 사용자 정의 제목 */}
+                <div className={styles.customTitle}>
+                    비품 
+                </div>
                 <FullCalendar
-                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                initialView="timeGridDay"
-                locales={[koLocale]} // 한국어 로케일 설정
-                locale="ko"
-                headerToolbar={{
-                    left: '', 
-                    center: 'title',
-                    right: 'prev,today,next' // 월 주 일
-                }}
-                slotMinTime="07:00:00"
-                slotMaxTime="23:00:00"
-                slotDuration="00:30:00" // 슬롯의 간격을 30분으로 설정
-                slotLabelInterval="00:30:00" // 라벨 간격을 30분으로 설정 (시간 슬롯의 레이블을 30분 간격으로 표시)
-                allDaySlot={false} // 종일 슬롯 비활성화
-            />
+                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                    initialView="timeGridDay"
+                    locales={[koLocale]} // 한국어 로케일 설정
+                    locale="ko"
+                    headerToolbar={{
+                        left: 'title',
+                        center: '',
+                        right: 'prev,today,next'
+                    }}
+                    slotDuration="00:30:00" // 슬롯의 간격을 30분으로 설정
+                    slotLabelInterval="00:30:00" // 라벨 간격을 30분으로 설정
+                    allDaySlot={false} // 종일 슬롯 비활성화
+                    selectMirror={true}
+                    events={events} // 이벤트 상태
+                    displayEventEnd={true} // 끝 시간 표시 
+                />
             </div>
         </div>
     )

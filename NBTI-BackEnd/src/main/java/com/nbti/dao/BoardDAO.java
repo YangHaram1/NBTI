@@ -34,8 +34,7 @@ public class BoardDAO {
 		return mybatis.selectOne("Board.getMyListCount", map);
 	}
 	
-	
-	
+
 	// 게시글 출력
 	public BoardDTO selectBoard(BoardDTO dto) {
 		return mybatis.selectOne("Board.selectBoard", dto);
@@ -59,6 +58,11 @@ public class BoardDAO {
 	// 조회수 증가
 	public void updateViewCount(HashMap<String, Integer> map) {
 		mybatis.update("Board.updateViewCount", map);
+	}
+	
+	// 중요(북마크) 게시글 출력
+	public List<BoardDTO> bookmarkList(Map<String, Object> map){
+		return mybatis.selectList("Board.bookmarkList", map);
 	}
 
 	
