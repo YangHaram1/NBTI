@@ -19,4 +19,9 @@ public class ReferLineDAO {
 	}
 	
 	
+	public List<ReferLineDTO> selectLine(int seq){
+		return mybatis.selectList("ReferLine.selectLine",seq);
+	}
+	
+	
 }
