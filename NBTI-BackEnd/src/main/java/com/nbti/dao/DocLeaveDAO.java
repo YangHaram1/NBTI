@@ -15,5 +15,9 @@ public class DocLeaveDAO {
 	public void insert(DocLeaveDTO dldto) {
 		mybatis.insert("DocLeave.insert", dldto);
 	}
+	
+	public DocLeaveDTO getContent(int seq) {
+		return mybatis.selectOne("DocLeave.selectContent",seq);
+	}
 
 }

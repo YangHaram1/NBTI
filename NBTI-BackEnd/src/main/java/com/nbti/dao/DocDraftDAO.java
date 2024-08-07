@@ -16,5 +16,9 @@ public class DocDraftDAO {
 	public void insert(DocDraftDTO dddto) {
 		mybatis.insert("DocDraft.insert", dddto);
 	}
+	
+	public DocDraftDTO selectContent(int seq) {
+		return mybatis.selectOne("DocDraft.selectContent",seq);
+	}
 
 }

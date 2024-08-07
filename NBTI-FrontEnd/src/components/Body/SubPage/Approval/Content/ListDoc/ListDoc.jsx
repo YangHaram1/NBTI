@@ -66,8 +66,6 @@ export const ListDoc = ({setlist}) => {
     };
 
     const handleMove = (tempSeq, docSubName) => {
-        console.log("Temp Seq:", tempSeq);
-        console.log("Doc Sub Name:", docSubName);
         navi("/approval/detail", {state:{seq:tempSeq, setlist:docSubName}});
     };
 
