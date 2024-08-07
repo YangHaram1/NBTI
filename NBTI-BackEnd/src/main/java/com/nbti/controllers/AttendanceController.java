@@ -75,7 +75,7 @@ public class AttendanceController {
     @GetMapping("/weekly-stats")
     public ResponseEntity<Map<String, Object>> getWeeklyStats(HttpServletRequest request) {
         String memberId = (String) request.getSession().getAttribute("loginID");
-        System.out.println("Member ID from session: " + memberId); // 확인용 로그
+        
 
         if (memberId == null) {
             Map<String, Object> errorResponse = new HashMap<>();
@@ -112,6 +112,32 @@ public class AttendanceController {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("error", -2); // Error code for internal server error
             errorResponse.put("message", "An internal server error occurred");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+    @GetMapping("/monthly-stats")
+    public ResponseEntity<Map<String, Object>> getMonthlyStats(HttpServletRequest request,
+                                                               @RequestParam int year,
+                                                               @RequestParam int month) {
+        // 세션에서 memberId를 가져옵니다.
+        String memberId = (String) request.getSession().getAttribute("loginID");
+        System.out.println("Member ID from session: " + memberId); // 확인용 로그
+
+        if (memberId == null) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", -1); // 인증 오류 코드
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+        }
+
+        try {
+            // 월간 통계 조회
+            Map<String, Object> stats = aServ.getMonthlyStats(memberId, year, month);
+            System.out.println("Stats: " + stats); // 서버 측에서 반환된 데이터를 확인
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", -2); // 내부 서버 오류 코드
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
