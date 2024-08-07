@@ -6,6 +6,7 @@ import styles from './Write.module.css';
 import { host } from '../../../../../../config/config';
 import axios from 'axios';
 import { useApprovalLine, useDocLeave, useDocVacation, useReferLine } from '../../../../../../store/store';
+import { useNavigate } from 'react-router-dom';
 
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import {faPenToSquare} from '@fortawesome/free-solid-svg-icons';
@@ -22,6 +23,8 @@ export const Write = ({setlist})=>{
     const { approvalLine, resetApprovalLine } = useApprovalLine();
     const { docLeave } = useDocLeave();
     const { docVacation } = useDocVacation();
+
+    const navi = useNavigate();
 
     // ===== 아이콘 =====
     useEffect(() => {
@@ -70,10 +73,10 @@ export const Write = ({setlist})=>{
                 emergency: result,
                 docType : setlist === '업무기안서'? 1 : setlist === '휴가신청서' ? 2:3
             };
-            console.log("휴가",docVacation);
-            console.log("휴가 신청서");
-            console.log("휴가 결재",approvalLine);
-            console.log("휴가 참조",referLine);
+            // console.log("휴가",docVacation);
+            // console.log("휴가 신청서");
+            // console.log("휴가 결재",approvalLine);
+            // console.log("휴가 참조",referLine);
 
         }else if(setlist === "휴직신청서"){
             requestData = {
@@ -83,19 +86,18 @@ export const Write = ({setlist})=>{
                 emergency: result,
                 docType : setlist === '업무기안서'? 1 : setlist === '휴가신청서' ? 2:3
             };
-            console.log("휴직", docLeave);
-            console.log("휴직 신청서");
-            console.log("휴직 결재",approvalLine);
-            console.log("휴직 참조",referLine);
+            // console.log("휴직", docLeave);
+            // console.log("휴직 신청서");
+            // console.log("휴직 결재",approvalLine);
+            // console.log("휴직 참조",referLine);
         }
     
         axios.post(`${host}/approval`, requestData)
             .then(response => {
                 resetApprovalLine();
                 resetReferLine();
-                console.log("문서 제출 성공:", response);
-                console.log("성공",approvalLine);
-                console.log("성공",referLine);
+                console.log("성공!");
+                navi("/approval");
             })
             .catch(error => {
                 console.error("문서 제출 실패:", error);
@@ -105,8 +107,8 @@ export const Write = ({setlist})=>{
     useEffect(()=>{
         axios.get(`${host}/members/docData`)
         .then((resp)=>{
-            console.log("정보 받아오기",resp);
-            console.log("테스트",resp.data.NAME);
+            // console.log("정보 받아오기",resp);
+            // console.log("테스트",resp.data.NAME);
             setUserData(resp.data);
         })
         .catch((err)=>{

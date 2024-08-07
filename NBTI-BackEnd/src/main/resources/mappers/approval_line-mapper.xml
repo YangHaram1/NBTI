@@ -9,8 +9,25 @@
  		insert into approval_line values(approval_line_seq.nextval, ${temp_seq}, #{approval_id}, '',#{member_state_code},${approval_order},null)
  	</insert>
  	
- 	<select id="selectLine" resultType="com.nbti.dto.ApprovalLineDTO">
- 		select * from approval_line where temp_seq = #{seq} order by approval_order
+ 	<select id="selectLine" resultType="map">
+ 		select 
+		    a.temp_seq,
+		    a.approval_id,
+		    TO_CHAR(a.approval_date, 'YYYY-MM-DD HH24:MI:SS') AS approval_date,
+		    a.member_state_code,
+		    a.approval_order,
+		    a.comments,
+		    m.name, 
+		    j.JOB_NAME,
+		    t.team_name,
+		    d.dept_name
+		from approval_line a
+		left outer join members m on a.approval_id = m.id 
+		left outer join JOB j on m.JOB_CODE = j.JOB_CODE
+		left outer join teams t on m.TEAM_CODE = t.TEAM_CODE
+		left outer join department d on t.DEPT_CODE = d.DEPT_CODE
+		where temp_seq=#{seq}
+		order by a.approval_order
  	</select>
   
  </mapper>

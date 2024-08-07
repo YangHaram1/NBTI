@@ -213,4 +213,15 @@ public class MembersController {
          return ResponseEntity.ok(day);
          
       }
+      
+      
+      // 작성일 24.08.7
+   	  // 작성자 김지연
+      // 아이디에 따른 이름, 팀코드, 팀명, 부서코드, 부서명, 관리자 권한 코드, 관리자 권한명 추출
+       @GetMapping("/approvaler/{id}")
+       public ResponseEntity<Map<String, Object>> docData(@PathVariable String id){
+      	  System.out.println("데이터 여기까지는 넘어옴" + id);
+          Map<String, Object> memberData = mServ.memberData(id);
+          return ResponseEntity.ok(memberData);
+       }
 }

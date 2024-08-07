@@ -1,6 +1,7 @@
 package com.nbti.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class ApprovalLineDAO {
 		mybatis.insert("ApprovalLine.insert", dto);
 	}
 	
-	public List<ApprovalLineDTO> selectLine(int seq){
+	public List<Map<String,Object>> selectLine(int seq){
 		return mybatis.selectList("ApprovalLine.selectLine",seq);
 	}
 
