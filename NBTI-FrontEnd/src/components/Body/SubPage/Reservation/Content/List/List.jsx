@@ -9,11 +9,10 @@ export const List = ()=>{
     const { wait, setWait, approve, setApprove } = useReservationList();
 
     useEffect(() => {
-
-        // 예약 목록을 가져오는 함수
+        // 대기 목록을 가져오는 함수
         const fetchReservations = () => {
             axios.get(`${host}/reserve`)
-                .then((resp) => {
+                .then(resp => {
                     console.log(JSON.stringify(resp))
                     setWait(resp.data); // 예약 목록 상태 업데이트
                 })
@@ -21,25 +20,23 @@ export const List = ()=>{
                     console.error('Error: ', error);
                 });
         };
-
         fetchReservations(); // 컴포넌트가 마운트될 때 예약 목록 가져오기
     }, [setWait]); // 의존성 배열에 추가
     
-    useEffect(() => {
 
+    useEffect(() => {
         // 예약 목록을 가져오는 함수
-        const fetchReservations = () => {
+        const fetchApproveList = () => {
             axios.get(`${host}/reserve/approveList`)
-                .then((resp) => {
+                .then(resp => {
                     console.log(JSON.stringify(resp))
-                    setApprove(resp.data); // 예약 목록 상태 업데이트
+                    setApprove(resp.data); // 승인된 예약 목록 상태 업데이트
                 })
                 .catch((error) => {
                     console.error('Error: ', error);
                 });
         };
-
-        fetchReservations(); // 컴포넌트가 마운트될 때 예약 목록 가져오기
+        fetchApproveList(); // 컴포넌트가 마운트될 때 예약 목록 가져오기
     }, [setApprove]); // 의존성 배열에 추가
 
 

@@ -11,7 +11,7 @@
   	</insert>
   	
   	<!-- 승인 전 대기 목록 -->
-  	<select id="waitingList" resultType="com.nbti.dto.ReserveDTO">
+  	<select id="waitingList" parameterType="String" resultType="com.nbti.dto.ReserveDTO">
 		SELECT 
 		    r.seq,
 		    r.member_id,
@@ -28,7 +28,7 @@
 		FROM 
 		    reserve r
 		WHERE 
-		    r.state = 'N'
+		    r.state = 'N' AND r.member_id = #{memberId}
 		ORDER BY 
 		    r.start_time
   	</select>
@@ -72,7 +72,7 @@
     </select>
 
 	<!-- 승인 관리 -> 승인 목록 출력 -->
-	<select id="approveList" resultMap="reserveResultMap">
+	<select id="approveList" parameterType="String" resultMap="reserveResultMap">
 		SELECT 
 		    r.seq,
 		    r.member_id,
@@ -92,7 +92,7 @@
 		JOIN 
 		    members m ON r.member_id = m.id 
 		WHERE 
-		    r.state = 'Y'
+		    r.state = 'Y' AND r.member_id = #{memberId}
 		ORDER BY 
 		    r.seq
 	</select>
