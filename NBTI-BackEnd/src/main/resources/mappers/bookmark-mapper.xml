@@ -15,6 +15,10 @@
 		delete from board_bookmark where board_seq = ${seq} and member_id = #{member_id}
 	</delete>
 
+	<!-- 게시글이 북마크 되었는지 -->
+	<select id="isBookmarkStatus" resultType="boolean">
+		select count(*) from board_bookmark where board_seq = #{boardSeq} and member_id = #{member_id}
+	</select>
 
 
 </mapper>

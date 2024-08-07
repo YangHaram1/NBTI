@@ -40,6 +40,12 @@ export const Detail = () => {
         setDetail(resp.data); // 취소 시 원본 데이터
         setBoard(resp.data);
       });
+
+      // 북마크 상태 확인
+      axios.get(`${host}/bookmark/${boardSeq}`).then((resp) => {
+        console.log("북마크 ", resp.data);
+        setIsBookmarked(resp.data);
+      });
     }
 
     // 로그인 한 사용자 정보
@@ -155,7 +161,8 @@ export const Detail = () => {
   const handleBookmarkRemove = (seq) => {
     setIsBookmarked(!isBookmarked);
     axios.delete(`${host}/bookmark/delete/${seq}`).then((resp) => {
-      if (resp.data === 1) alert("중요 게시글에서 삭제되었습니다.")
+      console.log("삭제", resp.data)
+      if (resp.data > 0) alert("중요 게시글에서 삭제되었습니다.")
     })
   };
 
@@ -166,12 +173,12 @@ export const Detail = () => {
       <div className={styles.top}>
         <div className={styles.left}>
           <i
-            className="fa-regular fa-star"
+            className="fa-regular fa-star fa-lg"
             onClick={() => { handleBookmarkAdd(detail.seq) }}
             style={{ display: isBookmarked ? "none" : "inline" }}
           ></i>
           <i
-            className="fa-solid fa-star"
+            className="fa-solid fa-star fa-lg"
             onClick={() => { handleBookmarkRemove(detail.seq) }}
             style={{ display: isBookmarked ? "inline" : "none" }}
           ></i>
