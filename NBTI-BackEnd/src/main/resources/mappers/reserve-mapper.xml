@@ -4,11 +4,13 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="Reserve">
   
+  	<!-- 예약하기 -->
   	<insert id="insert">
   		INSERT 
   		INTO reserve VALUES (reserve_seq.nextval, #{member_id},#{reserve_title_code} ,#{purpose},#{start_time}, #{end_time} , 'N')
   	</insert>
   	
+  	<!-- 승인 전 대기 목록 -->
   	<select id="waitingList" resultType="com.nbti.dto.ReserveDTO">
 		SELECT 
 		    r.seq,
@@ -30,9 +32,9 @@
 		ORDER BY 
 		    r.start_time
   	</select>
-
   	
-	<!-- 목록 -->
+  	
+	<!--  -->
 	<resultMap id="reserveResultMap" type="com.nbti.dto.ReserveDTO">
         <id property="seq" column="seq"/>
         <result property="member_id" column="name"/>
@@ -42,7 +44,8 @@
         <result property="end_time" column="end_time"/>
         <result property="state" column="state"/>
     </resultMap>
-
+    
+	<!-- 승인 관리 -> 대기 목록 출력 -->
     <select id="waitList" resultMap="reserveResultMap">
         SELECT 
             r.seq,
@@ -67,21 +70,8 @@
         ORDER BY 
             r.start_time
     </select>
-    
-	<!-- 예약 승인 Y 업데이트 -->
-    <update id="updateReservationStatus" parameterType="map">
-	    UPDATE reserve 
-	    SET state = #{state} 
-	    WHERE seq = #{seq}
-	</update>
-	<!-- 반려 R 업데이트 -->
-    <update id="reject" parameterType="map">
-	    UPDATE reserve 
-	    SET state = #{state} 
-	    WHERE seq = #{seq}
-	</update>
 
-	<!-- 승인 관리 - 승인 목록 출력 -->
+	<!-- 승인 관리 -> 승인 목록 출력 -->
 	<select id="approveList" resultMap="reserveResultMap">
 		SELECT 
 		    r.seq,
@@ -107,7 +97,7 @@
 		    r.seq
 	</select>
 
-	<!-- 승인 관리 - 반려 목록 출력 -->
+	<!-- 승인 관리 -> 반려 목록 출력 -->
 	<select id="rejectList" resultMap="reserveResultMap">
 		SELECT 
 		    r.seq,
@@ -132,9 +122,32 @@
 		ORDER BY 
 		    r.seq
 	</select>
-
-
-
-
-  	
-  </mapper>
+	
+	<!-- 승인 Y 업데이트 -->
+    <update id="updateReservationStatus" parameterType="map">
+	    UPDATE reserve 
+	    SET state = #{state} 
+	    WHERE seq = #{seq}
+	</update>
+	
+	<!-- 반려 R 업데이트 -->
+    <update id="reject" parameterType="map">
+	    UPDATE reserve 
+	    SET state = #{state} 
+	    WHERE seq = #{seq}
+	</update>
+	
+	<!-- car 자동차 -->
+	<select id="carList" resultType="com.nbti.dto.ReserveDTO">
+		SELECT 
+		 *
+		FROM 
+		    reserve
+		WHERE 
+		    state = 'Y'
+		    AND reserve_title_code = '3'
+		ORDER BY 
+		    seq
+	</select>
+	
+</mapper>

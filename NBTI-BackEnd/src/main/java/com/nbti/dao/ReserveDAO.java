@@ -60,6 +60,10 @@ public class ReserveDAO {
     	return mybatis.selectList("Reserve.rejectList");
     }
     
+    //캘린더 car
+    public List<ReserveDTO> carList () throws Exception {
+    	return mybatis.selectList("Reserve.carList");
+    }
 
 
 

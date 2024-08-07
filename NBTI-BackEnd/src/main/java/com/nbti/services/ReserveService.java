@@ -48,6 +48,11 @@ public class ReserveService {
 		return rdao.rejectList();
 	}
 	
+	//캘린더 car
+	public List<ReserveDTO> carList () throws Exception{
+		return rdao.carList();
+	}
+	
 	
 
 

@@ -48,7 +48,7 @@ public class ReserveController {
 		return ResponseEntity.ok(list);
 	}
 
-	// 업데이트 N -> Y 
+	//승인 N -> Y 
 	@PostMapping("/approve")
 	public ResponseEntity<Void> update(@RequestBody Map<String, Integer> request) throws Exception {
 	    Integer seq = request.get("seq");
@@ -60,7 +60,7 @@ public class ReserveController {
 	    }
 	}
 
-	// 반려 N -> R 
+	//반려 N -> R 
 	@PostMapping("/reject")
 	public ResponseEntity<Void> reject(@RequestBody Map<String, Integer> request) throws Exception {
 	    Integer seq = request.get("seq");
@@ -73,8 +73,6 @@ public class ReserveController {
 	    }
 	}
 
-    
-    
     //승인 관리 - 승인 목록 출력
     @GetMapping("/approveList")
     public ResponseEntity<List<ReserveDTO>> ApproveList() throws Exception {
@@ -83,10 +81,17 @@ public class ReserveController {
     }
     //승인 관리 - 반려 목록 출력
     @GetMapping("/rejectList")
-    public ResponseEntity<List<ReserveDTO>> rejectList () throws Exception{
+    public ResponseEntity<List<ReserveDTO>> rejectList () throws Exception {
     	List<ReserveDTO> rejectList = rserv.rejectList();
 //    	System.out.println(rejectList.size());
     	return ResponseEntity.ok(rejectList);
+    }
+    
+    @GetMapping("/carList")
+    public ResponseEntity<List<ReserveDTO>> carList () throws Exception {
+    	List<ReserveDTO> carList = rserv.carList();
+//    	System.out.println(rejectList.size());
+    	return ResponseEntity.ok(carList);
     }
 
 
