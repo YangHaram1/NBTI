@@ -52,11 +52,11 @@ const Files = () => {
                         const list = item.list;
                         return (
                             <React.Fragment key={lIndex}>
-                                <li className={styles.name} onClick={()=>handleList(lIndex)}>
+                                <div className={styles.name} onClick={()=>handleList(lIndex)}>
                                     {!listDisplay[lIndex]&&(<i className="fa-solid fa-chevron-down fa-sm"></i>)}
                                     {listDisplay[lIndex]&&(<i className="fa-solid fa-chevron-up"></i>)}
                                     {lIndex+1}. {item.name}
-                                </li> 
+                                </div> 
                                 {
                                     listDisplay[lIndex]&&(list.map((file, index) => {
                                         return (

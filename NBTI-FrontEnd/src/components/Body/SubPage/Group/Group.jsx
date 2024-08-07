@@ -7,7 +7,6 @@ const Group=()=>{
     return(
         <div className={styles.container}>
             <Side></Side>
-            <Content/>
         </div>
     );
 }
