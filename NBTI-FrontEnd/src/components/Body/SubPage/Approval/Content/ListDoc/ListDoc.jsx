@@ -3,12 +3,14 @@ import styles from './ListDoc.module.css';
 import axios from 'axios';
 import { host } from '../../../../../../config/config';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 
 export const ListDoc = ({setlist}) => {
 
     // DTO 하나 생성하기 -> 기안일, 결재양식, 긴급, 제목, 첨부, 기안자, 문서번호, 문서 상태, 임시번호
     const [lists, setLists] = useState([]);
+    const navi = useNavigate();
 
     useEffect(()=>{
         let url = '';
@@ -63,6 +65,9 @@ export const ListDoc = ({setlist}) => {
         }
     };
 
+    const handleMove = (tempSeq, docSubName) => {
+        navi("/approval/detail", {state:{seq:tempSeq, setlist:docSubName}});
+    };
 
     return(
         <div className={styles.container}>
@@ -102,10 +107,12 @@ export const ListDoc = ({setlist}) => {
                                             list.emergency == "Y  " ?  <div className={styles.emergency_badge}>긴급</div> :"" 
                                         }
                                 </div>
-                                <div className={styles.content_title}>
+                                <div className={styles.content_title} onClick={() => handleMove(list.temp_seq, list.doc_sub_name)}>
                                     {
                                         list.title !== null ? list.title : list.doc_sub_name 
                                     }
+                                    <input type='hidden' value={list.temp_seq}></input>
+                                    <input type='hidden' value={list.doc_sub_name}></input>
                                 </div>
                                 <div className={styles.file}>Y</div>
                                 {setlist !== '반려 문서함' && setlist !== '상신취소 문서함' ? (
@@ -117,7 +124,6 @@ export const ListDoc = ({setlist}) => {
                                 </div>
                                 </>
                             ) : null}
-                            <div className={styles.temp_number}>{list.temp_seq}</div>
                             </div>
                         );
 

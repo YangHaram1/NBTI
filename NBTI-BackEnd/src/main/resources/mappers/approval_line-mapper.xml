@@ -8,5 +8,9 @@
  	<insert id="insert">
  		insert into approval_line values(approval_line_seq.nextval, ${temp_seq}, #{approval_id}, '',#{member_state_code},${approval_order},null)
  	</insert>
+ 	
+ 	<select id="selectLine" resultType="com.nbti.dto.ApprovalLineDTO">
+ 		select * from approval_line where temp_seq = #{seq} order by approval_order
+ 	</select>
   
  </mapper>

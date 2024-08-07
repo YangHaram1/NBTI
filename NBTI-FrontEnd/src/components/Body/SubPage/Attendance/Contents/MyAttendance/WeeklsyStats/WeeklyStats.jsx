@@ -16,17 +16,40 @@ const formatDate = (date) => new Date(date).toISOString().split('T')[0];
 // 요일 계산 함수 (월요일을 주의 시작일로 설정)
 const getDayOfWeek = (date) => (date.getDay() + 6) % 7; // 0 (월요일)부터 6 (일요일)
 
+// 주의 시작일 계산 함수 (월요일)
+const getStartOfWeek = (date) => {
+    const day = date.getDay();
+    const distanceToMonday = (day + 6) % 7;
+    const monday = new Date(date);
+    monday.setDate(date.getDate() - distanceToMonday);
+    return monday;
+};
+
+// 근무 시간 계산 함수
+const calculateWorkingHours = (startDate, endDate) => {
+    if (!startDate || !endDate) return 'N/A';
+    
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    
+    const diffMs = end - start;
+    if (diffMs < 0) return 'N/A'; // 유효하지 않은 시간
+
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    
+    return `${diffHours}시간 ${diffMinutes}분`;
+};
+
 const WeeklyStats = ({ stats, dailyStats }) => {
     const { lateCount, absentCount, earlyLeaveCount } = stats;
 
     // FullCalendar 이벤트 데이터 생성
     const events = Array.from({ length: 7 }).map((_, index) => {
-        // 현재 주의 시작일을 기준으로 날짜 계산 (월요일 시작)
         const date = new Date();
-        const currentDay = date.getDay();
-        const daysToMonday = (currentDay === 0 ? -6 : 1 - currentDay);
-        date.setDate(date.getDate() + daysToMonday + index);
-        const formattedDate = formatDate(date);
+        const monday = getStartOfWeek(date);
+        monday.setDate(monday.getDate() + index);
+        const formattedDate = formatDate(monday);
 
         // dailyStats에서 데이터 가져오기
         const { late = false, absent = false, earlyLeave = false, startDate, endDate } = dailyStats[formattedDate] || {};
@@ -34,25 +57,25 @@ const WeeklyStats = ({ stats, dailyStats }) => {
         // 시간 및 근무 시간 계산
         const startTime = startDate ? formatTime(startDate) : 'N/A';
         const endTime = endDate ? formatTime(endDate) : 'N/A';
-        const workingHours = startDate && endDate ? `${((new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60)).toFixed(2)} 시간` : 'N/A';
+        const workingHours = calculateWorkingHours(startDate, endDate);
 
         const title = `출근: ${startTime}\n퇴근: ${endTime}\n근무 시간: ${workingHours}\n`;
 
-        const dayOfWeek = getDayOfWeek(date); // 0: 월요일, 6: 일요일
+        const dayOfWeek = getDayOfWeek(monday);
 
-        let backgroundColor = 'white'; // 기본 배경색
-        let textColor = 'black'; // 기본 텍스트 색상
+        let backgroundColor = 'white';
+        let textColor = 'black';
 
         if (dayOfWeek === 6) {
-            textColor = 'red'; // 텍스트 색상
+            textColor = 'red';
         } else if (dayOfWeek === 5) {
-            textColor = 'blue'; // 텍스트 색상
+            textColor = 'blue';
         }
 
         return {
-            title, // 제목을 문자열로 설정
+            title,
             date: formattedDate,
-            extendedProps: { backgroundColor, textColor } // 추가 속성 설정
+            extendedProps: { backgroundColor, textColor }
         };
     });
 
@@ -65,7 +88,6 @@ const WeeklyStats = ({ stats, dailyStats }) => {
                 <p>조기 퇴근 횟수: {earlyLeaveCount}</p>
             </div>
             <div className='minical'>
-                {/* 미니 주간 캘린더 */}
                 <FullCalendar
                     plugins={[dayGridPlugin]}
                     initialView="dayGridWeek"
@@ -74,8 +96,8 @@ const WeeklyStats = ({ stats, dailyStats }) => {
                     locale="ko"
                     selectable={true}
                     height="auto"
-                    events={events} // 이벤트 데이터 추가
-                    firstDay={1} // 월요일을 주의 시작일로 설정
+                    events={events}
+                    firstDay={1}
                     eventContent={({ event }) => {
                         const lines = event.title.split('\n');
                         return (

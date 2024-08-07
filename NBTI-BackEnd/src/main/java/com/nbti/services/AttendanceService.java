@@ -2,6 +2,7 @@ package com.nbti.services;
 
 import java.sql.Timestamp;
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -31,7 +32,7 @@ public class AttendanceService {
         dto.setMember_id(memberId);
         dto.setStart_date(now);
         aDao.insert(dto);
-
+        
         Map<String, Object> result = new HashMap<>();
         result.put("seq", dto.getSeq());
         result.put("start_date", dto.getStart_date());
@@ -85,6 +86,80 @@ public class AttendanceService {
         return result;
     }
 
+    public Map<String, Object> getMonthlyStats(String memberId, int year, int month) {
+        List<AttendanceDTO> records = aDao.getMonthlyRecords(memberId, year, month);
+
+        LocalDate startOfMonth = LocalDate.of(year, month, 1);
+        LocalDate endOfMonth = startOfMonth.with(TemporalAdjusters.lastDayOfMonth());
+
+        int lateCount = 0;
+        int absentCount = 0;
+        int earlyLeaveCount = 0;
+        double totalWorkHours = 0;
+
+        Map<String, Map<String, Object>> dailyStats = new HashMap<>();
+
+        for (AttendanceDTO record : records) {
+            Timestamp startDate = record.getStart_date();
+            Timestamp endDate = record.getEnd_date();
+
+            if (startDate != null) {
+                LocalDateTime startDateTime = startDate.toLocalDateTime();
+                LocalDate localDate = startDateTime.toLocalDate();
+                String dateString = localDate.toString();
+
+                if (!dailyStats.containsKey(dateString)) {
+                    dailyStats.put(dateString, new HashMap<>());
+                }
+
+                Map<String, Object> dateStats = dailyStats.get(dateString);
+                dateStats.put("startDate", startDate);
+                dateStats.put("endDate", endDate);
+
+                if (localDate.isEqual(LocalDate.now()) && endDate == null) {
+                    absentCount++;
+                    dateStats.put("absent", true);
+                } else {
+                    dateStats.put("absent", false);
+                }
+
+                if (!localDate.isBefore(startOfMonth) && !localDate.isAfter(endOfMonth)) {
+                    if (startDateTime.toLocalTime().isAfter(LocalTime.of(9, 0))) {
+                        lateCount++;
+                        dateStats.put("late", true);
+                    } else {
+                        dateStats.put("late", false);
+                    }
+
+                    if (endDate != null) {
+                        LocalDateTime endDateTime = endDate.toLocalDateTime();
+                        Duration workDuration = Duration.between(startDateTime, endDateTime);
+                        totalWorkHours += workDuration.toHours() + workDuration.toMinutes() / 60.0;
+
+                        if (endDateTime.toLocalTime().isBefore(LocalTime.of(18, 0))) {
+                            earlyLeaveCount++;
+                            dateStats.put("earlyLeave", true);
+                        } else {
+                            dateStats.put("earlyLeave", false);
+                        }
+                    }
+                }
+            }
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("lateCount", lateCount);
+        result.put("absentCount", absentCount);
+        result.put("earlyLeaveCount", earlyLeaveCount);
+        result.put("totalWorkHours", totalWorkHours);
+        result.put("dailyStats", dailyStats);
+
+        return result;
+    }
+
+    
+    
+    
     public Map<String, Object> getWeeklyStats(String memberId) {
         List<AttendanceDTO> records = aDao.getWeeklyRecords(memberId);
 
@@ -153,11 +228,9 @@ public class AttendanceService {
     }
 
 
-    public Map<String, Integer> getYearlyStats(String memberId) {
-        // DAO에서 연간 근태 기록을 가져옵니다.
+    public Map<String, Object> getYearlyStats(String memberId) {
         List<AttendanceDTO> records = aDao.getYearlyRecords(memberId);
 
-        // 현재 연도의 시작과 끝을 계산합니다.
         LocalDate today = LocalDate.now();
         LocalDate startOfYear = today.with(TemporalAdjusters.firstDayOfYear());
         LocalDate endOfYear = today.with(TemporalAdjusters.lastDayOfYear());
@@ -165,6 +238,8 @@ public class AttendanceService {
         int lateCount = 0;
         int absentCount = 0;
         int earlyLeaveCount = 0;
+        int statsDay = 0;
+        double statsHours = 0;
 
         for (AttendanceDTO record : records) {
             Timestamp startDate = record.getStart_date();
@@ -174,7 +249,7 @@ public class AttendanceService {
                 LocalDateTime startDateTime = startDate.toLocalDateTime();
                 if (!startDateTime.toLocalDate().isBefore(startOfYear) &&
                     !startDateTime.toLocalDate().isAfter(endOfYear)) {
-                    
+
                     // 지각 체크
                     if (startDateTime.toLocalTime().isAfter(LocalTime.of(9, 0))) {
                         lateCount++;
@@ -186,6 +261,9 @@ public class AttendanceService {
                         if (endDateTime.toLocalTime().isBefore(LocalTime.of(18, 0))) {
                             earlyLeaveCount++;
                         }
+                        Duration workDuration = Duration.between(startDateTime, endDateTime);
+                        statsHours += workDuration.toHours() + workDuration.toMinutes() / 60.0;
+                        statsDay++;
                     } else {
                         // 결근 체크
                         if (startDateTime.toLocalDate().isEqual(today)) {
@@ -196,11 +274,15 @@ public class AttendanceService {
             }
         }
 
-        Map<String, Integer> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         result.put("lateCount", lateCount);
         result.put("absentCount", absentCount);
         result.put("earlyLeaveCount", earlyLeaveCount);
+        result.put("statsDay", statsDay);
+        result.put("statsHours", statsHours);
 
         return result;
     }
+    
+
 }

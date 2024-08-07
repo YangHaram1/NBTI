@@ -8,7 +8,7 @@ import { useReservationList } from "../../../../../store/store";
 export const Side = () => {
 
   const navi = useNavigate();
-  const { setReservations } = useReservationList();
+  const {reservations, setReservations } = useReservationList();
 
   //입력 데이터 상태
   const [reserveData, setReserveData] = useState({ 
@@ -34,17 +34,22 @@ const handleChange = (e) => {
 
 // 저장 처리
 const handleSave = () => {
-  const { reserve_title_code, purpose, state } = reserveData;
+  const { reserve_title_code, start_time, end_time, purpose, state } = reserveData;
 
   // 날짜와 시간을 합쳐서 Timestamp로 변환
   const fullStartTime = selectedDate ? `${selectedDate}T${reserveData.start_time}` : null;
   const fullEndTime = selectedDate ? `${selectedDate}T${reserveData.end_time}` : null;
 
   // 데이터 검증
-  if (!reserve_title_code || !fullStartTime || !fullEndTime || !purpose) {
+  if (!reserve_title_code || !fullStartTime || !fullEndTime || !purpose || !start_time || !end_time) {
       alert('모든 필드를 입력하세요.');
       return;
   }
+  //  console.log('reserve_title_code:', reserve_title_code);
+  //  console.log('start_time:', fullStartTime);
+  //  console.log('end_time:', fullEndTime);
+  //  console.log('purpose:', purpose);
+  //  console.log('state:', state);
 
   // AJAX 요청
   axios.post(`${host}/reserve`, {
@@ -55,7 +60,7 @@ const handleSave = () => {
       state // 'N' 
   })
   .then((resp) => {
-      console.log('예약 성공:', resp.data);
+      // console.log(JSON.stringify(resp.date))
       fetchReservations(); // 새 예약 추가 후 목록 갱신
       closeModal(); // 모달 닫기
   })
@@ -64,16 +69,17 @@ const handleSave = () => {
       alert('예약에 실패했습니다.');
   });
 };
-    // 예약 목록을 갱신하는 함수
-    const fetchReservations = () => {
-      axios.get(`${host}/reserve`)
-          .then((resp) => {
-              setReservations(resp.data); // 주스탠드 상태 업데이트
-          })
-          .catch((error) => {
-              console.error('Error fetching reservations', error);
-          });
-  };
+// 예약 목록을 갱신하는 함수
+const fetchReservations = () => {
+  axios.get(`${host}/reserve`)
+      .then((resp) => {
+          console.log(JSON.stringify(resp.data))
+          setReservations(resp.data); // 주스탠드 상태 업데이트
+      })
+      .catch((error) => {
+          console.error('Error :', error);
+      });
+};
 
   //모달창
   const [modalOpen, setModalOpen] = useState(false);
@@ -117,6 +123,11 @@ const handleSave = () => {
       <div className={styles.mainBtn}>
         <button onClick={()=> {navi('car')}} >
           <p>차량</p>
+        </button>
+      </div>
+      <div className={styles.mainBtn}>
+        <button onClick={()=> {navi('manager')}} >
+          <p>승인 관리</p>
         </button>
       </div>
 

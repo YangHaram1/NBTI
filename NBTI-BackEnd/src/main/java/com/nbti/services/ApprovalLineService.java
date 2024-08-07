@@ -14,10 +14,8 @@ public class ApprovalLineService {
 	@Autowired
 	private ApprovalLineDAO aldao;
 	
-//	public void insert(List<ApprovalLineDTO> list) {
-//		for(ApprovalLineDTO dto: list) {
-//			aldao.insert(dto);
-//		}
-//	}
+	public List<ApprovalLineDTO> getApprovalLine(int seq) {
+		return aldao.selectLine(seq);
+	}
 	
 }

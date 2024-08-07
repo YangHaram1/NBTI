@@ -28,6 +28,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -211,12 +212,10 @@ public class ApprovalController {
 		}else {adto.setEmergency("N");}
 		
 		
-		// 참조 라인 DTO 저장 => select key로 임시번호 받아오기
-		// 결재 라인 DTO 저장 => select key로 임시번호 받아오기
+		// 각 라인별 temp_seq는 서비스에서 받기
 		List<ReferLineDTO> referline = new ArrayList<>();
 		 for (Map<String, Object> map : referLine) {
 	            ReferLineDTO dto = new ReferLineDTO();
-//	            dto.setTemp_seq(temp_seq); // temp_seq는 기본값 설정, 필요시 적절히 변경
 	            dto.setReferer((String) map.get("id")); // id를 referer로 사용
 	            referline.add(dto);
 	        }
@@ -224,7 +223,6 @@ public class ApprovalController {
 		 List<ApprovalLineDTO> approvalline = new ArrayList<>();
 		 for (Map<String, Object> map : approvalLine) {
 			 ApprovalLineDTO dto = new ApprovalLineDTO();
-//	            dto.setTemp_seq(temp_seq); // temp_seq는 기본값 설정, 필요시 적절히 변경
 	            dto.setApproval_id((String) map.get("id")); // 
 	            int order = Integer.parseInt((String)map.get("order"));
 	            if(order == 1) {
@@ -298,4 +296,11 @@ public class ApprovalController {
 		return list;
 	}
 	
+	// 디테일 공통 데이터 출력
+	@GetMapping("/{seq}")
+	public ApprovalDTO getApproval(@PathVariable int seq){
+		ApprovalDTO dto = aServ.getApproval(seq);
+		return dto; 
+	}
+
 }
