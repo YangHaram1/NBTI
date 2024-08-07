@@ -33,7 +33,10 @@ export const useCalendarList = create((set) => ({
 export const useReservationList = create((set) => ({
     reservations: [],
     setReservations: (items) => set({ reservations: items }),
+    wait: [],
+    setWait: (items) => set({ wait: items }),
 }));
+
 
 /*하람*/
 export const useCheckList = create((set) => ({
