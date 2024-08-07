@@ -34,7 +34,7 @@
   	
 	<!-- 목록 -->
 	<resultMap id="reserveResultMap" type="com.nbti.dto.ReserveDTO">
-        <id property="seq" column="reservation_seq"/>
+        <id property="seq" column="seq"/>
         <result property="member_id" column="name"/>
         <result property="reserve_title_code" column="reserve_title_code"/>
         <result property="purpose" column="purpose"/>
@@ -45,7 +45,7 @@
 
     <select id="waitList" resultMap="reserveResultMap">
         SELECT 
-            r.seq AS reservation_seq,
+            r.seq,
             r.member_id,
             m.name,  
             CASE 
@@ -74,8 +74,64 @@
 	    SET state = #{state} 
 	    WHERE seq = #{seq}
 	</update>
+	<!-- 반려 R 업데이트 -->
+    <update id="reject" parameterType="map">
+	    UPDATE reserve 
+	    SET state = #{state} 
+	    WHERE seq = #{seq}
+	</update>
 
+	<!-- 승인 관리 - 승인 목록 출력 -->
+	<select id="approveList" resultMap="reserveResultMap">
+		SELECT 
+		    r.seq,
+		    r.member_id,
+		    m.name,  
+		    CASE 
+		        WHEN r.reserve_title_code = '1' THEN '회의실'
+		        WHEN r.reserve_title_code = '2' THEN '비품'
+		        WHEN r.reserve_title_code = '3' THEN '차량'
+		        ELSE '기타' 
+		    END AS reserve_title_code,
+		    r.purpose,
+		    r.start_time,
+		    r.end_time,
+		    r.state
+		FROM 
+		    reserve r
+		JOIN 
+		    members m ON r.member_id = m.id 
+		WHERE 
+		    r.state = 'Y'
+		ORDER BY 
+		    r.seq
+	</select>
 
+	<!-- 승인 관리 - 반려 목록 출력 -->
+	<select id="rejectList" resultMap="reserveResultMap">
+		SELECT 
+		    r.seq,
+		    r.member_id,
+		    m.name,  
+		    CASE 
+		        WHEN r.reserve_title_code = '1' THEN '회의실'
+		        WHEN r.reserve_title_code = '2' THEN '비품'
+		        WHEN r.reserve_title_code = '3' THEN '차량'
+		        ELSE '기타' 
+		    END AS reserve_title_code,
+		    r.purpose,
+		    r.start_time,
+		    r.end_time,
+		    r.state
+		FROM 
+		    reserve r
+		JOIN 
+		    members m ON r.member_id = m.id 
+		WHERE 
+		    r.state = 'R'
+		ORDER BY 
+		    r.seq
+	</select>
 
 
 

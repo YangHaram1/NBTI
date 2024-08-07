@@ -22,15 +22,33 @@ public class ReserveService {
 	public List<ReserveDTO> waitingList() throws Exception{
 		return rdao.waitingList();
 	}
-	//대기 목록 출력 
+	
+    // 예약 상태 업데이트 N->Y
+	public void update(int reservationSeq) throws Exception {
+		rdao.update(reservationSeq, "Y"); // 'Y'로 업데이트
+    }
+	
+	//승인 관리 - 반려 N->R
+	public void reject(int reservationSeq) throws Exception {
+		rdao.reject(reservationSeq, "R"); // 'R'로 업데이트
+	}
+	
+	//승인 관리 - 대기 목록 출력 
 	public List<ReserveDTO> waitList() throws Exception{
 		return rdao.waitList();
 	}
 	
-    // 예약 상태 업데이트 메서드
-	public void update(int reservationSeq) throws Exception {
-		rdao.update(reservationSeq, "Y"); // 'Y'로 업데이트
-    }
+	//승인 관리 - 승인 목록 출력
+	public List<ReserveDTO> approveList() throws Exception{
+		return rdao.approveList();
+	}
+
+	//승인 관리 - 반려 목록 출력
+	public List<ReserveDTO> rejectList () throws Exception{
+		return rdao.rejectList();
+	}
+	
+	
 
 
 	
