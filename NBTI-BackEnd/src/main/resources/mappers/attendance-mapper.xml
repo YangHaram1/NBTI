@@ -124,4 +124,41 @@ AND start_date &lt; TRUNC(SYSDATE, 'IW') + 7;
           AND start_date >= TRUNC(SYSDATE, 'YYYY')  
           AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
     </select>
+<select id="getMonthlyRecords" parameterType="map" resultType="com.nbti.dto.AttendanceDTO">
+    SELECT *  
+    FROM attendance  
+    WHERE member_id = #{memberId}  
+    AND start_date >= TRUNC(TO_DATE(#{year} || '-' || #{month} || '-01', 'YYYY-MM-DD'), 'MM')  
+    AND start_date &lt; ADD_MONTHS(TRUNC(TO_DATE(#{year} || '-' || #{month} || '-01', 'YYYY-MM-DD'), 'MM'), 1)
+</select>
+
+
+<!-- Get Monthly Stats -->
+<select id="getMonthlyStats" parameterType="string" resultType="map">
+    SELECT
+        COUNT(CASE 
+            WHEN start_date >= TRUNC(SYSDATE, 'MM') 
+            AND start_date > TRUNC(start_date) + INTERVAL '09:00' HOUR TO MINUTE 
+            THEN 1 
+            ELSE NULL 
+        END) AS lateCount,
+        COUNT(CASE 
+            WHEN start_date >= TRUNC(SYSDATE, 'MM') 
+            AND end_date IS NULL 
+            AND TRUNC(start_date) = TRUNC(SYSDATE) 
+            THEN 1 
+            ELSE NULL 
+        END) AS absentCount,
+        COUNT(CASE 
+            WHEN start_date >= TRUNC(SYSDATE, 'MM') 
+            AND end_date IS NOT NULL 
+            AND end_date &lt; TRUNC(start_date) + INTERVAL '18:00' HOUR TO MINUTE 
+            THEN 1 
+            ELSE NULL 
+        END) AS earlyLeaveCount
+    FROM attendance
+    WHERE member_id = #{memberId}
+    AND start_date >= TRUNC(SYSDATE, 'MM')
+    AND start_date &lt; TRUNC(SYSDATE, 'MM') + INTERVAL '1 MONTH';
+</select>
 </mapper>
