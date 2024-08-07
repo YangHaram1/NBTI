@@ -18,8 +18,6 @@ export const Insert = () => {
   const [tempBoard, setTempBoard] = useState({ title: "", contents: "", board_code: 1 });
   const [tempBoardList, setTempBoardList] = useState([]);
   const [tempSaveTime, setTempSaveTime] = useState(""); // 임시 저장 시간 상태
-  // const [tempModify, setTempModify] = ({ title: "", contents: "", board_code: 1 });
-  // const [transform, setTransform] = useState(false);
 
   // 1 : 자유 2: 공지
   let code = 1;
@@ -90,7 +88,6 @@ export const Insert = () => {
   // 임시 저장 버튼
   const handleTempSaveBtn = () => {
     setTempBoard(board); // 작성한 내용을 tempBoard에 담기
-    saveTempBoard(); // 임시 저장된 게시물 목록 확인
 
     if (tempBoardList.length >= 10) {
       alert("임시 저장된 게시물이 최대 개수(10개)를 초과했습니다. \n기존 게시물을 삭제한 후 다시 시도해주세요.");
@@ -104,15 +101,12 @@ export const Insert = () => {
 
     // 임시 저장 완료
     axios.post(`${host}/tempBoard/tempSave`, board).then((resp) => {
-      console.log("임시저장 응답: ", resp.data);
       if (resp.data === 1) {
         const now = new Date();
         setTempSaveTime(format(now, "yyyy-MM-dd HH:mm:ss"));
         alert("임시저장 되었습니다.");
-
+        saveTempBoard(); // 임시 저장된 게시물 목록 업데이트 역할
       }
-
-
     }).catch((error) => {
       console.error("임시저장 오류: ", error);
       alert("임시저장에 실패했습니다.");
@@ -141,7 +135,6 @@ export const Insert = () => {
             return prev.filter((item) => item.seq !== seq);
           })
         }
-
       }).catch((error) => {
         console.error("임시저장 삭제 실패: ", error);
         alert("삭제에 실패했습니다.");
@@ -152,9 +145,10 @@ export const Insert = () => {
   // 임시 저장 수정 (작성된 글 불러오기)
   const tempBoardModify = (seq) => {
     axios.get(`${host}/tempBoard/modify/${seq}`).then((resp) => {
-      console.log("수정할 글 : ", resp.data);
       setBoard(resp.data);
-      console.log(board.title);
+      setTempSaveTime(format(new Date(resp.data.write_date), "yyyy-MM-dd HH:mm:ss")); // 수정할 글의 임시저장 시간을 설정
+
+      closePopup(); // 팝업창 닫는 함수 호출
     })
   }
 
@@ -214,7 +208,7 @@ export const Insert = () => {
 
       {/* 팝업 창 */}
       {isPopupOpen && (
-        <div className={styles.popupOverlay}>
+        <div className={styles.popupOverlay} >
           <div className={styles.popup}>
             <h3>임시 저장된 글 목록</h3>
             <div className={styles.tempSaveList}>
