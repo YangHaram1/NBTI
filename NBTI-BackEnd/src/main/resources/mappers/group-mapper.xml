@@ -10,7 +10,7 @@
 		select * from department
 	</select>
 	<select id="getMemberByTeamcode" resultType="com.nbti.dto.GroupDTO" >
-		select name,job_name,member_img from members m
+		select name,job_name,member_img,id from members m
 		join job j on j.job_code =m.job_code where m.team_code=#{team_code}
 	</select>
 </mapper>
