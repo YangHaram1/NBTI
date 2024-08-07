@@ -68,7 +68,7 @@ export const List = ()=>{
                             {approve.length > 0 ? (
                                 approve.map((approve) => (
                                     <tr key={approve.seq}>
-                                        <td>{approve.member_id}</td>
+                                        <td>{approve.reserve_title_code}</td>
                                         <td>{approve.reserve_title_code}</td>
                                         <td>{`${new Date(approve.start_time).toLocaleString()} ~ ${new Date(approve.end_time).toLocaleString()}`}</td>
                                     </tr>

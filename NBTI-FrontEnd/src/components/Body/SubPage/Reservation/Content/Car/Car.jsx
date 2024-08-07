@@ -33,19 +33,21 @@ export const Car = () => {
 
     return (
         <div className={styles.container}>
-            <div className='reservationContent'>
+            <div className={styles.reservationContent}>
+                {/* 사용자 정의 제목 */}
+                <div className={styles.customTitle}>
+                    차량
+                </div>
                 <FullCalendar
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                     initialView="timeGridDay"
                     locales={[koLocale]} // 한국어 로케일 설정
                     locale="ko"
                     headerToolbar={{
-                        left: '',
-                        center: 'title',
+                        left: 'title',
+                        center: '',
                         right: 'prev,today,next'
                     }}
-                    slotMinTime="07:00:00"
-                    slotMaxTime="23:00:00"
                     slotDuration="00:30:00" // 슬롯의 간격을 30분으로 설정
                     slotLabelInterval="00:30:00" // 라벨 간격을 30분으로 설정
                     allDaySlot={false} // 종일 슬롯 비활성화

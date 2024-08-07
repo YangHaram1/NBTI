@@ -52,6 +52,14 @@ public class ReserveService {
 	public List<ReserveDTO> carList () throws Exception{
 		return rdao.carList();
 	}
+	//캘린더 suppliesList
+	public List<ReserveDTO> suppliesList () throws Exception{
+		return rdao.suppliesList();
+	}
+	//캘린더 meetingRoomList
+	public List<ReserveDTO> meetingRoomList () throws Exception{
+		return rdao.meetingRoomList();
+	}
 	
 	
 

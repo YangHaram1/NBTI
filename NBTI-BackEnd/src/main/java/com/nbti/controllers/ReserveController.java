@@ -93,7 +93,19 @@ public class ReserveController {
 //    	System.out.println(rejectList.size());
     	return ResponseEntity.ok(carList);
     }
-
+    //suppliesList
+    @GetMapping("/suppliesList")
+    public ResponseEntity<List<ReserveDTO>> suppliesList () throws Exception {
+    	List<ReserveDTO> suppliesList = rserv.suppliesList();
+//    	System.out.println(rejectList.size());
+    	return ResponseEntity.ok(suppliesList);
+    }
+    @GetMapping("/meetingRoomList")
+    public ResponseEntity<List<ReserveDTO>> meetingRoomList () throws Exception {
+    	List<ReserveDTO> meetingRoomList = rserv.meetingRoomList();
+//    	System.out.println(rejectList.size());
+    	return ResponseEntity.ok(meetingRoomList);
+    }
 
 
 

@@ -137,17 +137,68 @@
 	    WHERE seq = #{seq}
 	</update>
 	
-	<!-- car 자동차 -->
-	<select id="carList" resultType="com.nbti.dto.ReserveDTO">
+	<!-- 자동차 -->
+	<select id="carList" resultMap="reserveResultMap">
 		SELECT 
-		 *
+		 	r.seq,
+		    r.member_id,
+		    m.name,  
+			r.reserve_title_code,
+		    r.purpose,
+		    r.start_time,
+		    r.end_time,
+		    r.state
 		FROM 
-		    reserve
+		    reserve r
+		JOIN 
+		    members m ON r.member_id = m.id 
 		WHERE 
-		    state = 'Y'
-		    AND reserve_title_code = '3'
+		    r.state = 'Y'
+		    AND r.reserve_title_code = '3'
 		ORDER BY 
-		    seq
+		    r.seq
+	</select>
+	<!-- 비품 -->
+	<select id="suppliesList" resultMap="reserveResultMap">
+		SELECT 
+		 	r.seq,
+		    r.member_id,
+		    m.name,  
+			r.reserve_title_code,
+		    r.purpose,
+		    r.start_time,
+		    r.end_time,
+		    r.state
+		FROM 
+		    reserve r
+		JOIN 
+		    members m ON r.member_id = m.id 
+		WHERE 
+		    r.state = 'Y'
+		    AND r.reserve_title_code = '2'
+		ORDER BY 
+		    r.seq
+	</select>
+	<!-- 회의실 -->
+	<select id="meetingRoomList" resultMap="reserveResultMap">
+		SELECT 
+		 	r.seq,
+		    r.member_id,
+		    m.name,  
+			r.reserve_title_code,
+		    r.purpose,
+		    r.start_time,
+		    r.end_time,
+		    r.state
+		FROM 
+		    reserve r
+		JOIN 
+		    members m ON r.member_id = m.id 
+		WHERE 
+		    r.state = 'Y'
+		    AND r.reserve_title_code = '1'
+		ORDER BY 
+		    r.seq
 	</select>
 	
 </mapper>

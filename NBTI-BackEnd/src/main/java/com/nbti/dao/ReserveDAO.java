@@ -65,6 +65,15 @@ public class ReserveDAO {
     	return mybatis.selectList("Reserve.carList");
     }
 
+    //캘린더 suppliesList
+    public List<ReserveDTO> suppliesList () throws Exception {
+    	return mybatis.selectList("Reserve.suppliesList");
+    }
+    
+    //캘린더 meetingRoomList
+    public List<ReserveDTO> meetingRoomList () throws Exception {
+    	return mybatis.selectList("Reserve.meetingRoomList");
+    }
 
 
 
