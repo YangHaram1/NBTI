@@ -19,6 +19,7 @@ export const Detail = () => {
     board_code: 1,
   });
   const [currentUser, setCurrentUser] = useState(null); // 로그인된 사용자 정보 상태
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   // 게시판 코드
   let code = 1;
@@ -142,13 +143,38 @@ export const Detail = () => {
     });
   };
 
+  // 북마크 추가
+  const handleBookmarkAdd = (seq) => {
+    setIsBookmarked(!isBookmarked);
+    axios.post(`${host}/bookmark/insert`, { board_seq: seq }).then((resp) => {
+      if (resp.data === 1) alert("중요 게시글에 추가되었습니다.")
+    })
+  };
+
+  // 북마크 해제 
+  const handleBookmarkRemove = (seq) => {
+    setIsBookmarked(!isBookmarked);
+    axios.delete(`${host}/bookmark/delete/${seq}`).then((resp) => {
+      if (resp.data === 1) alert("중요 게시글에서 삭제되었습니다.")
+    })
+  };
+
   //======================================================================================
 
   return (
     <div className={styles.container}>
       <div className={styles.top}>
         <div className={styles.left}>
-          <i className="fa-regular fa-star"></i>
+          <i
+            className="fa-regular fa-star"
+            onClick={() => { handleBookmarkAdd(detail.seq) }}
+            style={{ display: isBookmarked ? "none" : "inline" }}
+          ></i>
+          <i
+            className="fa-solid fa-star"
+            onClick={() => { handleBookmarkRemove(detail.seq) }}
+            style={{ display: isBookmarked ? "inline" : "none" }}
+          ></i>
         </div>
         <div className={styles.right}>
           {currentUser && detail.member_id === currentUser.id && !isEditing ? (

@@ -89,11 +89,11 @@
 		SELECT COUNT(*)
 		   FROM board
 		   <trim prefix="WHERE" prefixOverrides="AND|OR">
-		       기본 조건: 게시판 코드와 작성자 ID
+		    <!-- 기본 조건: 게시판 코드와 작성자 ID -->
 		    board_code = #{board_code}
 		    AND member_id = #{member_id}
 		    
-		    검색 조건: target이 특정 값일 때
+		    <!-- 검색 조건: target이 특정 값일 때 -->
 		    <if test="target == 'title'">
 		        AND title LIKE '%' || #{keyword} || '%'
 		    </if>
@@ -103,7 +103,7 @@
 		    <if test="target == 'member_id'">
 		        AND member_id = #{keyword}
 		    </if>
-		    검색 조건: target이 빈 문자열일 때
+		    <!-- 검색 조건: target이 빈 문자열일 때 -->
 		    <if test="target == ''">
 		        AND (title LIKE '%' || #{keyword} || '%'
 		        OR REGEXP_REPLACE(contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
