@@ -7,11 +7,17 @@ const useYearlyStats = (memberId) => {
         lateCount: 0,
         absentCount: 0,
         earlyLeaveCount: 0,
-        statsDay : 0,
-        statsHours : 0
+        statsDay: 0,
+        statsHours: '0시간 0분'
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const convertHoursToHoursAndMinutes = (hours) => {
+        const wholeHours = Math.floor(hours);
+        const minutes = Math.round((hours - wholeHours) * 60);
+        return `${wholeHours}시간 ${minutes}분`;
+    };
 
     const fetchYearlyStats = async () => {
         if (!memberId) {
@@ -29,14 +35,14 @@ const useYearlyStats = (memberId) => {
 
             console.log('API 응답 데이터:', response.data);
 
-            const { lateCount, absentCount, earlyLeaveCount,statsDay,statsHours } = response.data;
+            const { lateCount, absentCount, earlyLeaveCount, statsDay, statsHours } = response.data;
 
             setStats({
                 lateCount,
                 absentCount,
                 earlyLeaveCount,
                 statsDay,
-                statsHours
+                statsHours: convertHoursToHoursAndMinutes(statsHours)
             });
             setError(null);
         } catch (err) {
