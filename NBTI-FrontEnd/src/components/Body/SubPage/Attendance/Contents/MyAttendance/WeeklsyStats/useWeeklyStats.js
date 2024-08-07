@@ -13,8 +13,8 @@ const useWeeklyStats = (memberId) => {
                 params: { memberId },
                 withCredentials: true
             });
-            console.log("Response status:", response.status); // 응답 상태 코드 확인
-            console.log("Response data:", response.data); // 전체 응답 데이터 확인
+            console.log("Response status:", response.status);
+            console.log("Response data:", response.data);
             
             // 상태 업데이트
             if (response.data) {
