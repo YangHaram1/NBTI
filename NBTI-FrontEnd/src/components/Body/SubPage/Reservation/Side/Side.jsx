@@ -6,7 +6,7 @@ import axios from "axios";
 import { useReservationList } from "../../../../../store/store";
 
 export const Side = () => {
-
+  const [isAdmin, setIsAdmin] = useState(false); // 권한 여부 상태
   const navi = useNavigate();
   const {reservations, setReservations } = useReservationList();
 
@@ -96,6 +96,23 @@ const fetchReservations = () => {
       setReserveData({ reserve_title_code: '', start_time: '', end_time: '', purpose: '', state: 'N' }); // 초기화
   };
 
+    // 로그인 한 사용자 정보 및 reservation 권한 확인
+    useEffect(() => {
+      axios.get(`${host}/members`).then((resp) => {
+        if (resp.data.member_level === "2" || resp.data.member_level === "4") {
+          // reservation 권한 확인
+          axios.get(`${host}/members/selectLevel`).then((resp1) => {
+            console.log(resp1.data[parseInt(resp.data.member_level) - 1]?.reservation)
+            const reservationStatus = resp1.data[parseInt(resp.data.member_level) - 1]?.reservation; // 배열의 n번째 요소에서 hr 확인
+  
+            if (reservationStatus === "Y") {
+              setIsAdmin(true); // Y일 때 true
+            }
+          });
+        }
+      });
+    }, []);
+
 
   return (
     <div className={styles.container}>
@@ -126,9 +143,12 @@ const fetchReservations = () => {
         </button>
       </div>
       <div className={styles.mainBtn}>
-        <button onClick={()=> {navi('manager')}} >
-          <p>승인 관리</p>
-        </button>
+        {isAdmin &&(
+          <button onClick={()=> {navi('manager')}} >
+            <p>승인 관리</p>
+          </button>
+        )
+        }
       </div>
 
       {modalOpen && (
