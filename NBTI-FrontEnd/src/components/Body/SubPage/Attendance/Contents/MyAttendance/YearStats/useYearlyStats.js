@@ -13,10 +13,10 @@ const useYearlyStats = (memberId) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const convertHoursToHoursAndMinutes = (hours) => {
-        const wholeHours = Math.floor(hours);
-        const minutes = Math.round((hours - wholeHours) * 60);
-        return `${wholeHours}시간 ${minutes}분`;
+    const convertHoursToHoursAndMinutes = (totalHours) => {
+        const hours = Math.floor(totalHours);
+        const minutes = Math.round((totalHours - hours) * 60);
+        return `${hours}시간 ${minutes}분`;
     };
 
     const fetchYearlyStats = async () => {
