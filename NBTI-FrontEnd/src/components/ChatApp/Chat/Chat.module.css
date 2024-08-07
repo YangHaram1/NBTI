@@ -167,7 +167,7 @@
 }
 
 /* 스크롤바의 핸들 */
-::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb { 
     background: #888;
     /* 핸들의 배경 색상 */
     border-radius: 10px;

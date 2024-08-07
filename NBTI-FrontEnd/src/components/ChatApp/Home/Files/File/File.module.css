@@ -3,12 +3,14 @@
     height: 100%;
 }
 .item{
+    width: 100%;
+    height: 100%;
     display: flex;
     gap: 10px;
     font-size: 11.5px;
    
 }
-.item div{
+.item div{ 
     flex: 1;
     display: flex;
     justify-content: center;

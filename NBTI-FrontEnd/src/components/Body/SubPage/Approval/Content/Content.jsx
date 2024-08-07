@@ -4,6 +4,7 @@ import { Home } from './Home/Home';
 import { Write } from './Write/Write';
 import { List } from './List/List';
 import { ListDoc } from './ListDoc/ListDoc';
+import { Detail } from './Detail/Detail';
 
 export const Content = ()=>{
     return(
@@ -27,6 +28,7 @@ export const Content = ()=>{
                 <Route path="write/docVacation/*" element={<Write setlist={"휴가신청서"} />} />
                 <Route path="write/docLeave/*" element={<Write setlist={"휴직신청서"} />} />
                 <Route path="write/docDraft/*" element={<Write setlist={"업무기안서"} />} />
+                <Route path="detail/*" element={<Detail setlist={"디페일 페이지"}/>}/>
             </Routes>
         </div>
     );
