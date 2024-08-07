@@ -45,11 +45,13 @@ export const useCheckList = create((set) => ({
     onMessage:false,
     emoticonDisplay: false,
     searchDisplay: true,
+    chatController:false,
     setEmoticonDisplay: ()=>set((state) => ({ emoticonDisplay: !state.emoticonDisplay })),
     setSearchDisplay: (search) => set({ searchDisplay: search }),
     setChatSeq:(seq)=>set({chatSeq:seq}),
     setOnmessage:() => set((state) => ({ onMessage: !state.onMessage  })),
-    setWebSocketCheck:() => set((state) => ({ webSocketCheck: !state.webSocketCheck}))
+    setWebSocketCheck:() => set((state) => ({ webSocketCheck: !state.webSocketCheck})),
+    setChatController:()=>set((state) => ({ chatController: !state.chatController}))
 }));
 
 export const useNotification =create((set)=>({
@@ -87,7 +89,7 @@ export const useDocFormStore = create((set)=>{
 // 결재라인
 export const useApprovalLine = create((set) => {
     return {
-        approvalLine: [{}],
+        approvalLine: [],
         setApprovalLine: (approval) => set((prev) => {
             const exist = prev.approvalLine.findIndex(line => line.order === approval.order);
             let newApprovalLine;
@@ -107,7 +109,7 @@ export const useApprovalLine = create((set) => {
 // 참조라인
 export const useReferLine = create((set) => {
     return {
-        referLine: [{}],
+        referLine: [],
         // setReferLine : (refer)=>set((prev)=>({
         //     referLine: [...prev.referLine, refer]
         // })), 

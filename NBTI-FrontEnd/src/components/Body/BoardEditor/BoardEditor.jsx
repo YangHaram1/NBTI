@@ -4,7 +4,7 @@ import axios from "axios";
 import { host, api } from "./../../../config/config";
 import styles from "./BoardEditor.module.css";
 
-const BoardEditor = ({ setBoard, contents }) => {
+const BoardEditor = ({ board, setBoard, contents }) => {
   const [content, setContent] = useState(contents);
   const editorRef = useRef();
   const inputRef = useRef(null);

@@ -60,7 +60,7 @@
   border: 1px solid #a4c3b2;
 }
 .container .top .left .tempSave {
-  width: 160px;
+  width: 190px;
   font-size: 0.73rem;
   color: #a4c3b2;
   margin-left: 10px;
@@ -139,7 +139,7 @@
 }
 
 .popup {
-  width: 500px;
+  width: 560px;
   min-width: 450px;
   height: auto;
   background: white;
@@ -176,14 +176,22 @@
   align-items: center;
   border-bottom: 1px solid rgb(234, 234, 234);
 }
+
+.popup .tempSaveList > div .tempSaveValue {
+  flex: 1;
+  color: #6b9080;
+  font-weight: 600;
+}
 .popup .tempSaveList > div .tempSaveTitle {
   flex: 5;
   font-size: 0.75rem;
+  padding: 0 10px;
 }
 .popup .tempSaveList > div .tempSaveTime {
-  flex: 2;
+  flex: 2.3;
   font-size: 0.65rem;
   color: #959595;
+  margin-left: 8px;
 }
 .popup .tempSaveList > div .tempSaveBtns {
   flex: 1.8;
@@ -221,7 +229,7 @@
 .popup > span {
   height: 60px;
   font-size: 0.7rem;
-  margin: 20px 0 10px 10px;
+  margin: 23px 0 10px 10px;
   text-align: center;
   display: flex;
   align-items: center;

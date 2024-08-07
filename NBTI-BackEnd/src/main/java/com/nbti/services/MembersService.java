@@ -50,13 +50,9 @@ public class MembersService {
 		   mdao.deleteUser(id);
 	   }
 	// 사용자목록 회원 검색 ( 이름으로 )
-	   public List<MembersDTO> searchUser(String name){
-		   
-	        System.out.println("Search term: " + name);
-	        List<MembersDTO> users = mdao.searchUser(name);
-	        System.out.println("Found users: " + users);
-		   return users;
-	   }
+	   public List<Map<String, Object>> searchUser(String name){
+		    return mdao.searchUser(name);
+		}
 	// 팀 코드로 사용자 조회
 	   public List<MembersDTO> selectByTeam(String team_code){
 		   return mdao.selectByTeam(team_code);

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nbti.dao.ChatDAO;
 import com.nbti.dao.Group_chatDAO;
@@ -27,9 +27,30 @@ public class Group_chatService {
 	@Autowired
 	private ChatDAO cdao;
 	
-	public int insert(String member_id) throws Exception{
-		return dao.insert(member_id);
+	
+	
+	@Transactional
+	public void insert(String member_id,String loginID) throws Exception{
+		List<String> list =new ArrayList<>();
+		list.add(member_id);
+		list.add(loginID);
+		boolean check=mdao.check(list);
+		
+		if(!check) {
+			int group_seq=dao.insert();	
+			List<Group_memberDTO> member_list=new ArrayList<>();
+			Group_memberDTO dto= new Group_memberDTO(group_seq,list.get(0),0,"Y","N",list.get(1));
+			member_list.add(dto);
+			dto= new Group_memberDTO(group_seq,list.get(1),0,"Y","N",list.get(0));
+			member_list.add(dto);
+			mdao.insert(member_list);
+			ChatDTO cdto=new ChatDTO(0,"system",member_id+"님과 "+loginID+"님이 입장하셨습니다!",null,group_seq,0);
+			cdao.insert(cdto);
+		}
+		
 	}
+	
+	
 	
 	public List<Group_chatDTO> getList(List<Group_memberDTO> list) throws Exception{
 		return dao.getList(list);
@@ -38,6 +59,8 @@ public class Group_chatService {
 	public void delete(int seq) throws Exception{
 		dao.delete(seq);
 	}
+	
+	
 	
 	public List<Group_chatSizeDTO> getChatSizeDTOs(String loginID) throws Exception {
 		List<Group_memberDTO> list= new ArrayList<>();

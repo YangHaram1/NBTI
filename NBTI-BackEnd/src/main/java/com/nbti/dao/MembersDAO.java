@@ -26,9 +26,9 @@ public boolean login(MembersDTO dto) {
 	public void updateUser(MembersDTO dto) {
 		mybatis.update("Member.updateMember",dto);
 	}
-	public List<MembersDTO> searchUser(String name){
-		System.out.println(name);
-		return mybatis.selectList("Member.searchUser",name);
+	public List<Map<String, Object>> searchUser(String name) {
+	    System.out.println("검색어: " + name);
+	    return mybatis.selectList("Member.searchUser", name);
 	}
 	
 	public MembersDTO selectMyData(String id) {

@@ -135,8 +135,6 @@ export const Detail = () => {
 
   // 댓글 삭제
   const handleDelReplyBtn = (replySeq) => {
-    console.log(replySeq);
-
     axios.delete(`${host}/reply/${replySeq}`).then((resp) => {
       setReply((prev) => {
         return prev.filter((item) => item.seq !== replySeq);

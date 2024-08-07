@@ -1,4 +1,3 @@
-// SearchUser.js
 import React from 'react';
 import styles from './SearchUser.module.css';
 

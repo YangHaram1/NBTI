@@ -72,7 +72,29 @@ public class AttendanceController {
     }
 
     @GetMapping("/weekly-stats")
-    public ResponseEntity<Map<String, Integer>> getWeeklyStats(HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> getWeeklyStats(HttpServletRequest request) {
+        String memberId = (String) request.getSession().getAttribute("loginID");
+        System.out.println("Member ID from session: " + memberId); // 확인용 로그
+
+        if (memberId == null) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", -1); // Error code for unauthorized
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+        }
+        try {
+            // 주간 통계 조회
+            Map<String, Object> stats = aServ.getWeeklyStats(memberId);
+            System.out.println("Stats: " + stats); // 서버 측에서 반환된 데이터를 확인
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", -2); // Error code for internal server error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+    @GetMapping("/yearly-stats")
+    public ResponseEntity<Map<String, Integer>> getYearlyStats(HttpServletRequest request) {
         String memberId = (String) request.getSession().getAttribute("loginID");
         if (memberId == null) {
             Map<String, Integer> errorResponse = new HashMap<>();
@@ -80,8 +102,8 @@ public class AttendanceController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
         try {
-            // 주간 통계 조회
-            Map<String, Integer> stats = aServ.getWeeklyStats(memberId);
+            // Fetch yearly stats
+            Map<String, Integer> stats = aServ.getYearlyStats(memberId);
             return ResponseEntity.ok(stats);
         } catch (Exception e) {
             e.printStackTrace();

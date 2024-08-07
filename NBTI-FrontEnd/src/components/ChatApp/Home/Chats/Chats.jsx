@@ -23,7 +23,7 @@ const Chats = () => {
           //  console.log(resp);
             if (resp != null) {
                 if (resp.data !== '') {
-                    console.log(resp.data);
+                 //   console.log(resp.data);
                     let count = -1;
                     let countUnread=0;
                     (resp.data).forEach((temp) => {
@@ -168,7 +168,7 @@ const Chats = () => {
 
                             </div>
                             {index === countBookmark && (<div className={styles.line}></div>)}
-                            <ChatsModal modalRef={modalRef} index={index} item={item} setGroup_chats={setGroup_chats} setCountBookmark={setCountBookmark}></ChatsModal>
+                            <ChatsModal modalRef={modalRef} index={index} item={item} setGroup_chats={setGroup_chats} setCountBookmark={setCountBookmark} setCountTotal={setCountTotal}></ChatsModal>
                         </React.Fragment>
                     );
                 })

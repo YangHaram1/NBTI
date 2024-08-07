@@ -24,6 +24,7 @@ const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch, cha
         if(search!==''){
             const searchParam = search ? `?search=${encodeURIComponent(search)}` : '';
             axios.get(`${host}/chat${searchParam}&&chatSeq=${chatSeq}`).then((resp) => {
+               // console.log(resp.data);
                 setSearchList(resp.data);
             })
         }

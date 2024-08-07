@@ -30,13 +30,13 @@ const Chat = () => {
   const { loginID } = useAuthStore();
   const [chatCheck, setChatCheck] = useState([]);
 
-  const { chats, setChats, ws, setChatNavi, chatAppRef, chatNavi } = useContext(ChatsContext);
+  const { chats, setChats, ws, setChatNavi, chatAppRef, chatNavi} = useContext(ChatsContext);
   //const { maxCount,count, increment,decrement } = useNotification();
   let lastDate = null;
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
-  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage, setWebSocketCheck } = useCheckList();
+  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage, setWebSocketCheck,chatController,setChatController } = useCheckList();
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
   const [updateMember, setUpdateMember] = useState(false);
@@ -57,21 +57,7 @@ const Chat = () => {
   useEffect(() => {
     const url = host.replace(/^https?:/, '')
 
-    if (loginID != null) {
-      const { chatSeq } = useCheckList.getState();
-
-      if (chatSeq !== 0) {
-        axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {//채팅목록 가저오기
-          setChats(resp.data);
-          console.log("채팅목록가저오기");
-          if (resp.data.length > 0) //멤버 last_chat_seq 업데이트
-            axios.patch(`${host}/group_member?group_seq=${chatSeq}&&last_chat_seq=${resp.data[resp.data.length - 1].seq}`).then((resp) => {
-              ws.current.send("updateMember");
-            })
-        })
-
-      }
-
+    if (loginID != null && loginID !== 'error') {
       updateSidebarPosition();
       updateSearchPosition();
       ws.current.onclose = () => {
@@ -86,8 +72,11 @@ const Chat = () => {
       };
 
       ws.current.onmessage = (e) => {
-
-        if (e.data === "updateMember") {
+        if(e.data==='chatController'){
+          console.log("delete");
+          setChatController();
+        }
+        else if (e.data === "updateMember") {
           console.log(e.data);
           setUpdateMember((prev) => {
             return !prev;
@@ -98,22 +87,19 @@ const Chat = () => {
           let chat = JSON.parse(e.data);
           const { chatSeq } = useCheckList.getState();
           //메세지 온거에 맞게 group_seq 사용해서 멤버 list받기 이건 chatSeq 없이 채팅 꺼저있을떄를 위해서 해놈
-          if(chatSeq===0)
-          axios.get(`${host}/group_member?group_seq=${chat.group_seq}`).then((resp) => {
-            setOnmessage();
-            if (chat.member_id !== loginID) {
-              resp.data.forEach((temp) => { //알림보내기 로직
-                if (temp.member_id === loginID) {
-                  if (temp.alarm === 'Y') notify(chat);
-                }
-              })
-            }
-          })
+          if (chatSeq === 0)
+            axios.get(`${host}/group_member?group_seq=${chat.group_seq}`).then((resp) => {
+              setOnmessage();
+              if (chat.member_id !== loginID) {
+                resp.data.forEach((temp) => { //알림보내기 로직
+                  if (temp.member_id === loginID) {
+                    if (temp.alarm === 'Y') notify(chat);
+                  }
+                })
+              }
+            })
 
           //////
-
-
-
           if (chat.group_seq === chatSeq) {
             setChats((prev) => {
 
@@ -129,14 +115,11 @@ const Chat = () => {
             }
 
           }
-         
           console.log("메세지보냄");
         }
       }
 
     }
-
-
     window.addEventListener('resize', updateSidebarPosition);
 
     return () => {
@@ -144,6 +127,22 @@ const Chat = () => {
     };
 
   }, [chatNavi]);
+
+  useEffect(() => {
+    if (loginID != null && loginID !== 'error') {
+      const { chatSeq } = useCheckList.getState();
+      if (chatSeq !== 0) {
+        axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {//채팅목록 가저오기
+          setChats(resp.data);
+          console.log("채팅목록가저오기");
+          if (resp.data.length > 0) //멤버 last_chat_seq 업데이트
+            axios.patch(`${host}/group_member?group_seq=${chatSeq}&&last_chat_seq=${resp.data[resp.data.length - 1].seq}`).then((resp) => {
+              ws.current.send("updateMember");
+            })
+        })
+      }
+    }
+  }, [chatNavi, invite,chatController])
 
 
   const notify = useCallback((item) => {
@@ -166,7 +165,7 @@ const Chat = () => {
         onClose: decrement,
         onOpen: increment,
         onClick: () => handleToastOnclick(item),
-        icon: <img src={notice}alt="custom-icon" className={styles.shake} /> 
+        icon: <img src={notice} alt="custom-icon" className={styles.shake} />
       });
     }
     //}
@@ -250,7 +249,7 @@ const Chat = () => {
 
 
   //다운로드 컨트롤
-  const handleDownload=(e)=>{
+  const handleDownload = (e) => {
     e.preventDefault();
     const userConfirmed = window.confirm("다운로드를 진행하시겠습니까?");
     if (userConfirmed) {
@@ -259,11 +258,11 @@ const Chat = () => {
     }
   }
 
-  const safeHtml=(html)=>{
+  const safeHtml = (html) => {
     const sanitizedHtml = sanitizeHtml(html, {
       allowedTags: ['a', 'p', 'b', 'i', 'u'],
       allowedAttributes: {
-       // 'a': ['href', 'download'],
+        // 'a': ['href', 'download'],
       },
     });
 
@@ -276,6 +275,7 @@ const Chat = () => {
 
     setList(
       chats.map((item, index) => {
+        //---------------------------------------------// 날짜 로직 
         const formattedTimestamp = format(new Date(item.write_date), 'a hh:mm').replace('AM', '오전').replace('PM', '오후');
         const currentDate = format(new Date(item.write_date), 'yyyy-MM-dd');
         const isDateChanged = currentDate !== lastDate;
@@ -288,10 +288,10 @@ const Chat = () => {
         if (temp !== '') {
           check = true;
         }
-        else{
+        else {
 
         }
-        
+
         //--------------------------------------------------// 내가쓴글인지 아닌지
         let idCheck = false;
         if (item.member_id === loginID) {
@@ -309,47 +309,58 @@ const Chat = () => {
         }).length;
 
         //--------------------------------------------------// 여기가 파일쪽 로직 처리
-        let fileCheck=false;
-        let file='';
-        if(item.upload_seq!==0){
-          const split=item.message.split(' ');
-          fileCheck=true;
-          if(split[2]==='2'){
-            file=`<a href=${host}/files/downloadChat?oriname=${split[0]}&&sysname=${split[1]} download=${split[0]}  onClick="return confirm('다운로드를 진행하시겠습니까?');"><p>${split[0]}</p></a>`; 
+        let fileCheck = false;
+        let file = '';
+        if (item.upload_seq !== 0) {
+          const split = item.message.split(' ');
+          fileCheck = true;
+          if (split[2] === '2') {
+            file = `<a href=${host}/files/downloadChat?oriname=${split[0]}&&sysname=${split[1]} download=${split[0]}  onClick="return confirm('다운로드를 진행하시겠습니까?');"><p>${split[0]}</p></a>`;
           }
-          else if(split[2]==='1'){
-            file=`<a href=${host}/files/downloadChat?oriname=${split[0]}&&sysname=${split[1]} download=${split[0]} onClick="return confirm('다운로드를 진행하시겠습니까?');">
+          else if (split[2] === '1') {
+            file = `<a href=${host}/files/downloadChat?oriname=${split[0]}&&sysname=${split[1]} download=${split[0]} onClick="return confirm('다운로드를 진행하시겠습니까?');">
             <p><img src=${host}/images/chat/${split[1]} alt=downloadImage></img></p>
-            </a>`; 
-          }        
-         
+            </a>`;
+          }
+
         }
+        //--------------------------------------------------// 여긴 시스템 로직 처리
+        let systemCheck = false;
+        if (item.member_id === 'system') {
+          check = false;
+          systemCheck = true;
+        }
+
         //--------------------------------------------------//
         return (
           <React.Fragment key={index}>
             {isDateChanged && (
               <div className={styles.dateSeparator}>{currentDate}</div>
             )}
-            <div className={idCheck ? styles.div1Left : styles.div1} >
-              {
-                !idCheck && (<div className={styles.avatar}><img src={avatar} alt="" /></div>)
-              }
-              <div>
-                <div className={idCheck ? styles.nameReverse : styles.name}>{item.member_id}</div>
-                <div className={idCheck ? styles.contentReverse : styles.content}>
-                  <div dangerouslySetInnerHTML={{ __html: (check ? temp : (fileCheck? file:item.message)) }}
-                    ref={el => {
-                      if (el && check) {
-                        chatRef.current[count++] = el; //검색한것만 ref 추가
-                      }
-                    }} className={idCheck ? styles.mboxReverse : styles.mbox}></div>
-                  <div style={{display:"flex"}}>
-                    {(chatCheckCount>0)&&(<div className={styles.check}>{chatCheckCount || ''}</div>)}
-                    <div className={styles.date}>{formattedTimestamp}</div>
+            {systemCheck && (
+              <div className={styles.system}><p>{item.message}</p></div>
+            )}
+            {!systemCheck && (
+              <div className={idCheck ? styles.div1Left : styles.div1} >
+                {
+                  !idCheck && (<div className={styles.avatar}><img src={avatar} alt="" /></div>)
+                }
+                <div>
+                  <div className={idCheck ? styles.nameReverse : styles.name}>{item.member_id}</div>
+                  <div className={idCheck ? styles.contentReverse : styles.content}>
+                    <div dangerouslySetInnerHTML={{ __html: (check ? temp : (fileCheck ? file : item.message)) }}
+                      ref={el => {
+                        if (el && check) {
+                          chatRef.current[count++] = el; //검색한것만 ref 추가
+                        }
+                      }} className={idCheck ? styles.mboxReverse : styles.mbox}></div>
+                    <div style={{ display: "flex" }}>
+                      {(chatCheckCount > 0) && (<div className={styles.check}>{chatCheckCount || ''}</div>)}
+                      <div className={styles.date}>{formattedTimestamp}</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </div>)}
           </React.Fragment>
         );
       })
@@ -374,14 +385,13 @@ const Chat = () => {
 
   useEffect(() => { //스크롤 
     scrollBottom();
-  }, [scrollBottom])
+  }, [scrollBottom]);
 
   useEffect(() => {//group_seq에 맞는 member list 뽑기
     axios.get(`${host}/group_member?group_seq=${chatSeq}`).then((resp) => {
-      console.log(resp.data);
       setChatCheck(resp.data);
     })
-  }, [invite, updateMember, chatNavi])
+  }, [invite, updateMember, chatNavi]);
 
 
   if (isLoading === true) {

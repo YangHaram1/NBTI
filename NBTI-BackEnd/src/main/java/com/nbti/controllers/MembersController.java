@@ -27,7 +27,7 @@ import com.nbti.services.DepartmentService;
 import com.nbti.services.JobService;
 import com.nbti.services.M_LevelService;
 import com.nbti.services.MembersService;
-import com.nbti.services.TeamService;
+import com.nbti.services.TeamsService;
 
 import jakarta.servlet.http.HttpSession;
 //import org.springframework.web.bind.annotation.RequestParam;
@@ -39,7 +39,7 @@ public class MembersController {
 	@Autowired
 	private DepartmentService dServ;
 	@Autowired
-	private TeamService tServ;
+	private TeamsService tServ;
 	@Autowired
 	private JobService jServ;
 	@Autowired
@@ -134,10 +134,9 @@ public class MembersController {
 	}
 	// 사용자목록 검색
 	@GetMapping("/searchUser")
-	public ResponseEntity<List<MembersDTO>> searchUser(@RequestParam String name){
-		System.out.println(name);
-		List<MembersDTO> user = mServ.searchUser(name);
-		return ResponseEntity.ok(user);
+	public ResponseEntity<List<Map<String, Object>>> searchUser(@RequestParam String name){
+	    List<Map<String, Object>> users = mServ.searchUser(name);
+	    return ResponseEntity.ok(users);
 	}
 	// 사용자목록 팀 조회
 	@GetMapping("/selectByTeam")
