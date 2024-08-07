@@ -23,6 +23,20 @@ public class ListDocDTO {
 		this.doc_state = doc_state;
 	}
 	
+	// 결재대기, 결재예정, 참조/열람 대기
+	public ListDocDTO(int temp_seq, Timestamp approval_date, String doc_sub_name, String emergency, String title,
+			String file_yn, String member_id) {
+		super();
+		this.temp_seq = temp_seq;
+		this.approval_date = approval_date;
+		this.doc_sub_name = doc_sub_name;
+		this.emergency = emergency;
+		this.title = title;
+		this.file_yn = file_yn;
+		this.member_id = member_id;
+	}
+	
+	
 	public ListDocDTO(int temp_seq, Timestamp approval_date, String doc_sub_name, String emergency, String title,
 			String member_id, String approval_seq, String doc_state) {
 		super();

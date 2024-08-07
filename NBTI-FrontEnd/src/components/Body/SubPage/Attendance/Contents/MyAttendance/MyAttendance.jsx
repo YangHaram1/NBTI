@@ -16,11 +16,11 @@ export const MyAttendance = () => {
     const [isLate, setIsLate] = useState(false);
     const [isAbsent, setIsAbsent] = useState(false);
     const [isEarlyLeave, setIsEarlyLeave] = useState(false);
-                                
+
     const memberId = sessionStorage.getItem('loginID');
     const today = new Date().toISOString().split('T')[0];
-    const { stats: weeklyStats, dailyStats } = useWeeklyStats(memberId);
-    const { stats: yearlyStats } = useYearlyStats(memberId);
+    const { stats: weeklyStats, dailyStats, fetchWeeklyStats } = useWeeklyStats(memberId);
+    const { stats: yearlyStats, fetchYearlyStats } = useYearlyStats(memberId);
 
     const fetchAttendanceStatus = useCallback(async () => {
         if (!memberId) return;
@@ -61,12 +61,14 @@ export const MyAttendance = () => {
                 params: { memberId },
                 withCredentials: true
             });
-            const { seq, start_date, isLate } = response.data;
+            const { start_date, isLate } = response.data;
             setCurrentClockIn(format(new Date(start_date), 'HH:mm:ss'));
             setClockedIn(true);
             setIsLate(isLate);
             setIsAbsent(false);
             alert(isLate ? '지각 기록이 저장되었습니다.' : '출근 기록이 저장되었습니다.');
+            fetchWeeklyStats(); // 주간 통계 업데이트
+            fetchYearlyStats(); // 연간 통계 업데이트
         } catch (err) {
             console.error('출근 기록에 실패했습니다.', err.response ? err.response.data : err);
             alert('출근 기록에 실패했습니다.');
@@ -85,6 +87,8 @@ export const MyAttendance = () => {
                 setClockedOut(true);
                 setIsEarlyLeave(true);
                 alert('퇴근 기록이 저장되었습니다.');
+                fetchWeeklyStats(); // 주간 통계 업데이트
+                fetchYearlyStats(); // 연간 통계 업데이트
             } else {
                 alert('퇴근 기록 저장 실패');
             }
@@ -96,7 +100,7 @@ export const MyAttendance = () => {
 
     return (
         <div className={styles.container}>
-            <YearlyStats stats={yearlyStats} /> {/* Ensure the props match the YearlyStats component's expectations */}
+            <YearlyStats stats={yearlyStats} />
             <div className={styles.titleSection}>
                 <h2>금일 근무 현황</h2>
             </div>
@@ -135,7 +139,7 @@ export const MyAttendance = () => {
                     </div>
                 </div>
             </div>
-            <WeeklyStats stats={weeklyStats} dailyStats={dailyStats} /> {/* Pass both stats and dailyStats */}
+            <WeeklyStats stats={weeklyStats} dailyStats={dailyStats} />
         </div>
     );
 };

@@ -18,7 +18,7 @@
     /* border: 1px solid black; */
     display: flex;
     justify-content: end;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
 
 .search_box button{
@@ -88,7 +88,7 @@
     color: red;
 }
 
-.state_badge{
+.state_badge_green{
     width: 60%; 
     height: 90%; 
     background-color: rgba(245, 245, 220, 0); 
@@ -96,4 +96,31 @@
     border-radius: 5px; 
     color:forestgreen;
 }
+
+.state_badge_gray{
+    width: 60%; 
+    height: 90%; 
+    background-color: rgba(245, 245, 220, 0); 
+    border: 1px solid gray;
+    border-radius: 5px; 
+    color:gray;
+}
+
+.state_badge_red{
+    width: 60%; 
+    height: 90%; 
+    background-color: rgba(245, 245, 220, 0); 
+    border: 1px solid red;
+    border-radius: 5px; 
+    color:red;
+}
+
+/* .state_badge{
+    width: 60%; 
+    height: 90%; 
+    background-color: rgba(245, 245, 220, 0); 
+    border: 1px solid forestgreen;
+    border-radius: 5px; 
+    color:forestgreen;
+} */
 
