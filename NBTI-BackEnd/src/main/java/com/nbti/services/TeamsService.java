@@ -9,7 +9,7 @@ import com.nbti.dao.TeamsDAO;
 import com.nbti.dto.TeamsDTO;
 
 @Service
-public class TeamService {
+public class TeamsService {
 	@Autowired
 	private TeamsDAO tdao;
 	
