@@ -2,6 +2,7 @@ package com.nbti.services;
 
 import java.sql.Timestamp;
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -31,7 +32,7 @@ public class AttendanceService {
         dto.setMember_id(memberId);
         dto.setStart_date(now);
         aDao.insert(dto);
-
+        
         Map<String, Object> result = new HashMap<>();
         result.put("seq", dto.getSeq());
         result.put("start_date", dto.getStart_date());
@@ -165,7 +166,8 @@ public class AttendanceService {
         int lateCount = 0;
         int absentCount = 0;
         int earlyLeaveCount = 0;
-
+        int statsDay = 0;
+        int statsHours = 0;
         for (AttendanceDTO record : records) {
             Timestamp startDate = record.getStart_date();
             Timestamp endDate = record.getEnd_date();
@@ -186,6 +188,9 @@ public class AttendanceService {
                         if (endDateTime.toLocalTime().isBefore(LocalTime.of(18, 0))) {
                             earlyLeaveCount++;
                         }
+                        Duration workDuration = Duration.between(startDateTime, endDateTime);
+                        statsHours += workDuration.toHours();
+                        statsDay++;
                     } else {
                         // 결근 체크
                         if (startDateTime.toLocalDate().isEqual(today)) {
@@ -200,7 +205,8 @@ public class AttendanceService {
         result.put("lateCount", lateCount);
         result.put("absentCount", absentCount);
         result.put("earlyLeaveCount", earlyLeaveCount);
-
+        result.put("statsDay", statsDay);
+        result.put("statsHours", statsHours);
         return result;
     }
 }
