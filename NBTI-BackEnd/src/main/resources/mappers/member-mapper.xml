@@ -59,7 +59,7 @@
             m.ent_yn,
             m.vacation_period
         FROM members m
-        LEFT JOIN team t ON m.team_code = t.team_code
+        LEFT JOIN teams t ON m.team_code = t.team_code
         LEFT JOIN job j ON m.job_code = j.job_code
     </select>
 	<select id="selectByTeam" resultType="map">
@@ -76,7 +76,7 @@ SELECT
     m.ent_yn,
     m.vacation_period
 FROM members m
-LEFT JOIN team t ON m.team_code = t.team_code
+LEFT JOIN teams t ON m.team_code = t.team_code
 LEFT JOIN job j ON m.job_code = j.job_code
 WHERE m.team_code = #{team_code}
 
@@ -106,7 +106,7 @@ WHERE m.team_code = #{team_code}
         m.ent_yn,
         m.vacation_period
     FROM members m
-    LEFT JOIN team t ON m.team_code = t.team_code
+    LEFT JOIN teams t ON m.team_code = t.team_code
     LEFT JOIN job j ON m.job_code = j.job_code
     WHERE m.name LIKE '%' || #{name} || '%'
     ORDER BY m.name
@@ -119,7 +119,7 @@ WHERE m.team_code = #{team_code}
 			m.job_code, j.job_name, 
 			t.dept_code, d.dept_name 
 		from members m 
-		left outer join team t on m.team_code = t.team_code
+		left outer join teams t on m.team_code = t.team_code
 		left outer join job j on m.job_code = j.job_code
 		left outer join department d on t.dept_code = d.dept_code
 		where id = #{id}
