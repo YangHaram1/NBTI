@@ -29,5 +29,27 @@
 		where temp_seq=#{seq}
 		order by a.approval_order
  	</select>
+ 	
+ 	<!-- 결재 승인, 반려 코멘트 저장-->
+ 	<update id="updateComment">
+ 		update approval_line 
+ 		set member_state_code = #{approvalYN}, approval_date = sysdate, comments = #{comment} 
+ 		where temp_seq = #{temp_seq} and approval_id = #{id}
+ 	</update>
+ 	
+ 	<!-- 현재 결재된 라인의 order 출력  -->
+ 	<select id="selectOrder" resultType="int">
+ 		select approval_order from approval_line where temp_seq = #{temp_seq} and approval_id=#{id}
+ 	</select>
+ 	
+ 	<!-- 임시번호에 따른 결재라인 수 확인 -->
+ 	<select id="selectLineCount" resultType="int">
+ 		select count(*) from approval_line where temp_seq = #{temp_seq}
+ 	</select>
+ 	
+ 	<!-- 결재 승인 시 다음 결재자 상태 업데이트  -->
+ 	<update id="updateNextApproval">
+ 		update approval_line set member_state_code = 'w' where temp_seq = #{temp_seq} and approval_order=#{updateOrder}
+ 	</update>
   
  </mapper>

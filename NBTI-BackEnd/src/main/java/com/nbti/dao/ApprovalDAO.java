@@ -1,6 +1,8 @@
 package com.nbti.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +54,14 @@ public class ApprovalDAO {
 	
 	public ApprovalDTO selectApproval(int seq){
 		return mybatis.selectOne("Approval.selectApproval",seq);
+	}
+	
+	// 문서 정보 최신화
+	public void updateDocState(int temp_seq, String state) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("temp_seq", temp_seq);
+		map.put("state", state);
+		mybatis.update("Approval.updateDocState", map);
 	}
 
 }

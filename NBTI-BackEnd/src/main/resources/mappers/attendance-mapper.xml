@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -161,24 +160,15 @@ AND start_date &lt; TRUNC(SYSDATE, 'IW') + 7;
     AND start_date >= TRUNC(SYSDATE, 'MM')
     AND start_date &lt; TRUNC(SYSDATE, 'MM') + INTERVAL '1 MONTH';
 </select>
-<select id="getWeeklyRecordsForAll" parameterType="map" resultType="map">
+<select id="getWeeklyRecordsForAll" parameterType="map" resultType="com.nbti.dto.AttendanceDTO">
     SELECT
-        a.seq,
-        a.member_id AS memberId,
-        a.start_date AS startDate,
-        a.end_date AS endDate,
-        m.name AS employeeName,
-        t.team_name AS teamName
+        a.*,
+        m.name,
+        t.team_name
     FROM attendance a
     JOIN members m ON a.member_id = m.id
     JOIN teams t ON m.team_code = t.team_code
-    WHERE a.start_date >= #{startDate}
-      AND a.start_date &lt;= #{endDate}
-    ORDER BY a.start_date
+    WHERE a.start_date BETWEEN #{startOfWeek} AND #{endOfWeek}
+    ORDER BY a.member_id, a.start_date
 </select>
-    <select id="getAllWeeklyRecords" resultType="map">
-        SELECT *
-        FROM attendance
-        WHERE start_date BETWEEN #{startOfWeek} AND #{endOfWeek}
-    </select>
 </mapper>
