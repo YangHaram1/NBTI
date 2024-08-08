@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { useApprovalLine, useDocLeave, useDocVacation, useReferLine } from '../../../../../../store/store';
 import html2pdf from 'html2pdf.js';
 import { DocLeave } from './DocLeave/DocLeave';
+import { Header } from './Header/Header';
 
 export const Detail=()=>{
 
@@ -16,6 +17,7 @@ export const Detail=()=>{
     const { seq, setlist } = location.state || {};
     console.log("seq:", seq);
     console.log("setlist:", setlist);
+
 
     const [approvalData, setApprovalData] = useState([]);
     const [referData, setReferData] = useState([]); 
@@ -33,40 +35,46 @@ export const Detail=()=>{
             try {
                 // 내 정보 받아오기 (이게 필요할까..?)
                 const userDataResponse = await axios.get(`${host}/members/docData`);
-                console.log("내정보",userDataResponse);
+                // console.log("내정보",userDataResponse);
                 setUserData(userDataResponse.data);
 
                 // 문서 공통 정보 받아오기
                 const docDataResponse = await axios.get(`${host}/approval/${seq}`)
-                console.log("문서공통정보",docDataResponse);
+                // console.log("문서공통정보",docDataResponse);
+                console.log("문서코드", docDataResponse.data.doc_sub_seq);
                 setDocCommonData(docDataResponse.data);
-
+                let form_code = docDataResponse.data.doc_sub_seq;
                 // 문서양식 별 데이터 받아오기
-                if(docDataResponse.data.doc_sub_seq == 1){
+                if(form_code == 1){
                     // 업무기안
                     const docMainDataResponse = await axios.get(`${host}/docDraft/${seq}`);
                     console.log("업무기안서",docMainDataResponse);
                     setDocDraft(docMainDataResponse.data);
-                }else if(docDataResponse.data.doc_sub_seq == 2){
+                }
+                else if(form_code == 2){
+                    // 휴직 신청서
+                    const docMainDataResponse = await axios.get(`${host}/docLeave/${seq}`);
+                    console.log("휴직신청서 데이터 받아왔지요");
+                    console.log("휴직신청서",docMainDataResponse);
+                    setDocLeave(docMainDataResponse.data);
+                }else if(form_code == 3){
                     // 휴가 신청서
                     const docMainDataResponse = await axios.get(`${host}/docVacation/${seq}`);
                     console.log("휴가신청서",docMainDataResponse);
                     setDocVacation(docMainDataResponse.data);
-                }else if(docDataResponse.data.doc_sub_seq == 3){
-                    // 휴직 신청서
-                    const docMainDataResponse = await axios.get(`${host}/docLeave/${seq}`);
-                    console.log("휴직신청서",docMainDataResponse);
-                    setDocLeave(docMainDataResponse.data);
+                }
+                else{
+                    console.log("값이 안나오는 중");
                 }
                 // 결재라인 정보 받아오기
                 const approvalLineResponse = await axios.get(`${host}/approvalLine/${seq}`);
                 setApprovalData(approvalLineResponse.data);
-                console.log("결재라인 체크",approvalLineResponse.data);
+                // console.log("결재라인 체크",approvalLineResponse.data);
 
                 // 참조라인 정보 받아오기
                 const referLineResponse = await axios.get(`${host}/referLine/${seq}`);
                 setReferData(referLineResponse.data);
-                console.log("참조라인확인",referLineResponse.data);
+                // console.log("참조라인확인",referLineResponse.data);
 
     
             } catch (error) {
@@ -171,12 +179,18 @@ export const Detail=()=>{
                         <div className={`${styles.approval_change_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
                     </div>
                     <div className={styles.write_box}>
+                        <div className={styles.write_title}>{setlist}</div>
+                        <div className={styles.write_header}>
+                            <Header docCommonData={docCommonData} userdata={userdata} approvalData={approvalData}/>
+                        </div>
+                        <div className={styles.write_container}>
                         {/* {   
                         setlist === '휴가신청서' ?  <DocVacation userdata={userdata}/>
                         : setlist === '휴직신청서' ? <DocLeave userdata={userdata} setContent={setContent} content={content}/>
                         : <DocDraft userdata={userdata} setDocData={setDocData} setContent={setContent} content={content} setDate={setDate} setDept={setDept} setTitle={setTitle}/>
                         }    */}
-                        <DocLeave setlist={setlist} userdata={userdata} docCommonData={docCommonData} approvalData={approvalData} referData={referData} docLeave={docLeave}/>
+                        <DocLeave docLeave={docLeave}/>
+                        </div>
                     </div>
                     <div className={styles.files}>
                         첨부파일 넣기

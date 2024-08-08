@@ -100,7 +100,7 @@ public class ApprovalController {
 			}
 		    
 		// 휴가 신청서 데이터 저장    
-		}else if(docType == 2) {
+		}else if(docType == 3) {
 			Map<String, Object> docVacation = (Map<String, Object>) requestData.get("docVacation");
 		    System.out.println("Received docVacation: " + docVacation);
 		    
@@ -169,7 +169,7 @@ public class ApprovalController {
 		    }
 			
 		// 휴직 신청서 데이터 저장	
-		}else if(docType == 3) {
+		}else if(docType == 2) {
 			Map<String, Object> docLeave = (Map<String, Object>) requestData.get("docLeave");
 			System.out.println("Received docLeave: " + docLeave);
 			

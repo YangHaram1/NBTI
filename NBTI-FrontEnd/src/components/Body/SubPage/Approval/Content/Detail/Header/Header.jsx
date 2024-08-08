@@ -15,14 +15,14 @@ export const Header = ({docCommonData, userdata, approvalData}) => {
     const Today = `${year}-${month}-${day}`;
     const [writer, setWriter] = useState({}); 
 
-    console.log("header 결재라인 넘어오는지",approvalData);
-    console.log("공통정보", docCommonData);
+    // console.log("header 결재라인 넘어오는지",approvalData);
+    // console.log("공통정보", docCommonData);
 
     useEffect(()=>{
         let id = docCommonData.member_id;
         axios.get(`${host}/members/approvaler/${id}`)
         .then((resp)=>{
-            console.log("기안자",resp.data);
+            // console.log("기안자",resp.data);
             setWriter(resp.data);
         })
     },[])

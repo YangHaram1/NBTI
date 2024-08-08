@@ -10,7 +10,7 @@ import com.nbti.dto.DocLeaveDTO;
 import com.nbti.services.DocLeaveService;
 
 @RestController
-@RequestMapping("docLeave")
+@RequestMapping("/docLeave")
 public class DocLeaveController {
 	
 	@Autowired
