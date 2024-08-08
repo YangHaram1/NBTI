@@ -12,7 +12,7 @@
 
 	<!-- 북마크 삭제 -->
 	<delete id="delete">
-		delete from board_bookmark where board_seq = ${seq} and member_id = #{member_id}
+		delete from board_bookmark where board_seq = ${board_seq} and member_id = #{member_id}
 	</delete>
 
 	<!-- 게시글이 북마크 되었는지 -->
