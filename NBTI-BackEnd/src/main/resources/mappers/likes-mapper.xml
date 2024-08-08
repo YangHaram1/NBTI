@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Likes">	
+	
+	<!-- 좋아요 추가 -->
+	<insert id="insert">
+		insert into likes values(likes_seq.nextval, ${reply_seq}, #{member_id})
+	</insert>
+
+	<!-- 좋아요 취소 -->
+	<delete id="delete">
+		delete from likes where reply_seq = ${reply_seq} and member_id = #{member_id}
+	</delete>
+
+
+</mapper>

@@ -1,7 +1,10 @@
 package com.nbti.controllers;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,62 +16,59 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nbti.dto.BookmarkDTO;
-import com.nbti.services.BookmarkService;
+import com.nbti.dto.LikesDTO;
+import com.nbti.services.LikesService;
 
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/bookmark")
-public class BookmarkController {
+@RequestMapping("/likes")
+public class LikesController {
 
 	@Autowired
-	private BookmarkService bserv;
+	private LikesService lserv;
 	@Autowired
 	private HttpSession session;
 	
-	
-	// 북마크 추가
+	// 좋아요 추가
 	@PostMapping("/insert")
-	public ResponseEntity<Integer> insert(@RequestBody BookmarkDTO dto) {
-		String member_id = (String) session.getAttribute("loginID");
+	public ResponseEntity<Integer> insert(@RequestBody LikesDTO dto){
+		
+		String member_id = (String)session.getAttribute("loginID");
 		dto.setMember_id(member_id);
-
-		int result = bserv.insert(dto);
+		
+		System.out.println("댓글 : " + dto.getReply_seq());
+		int result = lserv.insert(dto);
 		return ResponseEntity.ok(result);
 	}
 	
-	// 북마크 삭제
+	
+	// 좋아요 취소
 	@DeleteMapping("/delete/{seq}")
 	public ResponseEntity<Integer> delete(@PathVariable int seq){
 		
-		System.out.println("seq : " + seq); // 게시물 seq번호임 
-		
 		String member_id = (String) session.getAttribute("loginID");
 		
 		Map<String, Object> map = new HashMap<>();
-		map.put("board_seq", seq);
+		map.put("reply_seq", seq);
 		map.put("member_id", member_id);
 		
-		
-		int result = bserv.delete(map);
+		int result = lserv.delete(map);
 		return ResponseEntity.ok(result);
 	}
 	
-	// 게시글이 북마크 되었는지
-	@GetMapping("{boardSeq}")
-	public ResponseEntity<Boolean> isBookmarkStatus (@PathVariable int boardSeq) {
-		
-		String member_id = (String) session.getAttribute("loginID");
-		
-		Map<String, Object> map = new HashMap<>();
-		map.put("boardSeq", boardSeq);
-		map.put("member_id", member_id);
-		
-		
-		Boolean result = bserv.isBookmarkStatus(map);
-		return ResponseEntity.ok(result);
-	}
+	// 좋아요 추가 되었는지
+//	@GetMapping("/status/{replyIds}")
+//	public ResponseEntity<Map<Integer, Boolean>> getLikesStatus(@PathVariable String replyIds) {
+//		
+//        List<Integer> list = Arrays.stream(replyIds.split(","))
+//        					.map(Integer::parseInt)
+//                            .collect(Collectors.toList());
+//        
+//        Map<Integer, Boolean> result = lserv.getLikesStatus(list);
+//        return ResponseEntity.ok(result);
+//    }
+//	
 	
 	
 }
