@@ -1,16 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import styles from './Members.module.css';
 import axios from 'axios';
 import Modal from './Modal/Modal';
 import { useMemberStore } from '../../../../store/store';
 import { useAuthStore } from './../../../../store/store';
 import Profile from './Profile/Profile';
+import { ChatsContext } from '../../../../Context/ChatsContext';
 
 const Members = ({setName}) => {
     const [list, setList] = useState([]);
     const [modalDisplay, setModalDisplay] = useState(null);
     const { members } = useMemberStore();
     const { loginID } = useAuthStore();
+    const {dragRef} =useContext(ChatsContext);
 
     const modalRef = useRef([]);
     const profileRef =useRef([]);
@@ -26,8 +28,9 @@ const Members = ({setName}) => {
         })
     }, [])
     const handleRightClick = (index) => (e) => {
-        const { clientX: x, clientY: y } = e;
-       // console.log(`${x}:${y}`);
+        const rect = dragRef.current.getBoundingClientRect(); //부모요소~ 드래그 되는애
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
         e.preventDefault();
         setModalDisplay((prev) => {
             if (prev != null) {
@@ -35,7 +38,7 @@ const Members = ({setName}) => {
             }
             modalRef.current[index].style.display = 'flex';
             modalRef.current[index].style.top = y + 'px';
-            modalRef.current[index].style.left = x;
+            modalRef.current[index].style.left = x+'px';
             return modalRef.current[index];
         });
     };

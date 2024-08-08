@@ -1,6 +1,5 @@
 .container {
-    position: fixed;
-    top: 200px;
+    position: absolute;
     width: 310px; /* 사이드바의 너비 */
     height: 400px;
     overflow: auto;
@@ -9,6 +8,8 @@
     padding: 10px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
     display: none;
+    right: 360px;
+    
     
 }
 .div1{

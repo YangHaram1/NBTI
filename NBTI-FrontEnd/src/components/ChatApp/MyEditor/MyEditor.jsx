@@ -13,10 +13,10 @@ import { host } from '../../../config/config'
 
 const MyEditor = ({ sidebarRef, editorRef }) => {
 
-  const {emoticonDisplay,setEmoticonDisplay,chatSeq} =useCheckList();
+  const { emoticonDisplay, setEmoticonDisplay, chatSeq } = useCheckList();
   const [content, setContent] = useState('');
   const inputRef = useRef(null);
-  const { ws } = useContext(ChatsContext);
+  const { ws, dragRef } = useContext(ChatsContext);
 
   const handleEditorChange = debounce((content) => {
     localStorage.setItem('editorContent', content);
@@ -34,14 +34,14 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
     }
     console.log("upload")
     axios.post(`${host}/chat_upload?group_seq=${chatSeq}`, formData).then(resp => { //파일 로직 처리
-      const array=resp.data;
+      const array = resp.data;
       for (let index = 0; index < array.length; index++) {
         const jsonString = JSON.stringify(array[index]);
-        ws.current.send(jsonString);  
-        inputRef.current.value='';  
+        ws.current.send(jsonString);
+        inputRef.current.value = '';
       }
-     
-     
+
+
     }).catch(error => {
       console.error('There was an error posting the data!', error);
     });
@@ -60,6 +60,11 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
       sidebar.style.display = emoticonDisplay ? 'block' : 'none';
     }
   }, [emoticonDisplay]);
+
+  const handleEmoticon = (e) => {
+    console.log("emt");
+
+  }
 
   //localStorage.removeItem('editorContent');
 
@@ -114,7 +119,18 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
               onSetup: (e) => {
               },
               onAction: (e) => {
+               /* const sidebar = sidebarRef.current;
+                const container = dragRef.current;
+                if (sidebar && container) {
+                  const containerRect = container.getBoundingClientRect();
+                  const x = containerRect.left-1100;
+                  const y =  containerRect.top-200;
+                  sidebar.style.top = `${y}px`;
+                  sidebar.style.left = `${x}px`;
+                  console.log(`${y}:${x}`);
+                }*/
                 setEmoticonDisplay();
+
               },
             });
             editor.on('keydown', (event) => {

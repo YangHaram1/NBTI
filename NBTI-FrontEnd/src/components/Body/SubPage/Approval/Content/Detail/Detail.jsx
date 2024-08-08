@@ -16,9 +16,10 @@ export const Detail=()=>{
     // const [docdata, setDocData] = useState({effective_date:'', cooperation_dept:'', title:'', content:'', emergency:'' });
     //useLoaction으로 값 받아오기 => 객체이기 때문에 구조분할로 받는것이 용이
     const location = useLocation();
-    const { seq, setlist } = location.state || {};
+    const { seq, setlist, list } = location.state || {};
     console.log("seq:", seq);
     console.log("setlist:", setlist);
+    console.log("list:", list);
 
 
     const [approvalData, setApprovalData] = useState([]);
@@ -174,12 +175,33 @@ export const Detail=()=>{
             </div>
             <div className={styles.content_box} id='content-to-print'>
                 <div className={styles.content_left}>
-                    <div className={styles.btns}>
-                        <div className={`${styles.approval_submit_btn} ${styles.btn}`}><i class="fa-solid fa-pen-to-square"></i>재기안</div>
-                        <div className={`${styles.approval_temp_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div>
-                        {/* <div className={`${styles.approval_prev_btn} ${styles.btn}`}>미리보기</div> */}
-                        <div className={`${styles.approval_change_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
-                    </div>
+                    {
+                        list == 'doc' ?
+                        <>
+                        <div className={styles.btns}>
+                            <div className={`${styles.approval_submit_btn} ${styles.btn}`}><i class="fa-solid fa-pen-to-square"></i>재기안</div>
+                            <div className={`${styles.approval_temp_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div>
+                            {/* <div className={`${styles.approval_prev_btn} ${styles.btn}`}>미리보기</div> */}
+                            <div className={`${styles.approval_change_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
+                        </div>
+                        </>
+                        : list == '결재 대기' ?
+                        <>
+                        <div className={styles.btns}>
+                            <div className={`${styles.approval_submit_btn} ${styles.btn}`}><i class="fa-solid fa-pen-to-square"></i>결재승인</div>
+                            <div className={`${styles.approval_back_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>결재반려</div>
+                            <div className={`${styles.approval_download_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div>
+                            <div className={`${styles.approval_copy_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
+                        </div>
+                        </>
+                        :
+                        <>
+                        <div className={styles.btns}>
+                            <div className={`${styles.approval_download_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div>
+                            <div className={`${styles.approval_copy_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
+                        </div>
+                        </>
+                    }
                     <div className={styles.write_box}>
                         <div className={styles.write_title}>{setlist}</div>
                         <div className={styles.write_header}>

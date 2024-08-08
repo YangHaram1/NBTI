@@ -19,8 +19,8 @@
 
 	<select id="search" resultType="com.nbti.dto.ChatDTO">
 		select *from chat
-		where message
-		like '%'||#{content}||'%' and group_seq=#{group_seq} and member_id not in 'system'
+		where REGEXP_REPLACE(message, '&lt;[^>]+&gt;', '')
+		like '%'||#{content}||'%' and group_seq=#{group_seq} and member_id not in 'system' and upload_seq=0
 		order by seq
 	</select>
 

@@ -1,15 +1,14 @@
 import './App.css';
-import React, { useState,useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import React, { useState, useEffect, useContext, useRef, } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Header } from './components/Header/Header';
 import { Body } from './components/Body/Body';
 import axios from 'axios';
 import { useAuthStore, useMemberStore, useNotification, useCheckList } from './store/store';
 import ChatApp from './components/ChatApp/ChatApp';
-import { ChatsProvider } from './Context/ChatsContext';
+import { ChatsContext, ChatsProvider } from './Context/ChatsContext';
 import { host } from './config/config';
 import { Slide, ToastContainer } from 'react-toastify';
-import { useRef } from 'react';
 import styles from './App.module.css';
 import Draggable from 'react-draggable';
 
@@ -22,7 +21,7 @@ function App() {
   const { maxCount, count } = useNotification();
   const { webSocketCheck, onMessage, chatController } = useCheckList();
   const [unread, setUnread] = useState();
-
+  const draggableRef = useRef(null);
 
   useEffect(() => {
     setLoginID(sessionStorage.getItem("loginID"));
@@ -68,13 +67,28 @@ function App() {
     }
 
   }, [onMessage, loginID, chatController])
+
+
+
+  
+  const chatApp = loginID != null && loginID !== 'error' ? (
+    <ChatApp websocketRef={websocketRef} draggableRef={draggableRef} />
+  ) : (
+    <div></div>
+  );
+
+ 
   return (
     <ChatsProvider>
       <Router>
         <div className="container">
           {(loginID != null && loginID !== 'error') && <Header />}
           <Body />
-          {(loginID != null && loginID !== 'error') && <ChatApp websocketRef={websocketRef}></ChatApp>}
+          <Draggable nodeRef={draggableRef}>
+            <div className={styles.chatapp} ref={draggableRef}>
+                {chatApp}
+            </div>
+          </Draggable>
         </div>
         <ToastContainer
           position="top-right"
@@ -94,5 +108,8 @@ function App() {
     </ChatsProvider>
   );
 }
+
+
+
 
 export default App;

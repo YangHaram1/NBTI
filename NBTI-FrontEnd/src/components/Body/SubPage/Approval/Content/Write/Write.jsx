@@ -63,7 +63,7 @@ export const Write = ({setlist})=>{
                 approvalLine: approvalLine,
                 referLine: referLine,
                 emergency: result,
-                docType : setlist === '업무기안서'? 1 : setlist === '휴가신청서' ? 2:3
+                docType : setlist === '업무기안서'? 1 : setlist === '휴직신청서' ? 2:3
             };  
         }else if(setlist === "휴가신청서"){
             requestData = {
@@ -71,7 +71,7 @@ export const Write = ({setlist})=>{
                 approvalLine: approvalLine,
                 referLine: referLine,
                 emergency: result,
-                docType : setlist === '업무기안서'? 1 : setlist === '휴가신청서' ? 2:3
+                docType : setlist === '업무기안서'? 1 : setlist === '휴직신청서' ? 2:3
             };
             // console.log("휴가",docVacation);
             // console.log("휴가 신청서");
@@ -84,7 +84,7 @@ export const Write = ({setlist})=>{
                 approvalLine: approvalLine,
                 referLine: referLine,
                 emergency: result,
-                docType : setlist === '업무기안서'? 1 : setlist === '휴가신청서' ? 2:3
+                docType : setlist === '업무기안서'? 1 : setlist === '휴직신청서' ? 2:3
             };
             // console.log("휴직", docLeave);
             // console.log("휴직 신청서");
