@@ -85,14 +85,11 @@
 .members{
   display: flex;
   overflow: auto;
-  max-height: 800px;
+  max-height: 1000px;
   gap: 10px;
-  overflow: auto;
+  width: 1000px; /* 사이드바 너비를 제외한 전체 너비 */
   position: absolute;
-  top:0;
-  z-index: 9999;
-  width: 1300px;
   left: 350px;
-  padding: 15px;
+  
 }
 

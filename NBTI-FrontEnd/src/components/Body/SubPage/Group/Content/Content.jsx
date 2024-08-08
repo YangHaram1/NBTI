@@ -2,15 +2,10 @@ import styles from './Content.module.css';
 import { useEffect, useState } from 'react';
 import { host } from '../../../../../config/config';
 import avatar from '../../../../../images/user.jpg'
-const Content = ({ member, top, name }) => {
+const Content = ({ member, name }) => {
     const [newTop, setNewTop] = useState(0);
 
-    useEffect(() => {
-        // newTop 계산 및 상태 업데이트
-        const calculatedTop = (top % 100) * 200 + top;
-        setNewTop(calculatedTop);
-        console.log(calculatedTop);
-    }, [top]); // top이 변경될 때마다 다시 계산
+
 
     return (
         <div className={styles.container}>
