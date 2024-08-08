@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.nbti.dao.AttendanceDAO;
@@ -237,13 +239,12 @@ public class AttendanceService {
     public List<AttendanceDTO> getWeeklyRecordsForAll(LocalDate startOfWeek, LocalDate endOfWeek) {
         return aDao.getWeeklyRecordsForAll(startOfWeek, endOfWeek);
     }
+    // 주간 통계 계산
     public Map<String, Map<String, Object>> calculateAllWeeklyStats(List<AttendanceDTO> attendanceRecords) {
-        // 현재 날짜와 주 시작일 계산
         LocalDate today = LocalDate.now();
         LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDate endOfWeek = startOfWeek.plusDays(6);
 
-        // 모든 멤버의 통계를 저장할 맵
         Map<String, Map<String, Object>> memberWeeklyStats = new HashMap<>();
 
         for (AttendanceDTO record : attendanceRecords) {
@@ -252,33 +253,27 @@ public class AttendanceService {
             Timestamp endDate = record.getEnd_date();
 
             if (startDate == null) {
-                // Start date가 null인 경우, 해당 레코드를 건너뜁니다.
                 continue;
             }
+
+            // member_id로부터 이름과 팀 이름을 조회
+            Map<String, Object> memberDetails = mDao.memberData(memberId);
+
+            String memberName = (String) memberDetails.getOrDefault("NAME", "이름 없음");
+            String teamName = (String) memberDetails.getOrDefault("TEAM_NAME", "팀 이름 없음");
 
             LocalDateTime startDateTime = startDate.toLocalDateTime();
             LocalDate localDate = startDateTime.toLocalDate();
             String dateString = localDate.toString();
 
-            // member_id를 이용하여 이름과 팀 이름을 조회
-            String memberName = mDao.getMemberNameById(memberId);
-            String teamName = tDao.getTeamNameByMemberId(memberId);
+            // Create daily stats map if not present
+            Map<String, Object> dailyStats = memberWeeklyStats.computeIfAbsent(memberId, k -> new HashMap<>());
+            Map<String, Object> dateStats = (Map<String, Object>) dailyStats.computeIfAbsent(dateString, k -> new HashMap<>());
 
-            if (!memberWeeklyStats.containsKey(memberId)) {
-                memberWeeklyStats.put(memberId, new HashMap<>());
-            }
-
-            Map<String, Object> dailyStats = memberWeeklyStats.get(memberId);
-
-            if (!dailyStats.containsKey(dateString)) {
-                dailyStats.put(dateString, new HashMap<>());
-            }
-
-            Map<String, Object> dateStats = (Map<String, Object>) dailyStats.get(dateString);
             dateStats.put("startDate", startDate);
             dateStats.put("endDate", endDate);
-            dateStats.put("name", memberName); // 이름 추가
-            dateStats.put("team_name", teamName); // 팀 이름 추가
+            dateStats.put("name", memberName);
+            dateStats.put("team_name", teamName);
 
             if (localDate.isEqual(today) && endDate == null) {
                 dateStats.put("absent", true);
@@ -301,15 +296,16 @@ public class AttendanceService {
                         dateStats.put("earlyLeave", false);
                     }
                 } else {
-                    dateStats.put("earlyLeave", false); // endDate가 null인 경우, 'earlyLeave'를 false로 설정
+                    dateStats.put("earlyLeave", false);
                 }
             }
+
+            dailyStats.put(dateString, dateStats);
         }
 
         return memberWeeklyStats;
     }
-
-    public Map<String, Object> getAllWeeklyStats() {
+    public ResponseEntity<Map<String, Object>> getAllWeeklyStats() {
         try {
             LocalDate today = LocalDate.now();
             LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
@@ -321,15 +317,14 @@ public class AttendanceService {
             Map<String, Object> response = new HashMap<>();
             response.put("members", memberWeeklyStats);
 
-            return response;
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("error", -2); // Error code for internal server error
-            return errorResponse;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
-
   
 
 
@@ -345,11 +340,11 @@ public class AttendanceService {
         int earlyLeaveCount = 0;
         int statsDay = 0;
         double statsHours = 0.0;
-
+        System.out.println("asdfasdf:"+records);
         for (AttendanceDTO record : records) {
             Timestamp startDate = record.getStart_date();
             Timestamp endDate = record.getEnd_date();
-
+            
             if (startDate != null) {
                 LocalDateTime startDateTime = startDate.toLocalDateTime();
                 if (!startDateTime.toLocalDate().isBefore(startOfYear) &&

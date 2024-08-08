@@ -42,6 +42,21 @@ const calculateWorkingHours = (startDate, endDate) => {
     return `${diffHours}시간 ${diffMinutes}분`;
 };
 
+// 기본 이벤트 생성 함수
+const createDefaultEvent = (date, memberName, teamName) => {
+    return {
+        title: `출근: N/A\n퇴근: N/A\n근무 시간: N/A\n`,
+        date,
+        extendedProps: {
+            backgroundColor: 'gray',
+            textColor: 'white',
+            dayOfWeek: getDayOfWeek(new Date(date)),
+            memberName,
+            teamName
+        }
+    };
+};
+
 export const AllAttendance = () => {
     const { stats, loading } = useAllWeeklyStats();
 
@@ -53,15 +68,25 @@ export const AllAttendance = () => {
     const today = new Date();
     const startOfWeek = getStartOfWeek(today);
 
-    // FullCalendar 이벤트 데이터 생성
-    const events = Object.keys(stats).flatMap(memberId => {
-        const { name, team_name, records } = stats[memberId] || {};
+    // 멤버 목록을 추출하여 이름과 팀명 저장
+    const members = Object.keys(stats).map(memberId => {
+        const memberStats = stats[memberId] || {};
+        const hasAttendance = Object.keys(memberStats).length > 0;
+        return {
+            memberId,
+            name: hasAttendance ? memberStats[Object.keys(memberStats)[0]].name : 'N/A',
+            teamName: hasAttendance ? memberStats[Object.keys(memberStats)[0]].team_name : 'N/A'
+        };
+    });
+
+    // 월요일에 표시할 이벤트 생성
+    const events = members.flatMap(({ memberId, name, teamName }) => {
         return Array.from({ length: 7 }).map((_, index) => {
             const date = new Date(startOfWeek);
             date.setDate(date.getDate() + index);
             const formattedDate = formatDate(date);
 
-            const { late = false, absent = false, earlyLeave = false, startDate, endDate } = records[formattedDate] || {};
+            const { startDate, endDate } = stats[memberId]?.[formattedDate] || {};
 
             const startTime = startDate ? formatTime(startDate) : 'N/A';
             const endTime = endDate ? formatTime(endDate) : 'N/A';
@@ -80,10 +105,24 @@ export const AllAttendance = () => {
                 textColor = 'blue';
             }
 
+            // 월요일에 출근 기록이 없더라도, 다른 날짜에 출근 기록이 있는 경우에만 표시
+            if (dayOfWeek === 0) {
+                const hasAttendance = Object.keys(stats[memberId] || {}).length > 0;
+                if (!hasAttendance) {
+                    return createDefaultEvent(formattedDate, name, teamName);
+                }
+            }
+
             return {
                 title,
                 date: formattedDate,
-                extendedProps: { backgroundColor, textColor, dayOfWeek, name, team_name }
+                extendedProps: {
+                    backgroundColor,
+                    textColor,
+                    dayOfWeek,
+                    memberName: name,
+                    teamName
+                }
             };
         });
     });
@@ -103,18 +142,19 @@ export const AllAttendance = () => {
                 eventContent={({ event }) => {
                     const lines = event.title.split('\n');
                     const isMonday = event.extendedProps.dayOfWeek === 0; // 월요일인지 확인
+
                     return (
                         <div
                             className={styles.eventContent}
                             style={{ backgroundColor: event.extendedProps.backgroundColor, color: event.extendedProps.textColor }}
                         >
                             {isMonday && (
-                                <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-                                    <div>이름: {event.extendedProps.name}</div>
-                                    <div>부서: {event.extendedProps.team_name}</div>
+                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                    <div>이름: {event.extendedProps.memberName}</div>
+                                    <div>부서: {event.extendedProps.teamName}</div>
                                 </div>
                             )}
-                            <div style={{ display: "flex", flexDirection: "column", flex: 2 }}>
+                            <div style={{ display: "flex", flexDirection: "column" }}>
                                 {lines.map((line, index) => (
                                     <div key={index}>{line}</div>
                                 ))}
