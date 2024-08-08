@@ -1,6 +1,7 @@
 package com.nbti.services;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class ApprovalLineService {
 	@Autowired
 	private ApprovalLineDAO aldao;
 	
-	public List<ApprovalLineDTO> getApprovalLine(int seq) {
+	public List<Map<String,Object>> getApprovalLine(int seq) {
 		return aldao.selectLine(seq);
 	}
 	

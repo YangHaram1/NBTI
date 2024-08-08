@@ -1,0 +1,79 @@
+.container{
+    width: 97%;
+    height: 98%;
+    margin-left: 10px;
+    /* background-color: lightgray; */
+    display: flex;
+    flex-direction: column;
+}
+
+/* div{border: 1px solid black;} */
+
+.title{
+    flex:2;
+    display: flex;
+    text-indent: 20px;
+    justify-content: start;
+    align-items: center;
+    background-color: #CCE3DE;
+}
+.content{
+    flex:8;
+    background-color: white;
+    text-indent: 15px;
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+}
+
+.period{
+    flex:1;
+}
+
+.period input{
+    text-indent: 5px;
+    width: 120px;
+    font-size: 13px;
+    font-weight: 700;
+    height: 75%;
+    background-color: white;
+    border: 0px;
+}
+
+.wave{
+    /* display: flex;
+    justify-content: start;
+    align-items: start; */
+    text-align: center;
+    width: 20px;
+}
+
+.reason{
+    flex:3;
+}
+
+.reason textarea{
+    resize: none;
+    border: 0px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.address{
+    flex: 1;
+}
+
+.phone{
+    flex: 1;
+}
+
+.text{
+    flex:4;
+}
+
+.row{
+    display: flex;
+}
+
+
+

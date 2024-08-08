@@ -1,33 +1,108 @@
 /* div {
     border: 1px solid black;
   } */
-  
-  .container {
-    background-color: #cce3de;
-    width: 250px;
-    display: flex;
-    flex-direction: column;
-    padding: 20px 25px;
-    position: fixed;
-    top: 60px;
-    left: 0;
-    bottom: 0;
-    box-shadow: 1px 0 8px rgba(0, 0, 0, 0.1); /* 왼쪽에 그림자 추가 */
-  }
-  
-  
-  .container .menus {
-    height: 400px;
-    padding: 0 15px;
-  }
 
-  .menus{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .menu{
-    display: flex;
-    flex-direction: column;
-  }
+.container {
+  background-color: #cce3de;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 25px;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  bottom: 0;
+  box-shadow: 1px 0 8px rgba(0, 0, 0, 0.1);
+  /* 왼쪽에 그림자 추가 */
+}
+
+.nbti{
+  font-weight: 600;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+}
+.nbtiname{
+  display: flex;
+}
+.nbtiname:hover{
+  background-color: gray;
+}
+.deptname{
+  display: flex;
+}
+.deptname:hover{
+  background-color: gray;
+}
+
+
+.button:hover{
+  background-color: white;
+}
+
+
+
+.container .menus {
+  height: 400px;
+  padding: 0 15px;
+}
+
+.menus {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
   
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+}
+
+.dept {
+  color: red;
+  display: flex;
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: blue;
+  cursor: pointer;
+  padding-left: 20px;
+}
+.teams{
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.team:hover{
+  background-color: gray;
+}
+.members{
+  display: flex;
+  overflow: auto;
+  max-height: 1000px;
+  gap: 10px;
+  width: 1000px; 
+  position: absolute;
+  left: 350px;
+  flex-direction: column;
+}
+
+.membersTop{
+  display: flex;
+  overflow: auto;
+  max-height: 1000px;
+  gap: 10px;
+  width: 1000px; 
+  position: absolute;
+  left: 350px;
+  top:0;
+  flex-direction: column;
+}
+
+

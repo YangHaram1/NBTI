@@ -19,6 +19,9 @@ export const Detail = () => {
     board_code: 1,
   });
   const [currentUser, setCurrentUser] = useState(null); // 로그인된 사용자 정보 상태
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likedComments, setLikedComments] = useState({});
 
   // 게시판 코드
   let code = 1;
@@ -31,13 +34,19 @@ export const Detail = () => {
     ? format(date, "yyyy-MM-dd HH:mm")
     : "Invalid Date";
 
+  // 게시글 출력
   useEffect(() => {
     if (boardSeq === -1) navi("/board"); // detail 화면에서 f5 -> 목록으로 이동
     if (boardSeq !== -1) {
       axios.get(`${host}/board/${boardSeq}/${code}`).then((resp) => {
-        // 게시글 출력
         setDetail(resp.data); // 취소 시 원본 데이터
         setBoard(resp.data);
+      });
+
+      // 북마크 상태 확인
+      axios.get(`${host}/bookmark/${boardSeq}`).then((resp) => {
+        console.log("북마크 ", resp.data);
+        setIsBookmarked(resp.data);
       });
     }
 
@@ -130,8 +139,19 @@ export const Detail = () => {
   useEffect(() => {
     axios.get(`${host}/reply/${boardSeq}/${code}`).then((resp) => {
       setReply(resp.data);
+
+
+      // 좋아요 상태 가져오기
+      const replyIds = resp.data.map(item => item.seq).join(',');
+      console.log("좋아요 상태 ? : ", replyIds);
+
+      // axios.get(`${host}/likes/status/${replyIds}`).then((resp) => {
+      //   setLikedComments(resp.data);
+      // });
+
+
     });
-  }, []);
+  }, [boardSeq, code]);
 
   // 댓글 삭제
   const handleDelReplyBtn = (replySeq) => {
@@ -142,13 +162,67 @@ export const Detail = () => {
     });
   };
 
+  // 북마크 추가
+  const handleBookmarkAdd = (seq) => {
+    setIsBookmarked(!isBookmarked);
+    axios.post(`${host}/bookmark/insert`, { board_seq: seq }).then((resp) => {
+      if (resp.data === 1) alert("중요 게시글에 추가되었습니다.");
+    });
+  };
+
+  // 북마크 해제
+  const handleBookmarkRemove = (seq) => {
+    setIsBookmarked(!isBookmarked);
+    axios.delete(`${host}/bookmark/delete/${seq}`).then((resp) => {
+      console.log("삭제", resp.data);
+      if (resp.data > 0) alert("중요 게시글에서 삭제되었습니다.");
+    });
+  };
+
+  // 댓글 좋아요 클릭
+  const handleLikekAdd = (seq) => {
+    console.log("조아요..", seq)
+    // setIsLiked(!isLiked);
+    setLikedComments((prev) => ({ ...prev, [seq]: true }));
+
+    axios.post(`${host}/likes/insert`, { reply_seq: seq }).then((resp) => {
+      console.log("조아요 성공 : ", resp.data);
+    });
+  }
+
+  // 댓글 좋아요 해제
+  const handleLikeRemove = (seq) => {
+    // setIsLiked(!isLiked);
+
+    setLikedComments((prev) => ({ ...prev, [seq]: false }));
+
+    axios.delete(`${host}/likes/delete/${seq}`).then((resp) => {
+      console.log("좋아요 취소 : ", resp.data);
+    });
+  }
+
+
+
   //======================================================================================
 
   return (
     <div className={styles.container}>
       <div className={styles.top}>
         <div className={styles.left}>
-          <i className="fa-regular fa-star"></i>
+          <i
+            className="fa-regular fa-star fa-lg"
+            onClick={() => {
+              handleBookmarkAdd(detail.seq);
+            }}
+            style={{ display: isBookmarked ? "none" : "inline" }}
+          ></i>
+          <i
+            className="fa-solid fa-star fa-lg"
+            onClick={() => {
+              handleBookmarkRemove(detail.seq);
+            }}
+            style={{ display: isBookmarked ? "inline" : "none" }}
+          ></i>
         </div>
         <div className={styles.right}>
           {currentUser && detail.member_id === currentUser.id && !isEditing ? (
@@ -244,17 +318,16 @@ export const Detail = () => {
                   />
                 </div>
                 <div className={styles.likes}>
-                  <i className="fa-regular fa-heart fa-lg" />
+                  <i className="fa-regular fa-heart fa-lg"
+                    onClick={() => { handleLikekAdd(item.seq); }}
+                    style={{ display: likedComments[item.seq] ? "none" : "inline" }} />
+                  <i className="fa-solid fa-heart fa-lg"
+                    onClick={() => { handleLikeRemove(item.seq); }}
+                    style={{ display: likedComments[item.seq] ? "inline" : "none" }} />
                   <p>5</p>
                 </div>
                 {currentUser && currentUser.id === item.member_id && (
-                  <button
-                    onClick={() => {
-                      handleDelReplyBtn(item.seq);
-                    }}
-                  >
-                    X
-                  </button>
+                  <button onClick={() => { handleDelReplyBtn(item.seq); }}> X </button>
                 )}
               </div>
             );

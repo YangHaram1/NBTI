@@ -70,6 +70,7 @@
 .approval_job{
     flex:1;
     border-bottom: 1px solid black;
+    min-height: 25px;
 }
 
 .approval_member{
@@ -82,5 +83,5 @@
 
 .approval_date{
     flex:0.5;
-    min-height: 18px;
+    min-height: 25px;
 }

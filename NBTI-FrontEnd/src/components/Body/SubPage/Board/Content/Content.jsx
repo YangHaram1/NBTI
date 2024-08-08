@@ -4,6 +4,7 @@ import { List } from "./List/List";
 import { Insert } from "./Insert/Insert";
 import { Detail } from "./Detail/Detail";
 import { MyBoardList } from "./MyBoardList/MyBoardList";
+import { Bookmark } from "./Bookmark/Bookmark";
 
 export const Content = () => {
   return (
@@ -15,6 +16,7 @@ export const Content = () => {
         <Route path="insert" element={<Insert />} />
         <Route path="detail" element={<Detail />} />
         <Route path="myBoardList" element={<MyBoardList />} />
+        <Route path="bookmark" element={<Bookmark />} />
       </Routes>
     </div>
   );

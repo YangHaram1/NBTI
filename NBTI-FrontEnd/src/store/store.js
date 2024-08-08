@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { Detail } from '../components/Body/SubPage/Approval/Content/Detail/Detail';
 
 /*공통*/
 export const useAuthStore = create((set) => {
@@ -35,6 +36,10 @@ export const useReservationList = create((set) => ({
     setReservations: (items) => set({ reservations: items }),
     wait: [],
     setWait: (items) => set({ wait: items }),
+    approve: [],
+    setApprove: (items) => set({ approve: items }),
+    reject: [],
+    setReject: (items) => set({ reject: items }),
 }));
 
 
