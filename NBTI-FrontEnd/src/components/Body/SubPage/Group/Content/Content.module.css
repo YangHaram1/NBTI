@@ -1,15 +1,22 @@
 .container {
+  height: 100%;
   display: flex;
   flex: 1;
 }
 
 .member {
   display: flex;
-  gap: 20px;
+  width: 150px;
+  gap: 10px;
 }
 .div2{
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.div1{
+  
 }
 .div1 img{
   width: 50px;
