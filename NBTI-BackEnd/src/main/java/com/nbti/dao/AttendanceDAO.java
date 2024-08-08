@@ -1,5 +1,4 @@
 package com.nbti.dao;
-
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -47,18 +46,11 @@ public class AttendanceDAO {
         params.put("month", month);
         return mybatis.selectList("Attendance.getMonthlyRecords", params);
     }
-    public List<Map<String, Object>> getWeeklyRecordsForAll(LocalDate startOfWeek, LocalDate endOfWeek) {
+    public List<AttendanceDTO> getWeeklyRecordsForAll(LocalDate startOfWeek, LocalDate endOfWeek) {
         Map<String, Object> params = new HashMap<>();
         params.put("startOfWeek", startOfWeek);
         params.put("endOfWeek", endOfWeek);
-        return mybatis.selectList("Attendance.getWeeklyRecordsForAll", params);
-    }
 
-    // 추가 메서드
-    public List<Map<String, Object>> getAllWeeklyRecords(LocalDate startOfWeek, LocalDate endOfWeek) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("startOfWeek", startOfWeek);
-        params.put("endOfWeek", endOfWeek);
-        return mybatis.selectList("Attendance.getAllWeeklyRecords", params);
+        return mybatis.selectList("Attendance.getWeeklyRecordsForAll", params);
     }
 }
