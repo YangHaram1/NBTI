@@ -9,7 +9,7 @@ const Content = ({ member, name }) => {
         <div className={styles.container}>
             <div className={styles.member}>
                 <div className={styles.div1}>
-                    <img src={(member.member_img===null)?`${avatar}`:`${host}/avatar/${member.id}/${member.member_img}`} alt="" />
+                    <img src={(member.member_img===null)?`${avatar}`:`${host}/images/avatar/${member.id}/${member.member_img}`} alt="" />
                 </div>
                 <div className={styles.div2}>
                     <div>

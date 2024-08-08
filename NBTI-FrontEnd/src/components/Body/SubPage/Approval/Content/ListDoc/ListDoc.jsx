@@ -66,7 +66,7 @@ export const ListDoc = ({setlist}) => {
     };
 
     const handleMove = (tempSeq, docSubName) => {
-        navi("/approval/detail", {state:{seq:tempSeq, setlist:docSubName}});
+        navi("/approval/detail", {state:{seq:tempSeq, setlist:docSubName, list:"doc"}});
     };
 
     return(
@@ -117,7 +117,7 @@ export const ListDoc = ({setlist}) => {
                                 <div className={styles.file}>Y</div>
                                 {setlist !== '반려 문서함' && setlist !== '상신취소 문서함' ? (
                                 <>
-                                <div className={styles.writer}> {list.member_id}</div>
+                                <div className={styles.writer}> {list.name}</div>
                                 <div className={styles.doc_number}>{list.approval_seq}</div>
                                 <div className={styles.doc_state}>
                                     {renderDocStateBadge(list.doc_state)}
