@@ -176,10 +176,10 @@ public class FilesService {
     	if(type == 1) {
     		ddto.setDraft_seq(temp_seq);
     		dddao.insert(ddto);    		
-    	}else if(type == 2){
+    	}else if(type == 3){
     		dvdto.setVacation_seq(temp_seq);
     		dvdao.insert(dvdto);
-    	}else if(type ==3) {
+    	}else if(type == 2) {
     		dldto.setLeave_seq(temp_seq);
     		dldao.insert(dldto);
     	}

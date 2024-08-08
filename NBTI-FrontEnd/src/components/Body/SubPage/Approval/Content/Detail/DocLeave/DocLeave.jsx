@@ -8,8 +8,8 @@ export const DocLeave = ({docLeave, setDocLeave})=>{
     console.log(docLeave);
     
     
-    const leaveStart = format(new Date(docLeave.leave_start),'yyyy-MM-dd')
-    const leaveEnd = format(new Date(docLeave.leave_end),'yyyy-MM-dd')
+    const leaveStart = format(new Date(docLeave.leave_start),'yyyy-MM-dd');
+    const leaveEnd = format(new Date(docLeave.leave_end),'yyyy-MM-dd');
 
 
     return(
