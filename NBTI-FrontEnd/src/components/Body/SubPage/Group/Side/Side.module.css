@@ -13,6 +13,7 @@
   left: 0;
   bottom: 0;
   box-shadow: 1px 0 8px rgba(0, 0, 0, 0.1);
+  
   /* 왼쪽에 그림자 추가 */
 }
 
@@ -85,9 +86,9 @@
 .members{
   display: flex;
   overflow: auto;
-  max-width: 1500px;
+  max-width: 1000px;
   gap: 10px;
-  width: 1500px; 
+  width: 1000px; 
   position: absolute;
   left: 350px;
   flex-direction: column;
@@ -96,9 +97,9 @@
 .membersTop{
   display: flex;
   overflow: auto;
-  max-width: 1500px;
+  max-width: 1000px;
   gap: 10px;
-  width: 1500px; 
+  width: 1000px; 
   position: absolute;
   left: 350px;
   top:0;
