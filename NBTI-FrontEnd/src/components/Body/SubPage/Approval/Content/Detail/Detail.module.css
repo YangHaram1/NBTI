@@ -28,6 +28,7 @@
     flex-direction: column;
 }
 
+
 .content_right{
     flex:2;
     border: 1px solid black;
@@ -83,6 +84,46 @@
 .write_box{
     flex:8;
     border-top: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.write_title{
+    flex:0.75;
+    text-align: center;
+    font-size: 27px;
+    width: 98%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+
+.write_header{
+    flex:1.5;
+    width: 98%;
+    display: flex;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+
+.write_container{
+    flex:6.75;
+    padding-top: 10px;
+    padding-left: 10px;
+    /* border: 1px solid black; */
+    width: 98%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
 }
 
 .files{
@@ -91,6 +132,7 @@
     width: 98%;
     margin-left: 10px;
 }
+
 
 
 
