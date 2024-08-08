@@ -7,6 +7,8 @@ import { useApprovalLine, useDocLeave, useDocVacation, useReferLine } from '../.
 import html2pdf from 'html2pdf.js';
 import { DocLeave } from './DocLeave/DocLeave';
 import { Header } from './Header/Header';
+import { DocDraft } from './DocDraft/DocDraft';
+import { DocVacation } from './DocVacation/DocVacation';
 
 export const Detail=()=>{
 
@@ -184,12 +186,11 @@ export const Detail=()=>{
                             <Header docCommonData={docCommonData} userdata={userdata} approvalData={approvalData}/>
                         </div>
                         <div className={styles.write_container}>
-                        {/* {   
-                        setlist === '휴가신청서' ?  <DocVacation userdata={userdata}/>
-                        : setlist === '휴직신청서' ? <DocLeave userdata={userdata} setContent={setContent} content={content}/>
-                        : <DocDraft userdata={userdata} setDocData={setDocData} setContent={setContent} content={content} setDate={setDate} setDept={setDept} setTitle={setTitle}/>
-                        }    */}
-                        <DocLeave docLeave={docLeave}/>
+                        {   
+                        setlist === '휴가신청서' ?  <DocVacation docVacation={docVacation} setDocVacation ={setDocVacation}/>
+                        : setlist === '휴직신청서' ? <DocLeave docLeave={docLeave} setDocLeave={setDocLeave}/>
+                        : <DocDraft setDocDraft={setDocDraft} docDraft={docDraft}/>
+                        }   
                         </div>
                     </div>
                     <div className={styles.files}>
