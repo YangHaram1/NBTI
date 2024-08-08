@@ -3,9 +3,7 @@ import { useEffect, useState } from 'react';
 import { host } from '../../../../../config/config';
 import avatar from '../../../../../images/user.jpg'
 const Content = ({ member, name }) => {
-    const [newTop, setNewTop] = useState(0);
-
-
+    
 
     return (
         <div className={styles.container}>

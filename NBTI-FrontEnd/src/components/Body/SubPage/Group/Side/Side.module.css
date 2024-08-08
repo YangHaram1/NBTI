@@ -87,9 +87,22 @@
   overflow: auto;
   max-height: 1000px;
   gap: 10px;
-  width: 1000px; /* 사이드바 너비를 제외한 전체 너비 */
+  width: 1000px; 
   position: absolute;
   left: 350px;
-  
+  flex-direction: column;
 }
+
+.membersTop{
+  display: flex;
+  overflow: auto;
+  max-height: 1000px;
+  gap: 10px;
+  width: 1000px; 
+  position: absolute;
+  left: 350px;
+  top:0;
+  flex-direction: column;
+}
+
 
