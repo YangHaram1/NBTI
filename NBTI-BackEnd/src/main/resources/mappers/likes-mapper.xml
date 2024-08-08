@@ -14,6 +14,15 @@
 	<delete id="delete">
 		delete from likes where reply_seq = ${reply_seq} and member_id = #{member_id}
 	</delete>
-
-
+	
+	<!-- 좋아요 추가 되었는지 -->
+	<select id="isLiked" resultType="boolean">
+		select count(*) from likes where reply_seq = ${reply_seq} and member_id = #{member_id}
+	</select>
+	
+	<!-- 좋아요 개수 -->
+    <select id="likeCount" resultType="int">
+        select count(*) from likes where reply_seq = ${reply_seq}
+    </select>
+	
 </mapper>

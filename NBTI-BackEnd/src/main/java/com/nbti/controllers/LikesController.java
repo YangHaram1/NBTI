@@ -55,20 +55,28 @@ public class LikesController {
 		
 		int result = lserv.delete(map);
 		return ResponseEntity.ok(result);
-	}
+	}	
 	
 	// 좋아요 추가 되었는지
-//	@GetMapping("/status/{replyIds}")
-//	public ResponseEntity<Map<Integer, Boolean>> getLikesStatus(@PathVariable String replyIds) {
+	@GetMapping("/status/{replySeq}")
+    public ResponseEntity<Boolean> isLiked(@PathVariable int replySeq) {
+        String member_id = (String) session.getAttribute("loginID");
+        
+        Map<String, Object> map = new HashMap<>();
+        map.put("reply_seq", replySeq);
+        map.put("member_id", member_id);
+        
+        boolean result = lserv.isLiked(map);
+        return ResponseEntity.ok(result);
+    }
+	
+	// 좋아요 갯수
+//	@GetMapping("/count/{reply_seq}")
+//	public ResponseEntity<Integer> likeCount(@PathVariable int reply_seq){
 //		
-//        List<Integer> list = Arrays.stream(replyIds.split(","))
-//        					.map(Integer::parseInt)
-//                            .collect(Collectors.toList());
-//        
-//        Map<Integer, Boolean> result = lserv.getLikesStatus(list);
-//        return ResponseEntity.ok(result);
-//    }
-//	
+//		int result = lserv.likeCount(reply_seq);
+//		return ResponseEntity.ok(result);
+//	}
 	
 	
 }

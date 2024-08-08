@@ -9,7 +9,7 @@ import { format } from "date-fns";
 export const NoticeBoard = () => {
     const navi = useNavigate();
     const [boardList, setBoardList] = useState([]);
-    const { boardType, setBoardSeq } = useBoardStore();
+    const { boardType, setBoardSeq, setBoardType } = useBoardStore();
 
     // 공지 게시판 목록 출력
     useEffect(() => {
@@ -21,6 +21,7 @@ export const NoticeBoard = () => {
     // 조회수 증가 및 상세 페이지로 이동
     const handleTitleClick = (seq) => {
         console.log("게시글 번호 : ", seq);
+        setBoardType("공지");
 
         const requestBox = { seq: seq, board_code: 2 };
         axios.put(`${host}/board/viewCount`, requestBox).then((resp) => {

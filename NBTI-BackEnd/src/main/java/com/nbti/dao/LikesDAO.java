@@ -23,4 +23,14 @@ public class LikesDAO {
 	public int delete(Map<String, Object> map) {
 		return mybatis.delete("Likes.delete", map);
 	}
+	
+	// 좋아요 추가 되었는지
+	public boolean isLiked(Map<String, Object> map) {
+		return mybatis.selectOne("Likes.isLiked",map);
+	}
+	
+	// 좋아요 개수
+	public int likeCount(int reply_seq) {
+		return mybatis.selectOne("Likes.likeCount", reply_seq);
+	}
 }

@@ -20,20 +20,20 @@ public class LikesService {
 	public int insert(LikesDTO dto) {
 		return ldao.insert(dto);
 	}
-	
-	
+		
 	// 좋아요 취소
 	public int delete(Map<String, Object> map) {
 		return ldao.delete(map);
 	}
-	
+
 	// 좋아요 추가 되었는지
-//	public Map<Integer, Boolean> getLikesStatus(List<Integer> replyIds) {
-//        List<LikeStatus> likesStatusList = ldao.getLikesStatus(replyIds);
-//        Map<Integer, Boolean> likesStatusMap = new HashMap<>();
-//        for (LikeStatus likeStatus : likesStatusList) {
-//            likesStatusMap.put(likeStatus.getReplySeq(), likeStatus.isLiked());
-//        }
-//        return likesStatusMap;
-//    }
+	public boolean isLiked(Map<String, Object> map) {
+		return ldao.isLiked(map);
+	}
+	
+	// 좋아요 개수
+    public int likeCount(int reply_seq) {
+        return ldao.likeCount(reply_seq);
+    }
+	
 }
