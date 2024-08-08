@@ -19,8 +19,6 @@ import 'react-toastify/dist/ReactToastify.css'
 import notice from '../../../images/notice.png';
 axios.defaults.withCredentials = true;
 const Chat = () => {
-
-  //navi('',{state:resp.data});
   const editorRef = useRef(null);
   const sidebarRef = useRef(null);
   const containerRef = useRef(null);
@@ -29,37 +27,21 @@ const Chat = () => {
   const chatRef = useRef([]);
   const { loginID } = useAuthStore();
   const [chatCheck, setChatCheck] = useState([]);
-
-  const { chats, setChats, ws, setChatNavi, chatAppRef, chatNavi,dragRef} = useContext(ChatsContext);
-  //const { maxCount,count, increment,decrement } = useNotification();
+  const { chats, setChats, ws, setChatNavi, chatAppRef, chatNavi, dragRef } = useContext(ChatsContext);
   let lastDate = null;
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
-  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage, setWebSocketCheck,chatController,setChatController } = useCheckList();
+  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage, setWebSocketCheck, chatController, setChatController } = useCheckList();
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
   const [updateMember, setUpdateMember] = useState(false);
 
-
-  const handleChats = useCallback(() => {
-    if (!searchDisplay) {
-      updateSidebarPosition();
-      updateSearchPosition();
-    }
-  }, [searchDisplay])
-
-  useEffect(() => {
-    handleChats();
-  }, [searchDisplay])
-
   // WebSocket 연결을 설정하는 useEffect
   useEffect(() => {
-    const url = host.replace(/^https?:/, '')
+    //const url = host.replace(/^https?:/, '')
 
     if (loginID != null && loginID !== 'error') {
-      updateSidebarPosition();
-      updateSearchPosition();
       ws.current.onclose = () => {
         console.log('Disconnected from WebSocket');
         setWebSocketCheck();
@@ -72,7 +54,7 @@ const Chat = () => {
       };
 
       ws.current.onmessage = (e) => {
-        if(e.data==='chatController'){
+        if (e.data === 'chatController') {
           console.log("delete");
           setChatController();
         }
@@ -120,10 +102,7 @@ const Chat = () => {
       }
 
     }
-    window.addEventListener('resize', updateSidebarPosition);
-
-    return () => {
-      window.removeEventListener('resize', updateSidebarPosition);
+    return () => {   
     };
 
   }, [chatNavi]);
@@ -142,7 +121,7 @@ const Chat = () => {
         })
       }
     }
-  }, [chatNavi, invite,chatController])
+  }, [chatNavi, invite, chatController])
 
 
   const notify = useCallback((item) => {
@@ -180,7 +159,7 @@ const Chat = () => {
       if (chatAppRef.current != null)
         chatAppRef.current.style.display = "flex";
 
-      if(dragRef.current)
+      if (dragRef.current)
         dragRef.current.style.display = "flex";
       console.log(`on click toast:${item.group_seq} `);
       setChatSeq(item.group_seq);
@@ -204,35 +183,26 @@ const Chat = () => {
 
 
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
     const Searchbar = searchRef.current;
     Searchbar.style.display = searchDisplay ? "flex" : "none";
     if (!searchDisplay) {
       setSearchList([]);
       setSearch('');
     }
+    else {
+      const container = dragRef.current;
+      if (Searchbar && container) {
+        const containerRect = container.getBoundingClientRect();
+        const x = e.clientX - containerRect.left-305;
+        const y = e.clientY - containerRect.top+20;
+        Searchbar.style.top = `${y}px`;
+        Searchbar.style.left = `${x}px`;
+      }
+    }
     setSearchDisplay(!searchDisplay);
-
   }
 
-  const updateSidebarPosition = () => {
-    const sidebar = sidebarRef.current;
-    const container = containerRef.current;
-    if (sidebar && container) {
-      const containerRect = container.getBoundingClientRect();
-      sidebar.style.left = (containerRect.left - 325) + 'px';
-    }
-  };
-
-  const updateSearchPosition = () => {
-    const Searchbar = searchRef.current;
-    const container = containerRef.current;
-    if (Searchbar && container) {
-      const containerRect = container.getBoundingClientRect();
-      Searchbar.style.top = (containerRect.top + 30) + 'px';
-      Searchbar.style.left = (containerRect.left) + 'px';
-    }
-  };
 
   const handleSearchData = useCallback((item) => {
     let result = '';

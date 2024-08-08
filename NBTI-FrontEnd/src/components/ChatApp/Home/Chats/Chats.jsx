@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 const Chats = () => {
     const { loginID } = useAuthStore();
     const { setChatSeq, onMessage } = useCheckList();
-    const { setChatNavi,chatNaviBody } = useContext(ChatsContext);
+    const { setChatNavi,chatNaviBody ,dragRef} = useContext(ChatsContext);
     const [group_chats, setGroup_chats] = useState([]);
 
     const [modalDisplay, setModalDisplay] = useState(null);
@@ -42,8 +42,10 @@ const Chats = () => {
     }, [onMessage])
 
     const handleRightClick = (index) => (e) => {
-        const { clientX: x, clientY: y } = e;
-        // console.log(`${x}:${y}`);
+        const rect = dragRef.current.getBoundingClientRect(); //부모요소~ 드래그 되는애
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        console.log(`${x}:${y}`);
         e.preventDefault();
         setModalDisplay((prev) => {
             if (prev != null) {
