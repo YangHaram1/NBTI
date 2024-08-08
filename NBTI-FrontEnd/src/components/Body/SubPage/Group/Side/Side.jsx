@@ -9,6 +9,7 @@ const Side = () => {
     const [listDisplay, setListDisplay] = useState([]);
     const [teamDisplay, setTeamDisplay] = useState([[]]);
     const [mainDisplay, setMainDisplay] = useState(true);
+    const [allMember,setAllmember] =useState(false);
     useEffect(() => {
         // 외부 스타일시트를 동적으로 추가
         const link = document.createElement("link");
@@ -75,12 +76,28 @@ const Side = () => {
                 )
             )
         })
+        setAllmember(false);
     }
 
     const handleMainDisplay = () => {
         setMainDisplay((prev) => {
             return !prev;
         })
+    }
+
+    const handleAll = () => {
+        
+        const initialDisplayStateFalse = list.map(dept =>
+            dept.teams.map(() => false
+            )
+        );
+        const initialDisplayStateTrue = list.map(dept =>
+            dept.teams.map(() => true
+            )
+        );
+        setTeamDisplay(initialDisplayStateFalse);
+        setTeamDisplay(initialDisplayStateTrue);
+        setAllmember(true);
     }
     return (
         <React.Fragment>
@@ -89,7 +106,7 @@ const Side = () => {
                     <div onClick={handleMainDisplay} className={styles.button}>
                         {mainDisplay ? '➖' : '➕'}
                     </div>
-                    <div className={styles.nbtiname}>
+                    <div className={styles.nbtiname} onClick={handleAll}>
                         nbti
                     </div>
                 </div>
@@ -99,7 +116,7 @@ const Side = () => {
                             const teams = dItem.teams;
                             return (
                                 <div className={styles.menu} key={dindex} >
-                                    <div  className={styles.dept}>
+                                    <div className={styles.dept}>
                                         <div onClick={() => handlelistDisplay(dindex)} className={styles.button}>
                                             {listDisplay[dindex] ? '➖' : '➕'}
                                         </div>
@@ -113,26 +130,27 @@ const Side = () => {
                                                 teams.map((team, tindex) => {
                                                     const members = team.members
 
-                                                    let top = 100;
                                                     return (
                                                         <React.Fragment key={tindex}>
-                                                            <div className={styles.team} onClick={() => handleTeamDisplay(dindex, tindex)} >
-                                                                {team.name} ({members.length})
-                                                            </div>
-                                                            <div className={styles.members}>
-                                                                {
-                                                                    members.map((member, mindex) => {
-                                                                        return (
-                                                                            teamDisplay[dindex][tindex] &&
-                                                                            (
-                                                                                <React.Fragment key={mindex}>
-                                                                                    <Content member={member} top={top++} name={team.name}></Content>
-                                                                                </React.Fragment>
-                                                                            )
-                                                                        );
+                                                            <div style={{display:"flex"}}>
+                                                                <div className={styles.team} onClick={() => handleTeamDisplay(dindex, tindex)} >
+                                                                    {team.name} ({members.length})
+                                                                </div>
+                                                              {teamDisplay[dindex][tindex] &&(<div className={styles.members} style={allMember?{top:"none"}:{top:0}}>
+                                                                    {
+                                                                        members.map((member, mindex) => {
+                                                                            return (
+                                                            
+                                                                                (
+                                                                                    <React.Fragment key={mindex}  >
+                                                                                        <Content member={member} name={team.name}></Content>
+                                                                                    </React.Fragment>
+                                                                                )
+                                                                            );
 
-                                                                    })
-                                                                }
+                                                                        })
+                                                                    }
+                                                                </div>)}
                                                             </div>
                                                         </React.Fragment>
                                                     );
