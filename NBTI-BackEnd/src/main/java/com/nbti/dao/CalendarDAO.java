@@ -30,8 +30,8 @@ public class CalendarDAO {
 	}
     
     // 목록
-    public List<CalendarDTO> list ()  throws Exception{
-    	return mybatis.selectList("Calendar.list");
+    public List<CalendarDTO> list (String memberId)  throws Exception{
+    	return mybatis.selectList("Calendar.list", memberId);
     }
     
     // 수정
@@ -41,11 +41,6 @@ public class CalendarDAO {
     // 삭제 
     public void delete (int seq) {
     	mybatis.delete("Calendar.delete",seq);
-    }
-    
-    //전체 목록
-    public List<CalendarDTO> listAll() throws Exception{
-    	return mybatis.selectList("Calendar.listAll");
     }
 
 }

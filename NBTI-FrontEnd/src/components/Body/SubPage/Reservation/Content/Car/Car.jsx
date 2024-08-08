@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { host } from '../../../../../../config/config';
 import axios from 'axios';
 
-export const Car = () => {
+export const Car = ({ modalOpen , setModalOpen }) => {
     const [events, setEvents] = useState([]); // 이벤트 상태
 
     useEffect(() => {
@@ -21,7 +21,7 @@ export const Car = () => {
                         title: e.member_id,
                         start: e.start_time, // ISO 형식
                         end: e.end_time, // ISO 형식
-                        color: 'pink', 
+                        color: '#A4C3B2', 
                     }
                 });
                 setEvents(list); // 이벤트 상태 업데이트
@@ -31,10 +31,13 @@ export const Car = () => {
             });
     }, []); // 컴포넌트가 마운트될 때 한 번만 실행
 
+    const closeModal = () => {
+        setModalOpen(false); // 모달 닫기
+    };
+
     return (
         <div className={styles.container}>
             <div className={styles.reservationContent}>
-                {/* 사용자 정의 제목 */}
                 <div className={styles.customTitle}>
                     차량
                 </div>
@@ -48,14 +51,29 @@ export const Car = () => {
                         center: '',
                         right: 'prev,today,next'
                     }}
-                    slotDuration="00:30:00" // 슬롯의 간격을 30분으로 설정
-                    slotLabelInterval="00:30:00" // 라벨 간격을 30분으로 설정
-                    allDaySlot={false} // 종일 슬롯 비활성화
+                    slotDuration="00:30:00"
+                    slotLabelInterval="00:30:00"
+                    allDaySlot={false}
                     selectMirror={true}
-                    events={events} // 이벤트 상태
-                    displayEventEnd={true} // 끝 시간 표시 
+                    events={events}
+                    displayEventEnd={true}
                 />
             </div>
+            {/* 모달이 열릴 때만 보여지도록 조건부 렌더링 */}
+            {modalOpen && (
+                <div className={styles.modalOverlay} onClick={closeModal}>
+                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                        <h2>차량 예약 상세</h2>
+                        <p>예약자: {events.title}</p>
+                        <p>시작 시간: {events.start}</p>
+                        <p>종료 시간: {events.end}</p>
+                        <button onClick={closeModal}>닫기</button>
+                    </div>
+                </div>
+            )}
         </div>
-    )
+
+        
+    );
+    
 }

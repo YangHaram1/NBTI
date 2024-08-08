@@ -10,7 +10,7 @@ import axios from 'axios';
 import { host } from '../../../../../../config/config';
 
 
-export const MeetingRoom = () => {
+export const MeetingRoom = ({modalOpen , setModalOpen}) => {
     const [events, setEvents] = useState([]); // 이벤트 상태
 
     useEffect(() => {

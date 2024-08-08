@@ -6,42 +6,11 @@
   <mapper namespace="Calendar">
     
     <!-- 목록 -->
-<!--     <resultMap id="CalendarResultMap" type="com.nbti.dto.ScheduleDTO">
-        <result property="seq" column="schedule_seq"/>
-        <result property="member_id" column="member_id"/>
-        <result property="calendar_title_code" column="calendar_title_code"/>
-        <result property="name" column="name"/>
-        <result property="title" column="title"/>
-        <result property="contents" column="contents"/>
-        <result property="start_date" column="start_date"/>
-        <result property="end_date" column="end_date"/>
-    </resultMap>
-
-    <select id="list" resultMap="CalendarResultMap">
-        SELECT 
-            s.seq,
-            s.member_id,
-            s.calendar_title_code,
-            st.name,
-            s.title,
-            s.contents,
-            s.start_date,
-            s.end_date
-        FROM 
-            calendar s
-        JOIN 
-            calendar_title st ON s.calendar_title_code = st.code;
-    </select> -->
     <select id="list" resultType="com.nbti.dto.CalendarDTO" >
-        SELECT 
-            *
-        FROM 
-            calendar
+        SELECT * FROM calendar WHERE member_id = #{memberId}
     </select> 
     
-    
-    
-  <!-- 캘린더 입력 -->
+  	<!-- 입력 -->
 	<insert id="insert">
        insert into calendar 
    	   values(calendar_seq.nextval, #{member_id}, #{calendar_title_code}, #{title}, #{contents}, #{start_date}, #{end_date})
@@ -49,18 +18,17 @@
             select calendar_seq.currval from dual
       </selectKey>
     </insert>
-
+    
+	<!-- 수정 -->
     <update id="update">
     	update calendar set title=#{title}, contents=#{contents}  where seq = #{seq}
     </update>
     
+    <!-- 삭제 -->
     <delete id="delete">
     	delete calendar where seq = #{seq}
     </delete>
-    
-    <select id="listAll" resultType="com.nbti.dto.CalendarDTO">
-    	SELECT * from calendar
-    </select>
+
     
 </mapper>
 

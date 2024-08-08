@@ -19,9 +19,9 @@ public class CalendarService {
 	}
     
 	// 목록
-    public List<CalendarDTO> list () throws Exception{
+    public List<CalendarDTO> list (String memberId) throws Exception{
     	
-    	List<CalendarDTO> list = cdao.list();
+    	List<CalendarDTO> list = cdao.list(memberId);
     	return list;
     }
     

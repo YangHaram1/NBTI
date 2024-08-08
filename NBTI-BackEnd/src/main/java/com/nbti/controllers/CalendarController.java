@@ -33,17 +33,20 @@ public class CalendarController {
     // 입력
     @PostMapping
     public ResponseEntity<Void> insert(@RequestBody CalendarDTO dto) throws Exception{
-        System.out.println(dto.getCalendar_title_code() + " getCalendar_title_code");
-        System.out.println(dto.getContents() + " getContents");
-        dto.setMember_id((String) session.getAttribute("loginID"));
+        dto.setMember_id((String)session.getAttribute("loginID"));
         cserv.insert(dto);
+        System.out.println(dto.getMember_id());
+        System.out.println(dto.getContents());
+        System.out.println(dto.getSeq());
+        System.out.println(dto.getCalendar_title_code());
         return ResponseEntity.ok().build();
     }
 
     // 목록
     @GetMapping
     public ResponseEntity<List<CalendarDTO>> list () throws Exception {
-    	List<CalendarDTO> list = cserv.list();
+    	String member_id = (String) session.getAttribute("loginID");
+    	List<CalendarDTO> list = cserv.list(member_id);
     	return ResponseEntity.ok(list);
     }
     
