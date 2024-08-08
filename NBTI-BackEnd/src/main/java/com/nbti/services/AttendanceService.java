@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nbti.dao.AttendanceDAO;
+import com.nbti.dao.MembersDAO;
+import com.nbti.dao.TeamsDAO;
 import com.nbti.dto.AttendanceDTO;
 
 @Service
@@ -22,6 +24,10 @@ public class AttendanceService {
 
     @Autowired
     private AttendanceDAO aDao;
+    @Autowired
+    private TeamsDAO tDao;
+    @Autowired
+    private MembersDAO mDao;
 
     public Map<String, Object> clockIn(String memberId) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -32,7 +38,7 @@ public class AttendanceService {
         dto.setMember_id(memberId);
         dto.setStart_date(now);
         aDao.insert(dto);
-
+        
         Map<String, Object> result = new HashMap<>();
         result.put("seq", dto.getSeq());
         result.put("start_date", dto.getStart_date());
@@ -157,6 +163,9 @@ public class AttendanceService {
         return result;
     }
 
+    
+    
+    
     public Map<String, Object> getWeeklyStats(String memberId) {
         List<AttendanceDTO> records = aDao.getWeeklyRecords(memberId);
 
@@ -223,48 +232,27 @@ public class AttendanceService {
 
         return result;
     }
+    
 
-    public Map<String, Object> getAllWeeklyStats() {
-        try {
-            LocalDate today = LocalDate.now();
-            LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-            LocalDate endOfWeek = startOfWeek.plusDays(6);
-
-            List<Map<String, Object>> attendanceRecords = aDao.getAllWeeklyRecords(startOfWeek, endOfWeek);
-
-            // 통계 계산
-            Map<String, Map<String, Object>> memberWeeklyStats = calculateAllWeeklyStats(attendanceRecords);
-
-            // 응답 맵 준비
-            Map<String, Object> response = new HashMap<>();
-            response.put("memberWeeklyStats", memberWeeklyStats);
-
-            System.out.println("응답 데이터: " + response);  // 디버깅 출력
-
-            return response;
-        } catch (Exception e) {
-            e.printStackTrace();
-            Map<String, Object> errorResponse = new HashMap<>();
-            errorResponse.put("error", -2); // 내부 서버 오류 코드
-            return errorResponse;
-        }
+    public List<AttendanceDTO> getWeeklyRecordsForAll(LocalDate startOfWeek, LocalDate endOfWeek) {
+        return aDao.getWeeklyRecordsForAll(startOfWeek, endOfWeek);
     }
-
-    public Map<String, Map<String, Object>> calculateAllWeeklyStats(List<Map<String, Object>> attendanceRecords) {
+    public Map<String, Map<String, Object>> calculateAllWeeklyStats(List<AttendanceDTO> attendanceRecords) {
+        // 현재 날짜와 주 시작일 계산
         LocalDate today = LocalDate.now();
         LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDate endOfWeek = startOfWeek.plusDays(6);
 
+        // 모든 멤버의 통계를 저장할 맵
         Map<String, Map<String, Object>> memberWeeklyStats = new HashMap<>();
 
-        for (Map<String, Object> record : attendanceRecords) {
-            String memberId = (String) record.get("memberId");
-            Timestamp startDate = (Timestamp) record.get("startDate");
-            Timestamp endDate = (Timestamp) record.get("endDate");
-            String name = (String) record.get("employeeName");
-            String teamName = (String) record.get("teamName");
+        for (AttendanceDTO record : attendanceRecords) {
+            String memberId = record.getMember_id();
+            Timestamp startDate = record.getStart_date();
+            Timestamp endDate = record.getEnd_date();
 
             if (startDate == null) {
+                // Start date가 null인 경우, 해당 레코드를 건너뜁니다.
                 continue;
             }
 
@@ -272,12 +260,12 @@ public class AttendanceService {
             LocalDate localDate = startDateTime.toLocalDate();
             String dateString = localDate.toString();
 
+            // member_id를 이용하여 이름과 팀 이름을 조회
+            String memberName = mDao.getMemberNameById(memberId);
+            String teamName = tDao.getTeamNameByMemberId(memberId);
+
             if (!memberWeeklyStats.containsKey(memberId)) {
-                Map<String, Object> stats = new HashMap<>();
-                stats.put("name", name);
-                stats.put("teamName", teamName);
-                stats.put("totalWorkHours", 0.0);
-                memberWeeklyStats.put(memberId, stats);
+                memberWeeklyStats.put(memberId, new HashMap<>());
             }
 
             Map<String, Object> dailyStats = memberWeeklyStats.get(memberId);
@@ -289,6 +277,14 @@ public class AttendanceService {
             Map<String, Object> dateStats = (Map<String, Object>) dailyStats.get(dateString);
             dateStats.put("startDate", startDate);
             dateStats.put("endDate", endDate);
+            dateStats.put("name", memberName); // 이름 추가
+            dateStats.put("team_name", teamName); // 팀 이름 추가
+
+            if (localDate.isEqual(today) && endDate == null) {
+                dateStats.put("absent", true);
+            } else {
+                dateStats.put("absent", false);
+            }
 
             if (startDateTime.toLocalDate().isAfter(startOfWeek.minusDays(1)) && startDateTime.toLocalDate().isBefore(endOfWeek.plusDays(1))) {
                 if (startDateTime.toLocalTime().isAfter(LocalTime.of(9, 0))) {
@@ -304,11 +300,8 @@ public class AttendanceService {
                     } else {
                         dateStats.put("earlyLeave", false);
                     }
-
-                    Duration workDuration = Duration.between(startDateTime, endDateTime);
-                    double workHours = workDuration.toHours() + workDuration.toMinutes() / 60.0;
-                    double totalWorkHours = (double) dailyStats.get("totalWorkHours") + workHours;
-                    dailyStats.put("totalWorkHours", totalWorkHours);
+                } else {
+                    dateStats.put("earlyLeave", false); // endDate가 null인 경우, 'earlyLeave'를 false로 설정
                 }
             }
         }
@@ -316,44 +309,30 @@ public class AttendanceService {
         return memberWeeklyStats;
     }
 
-    private Map<String, Object> calculateDepartmentWeeklyStats(List<Map<String, Object>> attendanceRecords) {
-        LocalDate today = LocalDate.now();
-        LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-        LocalDate endOfWeek = startOfWeek.plusDays(6);
+    public Map<String, Object> getAllWeeklyStats() {
+        try {
+            LocalDate today = LocalDate.now();
+            LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+            LocalDate endOfWeek = startOfWeek.plusDays(6);
 
-        Map<String, Object> departmentWeeklyStats = new HashMap<>();
+            List<AttendanceDTO> attendanceRecords = aDao.getWeeklyRecordsForAll(startOfWeek, endOfWeek);
+            Map<String, Map<String, Object>> memberWeeklyStats = calculateAllWeeklyStats(attendanceRecords);
 
-        for (Map<String, Object> record : attendanceRecords) {
-            String deptName = (String) record.get("dept_name");
-            Timestamp startDate = (Timestamp) record.get("start_date");
-            Timestamp endDate = (Timestamp) record.get("end_date");
+            Map<String, Object> response = new HashMap<>();
+            response.put("members", memberWeeklyStats);
 
-            if (startDate == null) {
-                continue;
-            }
-
-            LocalDateTime startDateTime = startDate.toLocalDateTime();
-            if (!departmentWeeklyStats.containsKey(deptName)) {
-                Map<String, Object> stats = new HashMap<>();
-                stats.put("totalWorkHours", 0.0);
-                departmentWeeklyStats.put(deptName, stats);
-            }
-
-            Map<String, Object> departmentStats = (Map<String, Object>) departmentWeeklyStats.get(deptName);
-
-            if (startDateTime.toLocalDate().isAfter(startOfWeek.minusDays(1)) && startDateTime.toLocalDate().isBefore(endOfWeek.plusDays(1))) {
-                if (endDate != null) {
-                    LocalDateTime endDateTime = endDate.toLocalDateTime();
-                    Duration workDuration = Duration.between(startDateTime, endDateTime);
-                    double workHours = workDuration.toHours() + workDuration.toMinutes() / 60.0;
-                    double totalWorkHours = (double) departmentStats.get("totalWorkHours") + workHours;
-                    departmentStats.put("totalWorkHours", totalWorkHours);
-                }
-            }
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", -2); // Error code for internal server error
+            return errorResponse;
         }
-
-        return departmentWeeklyStats;
     }
+
+  
+
+
     public Map<String, Object> getYearlyStats(String memberId) {
         List<AttendanceDTO> records = aDao.getYearlyRecords(memberId);
 
@@ -411,4 +390,5 @@ public class AttendanceService {
 
         return result;
     }
+
 }

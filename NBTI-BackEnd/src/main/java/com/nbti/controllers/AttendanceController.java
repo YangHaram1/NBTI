@@ -102,8 +102,16 @@ public class AttendanceController {
     @GetMapping("/allweekly-stats")
     public ResponseEntity<Map<String, Object>> getAllWeeklyStats() {
         try {
-            // Fetch and prepare the weekly stats
-            Map<String, Object> response = aServ.getAllWeeklyStats();
+            LocalDate today = LocalDate.now();
+            LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+            LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+            List<AttendanceDTO> attendanceRecords = aServ.getWeeklyRecordsForAll(startOfWeek, endOfWeek);
+            Map<String, Map<String, Object>> memberWeeklyStats = aServ.calculateAllWeeklyStats(attendanceRecords);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("members", memberWeeklyStats);
+
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();

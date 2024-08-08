@@ -15,7 +15,7 @@ const formatTime = (date) => {
 const formatDate = (date) => new Date(date).toISOString().split('T')[0];
 
 // 요일 계산 함수 (월요일을 주의 시작일로 설정)
-const getDayOfWeek = (date) => (date.getDay() + 6) % 7;
+const getDayOfWeek = (date) => (date.getDay() + 6) % 7; // 0 (월요일)부터 6 (일요일)
 
 // 주의 시작일 계산 함수 (월요일)
 const getStartOfWeek = (date) => {
@@ -29,16 +29,16 @@ const getStartOfWeek = (date) => {
 // 근무 시간 계산 함수
 const calculateWorkingHours = (startDate, endDate) => {
     if (!startDate || !endDate) return 'N/A';
-    
+
     const start = new Date(startDate);
     const end = new Date(endDate);
-    
+
     const diffMs = end - start;
-    if (diffMs < 0) return 'N/A';
+    if (diffMs < 0) return 'N/A'; // 유효하지 않은 시간
 
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     return `${diffHours}시간 ${diffMinutes}분`;
 };
 
@@ -49,25 +49,25 @@ export const AllAttendance = () => {
         return <div>Loading...</div>;
     }
 
+    // 현재 날짜와 주 시작일 계산
     const today = new Date();
     const startOfWeek = getStartOfWeek(today);
-    const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(endOfWeek.getDate() + 6);
 
+    // FullCalendar 이벤트 데이터 생성
     const events = Object.keys(stats).flatMap(memberId => {
-        const memberStats = stats[memberId];
+        const { name, team_name, records } = stats[memberId] || {};
         return Array.from({ length: 7 }).map((_, index) => {
             const date = new Date(startOfWeek);
             date.setDate(date.getDate() + index);
             const formattedDate = formatDate(date);
 
-            const { late = false, absent = false, earlyLeave = false, startDate, endDate } = memberStats[formattedDate] || {};
+            const { late = false, absent = false, earlyLeave = false, startDate, endDate } = records[formattedDate] || {};
 
             const startTime = startDate ? formatTime(startDate) : 'N/A';
             const endTime = endDate ? formatTime(endDate) : 'N/A';
             const workingHours = calculateWorkingHours(startDate, endDate);
 
-            const title = ` 출근: ${startTime}\n퇴근: ${endTime}\n근무 시간: ${workingHours}\n`;
+            const title = `출근: ${startTime}\n퇴근: ${endTime}\n근무 시간: ${workingHours}\n`;
 
             const dayOfWeek = getDayOfWeek(date);
 
@@ -83,48 +83,46 @@ export const AllAttendance = () => {
             return {
                 title,
                 date: formattedDate,
-                extendedProps: { backgroundColor, textColor }
+                extendedProps: { backgroundColor, textColor, dayOfWeek, name, team_name }
             };
         });
     });
 
     return (
         <div className={styles.container}>
-            <div className={styles.sidebar}>
-                <p>이곳에 필요한 내용을 추가하세요</p>
-            </div>
-            <div className={styles.calendarContainer}>
-                <h2>부서별 주간 통계</h2>
-                <div className={styles.calendar}>
-                    <FullCalendar
-                        plugins={[dayGridPlugin]}
-                        initialView="dayGridWeek"
-                        headerToolbar={false}
-                        locales={[koLocale]}
-                        locale="ko"
-                        selectable={true}
-                        height="auto"
-                        events={events}
-                        firstDay={1}
-                        eventContent={({ event }) => {
-                            const lines = event.title.split('\n');
-                            return (
-                                <div
-                                    className={styles.eventContent}
-                                    style={{ backgroundColor: event.extendedProps.backgroundColor, color: event.extendedProps.textColor }}
-                                >
-                                    {lines.map((line, index) => (
-                                        <div key={index}>{line}</div>
-                                    ))}
+            <FullCalendar
+                plugins={[dayGridPlugin]}
+                initialView="dayGridWeek"
+                headerToolbar={false}
+                locales={[koLocale]}
+                locale="ko"
+                selectable={true}
+                height="auto"
+                events={events}
+                firstDay={1}
+                eventContent={({ event }) => {
+                    const lines = event.title.split('\n');
+                    const isMonday = event.extendedProps.dayOfWeek === 0; // 월요일인지 확인
+                    return (
+                        <div
+                            className={styles.eventContent}
+                            style={{ backgroundColor: event.extendedProps.backgroundColor, color: event.extendedProps.textColor }}
+                        >
+                            {isMonday && (
+                                <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+                                    <div>이름: {event.extendedProps.name}</div>
+                                    <div>부서: {event.extendedProps.team_name}</div>
                                 </div>
-                            );
-                        }}
-                    />
-                </div>
-            </div>
-            <div className={styles.sidebar}>
-                <p>이곳에 필요한 내용을 추가하세요</p>
-            </div>
+                            )}
+                            <div style={{ display: "flex", flexDirection: "column", flex: 2 }}>
+                                {lines.map((line, index) => (
+                                    <div key={index}>{line}</div>
+                                ))}
+                            </div>
+                        </div>
+                    );
+                }}
+            />
         </div>
     );
 };
