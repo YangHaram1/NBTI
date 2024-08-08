@@ -62,7 +62,7 @@ export const Profile = () =>{
     
 
     useEffect(()=>{
-        axios.get(`${host}/members`)
+        axios.get(`${host}/files/mypageUpdate`)
         .then((resp)=>{
             console.log(resp);
             SetMyData(resp.data);
