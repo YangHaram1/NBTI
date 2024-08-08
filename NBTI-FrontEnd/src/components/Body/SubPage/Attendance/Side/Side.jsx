@@ -51,7 +51,7 @@ export const Side = () => {
           </li>
         </ul>
         <ul>
-            <li onClick={() => { navi("/attendance/") }}>
+            <li onClick={() => { navi("/attendance/allattendance") }}>
                 부서 근무 현황 
             </li>
         </ul>
