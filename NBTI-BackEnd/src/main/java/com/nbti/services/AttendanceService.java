@@ -32,7 +32,7 @@ public class AttendanceService {
         dto.setMember_id(memberId);
         dto.setStart_date(now);
         aDao.insert(dto);
-        
+
         Map<String, Object> result = new HashMap<>();
         result.put("seq", dto.getSeq());
         result.put("start_date", dto.getStart_date());
@@ -157,9 +157,6 @@ public class AttendanceService {
         return result;
     }
 
-    
-    
-    
     public Map<String, Object> getWeeklyStats(String memberId) {
         List<AttendanceDTO> records = aDao.getWeeklyRecords(memberId);
 
@@ -227,7 +224,136 @@ public class AttendanceService {
         return result;
     }
 
+    public Map<String, Object> getAllWeeklyStats() {
+        try {
+            LocalDate today = LocalDate.now();
+            LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+            LocalDate endOfWeek = startOfWeek.plusDays(6);
 
+            List<Map<String, Object>> attendanceRecords = aDao.getAllWeeklyRecords(startOfWeek, endOfWeek);
+
+            // 통계 계산
+            Map<String, Map<String, Object>> memberWeeklyStats = calculateAllWeeklyStats(attendanceRecords);
+
+            // 응답 맵 준비
+            Map<String, Object> response = new HashMap<>();
+            response.put("memberWeeklyStats", memberWeeklyStats);
+
+            System.out.println("응답 데이터: " + response);  // 디버깅 출력
+
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", -2); // 내부 서버 오류 코드
+            return errorResponse;
+        }
+    }
+
+    public Map<String, Map<String, Object>> calculateAllWeeklyStats(List<Map<String, Object>> attendanceRecords) {
+        LocalDate today = LocalDate.now();
+        LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+        Map<String, Map<String, Object>> memberWeeklyStats = new HashMap<>();
+
+        for (Map<String, Object> record : attendanceRecords) {
+            String memberId = (String) record.get("memberId");
+            Timestamp startDate = (Timestamp) record.get("startDate");
+            Timestamp endDate = (Timestamp) record.get("endDate");
+            String name = (String) record.get("employeeName");
+            String teamName = (String) record.get("teamName");
+
+            if (startDate == null) {
+                continue;
+            }
+
+            LocalDateTime startDateTime = startDate.toLocalDateTime();
+            LocalDate localDate = startDateTime.toLocalDate();
+            String dateString = localDate.toString();
+
+            if (!memberWeeklyStats.containsKey(memberId)) {
+                Map<String, Object> stats = new HashMap<>();
+                stats.put("name", name);
+                stats.put("teamName", teamName);
+                stats.put("totalWorkHours", 0.0);
+                memberWeeklyStats.put(memberId, stats);
+            }
+
+            Map<String, Object> dailyStats = memberWeeklyStats.get(memberId);
+
+            if (!dailyStats.containsKey(dateString)) {
+                dailyStats.put(dateString, new HashMap<>());
+            }
+
+            Map<String, Object> dateStats = (Map<String, Object>) dailyStats.get(dateString);
+            dateStats.put("startDate", startDate);
+            dateStats.put("endDate", endDate);
+
+            if (startDateTime.toLocalDate().isAfter(startOfWeek.minusDays(1)) && startDateTime.toLocalDate().isBefore(endOfWeek.plusDays(1))) {
+                if (startDateTime.toLocalTime().isAfter(LocalTime.of(9, 0))) {
+                    dateStats.put("late", true);
+                } else {
+                    dateStats.put("late", false);
+                }
+
+                if (endDate != null) {
+                    LocalDateTime endDateTime = endDate.toLocalDateTime();
+                    if (endDateTime.toLocalTime().isBefore(LocalTime.of(18, 0))) {
+                        dateStats.put("earlyLeave", true);
+                    } else {
+                        dateStats.put("earlyLeave", false);
+                    }
+
+                    Duration workDuration = Duration.between(startDateTime, endDateTime);
+                    double workHours = workDuration.toHours() + workDuration.toMinutes() / 60.0;
+                    double totalWorkHours = (double) dailyStats.get("totalWorkHours") + workHours;
+                    dailyStats.put("totalWorkHours", totalWorkHours);
+                }
+            }
+        }
+
+        return memberWeeklyStats;
+    }
+
+    private Map<String, Object> calculateDepartmentWeeklyStats(List<Map<String, Object>> attendanceRecords) {
+        LocalDate today = LocalDate.now();
+        LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+        Map<String, Object> departmentWeeklyStats = new HashMap<>();
+
+        for (Map<String, Object> record : attendanceRecords) {
+            String deptName = (String) record.get("dept_name");
+            Timestamp startDate = (Timestamp) record.get("start_date");
+            Timestamp endDate = (Timestamp) record.get("end_date");
+
+            if (startDate == null) {
+                continue;
+            }
+
+            LocalDateTime startDateTime = startDate.toLocalDateTime();
+            if (!departmentWeeklyStats.containsKey(deptName)) {
+                Map<String, Object> stats = new HashMap<>();
+                stats.put("totalWorkHours", 0.0);
+                departmentWeeklyStats.put(deptName, stats);
+            }
+
+            Map<String, Object> departmentStats = (Map<String, Object>) departmentWeeklyStats.get(deptName);
+
+            if (startDateTime.toLocalDate().isAfter(startOfWeek.minusDays(1)) && startDateTime.toLocalDate().isBefore(endOfWeek.plusDays(1))) {
+                if (endDate != null) {
+                    LocalDateTime endDateTime = endDate.toLocalDateTime();
+                    Duration workDuration = Duration.between(startDateTime, endDateTime);
+                    double workHours = workDuration.toHours() + workDuration.toMinutes() / 60.0;
+                    double totalWorkHours = (double) departmentStats.get("totalWorkHours") + workHours;
+                    departmentStats.put("totalWorkHours", totalWorkHours);
+                }
+            }
+        }
+
+        return departmentWeeklyStats;
+    }
     public Map<String, Object> getYearlyStats(String memberId) {
         List<AttendanceDTO> records = aDao.getYearlyRecords(memberId);
 
@@ -239,7 +365,7 @@ public class AttendanceService {
         int absentCount = 0;
         int earlyLeaveCount = 0;
         int statsDay = 0;
-        double statsHours = 0;
+        double statsHours = 0.0;
 
         for (AttendanceDTO record : records) {
             Timestamp startDate = record.getStart_date();
@@ -261,8 +387,10 @@ public class AttendanceService {
                         if (endDateTime.toLocalTime().isBefore(LocalTime.of(18, 0))) {
                             earlyLeaveCount++;
                         }
+                        
+                        // 근무 시간 계산
                         Duration workDuration = Duration.between(startDateTime, endDateTime);
-                        statsHours += workDuration.toHours() + workDuration.toMinutes() / 60.0;
+                        statsHours += workDuration.toHours() + workDuration.toMinutesPart() / 60.0;
                         statsDay++;
                     } else {
                         // 결근 체크
@@ -283,6 +411,4 @@ public class AttendanceService {
 
         return result;
     }
-    
-
 }

@@ -1,8 +1,12 @@
 package com.nbti.controllers;
 
 import java.sql.Timestamp;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nbti.dto.AttendanceDTO;
 import com.nbti.services.AttendanceService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -85,8 +90,21 @@ public class AttendanceController {
         try {
             // 주간 통계 조회
             Map<String, Object> stats = aServ.getWeeklyStats(memberId);
-            System.out.println("Stats: " + stats); // 서버 측에서 반환된 데이터를 확인
+
             return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", -2); // Error code for internal server error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+    @GetMapping("/allweekly-stats")
+    public ResponseEntity<Map<String, Object>> getAllWeeklyStats() {
+        try {
+            // Fetch and prepare the weekly stats
+            Map<String, Object> response = aServ.getAllWeeklyStats();
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
             Map<String, Object> errorResponse = new HashMap<>();

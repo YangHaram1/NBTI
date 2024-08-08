@@ -8,7 +8,7 @@ import { useReservationList } from "../../../../../store/store";
 export const Side = () => {
   const [isAdmin, setIsAdmin] = useState(false); // 권한 여부 상태
   const navi = useNavigate();
-  const {reservations, setReservations } = useReservationList();
+  const {reservations, setReservations, wait } = useReservationList();
 
   //입력 데이터 상태
   const [reserveData, setReserveData] = useState({ 
@@ -45,11 +45,6 @@ const handleSave = () => {
       alert('모든 필드를 입력하세요.');
       return;
   }
-  //  console.log('reserve_title_code:', reserve_title_code);
-  //  console.log('start_time:', fullStartTime);
-  //  console.log('end_time:', fullEndTime);
-  //  console.log('purpose:', purpose);
-  //  console.log('state:', state);
 
   // AJAX 요청
   axios.post(`${host}/reserve`, {
@@ -69,6 +64,7 @@ const handleSave = () => {
       alert('예약에 실패했습니다.');
   });
 };
+
 // 예약 목록을 갱신하는 함수
 const fetchReservations = () => {
   axios.get(`${host}/reserve`)

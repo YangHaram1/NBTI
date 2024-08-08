@@ -19,8 +19,8 @@ public class ReserveService {
 	}
 	
 	//대기 목록 출력 
-	public List<ReserveDTO> waitingList() throws Exception{
-		return rdao.waitingList();
+	public List<ReserveDTO> waitingList(String memberId) throws Exception{
+		return rdao.waitingList(memberId);
 	}
 	
     // 예약 상태 업데이트 N->Y
@@ -39,8 +39,8 @@ public class ReserveService {
 	}
 	
 	//승인 관리 - 승인 목록 출력
-	public List<ReserveDTO> approveList() throws Exception{
-		return rdao.approveList();
+	public List<ReserveDTO> approveList(String memberId) throws Exception{
+		return rdao.approveList(memberId);
 	}
 
 	//승인 관리 - 반려 목록 출력
@@ -60,6 +60,11 @@ public class ReserveService {
 	public List<ReserveDTO> meetingRoomList () throws Exception{
 		return rdao.meetingRoomList();
 	}
+	
+	//예약 신청 취소
+//	public void delete(int seq) throws Exception{
+//		rdao.delete(seq);
+//	}
 	
 	
 
