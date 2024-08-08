@@ -9,6 +9,7 @@ public class MembersDTO {
 	private String team_code, job_code, member_level, member_call, address, birth, gender, end_date, ent_yn;
 	private int vacation_period;
 	private String member_img;
+	private Timestamp pw_change_date;
 	public String getId() {
 		return id;
 	}
@@ -105,9 +106,15 @@ public class MembersDTO {
 	public void setMember_img(String member_img) {
 		this.member_img = member_img;
 	}
+	public Timestamp getPw_change_date() {
+		return pw_change_date;
+	}
+	public void setPw_change_date(Timestamp pw_change_date) {
+		this.pw_change_date = pw_change_date;
+	}
 	public MembersDTO(String id, String pw, String name, String email, Timestamp enter_date, String team_code,
 			String job_code, String member_level, String member_call, String address, String birth, String gender,
-			String end_date, String ent_yn, int vacation_period, String member_img) {
+			String end_date, String ent_yn, int vacation_period, String member_img, Timestamp pw_change_date) {
 		super();
 		this.id = id;
 		this.pw = pw;
@@ -125,10 +132,13 @@ public class MembersDTO {
 		this.ent_yn = ent_yn;
 		this.vacation_period = vacation_period;
 		this.member_img = member_img;
+		this.pw_change_date = pw_change_date;
 	}
 	public MembersDTO() {
 		super();
 	}
+	
+	
 	
 	
 	
