@@ -40,6 +40,10 @@ public boolean login(MembersDTO dto) {
 		mybatis.update("Member.updateMyData", dto);
 	}
 	
+	public void updateMyDataNoImg(MembersDTO dto) {
+		mybatis.update("Member.updateMyDataNoImg", dto);
+	}
+	
 	public List<MembersDTO> selectAll (){
 		return mybatis.selectList("Member.selectAll");
 	}

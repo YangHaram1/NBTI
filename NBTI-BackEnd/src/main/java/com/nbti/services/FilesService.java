@@ -149,11 +149,18 @@ public class FilesService {
     	String realpath=RealpathConfig.realpath+"avatar"+File.separator+dto.getId();
     	File realPathFile =new File(realpath);
 		if(!realPathFile.exists()) {realPathFile.mkdir();}
-    	String oriName =file.getOriginalFilename();
-		String sysName= UUID.randomUUID() +"_"+ oriName;
-		file.transferTo(new File(realpath+"/"+sysName));
-		dto.setMember_img(sysName);
-    	memberdao.updateMyData(dto);
+		if(file!=null) {
+			String oriName =file.getOriginalFilename();
+			String sysName= UUID.randomUUID() +"_"+ oriName;
+			file.transferTo(new File(realpath+"/"+sysName));
+			dto.setMember_img(sysName);
+			memberdao.updateMyData(dto);
+		}
+		else {
+			memberdao.updateMyDataNoImg(dto);
+		}
+		
+    	
     	
     }
     // 작성일 24.08.4
