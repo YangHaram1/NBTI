@@ -47,14 +47,15 @@ public class ReplyController {
 		}
 	}
 	
-	// 댓글 출력
+	// 댓글 및 좋아요 상태 & 개수 조회
 	@GetMapping("/{board_seq}/{board_code}")
 	public ResponseEntity<Map<String, Object>> selectReply(@PathVariable int board_seq, @PathVariable int board_code){
 //		List<ReplyDTO> list = rserv.selectReply(board_seq, board_code);
 //		return ResponseEntity.ok(list);
-	
+	 
 		List<ReplyDTO> replies = rserv.selectReply(board_seq, board_code);
 	    Map<Integer, Boolean> likesStatus = new HashMap<>();
+	    
 	    
 	    String memberId = (String) session.getAttribute("loginID");
 	    
@@ -62,15 +63,20 @@ public class ReplyController {
 	        Map<String, Object> map = new HashMap<>();
 	        map.put("reply_seq", reply.getSeq());
 	        map.put("member_id", memberId);
-	        boolean isLiked = lserv.isLiked(map);
+	        
+	        boolean isLiked = lserv.isLiked(map); // map 안의 댓글에 담긴 좋아요의 상태( true/false )가 isLiked에 담김
+	        
 	        likesStatus.put(reply.getSeq(), isLiked);
+	        
+	        int count = lserv.likeCount(reply.getSeq());
+	        reply.setCount(count);
 	    }
 
-	    Map<String, Object> response = new HashMap<>();
-	    response.put("replies", replies);
-	    response.put("likes", likesStatus);
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("replies", replies);
+	    result.put("likes", likesStatus);
 	    
-	    return ResponseEntity.ok(response);
+	    return ResponseEntity.ok(result);
 	
 	
 	}

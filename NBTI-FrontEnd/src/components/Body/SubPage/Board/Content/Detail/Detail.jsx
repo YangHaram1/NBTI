@@ -27,7 +27,7 @@ export const Detail = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   const [isLiked, setIsLiked] = useState({}); // 좋아요 상태를 객체로 저장
-  // const [likesCount, setLikesCount] = useState({}); // 댓글별 좋아요 개수
+  const [likesCount, setLikesCount] = useState({}); // 댓글별 좋아요 개수
   // const [like, setLike] = useState([0, 0, 0]); // 댓글별 좋아요 개수
 
   // 게시판 코드
@@ -127,6 +127,7 @@ export const Detail = () => {
   };
 
 
+
   // ==========[댓 글]==========
   const handleInputReply = (e) => {
     const htmlContent = e.target.innerHTML;
@@ -156,17 +157,20 @@ export const Detail = () => {
     });
   };
 
-  // 댓글 전체 출력
+
+  // (좋아요 포함) 댓글 전체 출력
   useEffect(() => {
     axios.get(`${host}/reply/${boardSeq}/${code}`).then((resp) => {
       const { replies, likes } = resp.data;
-      setReply(replies);
-      setIsLiked(likes);
+      console.log(replies);
+      setReply(replies); // 좋아요 count 포함된 댓글 배열
+      setIsLiked(likes); // 좋아요 true / false 상태
 
       // 좋아요 상태 가져오기
       replies.forEach((reply) => {
-        axios.get(`${host}/likes/status/${reply.seq}`).then((res) => {
-          setIsLiked((prev) => ({ ...prev, [reply.seq]: res.data }));
+        axios.get(`${host}/likes/status/${reply.seq}`).then((resp) => { // boolean 반환
+          // 좋아요 상태의 prev에 새롭게 true / false를 업데이트
+          setIsLiked((prev) => ({ ...prev, [reply.seq]: resp.data }));
         });
       });
     });
@@ -182,30 +186,53 @@ export const Detail = () => {
   };
 
   // 댓글 좋아요 클릭
-  const handleLikekAdd = (seq) => {
+  const handleLikekAdd = (seq, i) => {
     console.log("조아요..", seq)
-    setIsLiked((prev) => ({ ...prev, [seq]: true }));
+    setIsLiked((prev) => ({ ...prev, [seq]: true })); // 상태를 true로 변환
 
     axios.post(`${host}/likes/insert`, { reply_seq: seq }).then((resp) => {
       if (resp.data === 1) console.log("조아요 성공");
     });
+
+    setReply((prev) => {
+      console.log("dasda");
+      return (
+        prev.map((item, index) => {
+          if (index === i) {
+            return { ...item, count: item.count + 1 };
+          }
+          return item
+        })
+      )
+
+    })
+
   }
 
   // 댓글 좋아요 해제
-  const handleLikeRemove = (seq) => {
+  const handleLikeRemove = (seq, i) => {
     setIsLiked((prev) => ({ ...prev, [seq]: false }));
 
     axios.delete(`${host}/likes/delete/${seq}`).then((resp) => {
       if (resp.data === 1) console.log("조아요 취소");
+
+      setReply((prev) => {
+        console.log("dasda");
+        return (
+          prev.map((item, index) => {
+            if (index === i) {
+              return { ...item, count: item.count - 1 };
+            }
+            return { ...item }
+          })
+        )
+
+
+      })
+
     });
+
   }
-
-  // 좋아요 개수
-  // useEffect(() => {
-  //   axios.get(`${host}/likes/count/${replySeq}`).then((resp) => {
-
-  //   })
-  // })
 
 
   //======================================================================================
@@ -324,13 +351,13 @@ export const Detail = () => {
                 </div>
                 <div className={styles.likes}>
                   <i className="fa-regular fa-heart fa-lg"
-                    onClick={() => { handleLikekAdd(item.seq); }}
+                    onClick={() => { handleLikekAdd(item.seq, i); }}
                     style={{ display: isLiked[item.seq] ? "none" : "inline" }} />
                   <i className="fa-solid fa-heart fa-lg"
-                    onClick={() => { handleLikeRemove(item.seq); }}
+                    onClick={() => { handleLikeRemove(item.seq, i); }}
                     style={{ display: isLiked[item.seq] ? "inline" : "none" }} />
                   {/* <p>5</p> */}
-                  <p></p>
+                  <p>{item.count}</p>
                 </div>
                 {currentUser && currentUser.id === item.member_id && (
                   <button onClick={() => { handleDelReplyBtn(item.seq); }}> X </button>

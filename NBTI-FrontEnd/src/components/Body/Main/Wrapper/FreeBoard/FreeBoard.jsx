@@ -55,13 +55,6 @@ export const FreeBoard = () => {
             document.getElementById(`replyInput-${boardSeq}`).innerText = "";
             setReplyContents("");
 
-
-
-
-            // if (inputRef.current.id == resp.data.board_seq) {
-            //     inputRef.current.innerHTML = ""; // div 내용 비우기
-            //     setReplyContents("");
-            // }
         });
 
     };

@@ -71,12 +71,12 @@ public class LikesController {
     }
 	
 	// 좋아요 갯수
-	@GetMapping("/count/{reply_seq}")
-	public ResponseEntity<Integer> likeCount(@PathVariable int reply_seq){
-		
-		int result = lserv.likeCount(reply_seq);
-		return ResponseEntity.ok(result);
-	}
+//	@GetMapping("/count/{reply_seq}")
+//	public ResponseEntity<Integer> likeCount(@PathVariable int reply_seq){
+//		
+//		int result = lserv.likeCount(reply_seq);
+//		return ResponseEntity.ok(result);
+//	}
 	
 	
 }
