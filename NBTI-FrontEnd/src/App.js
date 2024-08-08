@@ -1,27 +1,27 @@
 import './App.css';
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import React, { useState,useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import { Header } from './components/Header/Header';
 import { Body } from './components/Body/Body';
 import axios from 'axios';
 import { useAuthStore, useMemberStore, useNotification, useCheckList } from './store/store';
-import { useEffect, useContext } from 'react';
 import ChatApp from './components/ChatApp/ChatApp';
-import { ChatsProvider ,ChatsContext} from './Context/ChatsContext';
+import { ChatsProvider } from './Context/ChatsContext';
 import { host } from './config/config';
-import { Slide, ToastContainer } from'react-toastify';
+import { Slide, ToastContainer } from 'react-toastify';
 import { useRef } from 'react';
 import styles from './App.module.css';
+import Draggable from 'react-draggable';
 
 axios.defaults.withCredentials = true;
 
 function App() {
   const { loginID, setLoginID } = useAuthStore();
   const { setMembers } = useMemberStore();
-  const websocketRef=useRef(null);
-  const {maxCount,count} =useNotification();
-  const {webSocketCheck,onMessage,chatController} =useCheckList();
-  const [unread,setUnread] =useState();
+  const websocketRef = useRef(null);
+  const { maxCount, count } = useNotification();
+  const { webSocketCheck, onMessage, chatController } = useCheckList();
+  const [unread, setUnread] = useState();
 
 
   useEffect(() => {
@@ -29,7 +29,7 @@ function App() {
   }, []); // 의존성 배열에 setMembers 추가
 
   useEffect(() => {
-    if (loginID !== null && loginID!=='error') {
+    if (loginID !== null && loginID !== 'error') {
       axios.get(`${host}/members/selectAll`)
         .then((resp) => {
           const filteredMembers = resp.data.map(({ pw, ...rest }) => rest);
@@ -40,42 +40,41 @@ function App() {
   }, [loginID])
 
   //웹소켓 전체 관리
-  useEffect(()=>{
-    if (loginID !== null&& loginID!=='error') {
-      const url=host.replace(/^https?:/, '')
+  useEffect(() => {
+    if (loginID !== null && loginID !== 'error') {
+      const url = host.replace(/^https?:/, '')
       websocketRef.current = new WebSocket(`${url}/chatWebsocket`);
     }
-    if(websocketRef.current!=null){
+    if (websocketRef.current != null) {
       websocketRef.current.onopen = () => {
         console.log('Connected to WebSocket');
       }
     }
- 
+
 
     return () => {
-      if(websocketRef.current!=null){
+      if (websocketRef.current != null) {
         websocketRef.current.close();
       }
     };
-  },[loginID,webSocketCheck]);
+  }, [loginID, webSocketCheck]);
 
-  useEffect(()=>{
-    if(loginID!=null&& loginID!=='error'){
-      axios.get(`${host}/chat/unread`).then((resp)=>{
+  useEffect(() => {
+    if (loginID != null && loginID !== 'error') {
+      axios.get(`${host}/chat/unread`).then((resp) => {
         console.log(resp.data);
         setUnread(parseInt(resp.data));
       })
     }
 
-  },[onMessage,loginID,chatController])
+  }, [onMessage, loginID, chatController])
   return (
     <ChatsProvider>
       <Router>
         <div className="container">
-          {(loginID!=null&& loginID!=='error')&& <Header />}
+          {(loginID != null && loginID !== 'error') && <Header />}
           <Body />
-          {(loginID!=null&& loginID!=='error')&&<ChatApp websocketRef={websocketRef}></ChatApp>}
-          
+          {(loginID != null && loginID !== 'error') && <ChatApp websocketRef={websocketRef}></ChatApp>}
         </div>
         <ToastContainer
           position="top-right"
@@ -91,7 +90,7 @@ function App() {
           transition={Slide}
         />
       </Router>
-      {(unread>0&&(loginID !== null && loginID!=='error'))&&(<div className={styles.unread}>{unread}+</div>)}
+      {(unread > 0 && (loginID !== null && loginID !== 'error')) && (<div className={styles.unread}>{unread}+</div>)}
     </ChatsProvider>
   );
 }

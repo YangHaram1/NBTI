@@ -85,14 +85,24 @@
 .members{
   display: flex;
   overflow: auto;
-  max-height: 800px;
+  max-height: 1000px;
   gap: 10px;
-  overflow: auto;
+  width: 1000px; 
   position: absolute;
-  top:0;
-  z-index: 9999;
-  width: 1300px;
   left: 350px;
-  padding: 15px;
+  flex-direction: column;
 }
+
+.membersTop{
+  display: flex;
+  overflow: auto;
+  max-height: 1000px;
+  gap: 10px;
+  width: 1000px; 
+  position: absolute;
+  left: 350px;
+  top:0;
+  flex-direction: column;
+}
+
 
