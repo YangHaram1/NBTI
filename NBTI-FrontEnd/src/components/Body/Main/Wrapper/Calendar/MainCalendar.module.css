@@ -1,1 +1,6 @@
-.calendar_container{width: 100%; height: 100%;}
+.calendar_container{
+    width: 100%; height: 100%;
+    border: 1px solid #6b908089;
+    border-radius: 5px;
+    /* padding: 5px; */
+}

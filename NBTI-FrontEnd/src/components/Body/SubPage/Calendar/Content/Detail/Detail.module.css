@@ -2,19 +2,20 @@
     --fc-today-bg-color: #a1d3bc47 !important;
     --fc-border-color: #6B9080;
 }
+
 .calender {
     flex: 8;
     padding: 5%;
     position: relative;
     overflow-y: auto;  /* 내부 내용이 많을 경우 스크롤 가능하도록 설정 */
     box-sizing: border-box; /* padding을 포함한 크기 계산 */
-    background-color: #a1d3bc;
+    background-color: white;
 }
 .innerCalender{
-    background-color: white;
+    background-color: #EAF4F4;
     padding: 5%; 
     border: 5px solid white;
-    box-shadow: 1px 1px 3px #818181;
+    box-shadow: 0px 0px 3px #818181; /* 모든 방향으로 동일한 그림자 */
     border-radius: 20px;
     height: 100%;
 

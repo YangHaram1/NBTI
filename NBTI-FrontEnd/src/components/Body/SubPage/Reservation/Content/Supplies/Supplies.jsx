@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { host } from '../../../../../../config/config';
 
-export const Supplies = ()=>{
+export const Supplies = ({modalOpen , setModalOpen})=>{
     const [events, setEvents] = useState([]); // 이벤트 상태
 
     useEffect(() => {

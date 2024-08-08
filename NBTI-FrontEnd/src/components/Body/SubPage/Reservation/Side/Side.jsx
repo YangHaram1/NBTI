@@ -8,7 +8,7 @@ import { useReservationList } from "../../../../../store/store";
 export const Side = () => {
   const [isAdmin, setIsAdmin] = useState(false); // 권한 여부 상태
   const navi = useNavigate();
-  const {reservations, setReservations, wait } = useReservationList();
+  const {selectedDate,modalOpen,setModalOpen, setSelectedDate, setReservations } = useReservationList();
 
   //입력 데이터 상태
   const [reserveData, setReserveData] = useState({ 
@@ -45,6 +45,28 @@ const handleSave = () => {
       alert('모든 필드를 입력하세요.');
       return;
   }
+  const selectedDateObj = new Date(selectedDate);
+  const now = new Date();
+  const startTimeObj = new Date(fullStartTime);
+  const endTimeObj = new Date(fullEndTime);
+
+  // 과거 날짜 체크
+  if (selectedDateObj < now) {
+      alert('과거 날짜는 예약할 수 없습니다.');
+      return;
+  }
+
+  // 현재 시간 체크
+  if (startTimeObj < now) {
+      alert('시작 시간은 현재 시간 이후여야 합니다.');
+      return;
+  }
+
+  // 종료 시간 체크
+  if (endTimeObj <= startTimeObj) {
+      alert('종료 시간은 시작 시간 이후여야 합니다.');
+      return;
+  }
 
   // AJAX 요청
   axios.post(`${host}/reserve`, {
@@ -77,9 +99,10 @@ const fetchReservations = () => {
       });
 };
 
+
   //모달창
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
+  // const [modalOpen, setModalOpen] = useState(false);
+  // const [selectedDate, setSelectedDate] = useState(null);
   //모달창 열기
   const handleDateClick = (arg) => {
       setSelectedDate(arg.dateStr);
@@ -92,22 +115,22 @@ const fetchReservations = () => {
       setReserveData({ reserve_title_code: '', start_time: '', end_time: '', purpose: '', state: 'N' }); // 초기화
   };
 
-    // 로그인 한 사용자 정보 및 reservation 권한 확인
-    useEffect(() => {
-      axios.get(`${host}/members`).then((resp) => {
-        if (resp.data.member_level === "2" || resp.data.member_level === "4") {
-          // reservation 권한 확인
-          axios.get(`${host}/members/selectLevel`).then((resp1) => {
-            console.log(resp1.data[parseInt(resp.data.member_level) - 1]?.reservation)
-            const reservationStatus = resp1.data[parseInt(resp.data.member_level) - 1]?.reservation; // 배열의 n번째 요소에서 hr 확인
-  
-            if (reservationStatus === "Y") {
-              setIsAdmin(true); // Y일 때 true
-            }
-          });
-        }
-      });
-    }, []);
+  // 로그인 한 사용자 정보 및 reservation 권한 확인
+  useEffect(() => {
+    axios.get(`${host}/members`).then((resp) => {
+      if (resp.data.member_level === "2" || resp.data.member_level === "4") {
+        // reservation 권한 확인
+        axios.get(`${host}/members/selectLevel`).then((resp1) => {
+          console.log(resp1.data[parseInt(resp.data.member_level) - 1]?.reservation)
+          const reservationStatus = resp1.data[parseInt(resp.data.member_level) - 1]?.reservation; // 배열의 n번째 요소에서 hr 확인
+
+          if (reservationStatus === "Y") {
+            setIsAdmin(true); // Y일 때 true
+          }
+        });
+      }
+    });
+  }, []);
 
 
   return (
@@ -150,7 +173,7 @@ const fetchReservations = () => {
       {modalOpen && (
                 <div className={styles.modalOverlay} onClick={closeModal}>
                     <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                        <h2 className="title">예약하기</h2>
+                        <h2 className={styles.title}>예약하기</h2>
                         <div className={styles.modalInner}>
                             <div>
                                 <p>자원이름</p>

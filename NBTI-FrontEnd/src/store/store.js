@@ -40,6 +40,11 @@ export const useReservationList = create((set) => ({
     setApprove: (items) => set({ approve: items }),
     reject: [],
     setReject: (items) => set({ reject: items }),
+
+    modalOpen: false, // 모달 상태
+    setModalOpen: (open) => set({ modalOpen: open }),
+    selectedDate: null, // 선택한 날짜
+    setSelectedDate: (date) => set({ selectedDate: date }),
 }));
 
 
