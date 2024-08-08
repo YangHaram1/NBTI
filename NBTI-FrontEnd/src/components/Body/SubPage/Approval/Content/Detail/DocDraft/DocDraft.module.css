@@ -1,0 +1,86 @@
+.container{
+    margin-top: 20px;
+    width: 97%;
+    height: 90%;
+    margin-left: 10px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.container div{border: 1px solid black;}
+
+.row{
+    display: flex;
+    flex:0.8;
+}
+
+.date{
+    flex:2;
+    max-width: 180px;
+    background-color: #CCE3DE;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    text-indent: 10px;
+}
+
+.date_value{
+    flex:3;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    text-indent: 10px;
+}
+
+.date_value input{
+    text-indent: 5px;
+    width: 120px;
+    font-size: 13px;
+    font-weight: 700;
+    height: 75%;
+    background-color: white;
+    border: 0px;
+}
+
+.dept{
+    flex:2;
+    max-width: 180px;
+    background-color: #CCE3DE;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    text-indent: 10px;
+}
+
+.dept_value{
+    flex:3;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    text-indent: 10px;
+}
+
+.title{
+    flex:2;
+    max-width: 180px;
+    background-color: #CCE3DE;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    text-indent: 10px;
+}
+
+.title_value{
+    flex:8;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    text-indent: 10px;
+}
+
+.content{
+    flex:8.2;
+    padding-left: 15px;
+    padding-top: 15px;
+}
