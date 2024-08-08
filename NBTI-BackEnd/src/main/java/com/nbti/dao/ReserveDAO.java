@@ -74,6 +74,11 @@ public class ReserveDAO {
     public List<ReserveDTO> meetingRoomList () throws Exception {
     	return mybatis.selectList("Reserve.meetingRoomList");
     }
+    
+    //예약 취소
+//    public void delete(int seq) throws Exception{
+//    	mybatis.delete("Reserve.delete",seq);
+//    }
 
 
 

@@ -201,4 +201,9 @@
 		    r.seq
 	</select>
 	
+	<!-- 예약 취소 -->
+<!-- 	<delete id="delete">
+		delete from reserve where seq = #{seq}
+	</delete> -->
+	
 </mapper>

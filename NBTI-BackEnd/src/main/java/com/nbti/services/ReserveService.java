@@ -61,6 +61,11 @@ public class ReserveService {
 		return rdao.meetingRoomList();
 	}
 	
+	//예약 신청 취소
+//	public void delete(int seq) throws Exception{
+//		rdao.delete(seq);
+//	}
+	
 	
 
 
