@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import { Header } from '../Header/Header';
 import styles from './DocLeave.module.css';
 
-export const DocLeave = ({docLeave})=>{
+export const DocLeave = ({docLeave, setDocLeave})=>{
 
     console.log(docLeave);
     
