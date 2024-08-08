@@ -164,7 +164,7 @@
 
 .replyOutputWrap .replyOutput .likes {
   width: 30px;
-  margin-right: 3px;
+  /* margin-right: 3px; */
   display: flex;
   flex-direction: column;
   align-items: center;
