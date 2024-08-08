@@ -1,8 +1,8 @@
 
 .container {
-    position: fixed;
-    top: 245px;
-    right: 120px;
+    position: absolute;
+    top: 40px;
+    right: 30px;
     width: 300px; /* 사이드바의 너비 */
     height: 430px;
     overflow: auto;

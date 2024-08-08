@@ -99,11 +99,28 @@ public class AttendanceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
+
     @GetMapping("/allweekly-stats")
     public ResponseEntity<Map<String, Object>> getAllWeeklyStats() {
         try {
-            // Fetch and prepare the weekly stats
-            Map<String, Object> response = aServ.getAllWeeklyStats();
+            LocalDate today = LocalDate.now();
+            LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+            LocalDate endOfWeek = startOfWeek.plusDays(6);
+
+            // Attendance Records 조회
+            List<AttendanceDTO> attendanceRecords = aServ.getWeeklyRecordsForAll(startOfWeek, endOfWeek);
+            System.out.println("Attendance Records: " + attendanceRecords);
+
+            // Weekly Stats 계산
+            Map<String, Map<String, Object>> memberWeeklyStats = aServ.calculateAllWeeklyStats(attendanceRecords);
+            System.out.println("Member Weekly Stats: " + memberWeeklyStats);
+
+            // Create response map
+            Map<String, Object> response = new HashMap<>();
+            response.put("members", memberWeeklyStats);
+            System.out.println("Response before sending: " + response);
+
+            // Return response
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,6 +129,7 @@ public class AttendanceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
+
     @GetMapping("/yearly-stats")
     public ResponseEntity<Map<String, Object>> getYearlyStats(@RequestParam(value = "memberId", required = false) String memberId) {
         if (memberId == null) {

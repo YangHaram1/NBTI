@@ -21,8 +21,10 @@
 	 		ds.DOC_SUB_NAME, 
 	 		a.APPROVAL_SEQ ,
 	 		a.DOC_STATE,
-	 		dd.TITLE 
+	 		dd.TITLE,
+	 		m.name 
  		from approval a 
+ 			left outer join members m on a.member_id = m.id
 	 		left outer join doc_sub ds on a.DOC_SUB_SEQ = ds.DOC_FORM_SEQ
 	 		left outer join doc_draft dd on a.TEMP_SEQ = dd.DRAFT_SEQ
 	        left outer join DOC_LEAVE dl on a.temp_seq = dl.LEAVE_SEQ
@@ -40,8 +42,10 @@
 	 		ds.DOC_SUB_NAME, 
 	 		a.APPROVAL_SEQ ,
 	 		a.DOC_STATE,
-	        dd.TITLE
-        from approval a 
+	        dd.TITLE,
+	 		m.name 
+ 		from approval a 
+ 			left outer join members m on a.member_id = m.id
 	        left outer join REFER_LINE rl on a.temp_seq = rl.TEMP_SEQ
 	        left outer join doc_sub ds on a.DOC_SUB_SEQ = ds.DOC_FORM_SEQ
 	        left outer join doc_draft dd on a.TEMP_SEQ = dd.DRAFT_SEQ
@@ -60,8 +64,10 @@
 	 		ds.DOC_SUB_NAME, 
 	 		a.APPROVAL_SEQ ,
 	 		a.DOC_STATE,
-	        dd.TITLE
-	    from approval a 
+	        dd.TITLE,
+	 		m.name 
+ 		from approval a 
+ 			left outer join members m on a.member_id = m.id
 	        left outer join approval_LINE al on a.temp_seq = al.TEMP_SEQ
 	        left outer join doc_sub ds on a.DOC_SUB_SEQ = ds.DOC_FORM_SEQ
 	        left outer join doc_draft dd on a.TEMP_SEQ = dd.DRAFT_SEQ
@@ -80,8 +86,10 @@
 	 		ds.DOC_SUB_NAME, 
 	 		a.APPROVAL_SEQ ,
 	 		a.DOC_STATE,
-	        dd.TITLE
-	    from approval a 
+	        dd.TITLE,
+	 		m.name 
+ 		from approval a 
+ 			left outer join members m on a.member_id = m.id
 	        left outer join approval_LINE al on a.temp_seq = al.TEMP_SEQ
 	        left outer join doc_sub ds on a.DOC_SUB_SEQ = ds.DOC_FORM_SEQ
 	        left outer join doc_draft dd on a.TEMP_SEQ = dd.DRAFT_SEQ
@@ -100,8 +108,10 @@
 	 		ds.DOC_SUB_NAME, 
 	 		a.APPROVAL_SEQ ,
 	 		a.DOC_STATE,
-	        dd.TITLE
-	    from approval a 
+	        dd.TITLE,
+	 		m.name 
+ 		from approval a 
+ 			left outer join members m on a.member_id = m.id 
 	        left outer join approval_LINE al on a.temp_seq = al.TEMP_SEQ
 	        left outer join doc_sub ds on a.DOC_SUB_SEQ = ds.DOC_FORM_SEQ
 	        left outer join doc_draft dd on a.TEMP_SEQ = dd.DRAFT_SEQ
@@ -120,14 +130,16 @@
 		    ds.doc_sub_name, 
 		    a.approval_seq,
 		    a.doc_state,
-		    dd.title
-		from approval a 
-		left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
-		left outer join doc_draft dd on a.temp_seq = dd.draft_seq
-		left outer join doc_leave dl on a.temp_seq = dl.leave_seq
-		left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
-		where a.member_id = #{id} and a.doc_state = 'r'
-		order by a.temp_seq desc
+		    dd.title,
+	 		m.name 
+ 		from approval a 
+ 			left outer join members m on a.member_id = m.id
+			left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
+			left outer join doc_draft dd on a.temp_seq = dd.draft_seq
+			left outer join doc_leave dl on a.temp_seq = dl.leave_seq
+			left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
+			where a.member_id = #{id} and a.doc_state = 'r'
+			order by a.temp_seq desc
  	</select>
  	
  	<select id="selectCancle" resultType="com.nbti.dto.ListDocDTO">
@@ -139,19 +151,26 @@
 		    ds.doc_sub_name, 
 		    a.approval_seq,
 		    a.doc_state,
-		    dd.title
-		from approval a 
-		left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
-		left outer join doc_draft dd on a.temp_seq = dd.draft_seq
-		left outer join doc_leave dl on a.temp_seq = dl.leave_seq
-		left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
-		where a.member_id = #{id} and a.doc_state = 'c'
-		order by a.temp_seq desc
+		    dd.title,
+	 		m.name 
+ 		from approval a 
+ 			left outer join members m on a.member_id = m.id
+			left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
+			left outer join doc_draft dd on a.temp_seq = dd.draft_seq
+			left outer join doc_leave dl on a.temp_seq = dl.leave_seq
+			left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
+			where a.member_id = #{id} and a.doc_state = 'c'
+			order by a.temp_seq desc
  	</select>
  	
  	<select id="selectApproval" resultType="com.nbti.dto.ApprovalDTO">
  		select * from approval where temp_seq=#{seq}
  	</select>
+ 	
+ 	<!-- 문서 정보 최신화 -->
+ 	<update id="updateDocState">
+ 		update approval set doc_state = #{state} where temp_seq = ${temp_seq}
+ 	</update>
   
   	
   

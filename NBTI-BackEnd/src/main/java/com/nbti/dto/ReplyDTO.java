@@ -10,6 +10,7 @@ public class ReplyDTO {
 	private Timestamp write_date = null;
 	private int board_seq;
 	private int board_code;
+	private int count;
 	
 	public ReplyDTO() {
 	}
@@ -21,6 +22,27 @@ public class ReplyDTO {
 		this.write_date = write_date;
 		this.board_seq = board_seq;
 		this.board_code = board_code;
+		this.count = 0;
+	}
+
+	public ReplyDTO(int seq, String member_id, String contents, Timestamp write_date, int board_seq, int board_code,
+			int count) {
+		super();
+		this.seq = seq;
+		this.member_id = member_id;
+		this.contents = contents;
+		this.write_date = write_date;
+		this.board_seq = board_seq;
+		this.board_code = board_code;
+		this.count = count;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 	public int getSeq() {
@@ -61,7 +83,6 @@ public class ReplyDTO {
 	}
 	
 	
-
 
 
 }

@@ -68,12 +68,13 @@
 }
 
 .btn{
-    width: 110px;
+    max-width: 105px;
     text-indent: 8px;
     /* border: 1px solid black; */
     height: 100%;
     display: flex;
     align-items: center;
+    padding-right: 8px;
 }
 
 .btn:hover{

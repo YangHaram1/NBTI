@@ -44,8 +44,9 @@
     /* display: flex;
     justify-content: start;
     align-items: start; */
-    text-align: center;
-    width: 20px;
+    /* text-align: center; */
+    /* width: 20px; */
+    text-indent: 0px;
 }
 
 .reason{

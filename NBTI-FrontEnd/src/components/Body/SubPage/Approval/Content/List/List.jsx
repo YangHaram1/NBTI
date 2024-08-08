@@ -3,11 +3,12 @@ import styles from './List.module.css';
 import { format } from 'date-fns';
 import { host } from '../../../../../../config/config';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 
 export const List = ({setlist}) => {
 
-
+    const navi = useNavigate();
     const [lists, setLists] = useState([]);
 
     useEffect(()=>{
@@ -40,6 +41,9 @@ export const List = ({setlist}) => {
             });
     },[setlist])
 
+    const handleMove = (tempSeq, docSubName) => {
+        navi("/approval/detail", {state:{seq:tempSeq, setlist:docSubName, list:setlist}});
+    };
 
     return(
         <div className={styles.container}>
@@ -53,7 +57,7 @@ export const List = ({setlist}) => {
                     <div className={styles.date}> 기안일</div>
                     <div className={styles.form}> 결재양식</div>
                     <div className={styles.emergency}> 긴급</div>
-                    <div className={styles.content_title}> 제목</div>
+                    <div className={`${styles.content_title} ${styles.align}`}> 제목</div>
                     <div className={styles.file}> 첨부</div>
                     <div className={styles.writer}> 기안자</div>
                 </div>
@@ -74,13 +78,13 @@ export const List = ({setlist}) => {
                                             list.emergency == "Y  " ?  <div className={styles.emergency_badge}>긴급</div> :"" 
                                         }
                                 </div>
-                                <div className={styles.content_title}>
+                                <div className={`${styles.content_title} ${styles.content_title_hover}`} onClick={() => handleMove(list.temp_seq, list.doc_sub_name)}>
                                      {
                                         list.title !== null ? list.title : list.doc_sub_name 
                                     }
                                 </div>
                                 <div className={styles.file}>Y</div>
-                                <div className={styles.writer}> {list.member_id}</div>
+                                <div className={styles.writer}> {list.name}</div>
                             </div>
                             );
                         })
