@@ -9,6 +9,7 @@ import { DocLeave } from './DocLeave/DocLeave';
 import { Header } from './Header/Header';
 import { DocDraft } from './DocDraft/DocDraft';
 import { DocVacation } from './DocVacation/DocVacation';
+import { ApprovalModal } from '../ApprovalModal/ApprovalModal';
 
 export const Detail=()=>{
 
@@ -28,6 +29,10 @@ export const Detail=()=>{
     const [docLeave, setDocLeave] = useState({}); 
     const [docVacation, setDocVacation] = useState({}); 
     const [docDraft, setDocDraft] = useState({}); 
+    const [approvalYN, setApprovalYN] = useState('');
+
+    // 모달 표시 여부
+    const [showModal, setShowModal] = useState(false);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -72,7 +77,7 @@ export const Detail=()=>{
                 // 결재라인 정보 받아오기
                 const approvalLineResponse = await axios.get(`${host}/approvalLine/${seq}`);
                 setApprovalData(approvalLineResponse.data);
-                // console.log("결재라인 체크",approvalLineResponse.data);
+                console.log("결재라인 체크",approvalLineResponse.data);
 
                 // 참조라인 정보 받아오기
                 const referLineResponse = await axios.get(`${host}/referLine/${seq}`);
@@ -108,64 +113,15 @@ export const Detail=()=>{
     };
 
 
-    // const approvalSubmit = () =>{
+    const HandleSubmit = (e) =>{
+        console.log("이름값 확인",e.target.innerText);
+        setApprovalYN(e.target.innerText);
+        setShowModal(true);
+    }
 
-    //     let result = window.confirm("긴급 문서로 하시겠습니까?");
-    //     console.log("개별", date, dept, title, content);
-    //     let requestData;
-
-    //     if(setlist === "업무기안서"){
-    //         requestData = {
-    //             docDraft: {
-    //                 effective_date: date,
-    //                 cooperation_dept: dept,
-    //                 title: title,
-    //                 content: content
-    //             },
-    //             approvalLine: approvalLine,
-    //             referLine: referLine,
-    //             emergency: result,
-    //             docType : setlist === '업무기안서'? 1 : setlist === '휴가신청서' ? 2:3
-    //         };  
-    //     }else if(setlist === "휴가신청서"){
-    //         requestData = {
-    //             docVacation: docVacation,
-    //             approvalLine: approvalLine,
-    //             referLine: referLine,
-    //             emergency: result,
-    //             docType : setlist === '업무기안서'? 1 : setlist === '휴가신청서' ? 2:3
-    //         };
-    //         console.log("휴가",docVacation);
-    //         console.log("휴가 신청서");
-    //         console.log("휴가 결재",approvalLine);
-    //         console.log("휴가 참조",referLine);
-
-    //     }else if(setlist === "휴직신청서"){
-    //         requestData = {
-    //             docLeave: docLeave,
-    //             approvalLine: approvalLine,
-    //             referLine: referLine,
-    //             emergency: result,
-    //             docType : setlist === '업무기안서'? 1 : setlist === '휴가신청서' ? 2:3
-    //         };
-    //         console.log("휴직", docLeave);
-    //         console.log("휴직 신청서");
-    //         console.log("휴직 결재",approvalLine);
-    //         console.log("휴직 참조",referLine);
-    //     }
-    
-    //     axios.post(`${host}/approval`, requestData)
-    //         .then(response => {
-    //             resetApprovalLine();
-    //             resetReferLine();
-    //             console.log("문서 제출 성공:", response);
-    //             console.log("성공",approvalLine);
-    //             console.log("성공",referLine);
-    //         })
-    //         .catch(error => {
-    //             console.error("문서 제출 실패:", error);
-    //         });
-    // }
+    const handleCloseModal = () => {
+        setShowModal(false); // 모달 닫기
+    };
 
 
     return(
@@ -188,8 +144,8 @@ export const Detail=()=>{
                         : list == '결재 대기' ?
                         <>
                         <div className={styles.btns}>
-                            <div className={`${styles.approval_submit_btn} ${styles.btn}`}><i class="fa-solid fa-pen-to-square"></i>결재승인</div>
-                            <div className={`${styles.approval_back_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>결재반려</div>
+                            <div className={`${styles.approval_submit_btn} ${styles.btn}`} onClick={HandleSubmit}><i class="fa-solid fa-pen-to-square"></i>결재승인</div>
+                            <div className={`${styles.approval_back_btn} ${styles.btn}`} onClick={HandleSubmit}><i class="fa-regular fa-folder-open"></i>결재반려</div>
                             <div className={`${styles.approval_download_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div>
                             <div className={`${styles.approval_copy_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
                         </div>
@@ -234,6 +190,7 @@ export const Detail=()=>{
                     </div>
                 </div>
             </div>
+            {showModal && <ApprovalModal approvalYN={approvalYN} onClose={handleCloseModal} seq={seq} />}
         </div>
     );
 
