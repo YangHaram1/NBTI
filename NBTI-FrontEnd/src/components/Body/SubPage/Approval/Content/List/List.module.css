@@ -65,7 +65,8 @@
 .date{flex:0.8; text-align: center;}
 .form{flex:0.8; text-align: center;}
 .emergency{flex:0.5;  text-align: center; display: flex; justify-content: center;}
-.content_title{flex:5.5;  text-indent: 30px;}
+.content_title{flex:5.5;  text-indent: 70px;}
+.content_title_hover:hover{cursor: pointer;font-weight: 800;}
 .file{flex:0.8; text-align: center;}
 .writer{flex:0.8; text-align: center;}
 
@@ -76,3 +77,9 @@
     border: 1px solid red;
     border-radius: 5px; 
     color: red;}
+
+.align{
+    text-align: center;
+    text-indent: 0px;
+
+}

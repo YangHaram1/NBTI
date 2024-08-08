@@ -15,7 +15,7 @@ export const DocDraft = ({setDocDraft, docDraft})=>{
             <div className={`${styles.row}`}>
                 <div className={styles.date}>시행시작일자</div>
                 <div className={styles.date_value}>
-                    <input type='date' value='date' disabled></input>
+                    <input type='date' value={date} disabled></input>
                 </div>
                 <div className={styles.dept}>협조부서</div>
                 <div className={styles.dept_value}>{docDraft.cooperation_dept}</div>
