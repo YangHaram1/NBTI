@@ -80,6 +80,24 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
             console.error('time');
             return;
         }
+
+        // 현재 시간 구하기
+        const now = new Date();
+        // 과거 날짜 체크
+        if (startDate < now) {
+            alert('시작 날짜와 시간은 현재 시간 이후여야 합니다.');
+            return;
+        }
+        // 종료 시간 체크
+        if (endDate <= startDate) {
+            alert('종료 시간은 시작 시간 이후여야 합니다.');
+            return;
+        }
+        // Date 객체를 ISO 형식의 문자열로 변환하고, 이를 Timestamp로 변환
+        if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+            console.error('time');
+            return;
+        }
     
         // 서버에 데이터 전송
         const postData = {
@@ -100,7 +118,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                     ...prev,
                     {
                     
-                        color : calendar_title_code == 1 ? "rgba(164, 195, 178, 0.4)" : calendar_title_code === 2 ? "rgba(255, 178, 44, 0.4)" : "rgba(255, 178, 44, 0.8)",
+                        color : calendar_title_code == 1 ? "rgba(164, 195, 178, 10)" : calendar_title_code === 2 ? "rgba(255, 178, 44, 10)" : "rgba(255, 178, 44, 10)",
                         // seq: seq,
                         title: title, //제목
                         start: startDate, //사작
@@ -122,7 +140,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
     };
 
 
-    // 내 일정을 수정하는 기능
+    // 내 일정 수정
     const updateBtn = () => {
         setIsEditing(true); // 편집 모드로 전환
         setEditedTitle(selectedEvent.calendarTitle); // 선택된 이벤트의 제목을 편집 제목 상태로 설정
@@ -152,7 +170,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
             });
     };
 
-    // 캘린더 목록 출력
+    // 목록 출력
     useEffect(() => {
         axios.get(`${host}/calendar`)
             .then((resp) => {
@@ -160,14 +178,14 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                 const eventList = resp.data.map(event => {
                     let color = '';
                     if(event.calendar_title_code == 1 ){
-                        color='rgba(164, 195, 178, 0.4)';
+                        color='rgba(164, 195, 178, 10)';
                     }else{
-                        color='rgba(255, 178, 44, 0.4)';
+                        color='rgba(255, 178, 44, 10)';
                     }
 
                     return {
                         seq: event.seq,
-                        title: event.calendar_title_code,
+                        title: event.title,
                         start: event.start_date,
                         end: event.end_date,
                         extendedProps: {
@@ -222,24 +240,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
             });
     }
     
-    // 캘린더 추가 버튼 클릭 핸들러
-    const handleCalendarAddClick = () => {
 
-        setCalendarModalOpen(true); // 모달 열기
-    };
-
-    // 캘린더 추가 모달
-    const handleCloseModal = () => {
-        axios.get(`${host}/calendarList`)
-        .then((resp) => {
-            // console.log(resp.data + " List 가져오기");
-            setSelectedItem(resp.data); //추가된 "공유 일정 상태"
-        })
-        .catch((error) => {
-            console.error("Error", error);
-        });
-        setCalendarModalOpen(false); // 모달 닫기
-    };
 
     //사이드 캘린더 추가
     const [calendarName, setCalendarName] = useState(''); // 캘린더 이름 상태
@@ -247,29 +248,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
         setCalendarName(e.target.value); // 입력값을 상태에 저장
     };
 
-
-
-    const handleAddCalendar = () => {
-        const postData = {
-            name: calendarName, 
-            type: 'public', 
-        };
-    
-        axios.post(`${host}/calendarList`, postData)
-            .then((resp) => {
-                console.log("캘린더 추가 성공:", resp.data);
-                // 모달 닫기 및 상태 초기화
-                // setCalendarList([...calendarList, resp.data])
-                setCalendarName(''); // 상태 초기화
-                handleCloseModal(); // 모달 닫기
-            })
-            .catch((error) => {
-                console.error("캘린더 추가 실패:", error);
-            });
-    };
-
     useEffect(()=>{
-        console.log("useEffect"+calendarSelectList);
         setEvents(calendarSelectList)
     },[calendarSelectList]) 
 
@@ -283,20 +262,36 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                     locales={[koLocale]} // 한국어 로케일 설정
                     locale="ko" 
                     selectable="true" //달력 드래그 
+
+                    // 기본 (월)
                     dayMaxEventRows={3} // 각 날짜 셀에 표시되는 이벤트를 5개로 제한
                     moreLinkText="..." // "+n more" 링크에 표시되는 텍스트
-                    
+                    // 뷰가 변경될 때마다 호출되는 핸들러 (주/일)
+                    datesSet={(info) => {
+                        if (info.view.type === 'dayGridMonth') {
+                            // 월 뷰에서는 dayMaxEventRows와 moreLinkText 활성화
+                            info.view.calendar.setOption('dayMaxEventRows', 3);
+                            info.view.calendar.setOption('moreLinkText', '...');
+                        } else {
+                            // 주 뷰 또는 일 뷰에서는 해당 옵션 비활성화
+                            info.view.calendar.setOption('dayMaxEventRows', false);
+                            info.view.calendar.setOption('moreLinkText', '');
+                        }
+                    }}
+
                     headerToolbar={{
                         left: 'print dayGridMonth,dayGridWeek,dayGridDay', // 전/후 달로 이동, 오늘로 이동, 인쇄
                         center: 'title',
                         right: 'prev,today,next' // 월 주 일
                     }}
+
                     customButtons={{
                         print: {
                             text: '인쇄하기',
                             click: handlePrint // 인쇄 함수 연결
                         }
                     }}
+
                     //일정 추가 이벤트
                     events={events}
                     dateClick={handleDateClick}
@@ -394,7 +389,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
             )}
             {/* 캘린더 추가 모달 */}
             {calendarModalOpen && (
-                <div className={styles.modalOverlay} onClick={handleCloseModal}>
+                <div className={styles.modalOverlay} onClick={handleSave}>
                     <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                         <h2>캘린더 추가</h2>
                         <input 
@@ -404,8 +399,8 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                         onChange={handleCalendarNameChange} // 핸들러 연결
                     />
 
-                        <button onClick={handleAddCalendar}>추가</button>
-                        <button onClick={handleCloseModal}>닫기</button>
+                        <button onClick={handleSave}>추가</button>
+                        <button onClick={closeModal}>닫기</button>
                     </div>
                 </div>
             )}

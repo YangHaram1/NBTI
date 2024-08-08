@@ -6,22 +6,21 @@ import { useReservationList } from '../../../../../../store/store';
 
 export const List = ()=>{
 
-    const { wait, setWait, approve, setApprove } = useReservationList();
-    console.log(JSON.stringify(wait));
+    const { approve, setApprove , reservations, setReservations} = useReservationList();
     useEffect(() => {
         // 대기 목록을 가져오는 함수
         const fetchReservations = () => {
             axios.get(`${host}/reserve`)
                 .then(resp => {
                     console.log("대기 목록"+JSON.stringify(resp))
-                    setWait(resp.data); // 예약 목록 상태 업데이트
+                    setReservations(resp.data); // 예약 목록 상태 업데이트
                 })
                 .catch((error) => {
                     console.error('Error: ', error);
                 });
         };
         fetchReservations(); // 컴포넌트가 마운트될 때 예약 목록 가져오기
-    }, [setWait]); // 의존성 배열에 추가
+    }, [setReservations]); // 의존성 배열에 추가
 
     useEffect(() => {
         // 예약 목록을 가져오는 함수
@@ -59,7 +58,9 @@ export const List = ()=>{
                             </thead>
                             <tbody>
                             {approve.length > 0 ? (
-                                approve.map((approve) => (
+                                approve
+                                .filter((item) => new Date(item.end_time) > new Date()) // 현재 날짜보다 종료 시간이 큰 예약만 필터링
+                                .map((approve) => (
                                     <tr key={approve.seq}>
                                         <td>{approve.reserve_title_code}</td>
                                         <td>{approve.reserve_title_code}</td>
@@ -89,8 +90,8 @@ export const List = ()=>{
                             </tr>
                         </thead>
                         <tbody>
-                            {wait.length > 0 ? (
-                                wait.map((wait) => (
+                            {reservations.length > 0 ? (
+                                reservations.map((wait) => (
                                     <tr key={wait.seq}>
                                         <td>{wait.reserve_title_code}</td>
                                         <td>{wait.reserve_title_code}</td>

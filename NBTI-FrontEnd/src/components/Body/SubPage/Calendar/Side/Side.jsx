@@ -9,7 +9,7 @@ import { default as koLocale } from '@fullcalendar/core/locales/ko'; // 한국�
 export const Side = ({ setAddOpen , setCalendarModalOpen }) => {
 
   // === 공통 메뉴 토글 ===
-  const [FreeBoard, setFreeBoard] = useState(false);
+  const [FreeBoard, setFreeBoard] = useState(true);
   const [NoticeBoard, setNoticeBoard] = useState(false);
   const toggleFreeBoard = () => {
     setFreeBoard(!FreeBoard);
@@ -68,13 +68,9 @@ export const Side = ({ setAddOpen , setCalendarModalOpen }) => {
   //내 캘린더
   const myCalender = ()=>{
       setCalendarSelectList(calendarList.filter((item)=>{
-        return item.title === 1
+        console.log(JSON.stringify(item))
+        return item.extendedProps.calendar_title_code === 1; 
       }))
-
-      // const arr = calendarList.filter((item)=>{
-      //   return item.title === 1
-      // })
-      // console.log("arr:"+JSON.stringify(arr));
   }
 
   return (
@@ -85,7 +81,7 @@ export const Side = ({ setAddOpen , setCalendarModalOpen }) => {
           <p>일정추가</p>
         </button>
       </div>
-      <div className={styles.mini}>
+      <div className={`${styles.mini} dayGridWeek`}>
         {/* 미니 주간 캘린더 */}
         <FullCalendar
           plugins={[dayGridPlugin]}
@@ -95,7 +91,6 @@ export const Side = ({ setAddOpen , setCalendarModalOpen }) => {
           locale="ko"
           selectable={true}
           height="auto"
-          color="#FFCC00"
         />
       </div>
       {/* 사이드 메뉴 */}

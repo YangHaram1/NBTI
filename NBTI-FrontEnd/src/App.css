@@ -56,15 +56,6 @@ body::-webkit-scrollbar-thumb:hover {
   width: 100%;
   height: 100%;
 }
-/* 일요일 Red */
-.fc-day-sun a {
-  color: red
-}
-
-/* 토요일 blue */
-.fc-day-sat a {
-  color: blue;
-}
 
 /* more 링크 스타일 변경 */
 .fc-more a{
@@ -75,7 +66,7 @@ body::-webkit-scrollbar-thumb:hover {
 /* ================= */
 /* FullCalendar 헤더 전체 배경색 */
 .fc-toolbar {
-  background-color: #a1d3bc; 
+  background-color: #a4c3b2; 
   border-radius: 5px;
   padding: 10px;
 }
@@ -110,57 +101,74 @@ body::-webkit-scrollbar-thumb:hover {
 /* ================= */
 
 
-@media (min-width: 700px) {
-  /* ================= */
-  /* 캘린더 */
 
-  .fc {
-    font-size: 12px;
-    width: 100%;
-    height: 100%;
-  }
+/* ================= */
+/* main 미니 캘린더 */
+.mini_calendar_container .fc {
+  font-size: 12px;
+  width: 100%;
+  height: 100%;
+}
+/* more 링크 스타일 변경 */
+.mini_calendar_container .fc-more a{
+  color: gray; 
+  font-weight: bold; 
+  text-decoration: underline; 
+}
 
-  /* more 링크 스타일 변경 */
-  .fc-more a{
-    color: gray; 
-    font-weight: bold; 
-    text-decoration: underline; 
-  }
-  /* ================= */
-  /* FullCalendar 헤더 전체 배경색 */
-  .fc-toolbar {
-    background-color: #a4c3b2; color: white;
-    border-radius: 5px;
-    padding: 5px;
-  }
+/* FullCalendar 헤더 전체 배경색 */
+.mini_calendar_container .fc-toolbar {
+  background-color: initial; color: #6b9080;
+  border-radius: 5px;
+  margin: 0;
+}
+/* header 마진 */
+.mini_calendar_container .fc .fc-header-toolbar{
+  margin-bottom: 0;
+}
 
-  /* FullCalendar 헤더 버튼 hover 배경색 */
-  .fc-button:hover {
-    background-color: #c0c0c0; /* 마우스 오버 시 배경색 변경 */
-  }
+/* FullCalendar 헤더 버튼 hover 배경색 */
+.mini_calendar_container .fc-button:hover {
+  background-color: #c0c0c0; /* 마우스 오버 시 배경색 변경 */
+}
 
-  /* FullCalendar 헤더 버튼 배경색 */
-  .fc .fc-toolbar .fc-button {
-    background-color: #fff; 
-    border: #6b908061 solid 2px;
-    color: black; /* 버튼 텍스트 색상 */
-  }
+/* FullCalendar 헤더 버튼 배경색 */
+.mini_calendar_container .fc .fc-toolbar .fc-button {
+  background-color: #fff; 
+  color: black; 
+  transition: all ease-in-out 0.1s;
+}
 
-  /* FullCalendar 헤더 버튼 hover 배경색 */
-  .fc .fc-toolbar .fc-button:hover {
-    background-color: #6b908061; color: white;
-  }
+/* FullCalendar 헤더 버튼 hover 배경색 */
+.mini_calendar_container .fc .fc-toolbar .fc-button:hover {
+  background-color: #6b9080; color: white;
+}
 
-  /* FullCalendar 헤더 버튼 active */
-  .fc .fc-toolbar .fc-button:active {
-    background-color: #000;
-    color: #fff;
-  }
+/* FullCalendar 헤더 버튼 active */
+.mini_calendar_container .fc .fc-toolbar .fc-button:active {
+  background-color: #000;
+  color: #fff;
+}
 
-  /* FullCalendar 헤더 버튼 텍스트 색상 */
-  .fc .fc-toolbar .fc-button {
-    color: black;
-  }
+/* FullCalendar 헤더 버튼 텍스트 색상 */
+.mini_calendar_container .fc .fc-toolbar .fc-button {
+  color: black;
+}
 
-  /* ================= */
- } 
+/* 넘치는 요소 숨김 */
+.mini_calendar_container .fc-daygrid-day-events > * {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/* 캘린더 배경 */
+.mini_calendar_container .fc-day {
+  background-color: white; /* 원하는 색상으로 변경 */
+}
+.mini_calendar_container .fc-col-header-cell {
+  background-color: #a4c3b2;
+  font-weight: 500;
+  color: white;
+}
+/* ================= */
+.dayGridWeek .fc-col-header {font-size: 12px;}

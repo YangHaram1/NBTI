@@ -30,9 +30,6 @@
 	
 	<!-- ===================[ 메 인 ]==================== -->
 	<!-- 자유게시판 댓글 출력 -->
-	<!-- <select id="selectFreeReply" resultType="com.nbti.dto.ReplyDTO">
-		select * from reply where board_seq = ${board_seq} and board_code = 1 order by seq desc
-	</select>  -->
 	<select id="selectFreeReply" resultType="com.nbti.dto.ReplyDTO">
 	    <![CDATA[
 		    SELECT * 

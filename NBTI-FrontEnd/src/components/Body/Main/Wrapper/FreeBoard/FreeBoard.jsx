@@ -19,12 +19,22 @@ export const FreeBoard = () => {
     const [seq, setSeq] = useState();
     const [transform, setTransform] = useState(false);
 
+    const [isLiked, setIsLiked] = useState({}); // 좋아요 상태를 객체로 저장
+
 
     useEffect(() => {
         // 자유 게시판 글 & 댓글 출력
         axios.get(`${host}/board/freeBoard`).then((resp) => {
             setBoard(resp.data.list);
             setReply(resp.data.rlist);
+            console.log("list : ", resp.data.rlist);
+
+            resp.data.rlist.forEach(reply => {
+                reply.forEach(innerReply => {
+                    console.log("count : ", innerReply.count)
+                })
+
+            });
         });
 
         // 로그인 한 사용자 정보
@@ -71,6 +81,53 @@ export const FreeBoard = () => {
             });
         });
     };
+
+    // 댓글 좋아요 클릭
+    const handleLikekAdd = (seq, i) => {
+        console.log("조아요..", seq);
+        setIsLiked((prev) => ({ ...prev, [seq]: true })); // 상태를 true로 변환
+
+        axios.post(`${host}/likes/insert`, { reply_seq: seq }).then((resp) => {
+            if (resp.data === 1) console.log("조아요 성공");
+        });
+
+        // setReply((prev) => {
+        //     console.log("dasda");
+        //     return (
+        //         prev.map((item, index) => {
+        //             if (index === i) {
+        //                 return { ...item, count: item.count + 1 };
+        //             }
+        //             return item
+        //         })
+        //     )
+
+        // })
+
+    }
+
+    // 댓글 좋아요 해제
+    const handleLikeRemove = (seq, i) => {
+        setIsLiked((prev) => ({ ...prev, [seq]: false }));
+
+        axios.delete(`${host}/likes/delete/${seq}`).then((resp) => {
+            if (resp.data === 1) console.log("조아요 취소");
+
+            // setReply((prev) => {
+            //     console.log("dasda");
+            //     return (
+            //         prev.map((item, index) => {
+            //             if (index === i) {
+            //                 return { ...item, count: item.count - 1 };
+            //             }
+            //             return { ...item }
+            //         })
+            //     )
+            // })
+        });
+    }
+
+
 
     return (
         <div className={styles.container}>
@@ -141,8 +198,14 @@ export const FreeBoard = () => {
                                                             dangerouslySetInnerHTML={{ __html: ritem.contents }} />
                                                     </div>
                                                     <div className={styles.likes}>
-                                                        <i className="fa-regular fa-heart" />
-                                                        <p>5</p>
+                                                        {/* <i className="fa-regular fa-heart" /> */}
+                                                        <i className="fa-regular fa-heart"
+                                                            onClick={() => { handleLikekAdd(ritem.seq, i); }}
+                                                            style={{ display: isLiked[ritem.seq] ? "none" : "inline" }} />
+                                                        <i className="fa-solid fa-heart"
+                                                            onClick={() => { handleLikeRemove(ritem.seq, i); }}
+                                                            style={{ display: isLiked[ritem.seq] ? "inline" : "none" }} />
+                                                        <p>{ritem.count}</p>
                                                     </div>
                                                     {currentUser && currentUser.id === ritem.member_id && (
                                                         <button

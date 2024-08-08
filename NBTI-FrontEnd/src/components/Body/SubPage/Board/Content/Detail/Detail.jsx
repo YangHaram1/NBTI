@@ -204,9 +204,7 @@ export const Detail = () => {
           return item
         })
       )
-
     })
-
   }
 
   // 댓글 좋아요 해제
@@ -226,12 +224,8 @@ export const Detail = () => {
             return { ...item }
           })
         )
-
-
       })
-
     });
-
   }
 
 
