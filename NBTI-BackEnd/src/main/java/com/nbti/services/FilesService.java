@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nbti.commons.ImageConfig;
+import com.nbti.commons.RealpathConfig;
 import com.nbti.dao.ApprovalDAO;
 import com.nbti.dao.ApprovalLineDAO;
 import com.nbti.dao.ChatDAO;
@@ -21,6 +22,7 @@ import com.nbti.dao.DocDraftDAO;
 import com.nbti.dao.DocLeaveDAO;
 import com.nbti.dao.DocVacationDAO;
 import com.nbti.dao.Group_memberDAO;
+import com.nbti.dao.MembersDAO;
 import com.nbti.dao.ReferLineDAO;
 import com.nbti.dto.ApprovalDTO;
 import com.nbti.dto.ApprovalLineDTO;
@@ -29,6 +31,7 @@ import com.nbti.dto.DocDraftDTO;
 import com.nbti.dto.DocLeaveDTO;
 import com.nbti.dto.DocVacationDTO;
 import com.nbti.dto.Group_memberDTO;
+import com.nbti.dto.MembersDTO;
 import com.nbti.dto.ReferLineDTO;
 
 @Service
@@ -42,6 +45,9 @@ public class FilesService {
 	
 	@Autowired
 	private Group_memberDAO mdao;
+	
+	@Autowired
+	private MembersDAO memberdao;
 	
 	@Autowired
 	private ApprovalLineDAO aldao;
@@ -138,6 +144,25 @@ public class FilesService {
     	cdao.deleteByUploadSeq(seq);
     }
 	
+    @Transactional //마이페이지 수정 파일 포함
+    public void mypageUpdate(MembersDTO dto,MultipartFile file) throws Exception{
+    	String realpath=RealpathConfig.realpath+"avatar"+File.separator+dto.getId();
+    	File realPathFile =new File(realpath);
+		if(!realPathFile.exists()) {realPathFile.mkdir();}
+		if(file!=null) {
+			String oriName =file.getOriginalFilename();
+			String sysName= UUID.randomUUID() +"_"+ oriName;
+			file.transferTo(new File(realpath+"/"+sysName));
+			dto.setMember_img(sysName);
+			memberdao.updateMyData(dto);
+		}
+		else {
+			memberdao.updateMyDataNoImg(dto);
+		}
+		
+    	
+    	
+    }
     // 작성일 24.08.4
   	// 작성자 김지연
   	// 전자결재 결재라인, 참조라인, 공통정보, 문서별 데이터, 첨부파일 트랜잭션으로 저장

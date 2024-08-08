@@ -1,0 +1,83 @@
+.container{
+    margin-top: 30px;
+    width: 97%;
+    height: 80%;
+    margin-left: 10px;
+    /* background-color: lightgray; */
+    display: flex;
+    flex-direction: column;
+}
+
+/* .container div{border: 1px solid black;} */
+
+.title{
+    flex:2;
+    background-color: #CCE3DE;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    text-indent: 15px;
+}
+.content{flex:8;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    text-indent: 15px;
+    background-color: white;
+}
+
+.date input{
+    text-indent: 5px;
+    width: 120px;
+    font-size: 13px;
+    font-weight: 700;
+    height: 75%;
+    background-color: white;
+    border: 0px;
+}
+
+.wave{
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    justify-content: start;
+    text-indent: 0px;
+}
+
+.row{
+    flex:1;
+    display: flex;
+}
+
+.text{flex:5;}
+
+.half_box{
+    text-indent: 0px;
+}
+
+.indent_date{
+    margin-left: 10px;
+}
+
+.vPeriod{
+    font-size: 15px;
+}
+
+.innertext{
+    text-indent: 20px;
+    border: 1px solid black;
+    width: 100%;
+    /* margin-left: 10px; */
+    height: 200px;
+    background-color: #CCE3DE;
+    margin-top: 20px;
+    font-size: 15px;
+}
+
+.innertext p{
+    margin-top: 10px;
+}
+
+.empty{
+    margin-top: 0px;
+}

@@ -25,8 +25,8 @@ public class ReserveDAO {
 		mybatis.insert("Reserve.insert",dto);
 	}
 	
-	public List<ReserveDTO> waitingList () throws Exception{
-		return mybatis.selectList("Reserve.waitingList");
+	public List<ReserveDTO> waitingList (String memberId) throws Exception{
+		return mybatis.selectList("Reserve.waitingList",memberId);
 	}
 	public List<ReserveDTO> waitList () throws Exception{
 		return mybatis.selectList("Reserve.waitList");
@@ -51,8 +51,8 @@ public class ReserveDAO {
     }
     
     //승인 관리 - 승인 목록 출력
-    public List<ReserveDTO> approveList () throws Exception {
-    	return mybatis.selectList("Reserve.approveList");
+    public List<ReserveDTO> approveList (String memberId) throws Exception {
+    	return mybatis.selectList("Reserve.approveList",memberId);
     }
     
     //승인 관리 - 반려 목록 출력
@@ -74,6 +74,11 @@ public class ReserveDAO {
     public List<ReserveDTO> meetingRoomList () throws Exception {
     	return mybatis.selectList("Reserve.meetingRoomList");
     }
+    
+    //예약 취소
+//    public void delete(int seq) throws Exception{
+//    	mybatis.delete("Reserve.delete",seq);
+//    }
 
 
 

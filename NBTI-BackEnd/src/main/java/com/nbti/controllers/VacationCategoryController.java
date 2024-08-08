@@ -6,20 +6,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nbti.dto.DocLeaveDTO;
-import com.nbti.services.DocLeaveService;
+import com.nbti.services.VacationCategoryService;
 
 @RestController
-@RequestMapping("/docLeave")
-public class DocLeaveController {
+@RequestMapping("/vacationCategroy")
+public class VacationCategoryController {
 	
 	@Autowired
-	private DocLeaveService dlServ;
+	private VacationCategoryService vcServ;
 	
-	@GetMapping("/{seq}")
-	public DocLeaveDTO getContent(@PathVariable int seq) {
-		DocLeaveDTO dto = dlServ.getContent(seq);
-		return dto;
+	@GetMapping("/{category}")
+	public String getCategoryName(@PathVariable int category) {
+		System.out.println(category);
+		return vcServ.getCategoryName(category);
 	}
 
 }

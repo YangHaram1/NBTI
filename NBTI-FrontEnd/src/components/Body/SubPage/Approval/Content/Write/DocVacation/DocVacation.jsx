@@ -157,7 +157,7 @@ export const DocVacation = ({userdata})=>{
                 <div className={`${styles.subtitle_content} ${styles.align}`}>
                     <div className={styles.vacation_day}> 잔여연차 : </div>
                     <div className={styles.vacation_day_b}> 15일 </div>
-                    <div className={styles.half_check}> 신청연차 : </div>
+                    <div className={styles.half_check}> 신청 연차 : </div>
                     <div className={styles.vacation_day_b}> {total === 0 ? "0일" : `${total}일`} </div>
                 </div>
             </div>

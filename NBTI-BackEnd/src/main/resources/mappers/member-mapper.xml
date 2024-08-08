@@ -25,6 +25,14 @@
         member_level = #{member_level}
     WHERE id = #{id}
 </update>
+
+<update id="updateMyData">
+	update members set email=#{email},member_call=#{member_call}, address=#{address} , member_img = #{member_img, jdbcType=VARCHAR} where id =#{id}
+</update>
+
+<update id="updateMyDataNoImg">
+	update members set email=#{email},member_call=#{member_call}, address=#{address} where id =#{id}
+</update>
 	
 	<select id="selectAll" resultType="com.nbti.dto.MembersDTO">
 		select * from members 
