@@ -21,6 +21,8 @@ export const ApprovalModal = ({onClose, approvalYN, seq})=>{
         .catch((err)=>{
             console.log(err);
         })
+
+        onClose();
     }
 
     return(
