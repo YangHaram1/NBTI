@@ -30,7 +30,7 @@ const Chat = () => {
   const { loginID } = useAuthStore();
   const [chatCheck, setChatCheck] = useState([]);
 
-  const { chats, setChats, ws, setChatNavi, chatAppRef, chatNavi} = useContext(ChatsContext);
+  const { chats, setChats, ws, setChatNavi, chatAppRef, chatNavi,dragRef} = useContext(ChatsContext);
   //const { maxCount,count, increment,decrement } = useNotification();
   let lastDate = null;
   const [isLoading, setIsLoading] = useState(false);
@@ -179,6 +179,9 @@ const Chat = () => {
 
       if (chatAppRef.current != null)
         chatAppRef.current.style.display = "flex";
+
+      if(dragRef.current)
+        dragRef.current.style.display = "flex";
       console.log(`on click toast:${item.group_seq} `);
       setChatSeq(item.group_seq);
       return 'chat'

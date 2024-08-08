@@ -152,6 +152,9 @@ public class FilesService {
 		if(file!=null) {
 			String oriName =file.getOriginalFilename();
 			String sysName= UUID.randomUUID() +"_"+ oriName;
+			// 기존 파일이 존재하는 경우 삭제
+			File directory= new File(realpath);
+			deleteAllFilesInDirectory(directory);
 			file.transferTo(new File(realpath+"/"+sysName));
 			dto.setMember_img(sysName);
 			memberdao.updateMyData(dto);
@@ -159,9 +162,21 @@ public class FilesService {
 		else {
 			memberdao.updateMyDataNoImg(dto);
 		}
-		
-    	
-    	
+			
+    }
+
+    // 파일이 포함된 디렉토리의 모든 파일 삭제
+    private void deleteAllFilesInDirectory(File directory) {
+        if (directory.isDirectory()) {
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile()) {
+                        file.delete();
+                    }
+                }
+            }
+        }
     }
     // 작성일 24.08.4
   	// 작성자 김지연

@@ -3,7 +3,6 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    margin: 10px;
     background-color: #EAF4F4;
     overflow: auto;
 }
