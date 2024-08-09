@@ -50,7 +50,7 @@ const BoardEditor = ({ board, setBoard, contents }) => {
         }}
         init={{
           height: 500,
-          width: 800,
+          // width: 800,
           menubar: true,
           plugins: "wordcount anchor code image", //image
           toolbar:

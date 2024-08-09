@@ -23,8 +23,8 @@ public class TempBoardService {
 	}
 	
 	// 임시저장 목록 출력
-	public List<TempBoardDTO> selectAll(String member_id){
-		return tdao.selectAll(member_id);
+	public List<TempBoardDTO> selectAll(Map<String, Object> map){
+		return tdao.selectAll(map);
 	}
 //	public List<TempBoardDTO> selectAll(Map<String, Object> map){
 //		return tdao.selectAll(map);

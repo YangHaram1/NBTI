@@ -34,6 +34,7 @@ export const Detail = () => {
   let code = 1;
   if (boardType === "자유") code = 1;
   else if (boardType === "공지") code = 2;
+  else if (boardType === "문의") code = 3;
 
   // 게시글 날짜 타입 변경
   const date = new Date(detail.write_date);
@@ -126,8 +127,6 @@ export const Detail = () => {
     });
   };
 
-
-
   // ==========[댓 글]==========
   const handleInputReply = (e) => {
     const htmlContent = e.target.innerHTML;
@@ -157,7 +156,6 @@ export const Detail = () => {
     });
   };
 
-
   // (좋아요 포함) 댓글 전체 출력
   useEffect(() => {
     axios.get(`${host}/reply/${boardSeq}/${code}`).then((resp) => {
@@ -168,7 +166,8 @@ export const Detail = () => {
 
       // 좋아요 상태 가져오기
       replies.forEach((reply) => {
-        axios.get(`${host}/likes/status/${reply.seq}`).then((resp) => { // boolean 반환
+        axios.get(`${host}/likes/status/${reply.seq}`).then((resp) => {
+          // boolean 반환
           // 좋아요 상태의 prev에 새롭게 true / false를 업데이트
           setIsLiked((prev) => ({ ...prev, [reply.seq]: resp.data }));
         });
@@ -187,7 +186,7 @@ export const Detail = () => {
 
   // 댓글 좋아요 클릭
   const handleLikekAdd = (seq, i) => {
-    console.log("조아요..", seq)
+    console.log("조아요..", seq);
     setIsLiked((prev) => ({ ...prev, [seq]: true })); // 상태를 true로 변환
 
     axios.post(`${host}/likes/insert`, { reply_seq: seq }).then((resp) => {
@@ -196,16 +195,14 @@ export const Detail = () => {
 
     setReply((prev) => {
       console.log("dasda");
-      return (
-        prev.map((item, index) => {
-          if (index === i) {
-            return { ...item, count: item.count + 1 };
-          }
-          return item
-        })
-      )
-    })
-  }
+      return prev.map((item, index) => {
+        if (index === i) {
+          return { ...item, count: item.count + 1 };
+        }
+        return item;
+      });
+    });
+  };
 
   // 댓글 좋아요 해제
   const handleLikeRemove = (seq, i) => {
@@ -216,18 +213,15 @@ export const Detail = () => {
 
       setReply((prev) => {
         console.log("dasda");
-        return (
-          prev.map((item, index) => {
-            if (index === i) {
-              return { ...item, count: item.count - 1 };
-            }
-            return { ...item }
-          })
-        )
-      })
+        return prev.map((item, index) => {
+          if (index === i) {
+            return { ...item, count: item.count - 1 };
+          }
+          return { ...item };
+        });
+      });
     });
-  }
-
+  };
 
   //======================================================================================
 
@@ -344,17 +338,32 @@ export const Detail = () => {
                   />
                 </div>
                 <div className={styles.likes}>
-                  <i className="fa-regular fa-heart fa-lg"
-                    onClick={() => { handleLikekAdd(item.seq, i); }}
-                    style={{ display: isLiked[item.seq] ? "none" : "inline" }} />
-                  <i className="fa-solid fa-heart fa-lg"
-                    onClick={() => { handleLikeRemove(item.seq, i); }}
-                    style={{ display: isLiked[item.seq] ? "inline" : "none" }} />
+                  <i
+                    className="fa-regular fa-heart fa-lg"
+                    onClick={() => {
+                      handleLikekAdd(item.seq, i);
+                    }}
+                    style={{ display: isLiked[item.seq] ? "none" : "inline" }}
+                  />
+                  <i
+                    className="fa-solid fa-heart fa-lg"
+                    onClick={() => {
+                      handleLikeRemove(item.seq, i);
+                    }}
+                    style={{ display: isLiked[item.seq] ? "inline" : "none" }}
+                  />
                   {/* <p>5</p> */}
                   <p>{item.count}</p>
                 </div>
                 {currentUser && currentUser.id === item.member_id && (
-                  <button onClick={() => { handleDelReplyBtn(item.seq); }}> X </button>
+                  <button
+                    onClick={() => {
+                      handleDelReplyBtn(item.seq);
+                    }}
+                  >
+                    {" "}
+                    X{" "}
+                  </button>
                 )}
               </div>
             );
