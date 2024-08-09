@@ -170,7 +170,7 @@ SELECT
 FROM members m
 LEFT JOIN attendance a ON a.member_id = m.id AND a.start_date BETWEEN #{startOfWeek} AND #{endOfWeek}
 LEFT JOIN teams t ON m.team_code = t.team_code
-ORDER BY m.id, a.start_date
+order by m.name
 
 </select>
 </mapper>
