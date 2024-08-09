@@ -92,6 +92,7 @@
     width: 150px;
     gap: 10px;
     font-size: 10px;
+    color: gray;
   }
   .div2{
     display: flex;

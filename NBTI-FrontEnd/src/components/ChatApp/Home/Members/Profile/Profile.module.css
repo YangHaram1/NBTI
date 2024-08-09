@@ -1,19 +1,35 @@
 .container{
-    position: fixed;
-    right: 100px;
+    position: absolute;
     width: 250px; /* 사이드바의 너비 */
     height: 200px;
     background-color: #333;
     color: white;
     padding: 10px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
-    flex-direction: column;
     gap: 5px;
     display: none;
+}
+
+.img{
+    flex: 1;
+}
+.img img{
+    width: 100px;
+    height: 100px;
+}
+.contents{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    
 }
 .content{
     font-size: 12px;
     cursor: pointer;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .content:hover{
     background-color: wheat;

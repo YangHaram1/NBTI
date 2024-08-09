@@ -21,6 +21,8 @@ const Members = ({ setName }) => {
     const [mainDisplay, setMainDisplay] = useState(true);
     const [allMember, setAllmember] = useState(true);
 
+    let countModal=0;
+
     const modalRef = useRef([]);
     const profileRef = useRef([]);
 
@@ -162,13 +164,14 @@ const Members = ({ setName }) => {
                     {mainDisplay ? '➖' : '➕'}
                 </div>
                 <div className={styles.nbtiname} onClick={handleAll}>
-                    NBTI
+                    NBTI ({modalRef.current.length})
                 </div>
             </div>
             {mainDisplay && (<div className={styles.menus}>
                 {
                     list.map((dItem, dindex) => {
                         const teams = dItem.teams;
+                        const totalMembers = teams.reduce((sum, team) => sum + team.members.length, 0);
                         return (
                             <div className={styles.menu} key={dindex} >
                                 <div className={styles.dept}>
@@ -176,29 +179,30 @@ const Members = ({ setName }) => {
                                         {listDisplay[dindex] ? '➖' : '➕'}
                                     </div>
                                     <div className={styles.deptname} onClick={() => handleDept(dindex)}>
-                                        {dItem.dept}
+                                        {dItem.dept}  ({totalMembers})
                                     </div>
                                 </div>
                                 {listDisplay[dindex] && (
                                     <div className={styles.teams}>
-                                        {
+                                        {   
                                             teams.map((team, tindex) => {
                                                 const members = team.members
-
+                                               
                                                 return (
                                                     <React.Fragment key={tindex}>
                                                        
                                                             <div className={styles.team} onClick={() => handleTeamDisplay(dindex, tindex)} >
-                                                                {team.name} ({members.length})
+                                                                {team.name}  ({members.length})
                                                             </div>
                                                             {teamDisplay[dindex][tindex] && (<div className={styles.members}>
                                                                
                                                                     {
                                                                         members.map((member, mindex) => {
+                                                                            const index=countModal++;
                                                                             return (
                                                                                 (
                                                                                     <React.Fragment key={mindex}  >
-                                                                                        <div className={styles.member}>
+                                                                                        <div className={styles.member}  onContextMenu={handleRightClick(index)}>
                                                                                             <div className={styles.div1}>
                                                                                                 <img src={(member.member_img === null) ? `${avatar}` : `${host}/images/avatar/${member.id}/${member.member_img}`} alt="" />
                                                                                             </div>
@@ -211,6 +215,8 @@ const Members = ({ setName }) => {
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
+                                                                                        <Profile profileRef={profileRef} index={index} item={member}></Profile>
+                                                                                        <Modal modalRef={modalRef} index={index} item={member} profileRef={profileRef}></Modal>
                                                                                     </React.Fragment>
                                                                                 )
                                                                             );
@@ -219,7 +225,6 @@ const Members = ({ setName }) => {
                                                                     }
                                                             
                                                             </div>)}
-                                                   
                                                     </React.Fragment>
                                                 );
                                             })

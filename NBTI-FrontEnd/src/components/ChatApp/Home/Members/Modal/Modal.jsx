@@ -33,7 +33,7 @@ const Modal=({modalRef,index,item,profileRef})=>{
     return(
         <div className={styles.container} ref={el=>modalRef.current[index]=el}>
             <div className={styles.content} onClick={handleChatRoom}>
-                채팅 하기 {index}
+                채팅 하기 
             </div>
             <div className={styles.content} onClick={handleMemberIfo(index)}>
                 사용자 정보
