@@ -23,7 +23,7 @@
     display: flex;
   }
   .deptname:hover{
-    background-color: gray;
+    background-color: rgba(128, 128, 128, 0.378);
   }
   
   
@@ -76,7 +76,7 @@
 
   }
   .team:hover{
-    background-color: gray;
+    background-color: rgba(128, 128, 128, 0.378);
   }
   .members{
     display: flex;
