@@ -9,6 +9,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'; // 월 보기 플러그인
 import timeGridPlugin from '@fullcalendar/timegrid'; // 주 및 일 보기 플러그인
 import interactionPlugin from '@fullcalendar/interaction'; // 클릭 이벤트를 위한 플러그인
 import { default as koLocale } from '@fullcalendar/core/locales/ko'; // 한국어 로케일
+import Members from './Members/Members';
 
 
 
@@ -396,7 +397,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                         <h2>공유 캘린더</h2>
                         <input type="text" placeholder="캘린더 이름" value={calendarName} onChange={handleCalendarNameChange}/>
                         <p>공유 대상</p>
-                        <div className={styles.groupAdd}>test</div>
+                        <div className={styles.groupAdd}><Members/></div>
                         <button onClick={handleSave}>추가</button>
                         <button onClick={closeModal}>닫기</button>
                     </div>
