@@ -154,7 +154,7 @@ export const AllAttendance = () => {
                                     <div>부서: {event.extendedProps.teamName}</div>
                                 </div>
                             )}
-                            <div style={{ display: "flex", flexDirection: "column" }}>
+                            <div style={{ display: "flex", flexDirection: "column", textAlign:"center", flex:1 }}>
                                 {lines.map((line, index) => (
                                     <div key={index}>{line}</div>
                                 ))}
