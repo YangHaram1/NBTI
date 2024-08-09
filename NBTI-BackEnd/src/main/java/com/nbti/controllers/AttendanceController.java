@@ -109,16 +109,16 @@ public class AttendanceController {
 
             // Attendance Records 조회
             List<AttendanceDTO> attendanceRecords = aServ.getWeeklyRecordsForAll(startOfWeek, endOfWeek);
-            System.out.println("Attendance Records: " + attendanceRecords);
+            
 
             // Weekly Stats 계산
             Map<String, Map<String, Object>> memberWeeklyStats = aServ.calculateAllWeeklyStats(attendanceRecords);
-            System.out.println("Member Weekly Stats: " + memberWeeklyStats);
+            
 
             // Create response map
             Map<String, Object> response = new HashMap<>();
             response.put("members", memberWeeklyStats);
-            System.out.println("Response before sending: " + response);
+            
 
             // Return response
             return ResponseEntity.ok(response);
@@ -157,7 +157,7 @@ public class AttendanceController {
                                                                @RequestParam int month) {
         // 세션에서 memberId를 가져옵니다.
         String memberId = (String) request.getSession().getAttribute("loginID");
-        System.out.println("Member ID from session: " + memberId); // 확인용 로그
+        
 
         if (memberId == null) {
             Map<String, Object> errorResponse = new HashMap<>();
@@ -168,7 +168,7 @@ public class AttendanceController {
         try {
             // 월간 통계 조회
             Map<String, Object> stats = aServ.getMonthlyStats(memberId, year, month);
-            System.out.println("Stats: " + stats); // 서버 측에서 반환된 데이터를 확인
+            
             return ResponseEntity.ok(stats);
         } catch (Exception e) {
             e.printStackTrace();
