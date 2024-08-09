@@ -17,6 +17,8 @@ export const QnAList = () => {
     const [target, setTarget] = useState('');  // target 초기 값을 빈 문자열로 설정
     const [keyword, setKeyword] = useState('');     // keyword 초기 값
     const [search, setSearch] = useState(false);
+    // const [currentUser, setCurrentUser] = useState(null); // 로그인된 사용자 정보 상태
+
 
     // 페이지네이션
     const navi_count_per_page = 5;
@@ -24,6 +26,10 @@ export const QnAList = () => {
     const [pageTotalCount, setPageTotalCount] = useState();
     const [cpage, setCpage] = useState(1); // 현재 페이지
 
+    // 로그인 한 사용자 정보
+    // axios.get(`${host}/members`).then((resp) => {
+    //     setCurrentUser(resp.data);
+    // });
 
     // 1 : 자유 
     let code = 3;
@@ -37,8 +43,6 @@ export const QnAList = () => {
 
             setBoardList(resp.data.list); // 서버에서 list와 count 보낸 것 중 list만 담기
 
-            console.log("목록 : ", resp.data.list);
-
             // 페이지네이션
             const recordTotalCount = resp.data.count;
             if (recordTotalCount % recordCountPerPage === 0) {
@@ -47,8 +51,6 @@ export const QnAList = () => {
             else {
                 setPageTotalCount(Math.floor(recordTotalCount / recordCountPerPage) + 1);
             }
-            console.log("Total Record Count:", recordTotalCount);
-
 
         });
     }, [search, cpage]);
@@ -70,12 +72,9 @@ export const QnAList = () => {
         const requestBox = { seq: seq, board_code: code };
         axios.put(`${host}/board/viewCount`, requestBox).then((resp) => {
             setBoardSeq(seq);
-            // setBoardType("문의");
-            navi("/board/detail");
+            navi("/mypage/qnaDetail");
         });
     };
-
-
 
     return (
         <div className={styles.container}>
@@ -103,10 +102,10 @@ export const QnAList = () => {
                         <p>No</p>
                     </div>
                     <div>
-                        <p>제목</p>
+                        <p>답변</p>
                     </div>
                     <div>
-                        <p>작성자</p>
+                        <p>제목</p>
                     </div>
                     <div>
                         <p>작성일</p>
@@ -126,11 +125,11 @@ export const QnAList = () => {
                             <div className={styles.seq}>
                                 <p>{item.seq}</p>
                             </div>
+                            <div className={styles.status}>
+                                <p>진행중</p>
+                            </div>
                             <div className={styles.title}>
                                 <p onClick={() => { handleTitleClick(item.seq) }}>{item.title}</p>
-                            </div>
-                            <div className={styles.writer}>
-                                <p>{item.member_id}</p>
                             </div>
                             <div className={styles.writeDate}>
                                 <p>{currentDate}</p>

@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from "react";
 import styles from "./Detail.module.css";
+import { useEffect, useState, useRef } from "react";
 import { useBoardStore } from "../../../../../../store/store";
 import axios from "axios";
 import { host } from "../../../../../../config/config";

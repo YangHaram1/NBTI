@@ -31,7 +31,7 @@ export const FreeBoard = () => {
 
             resp.data.rlist.forEach(reply => {
                 reply.forEach(innerReply => {
-                    console.log("count : ", innerReply.count)
+                    // console.log("count : ", innerReply.count)
                 })
 
             });
