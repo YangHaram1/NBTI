@@ -13,3 +13,89 @@ div {
     /* height: 100%; 100vh ? */
     /* will-change: width; */
   }
+
+/* 날짜 클릭시 나오는 일정 추가 모달창 */
+.modal {
+  position: fixed; z-index: 1000;
+  top: 50%;
+  left: 50%;
+  width: 500px; height: 500px;
+  border-radius: 20px;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  display: flex; flex-direction: column;
+
+}
+.modalOverlay {
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+.title {
+flex: 1;
+border-radius: 5px;
+}
+.modalInner {
+background-color:white; height: 100%;
+display: flex;
+flex-direction: column;
+}
+.modalInner > .title {
+background-color: #000;
+}
+/* 내부 div 스타일 */
+.modalInner > div {
+flex: 1;
+display: flex;
+align-items: center;
+margin: 10px 0; 
+}
+/* 왼쪽 title */
+.modalInner > div p {
+width: 20%; /* 제목 영역 너비 */
+font-weight: bold;
+}
+
+/* 오른쪽 input, select */
+.modalInner > div select, 
+.modalInner > div input {
+width: 80%; 
+padding: 10px; 
+border-radius: 10px;
+border: 1px solid #ccc; 
+transition: border 0.3s; 
+}
+.modalInner > div select:focus, 
+.modalInner > div input:focus {
+  border: 1px solid #4CAF50; /* 포커스 시 초록색 경계선 */
+  outline: none; /* 기본 아웃라인 제거 */
+}
+
+/* 버튼 스타일 */
+.modalInner > div:nth-child(6) {
+display: flex; 
+justify-content: space-evenly; 
+align-items: center;
+}
+
+.modalInner > div:nth-child(6) > button, .modalInner > .detail > .detailBtn > button {
+padding: 10px 20px; 
+border: none;
+border-radius: 50px; 
+cursor: pointer;
+transition: all ease 0.3s;
+background-color: #6B9080;
+color: white; 
+font-weight: bold; 
+}
+
+.modalInner > div:nth-child(6) > button:hover, .modalInner > .detail > .detailBtn > button:hover  {
+background-color: #A4C3B2;
+}

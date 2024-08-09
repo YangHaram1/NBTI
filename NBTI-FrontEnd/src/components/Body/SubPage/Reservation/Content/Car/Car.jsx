@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { host } from '../../../../../../config/config';
 import axios from 'axios';
 
-export const Car = ({ modalOpen , setModalOpen }) => {
+export const Car = () => {
     const [events, setEvents] = useState([]); // 이벤트 상태
 
     useEffect(() => {
@@ -30,10 +30,6 @@ export const Car = ({ modalOpen , setModalOpen }) => {
                 console.error('Error fetching car list:', error);
             });
     }, []); // 컴포넌트가 마운트될 때 한 번만 실행
-
-    const closeModal = () => {
-        setModalOpen(false); // 모달 닫기
-    };
 
     return (
         <div className={styles.container}>
@@ -59,18 +55,6 @@ export const Car = ({ modalOpen , setModalOpen }) => {
                     displayEventEnd={true}
                 />
             </div>
-            {/* 모달이 열릴 때만 보여지도록 조건부 렌더링 */}
-            {modalOpen && (
-                <div className={styles.modalOverlay} onClick={closeModal}>
-                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                        <h2>차량 예약 상세</h2>
-                        <p>예약자: {events.title}</p>
-                        <p>시작 시간: {events.start}</p>
-                        <p>종료 시간: {events.end}</p>
-                        <button onClick={closeModal}>닫기</button>
-                    </div>
-                </div>
-            )}
         </div>
 
         

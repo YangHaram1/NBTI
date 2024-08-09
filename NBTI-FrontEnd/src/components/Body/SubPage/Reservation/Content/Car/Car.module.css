@@ -8,3 +8,28 @@
     height: inherit;
     overflow-y: none;
 }
+
+  /* 날짜 클릭시 나오는 일정 추가 모달창 */
+  .modal {
+    position: fixed; z-index: 1000;
+    top: 50%;
+    left: 50%;
+    width: 500px; height: 500px;
+    border-radius: 20px;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex; flex-direction: column;
+
+}
+.modalOverlay {
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
