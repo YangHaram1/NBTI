@@ -4,6 +4,8 @@ import { Security } from "./Security/Security";
 import { Profile } from "./Profile/Profile";
 import { QnA } from "./QnA/QnA";
 import { QnAList } from "./QnAList/QnAList";
+import { BookmarkQnA } from "./BookmarkQnA/BookmarkQnA";
+import { QnADetail } from "./QnADetail/QnADetail";
 
 export const Content = () => {
   return (
@@ -14,6 +16,8 @@ export const Content = () => {
         <Route path="security/*" element={<Security />} />
         <Route path="qna/*" element={<QnA />} />
         <Route path="qnaList/*" element={<QnAList />} />
+        <Route path="bookmarkQnA/*" element={<BookmarkQnA />} />
+        <Route path="qnaDetail/*" element={<QnADetail />} />
       </Routes>
     </div>
   );

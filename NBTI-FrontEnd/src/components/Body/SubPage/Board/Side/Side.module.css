@@ -1,7 +1,3 @@
-div {
-  /* border: 1px solid black; */
-}
-
 .container {
   background-color: #cce3de;
   width: 250px;
@@ -12,7 +8,7 @@ div {
   top: 60px;
   left: 0;
   bottom: 0;
-  box-shadow: 1px 0 8px rgba(0, 0, 0, 0.1); /* 왼쪽에 그림자 추가 */
+  box-shadow: 1px 0 8px rgba(0, 0, 0, 0.1); /* 오른쪽에 그림자 추가 */
 }
 
 .container .mainBtn {
