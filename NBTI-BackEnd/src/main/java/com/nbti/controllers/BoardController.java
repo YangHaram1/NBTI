@@ -1,5 +1,6 @@
 package com.nbti.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nbti.dto.BoardDTO;
+import com.nbti.dto.ReplyDTO;
 import com.nbti.services.BoardService;
+import com.nbti.services.ReplyService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -86,6 +89,7 @@ public class BoardController {
 	    
 		return ResponseEntity.ok(result);
 	}
+	
 	
 	// 게시글 출력
 	@GetMapping("/{boardSeq}/{code}")

@@ -23,8 +23,13 @@ public class ReplyDAO {
 	}
 	
 	// 댓글 출력
-	public List<ReplyDTO> selectReply(Map<String, Integer> params){
-		return mybatis.selectList("Reply.selectReply", params);
+	public List<ReplyDTO> selectReply(Map<String, Integer> map){
+		return mybatis.selectList("Reply.selectReply", map);
+	}
+	
+	// 댓글 개수
+	public int countReply(Map<String, Integer> map){
+		return mybatis.selectOne("Reply.countReply", map);
 	}
 	
 	// 댓글 삭제
