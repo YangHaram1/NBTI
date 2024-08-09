@@ -10,9 +10,14 @@
 		insert into temp_board values(temp_board_seq.nextval, #{title}, #{contents}, #{member_id}, sysdate, ${board_code})
 	</insert>
 	
-	<!-- 임시저장 목록 출력 -->
+	<!-- 임시저장 목록 출력 (QnA 별도 출력) -->
 	<select id="selectAll" resultType="com.nbti.dto.TempBoardDTO">
-		select * from temp_board where member_id = #{member_id} order by seq desc
+		select * from temp_board 
+		where member_id = #{member_id} 
+		<if test="board_code != null">
+        	and board_code = ${board_code}
+   		</if>
+		order by seq desc
 	</select>
 	
 	<!-- 임시저장 삭제 -->

@@ -41,37 +41,23 @@ public class TempBoardController {
 		
 		int result = tserv.insert(dto);
 		return ResponseEntity.ok(result);
-
 	}
 
-	// 임시저장 목록 출력
-	@GetMapping("/tempList")
-	public ResponseEntity<List<TempBoardDTO>> selectAll(){
+	// 임시저장 목록 출력 (QnA는 별도 출력)
+	@GetMapping("/tempList/{board_code}")
+	public ResponseEntity<List<TempBoardDTO>> selectAll(@PathVariable(required = false) Integer board_code){ // QnA일 경우 board_code 3 들어옴 
 		
 		String member_id = (String) session.getAttribute("loginID");
-		
-		List<TempBoardDTO> list = tserv.selectAll(member_id);
-		
-		return ResponseEntity.ok(list);
+
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("member_id", member_id);
+	    map.put("board_code", board_code); 
+
+	    List<TempBoardDTO> list = tserv.selectAll(map);
+
+	    return ResponseEntity.ok(list);
 	}
 	
-	
-//	@GetMapping("/tempList/{code}")
-//	public ResponseEntity<List<TempBoardDTO>> selectAll(@PathVariable int code){
-//		
-//		String member_id = (String) session.getAttribute("loginID");
-//		
-//		Map<String, Object> map = new HashMap<>();
-//		map.put("code",code);
-//		map.put("member_id", member_id);
-//		
-//		System.out.println(code);
-//		System.out.println(member_id);
-//		
-//		List<TempBoardDTO> list = tserv.selectAll(map);
-//		
-//		return ResponseEntity.ok(list);
-//	}
 
 	// 임시저장 삭제
 	@DeleteMapping("/delete/{seq}")
@@ -88,6 +74,23 @@ public class TempBoardController {
 		TempBoardDTO result = tserv.modify(seq);
 		return ResponseEntity.ok(result);
 	}
+	
+	
+	//==========================[ QnA 임시저장 ]========================
+	
+//	// QnA 임시저장 목록 출력
+//	@GetMapping("/tempQnAList")
+//	public ResponseEntity<List<TempBoardDTO>> selectAllQnA(){
+//		
+//		String member_id = (String) session.getAttribute("loginID");
+//		
+//		List<TempBoardDTO> list = tserv.selectAll(member_id);
+//		System.out.println("list : " +list);
+//		return ResponseEntity.ok(list);
+//	}
+	
+	
+	
 	
 	
 	

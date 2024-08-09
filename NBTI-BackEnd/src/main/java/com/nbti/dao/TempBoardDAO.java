@@ -22,8 +22,8 @@ public class TempBoardDAO {
 	}
 	
 	// 임시저장 목록 출력
-	public List<TempBoardDTO> selectAll(String member_id){
-		return mybatis.selectList("TempBoard.selectAll", member_id);
+	public List<TempBoardDTO> selectAll(Map<String, Object> map){
+		return mybatis.selectList("TempBoard.selectAll", map);
 	}
 	
 	// 임시저장 삭제
