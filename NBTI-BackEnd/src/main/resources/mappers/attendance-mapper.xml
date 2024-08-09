@@ -161,14 +161,16 @@ AND start_date &lt; TRUNC(SYSDATE, 'IW') + 7;
     AND start_date &lt; TRUNC(SYSDATE, 'MM') + INTERVAL '1 MONTH';
 </select>
 <select id="getWeeklyRecordsForAll" parameterType="map" resultType="com.nbti.dto.AttendanceDTO">
-    SELECT
-        a.*,
-        m.name,
-        t.team_name
-    FROM attendance a
-    JOIN members m ON a.member_id = m.id
-    JOIN teams t ON m.team_code = t.team_code
-    WHERE a.start_date BETWEEN #{startOfWeek} AND #{endOfWeek}
-    ORDER BY a.member_id, a.start_date
+SELECT
+    m.id AS member_id,
+    m.name,
+    t.team_name,
+    a.start_date,
+    a.end_date
+FROM members m
+LEFT JOIN attendance a ON a.member_id = m.id AND a.start_date BETWEEN #{startOfWeek} AND #{endOfWeek}
+LEFT JOIN teams t ON m.team_code = t.team_code
+ORDER BY m.id, a.start_date
+
 </select>
 </mapper>

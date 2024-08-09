@@ -1,19 +1,20 @@
 import { useEffect } from "react";
 import styles from "./Side.module.css";
 import { useNavigate } from "react-router-dom";
+import { useBoardStore } from "../../../store/store";
 
 export const Side = () => {
   // ===== 메뉴 토글 =====
-//   const [FreeBoard, setFreeBoard] = useState(false);
-//   const [NoticeBoard, setNoticeBoard] = useState(false);
+  //   const [FreeBoard, setFreeBoard] = useState(false);
+  //   const [NoticeBoard, setNoticeBoard] = useState(false);
 
-//   const toggleFreeBoard = () => {
-//     setFreeBoard(!FreeBoard);
-//   };
+  //   const toggleFreeBoard = () => {
+  //     setFreeBoard(!FreeBoard);
+  //   };
 
-//   const toggleNoticeBoard = () => {
-//     setNoticeBoard(!NoticeBoard);
-//   };
+  //   const toggleNoticeBoard = () => {
+  //     setNoticeBoard(!NoticeBoard);
+  //   };
 
   // ===== 아이콘 =====
   useEffect(() => {
@@ -30,24 +31,35 @@ export const Side = () => {
     };
   }, []);
 
-//   const preventPropagation = (e) => {
-//     e.stopPropagation();
-//   };
+  //   const preventPropagation = (e) => {
+  //     e.stopPropagation();
+  //   };
 
   const navi = useNavigate();
+  const { setBoardType } = useBoardStore();
 
   return (
     <div className={styles.container}>
       <div className={styles.menus}>
         <ul>
-            <li onClick={() => { navi("/mypage/profile") }}>
-                프로필 설정
-            </li>
+          <li onClick={() => { navi("/mypage/profile") }}>
+            프로필 설정
+          </li>
         </ul>
         <ul>
-            <li onClick={() => { navi("/mypage/security") }}>
-                보안 설정
-            </li>
+          <li onClick={() => { navi("/mypage/security") }}>
+            보안 설정
+          </li>
+        </ul>
+        <ul>
+          <li onClick={() => { navi("/mypage/qna"); setBoardType("문의"); }}>
+            문의하기
+          </li>
+        </ul>
+        <ul>
+          <li onClick={() => { navi("/mypage/qnaList"); setBoardType("문의"); }}>
+            나의 문의 내역
+          </li>
         </ul>
       </div>
     </div>

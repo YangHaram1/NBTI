@@ -62,11 +62,11 @@ public class AttendanceService {
             // Check for early leave
             if (endDateTime.toLocalTime().isBefore(LocalTime.of(18, 0))) {
                 // Handle early leave logic
-                System.out.println("조기 퇴근 처리: " + memberId);
+                
             }
         } else {
             // Handle case where no current record is found
-            System.out.println("퇴근 기록이 없습니다: " + memberId);
+            
         }
     }
 
@@ -247,27 +247,45 @@ public class AttendanceService {
 
         Map<String, Map<String, Object>> memberWeeklyStats = new HashMap<>();
 
+        // 각 멤버별 출석 기록을 처리
         for (AttendanceDTO record : attendanceRecords) {
+            if (record == null || record.getMember_id() == null) {
+                continue; // record 또는 member_id가 null인 경우 건너뛰기
+            }
+
             String memberId = record.getMember_id();
+            
             Timestamp startDate = record.getStart_date();
             Timestamp endDate = record.getEnd_date();
 
-            if (startDate == null) {
-                continue;
-            }
-
             // member_id로부터 이름과 팀 이름을 조회
             Map<String, Object> memberDetails = mDao.memberData(memberId);
-
             String memberName = (String) memberDetails.getOrDefault("NAME", "이름 없음");
             String teamName = (String) memberDetails.getOrDefault("TEAM_NAME", "팀 이름 없음");
+
+            Map<String, Object> dailyStats = memberWeeklyStats.computeIfAbsent(memberId, k -> new HashMap<>());
+
+            if (startDate == null) {
+                // 출근 기록이 없을 경우 기본값 설정
+                for (LocalDate date = startOfWeek; !date.isAfter(endOfWeek); date = date.plusDays(1)) {
+                    String dateString = date.toString();
+                    Map<String, Object> dateStats = new HashMap<>();
+                    dateStats.put("startDate", null);
+                    dateStats.put("endDate", null);
+                    dateStats.put("name", memberName);
+                    dateStats.put("team_name", teamName);
+                    dateStats.put("absent", true); // 출근 기록이 없는 경우 결근 처리
+                    dateStats.put("late", false);
+                    dateStats.put("earlyLeave", false);
+                    dailyStats.put(dateString, dateStats);
+                }
+                continue;
+            }
 
             LocalDateTime startDateTime = startDate.toLocalDateTime();
             LocalDate localDate = startDateTime.toLocalDate();
             String dateString = localDate.toString();
 
-            // Create daily stats map if not present
-            Map<String, Object> dailyStats = memberWeeklyStats.computeIfAbsent(memberId, k -> new HashMap<>());
             Map<String, Object> dateStats = (Map<String, Object>) dailyStats.computeIfAbsent(dateString, k -> new HashMap<>());
 
             dateStats.put("startDate", startDate);
@@ -281,7 +299,7 @@ public class AttendanceService {
                 dateStats.put("absent", false);
             }
 
-            if (startDateTime.toLocalDate().isAfter(startOfWeek.minusDays(1)) && startDateTime.toLocalDate().isBefore(endOfWeek.plusDays(1))) {
+            if (!localDate.isBefore(startOfWeek) && !localDate.isAfter(endOfWeek)) {
                 if (startDateTime.toLocalTime().isAfter(LocalTime.of(9, 0))) {
                     dateStats.put("late", true);
                 } else {
@@ -340,7 +358,7 @@ public class AttendanceService {
         int earlyLeaveCount = 0;
         int statsDay = 0;
         double statsHours = 0.0;
-        System.out.println("asdfasdf:"+records);
+        
         for (AttendanceDTO record : records) {
             Timestamp startDate = record.getStart_date();
             Timestamp endDate = record.getEnd_date();
