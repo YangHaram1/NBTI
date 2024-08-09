@@ -1,9 +1,11 @@
-import React from 'react';
+// AllAttendance.js
+import React, { useState, useCallback } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import koLocale from '@fullcalendar/core/locales/ko';
 import useAllWeeklyStats from './useAllAttendance';
 import styles from './AllAttendance.module.css';
+import SearchUser from './SearchUser/SearchUser';
 
 // 시간 포맷 함수
 const formatTime = (date) => {
@@ -59,6 +61,37 @@ const createDefaultEvent = (date, memberName, teamName) => {
 
 export const AllAttendance = () => {
     const { stats, loading } = useAllWeeklyStats();
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredMembers, setFilteredMembers] = useState([]);
+
+    // 검색 처리 함수
+    const handleSearch = useCallback(() => {
+        if (searchTerm.trim() === '') {
+            // 검색어가 비어 있으면 모든 데이터를 표시
+            const allMembers = Object.keys(stats).map(memberId => {
+                const memberStats = stats[memberId] || {};
+                const hasAttendance = Object.keys(memberStats).length > 0;
+                return {
+                    memberId,
+                    name: hasAttendance ? memberStats[Object.keys(memberStats)[0]].name : 'N/A',
+                    teamName: hasAttendance ? memberStats[Object.keys(memberStats)[0]].team_name : 'N/A'
+                };
+            });
+            setFilteredMembers(allMembers);
+        } else {
+            // 검색어에 따른 필터링
+            const lowerCaseSearchTerm = searchTerm.toLowerCase();
+            const filtered = Object.keys(stats).map(memberId => {
+                const memberStats = stats[memberId] || {};
+                const hasAttendance = Object.keys(memberStats).length > 0;
+                const name = hasAttendance ? memberStats[Object.keys(memberStats)[0]].name : 'N/A';
+                const teamName = hasAttendance ? memberStats[Object.keys(memberStats)[0]].team_name : 'N/A';
+                return { memberId, name, teamName };
+            }).filter(({ name }) => name.toLowerCase().includes(lowerCaseSearchTerm));
+
+            setFilteredMembers(filtered);
+        }
+    }, [searchTerm, stats]);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -68,8 +101,8 @@ export const AllAttendance = () => {
     const today = new Date();
     const startOfWeek = getStartOfWeek(today);
 
-    // 멤버 목록을 추출하여 이름과 팀명 저장
-    const members = Object.keys(stats).map(memberId => {
+    // 필터링된 멤버 목록 사용 또는 전체 멤버 목록 사용
+    const membersToDisplay = filteredMembers.length > 0 ? filteredMembers : Object.keys(stats).map(memberId => {
         const memberStats = stats[memberId] || {};
         const hasAttendance = Object.keys(memberStats).length > 0;
         return {
@@ -80,7 +113,7 @@ export const AllAttendance = () => {
     });
 
     // 월요일에 표시할 이벤트 생성
-    const events = members.flatMap(({ memberId, name, teamName }) => {
+    const events = membersToDisplay.flatMap(({ memberId, name, teamName }) => {
         return Array.from({ length: 7 }).map((_, index) => {
             const date = new Date(startOfWeek);
             date.setDate(date.getDate() + index);
@@ -129,6 +162,11 @@ export const AllAttendance = () => {
 
     return (
         <div className={styles.container}>
+            <SearchUser
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                onSearch={handleSearch}
+            />
             <FullCalendar
                 plugins={[dayGridPlugin]}
                 initialView="dayGridWeek"
@@ -149,12 +187,12 @@ export const AllAttendance = () => {
                             style={{ backgroundColor: event.extendedProps.backgroundColor, color: event.extendedProps.textColor }}
                         >
                             {isMonday && (
-                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                <div style={{ display: "flex", flexDirection: "column", alignItems: 'flex-start' }}>
                                     <div>이름: {event.extendedProps.memberName}</div>
                                     <div>부서: {event.extendedProps.teamName}</div>
                                 </div>
                             )}
-                            <div style={{ display: "flex", flexDirection: "column", textAlign:"center", flex:1 }}>
+                            <div style={{ display: "flex", flexDirection: "column", textAlign: "center", flex: 1 }}>
                                 {lines.map((line, index) => (
                                     <div key={index}>{line}</div>
                                 ))}
