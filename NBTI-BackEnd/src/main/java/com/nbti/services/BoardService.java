@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nbti.dao.BoardDAO;
+import com.nbti.dao.LikesDAO;
 import com.nbti.dao.ReplyDAO;
 import com.nbti.dto.BoardDTO;
 import com.nbti.dto.ReplyDTO;
@@ -20,6 +21,8 @@ public class BoardService {
 	private BoardDAO bdao;
 	@Autowired
 	private ReplyDAO rdao;
+	@Autowired
+	private LikesDAO ldao;
 	
 	// 목록 출력
 	public List<BoardDTO> selectAll(Map<String, Object> map){
@@ -85,21 +88,30 @@ public class BoardService {
 	// 자유 게시판 & 댓글 출력
 	public Map<String, Object> selectFree(){
 	
-		List<BoardDTO> list = bdao.selectFree();
+		List<BoardDTO> list = bdao.selectFree(); // 게시판 리스트 가져오기
 		
-		List<List<ReplyDTO>> rlist = new ArrayList<>();
+		List<List<ReplyDTO>> rlist = new ArrayList<>(); // 댓글 리스트 가져오기
 		
 		for (BoardDTO dto : list) {
-			int seq = dto.getSeq();
+			int seq = dto.getSeq(); // 게시글의 seq 담기
 			
-			rlist.add(rdao.selectFreeReply(seq));
+			List<ReplyDTO> replies = rdao.selectFreeReply(seq);
+			
+			for(ReplyDTO rdto : replies) { // count 세팅을 위한 로직 
+				int reply_seq = rdto.getSeq();
+				int count = ldao.likeCount(reply_seq); // 해당 댓글 seq에 맞는 좋아요 개수 가져오기
+						
+				rdto.setCount(count);
+			}
+			
+			rlist.add(replies); // 게시글의 seq에 맞는 댓글을 댓글 리스트에 추가
 		}
 			
 		Map<String, Object> map = new HashMap<>();
 		map.put("list", list);
 		map.put("rlist", rlist);
 		
-		return map;
+		return map; // map에 담아서 return
 	}
 	
 	
