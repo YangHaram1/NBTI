@@ -192,4 +192,8 @@
 }
 
 
-
+/* 그룹 모달창 */
+.groupAdd {
+    height: 500px;
+    background-color: #fff;
+}

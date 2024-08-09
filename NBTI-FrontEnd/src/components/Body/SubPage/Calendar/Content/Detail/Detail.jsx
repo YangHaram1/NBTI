@@ -41,6 +41,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
         setInsert((prev) => ({ ...prev, start_date: arg.dateStr}));
         setAddOpen(true); // 일정 추가 모달 열기
         setSelectedEvent(null); // 일정 추가할 때 선택된 이벤트 초기화
+        setCalendarModalOpen(true); // 공유 일정 모달창
     };
     // 모달창 [닫기]
     const closeModal = () => {
@@ -48,6 +49,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
         setSelectedDate(null);
         setAddOpen(false); // 일정 추가 모달 닫기 
         setSelectedEvent(null); // 선택된 이벤트 초기화
+        setCalendarModalOpen(null) // 공유 일정 모달창
     };
 
 
@@ -389,16 +391,12 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
             )}
             {/* 캘린더 추가 모달 */}
             {calendarModalOpen && (
-                <div className={styles.modalOverlay} onClick={handleSave}>
+                <div className={styles.modalOverlay} onClick={closeModal}>
                     <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                        <h2>캘린더 추가</h2>
-                        <input 
-                        type="text" 
-                        placeholder="캘린더 이름" 
-                        value={calendarName} // 상태와 연결
-                        onChange={handleCalendarNameChange} // 핸들러 연결
-                    />
-
+                        <h2>공유 캘린더</h2>
+                        <input type="text" placeholder="캘린더 이름" value={calendarName} onChange={handleCalendarNameChange}/>
+                        <p>공유 대상</p>
+                        <div className={styles.groupAdd}>test</div>
                         <button onClick={handleSave}>추가</button>
                         <button onClick={closeModal}>닫기</button>
                     </div>
