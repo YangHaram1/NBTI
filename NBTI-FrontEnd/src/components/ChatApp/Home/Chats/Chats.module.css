@@ -29,10 +29,10 @@
     
 }
 .name{
-    font-weight: 600;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Freesentation-9Black';
     display: flex;
     gap: 30px;
+    font-size: 18px;
 }
 .size{
     font-size: 13px;
@@ -77,14 +77,22 @@
     align-items: center;
 }
 .fixed{
-    position: fixed;
+    position: absolute;
     border: 1px solid black;
     background-color: red;
     color: white;
     border-radius: 20px;
-    top: 310px;
-    right: 210px;
+    top: 100px;
+    right: 130px;
     width: 35px;
     display: flex;
     justify-content: center;
+}
+
+
+@font-face {
+    font-family: 'Freesentation-9Black';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
 }
