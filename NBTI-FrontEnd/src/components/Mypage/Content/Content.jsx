@@ -15,9 +15,9 @@ export const Content = () => {
         <Route path="profile/*" element={<Profile />} />
         <Route path="security/*" element={<Security />} />
         <Route path="qna/*" element={<QnA />} />
-        <Route path="qnaList/*" element={<QnAList />} />
-        <Route path="bookmarkQnA/*" element={<BookmarkQnA />} />
-        <Route path="qnaDetail/*" element={<QnADetail />} />
+        <Route path="qnaList" element={<QnAList setQnADetail={QnADetail} />} />
+        <Route path="qnaList/:seq" element={<QnADetail />} />
+        <Route path="bookmarkQnA" element={<BookmarkQnA />} />
       </Routes>
     </div>
   );

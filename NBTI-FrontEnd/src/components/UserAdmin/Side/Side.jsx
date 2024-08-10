@@ -56,7 +56,7 @@ export const Side = () => {
           </li>
         </ul>
         <ul>
-          <li onClick={() => { navi("/useradmin/adminQnA") }}>
+          <li onClick={() => { navi("/useradmin/qna"); }}>
             문의내역 목록
           </li>
         </ul>

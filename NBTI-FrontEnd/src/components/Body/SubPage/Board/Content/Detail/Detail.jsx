@@ -194,7 +194,6 @@ export const Detail = () => {
     });
 
     setReply((prev) => {
-      console.log("dasda");
       return prev.map((item, index) => {
         if (index === i) {
           return { ...item, count: item.count + 1 };
@@ -212,7 +211,6 @@ export const Detail = () => {
       if (resp.data === 1) console.log("조아요 취소");
 
       setReply((prev) => {
-        console.log("dasda");
         return prev.map((item, index) => {
           if (index === i) {
             return { ...item, count: item.count - 1 };
