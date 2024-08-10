@@ -1,5 +1,7 @@
 package com.nbti.services;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nbti.dao.ChatDAO;
 import com.nbti.dao.Group_memberDAO;
+import com.nbti.dao.MembersDAO;
 import com.nbti.dto.ChatDTO;
 import com.nbti.dto.Group_memberDTO;
 
@@ -15,6 +18,9 @@ import com.nbti.dto.Group_memberDTO;
 public class Group_memberService {
 	@Autowired
 	private Group_memberDAO dao;
+	
+	@Autowired
+	private MembersDAO msdao;
 	
 	@Autowired
 	private ChatDAO cdao;
@@ -29,9 +35,12 @@ public class Group_memberService {
 			Group_memberDTO dto = new Group_memberDTO(group_seq,members[i],0,"Y","N","새채팅방");
 			dao.insert(dto);
 		}
-		String result=loginID+"님이 ";
+		List<String> memberList = new ArrayList<>(Arrays.asList(members)); //네임받아올 리스트
+		memberList=msdao.chatMembersName(memberList);
+		String name=msdao.getMemberName(loginID);
+		String result=name+"님이 ";
 		int index=0;
-		for (String str : members) {
+		for (String str : memberList) {
 			if(index==members.length-1) {
 				result+=str+"님을 초대했습니다.";
 			}
@@ -66,7 +75,8 @@ public class Group_memberService {
 	@Transactional
 	public void delete(int group_seq,String member_id) throws Exception{
 		dao.delete(group_seq,member_id);
-		ChatDTO cdto=new ChatDTO(0,"system",member_id+"님이 퇴장하셨습니다",null,group_seq,0);
+		String name=msdao.getMemberName(member_id);
+		ChatDTO cdto=new ChatDTO(0,"system",name+"님이 퇴장하셨습니다",null,group_seq,0);
 		cdao.insert(cdto);
 	}
 	

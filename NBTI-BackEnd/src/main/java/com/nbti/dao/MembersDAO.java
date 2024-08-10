@@ -88,5 +88,15 @@ public boolean login(MembersDTO dto) {
 		int result = mybatis.selectOne("Member.selectPeriod",id);
 		return result;
 	}
+	
+	
+	//채팅관련 멤버아디로 네임 뽑기
+	public List<String> chatMembersName(List<String> list){
+		return mybatis.selectList("Member.chatMembersName",list);
+	}
+	
+	public String getMemberName(String id) {
+		return mybatis.selectOne("Member.getMemberName",id);
+	}
 
 }
