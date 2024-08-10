@@ -71,7 +71,10 @@ export const List = () => {
     const requestBox = { seq: seq, board_code: code };
     axios.put(`${host}/board/viewCount`, requestBox).then((resp) => {
       setBoardSeq(seq);
-      navi("/board/detail");
+      let type = "";
+      if (code === 1) type = "free";
+      else if (code === 2) type = "notice";
+      navi(`/board/${type}/${seq}`);
     });
   };
 

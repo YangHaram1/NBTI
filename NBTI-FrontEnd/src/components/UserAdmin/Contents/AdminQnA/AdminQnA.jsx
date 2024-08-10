@@ -65,7 +65,7 @@ export const AdminQnA = () => {
         const requestBox = { seq: seq, board_code: code };
         axios.put(`${host}/board/viewCount`, requestBox).then((resp) => {
             setBoardSeq(seq);
-            navi("/mypage/qnaDetail");
+            navi(`/useradmin/qna/${seq}`);
         });
     };
 
@@ -117,13 +117,14 @@ export const AdminQnA = () => {
                         ? format(date, "yyyy-MM-dd")
                         : "Invalid Date";
 
+                    const status = item.reply_count > 0 ? "답변완료" : "진행중";
                     return (
                         <div className={styles.list} key={index}>
                             <div className={styles.seq}>
                                 <p>{item.seq}</p>
                             </div>
                             <div className={styles.status}>
-                                <p>진행중</p>
+                                <p>{status}</p>
                             </div>
                             <div className={styles.title}>
                                 <p onClick={() => { handleTitleClick(item.seq) }}>{item.title}</p>

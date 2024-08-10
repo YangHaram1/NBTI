@@ -11,10 +11,14 @@ export const Content = () => {
     <div className={styles.container}>
       <Routes>
         <Route path="/" element={<List />} />
-        <Route path="free" element={<List />} />
-        <Route path="notice" element={<List />} />
+        <Route path="free" element={<List setDetail={Detail} />} />
+        <Route path="notice" element={<List setDetail={Detail} />} />
         <Route path="insert" element={<Insert />} />
-        <Route path="detail" element={<Detail />} />
+
+        <Route path="free/:seq" element={<Detail />} />
+        <Route path="notice/:seq" element={<Detail />} />
+
+        {/* <Route path="detail" element={<Detail />} /> */}
         <Route path="myBoardList" element={<MyBoardList />} />
         <Route path="bookmark" element={<Bookmark />} />
       </Routes>

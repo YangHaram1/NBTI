@@ -64,7 +64,7 @@ export const QnAList = () => {
         const requestBox = { seq: seq, board_code: code };
         axios.put(`${host}/board/viewCount`, requestBox).then((resp) => {
             setBoardSeq(seq);
-            navi("/mypage/qnaDetail");
+            navi(`/mypage/qnaList/${seq}`);
         });
     };
 
@@ -112,8 +112,9 @@ export const QnAList = () => {
                         ? format(date, "yyyy-MM-dd")
                         : "Invalid Date";
 
-                    const status = item.replyCount > 0 ? "답변완료" : "진행중";
-                    console.log("몇개니: ", item.replyCount)
+                    const status = item.reply_count > 0 ? "답변완료" : "진행중";
+                    console.log("몇개니: ", item)
+                    console.log("몇개니: ", item.reply_count)
 
                     return (
                         <div className={styles.list} key={index}>

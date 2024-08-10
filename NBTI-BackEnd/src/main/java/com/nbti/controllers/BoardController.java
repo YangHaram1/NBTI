@@ -1,6 +1,5 @@
 package com.nbti.controllers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nbti.dto.BoardDTO;
-import com.nbti.dto.ReplyDTO;
 import com.nbti.services.BoardService;
 import com.nbti.services.ReplyService;
 
@@ -30,6 +28,8 @@ public class BoardController {
 
 	@Autowired
 	private BoardService bserv;
+	@Autowired
+	private ReplyService rserv;
 	@Autowired
 	private HttpSession session;
 	
@@ -51,6 +51,10 @@ public class BoardController {
 	    map.put("end", end);
 	    
 	    List<BoardDTO> list = bserv.selectAll(map);
+	    for(BoardDTO dto : list) {
+	    	int replyCount = rserv.countReply(dto.getSeq(), code);
+	    	dto.setReply_count(replyCount);
+	    }
 	    
 	    // 클라이언트에게 보낼 값 ( 페이지네이션 : 게시글 총 개수, 게시글 목록 )
 	    Map<String, Object> result = new HashMap<>();
@@ -81,6 +85,12 @@ public class BoardController {
 	    map.put("member_id", member_id);
 	    
 	    List<BoardDTO> list = bserv.selectMyList(map);
+	    
+	    for(BoardDTO dto : list) {
+	    	int replyCount = rserv.countReply(dto.getSeq(), code);
+	    	dto.setReply_count(replyCount);
+	    }
+	    
 	    
 	    // 클라이언트에게 보낼 값 ( 페이지네이션 : 게시글 총 개수, 게시글 목록 )
 	    Map<String, Object> result = new HashMap<>();
