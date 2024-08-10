@@ -56,6 +56,10 @@ public class ApprovalDAO {
 		return mybatis.selectOne("Approval.selectApproval",seq);
 	}
 	
+	public List<ListDocDTO> selectReferIsMeWait(String id){
+		return mybatis.selectList("Approval.selectReferIsMeWait",id);
+	}
+	
 	// 문서 정보 최신화
 	public void updateDocState(int temp_seq, String state) {
 		Map<String, Object> map = new HashMap<>();

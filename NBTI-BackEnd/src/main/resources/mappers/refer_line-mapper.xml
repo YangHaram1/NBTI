@@ -6,11 +6,15 @@
  <mapper namespace="ReferLine">
  
  	<insert id="insert">
- 		insert into refer_line values(refer_line_seq.nextval, ${temp_seq}, #{referer})
+ 		insert into refer_line values(refer_line_seq.nextval, ${temp_seq}, #{referer},'N')
  	</insert>
  	
  	<select id="selectLine" resultType='com.nbti.dto.ReferLineDTO'>
  		select * from refer_line where temp_seq=#{seq}
  	</select>
+ 	
+ 	<update id="updateRead">
+ 		update refer_line set read='Y' where temp_seq = #{seq} and referer=#{id}
+ 	</update>
   
  </mapper>
