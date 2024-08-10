@@ -16,6 +16,10 @@ hr{width: 100%;}
     flex:0.5;
 }
 
+.bubble_empty{
+    text-indent: 40px;
+}
+
 .bubble_box{
     width: 100%;
     height: 240px;
@@ -33,10 +37,65 @@ hr{width: 100%;}
     border-radius: 15px;
     margin-right: 20px;
     margin-left: 20px;
-    /* display: flex;
-    align-items: start;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    font-size: 15px;
+    text-indent: 20px;
+    /* align-items: start;
     justify-content: start; */
 }
+
+.bubble_state{
+    flex:0.75;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+
+.bubble_title{
+    font-size: 18px;
+    font-weight: 700;
+    flex:1;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.approvaler, .approval_date{
+    display: flex;
+    flex:1;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    max-height: 30px;
+}
+
+.approvaler_content, .date_content{
+    text-indent: 10px;
+}
+
+.btn{
+    margin-top: 15px;
+    flex:1;
+}
+
+.btn button{
+    background-color: #A4C3B2;
+    border: 0px;
+    width: 270px;
+    height: 30px;
+    border-radius: 5px;
+    font-weight: 600;
+    letter-spacing:5px;
+}
+
+.btn button:hover{
+    cursor: pointer;
+    background-color: #6B9080;
+}
+
 
 /* 스크롤 */
 
