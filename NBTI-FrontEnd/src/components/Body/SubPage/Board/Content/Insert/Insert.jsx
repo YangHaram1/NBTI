@@ -83,7 +83,7 @@ export const Insert = () => {
   // 팝업창 공통 함수
   // 임시 저장된 목록 출력
   const saveTempBoard = () => {
-    axios.get(`${host}/tempBoard/tempList`).then((resp) => {
+    axios.get(`${host}/tempBoard/tempList/${code}`).then((resp) => {
       console.log("뭐야? : ", resp.data);
       setTempBoardList(resp.data);
     });

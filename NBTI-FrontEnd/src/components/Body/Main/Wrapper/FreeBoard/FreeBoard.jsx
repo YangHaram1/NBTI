@@ -27,15 +27,19 @@ export const FreeBoard = () => {
         axios.get(`${host}/board/freeBoard`).then((resp) => {
             setBoard(resp.data.list);
             setReply(resp.data.rlist);
-            console.log("list : ", resp.data.rlist);
 
+            // 좋아요 상태 가져오기
             resp.data.rlist.forEach(reply => {
                 reply.forEach(innerReply => {
-                    // console.log("count : ", innerReply.count)
+                    axios.get(`${host}/likes/status/${innerReply.seq}`).then((resp) => {
+                        // boolean 반환
+                        // 좋아요 상태의 prev에 새롭게 true / false를 업데이트
+                        setIsLiked((prev) => ({ ...prev, [innerReply.seq]: resp.data }));
+                    });
                 })
-
             });
         });
+
 
         // 로그인 한 사용자 정보
         axios.get(`${host}/members`).then((resp) => {
@@ -91,18 +95,22 @@ export const FreeBoard = () => {
             if (resp.data === 1) console.log("조아요 성공");
         });
 
-        // setReply((prev) => {
-        //     console.log("dasda");
-        //     return (
-        //         prev.map((item, index) => {
-        //             if (index === i) {
-        //                 return { ...item, count: item.count + 1 };
-        //             }
-        //             return item
-        //         })
-        //     )
+        setReply((prev) => {
+            let data = [];
+            for (let j = 0; j < prev.length; j++) {
+                if (i === j) {
+                    const newData = prev[j].map((item, index) => {
+                        if (seq == item.seq) return { ...item, count: item.count + 1 };
+                        else return item
+                    })
+                    data.push(newData);
 
-        // })
+                } else {
+                    data.push(prev[j]);
+                }
+            }
+            return data;
+        })
 
     }
 
@@ -113,17 +121,22 @@ export const FreeBoard = () => {
         axios.delete(`${host}/likes/delete/${seq}`).then((resp) => {
             if (resp.data === 1) console.log("조아요 취소");
 
-            // setReply((prev) => {
-            //     console.log("dasda");
-            //     return (
-            //         prev.map((item, index) => {
-            //             if (index === i) {
-            //                 return { ...item, count: item.count - 1 };
-            //             }
-            //             return { ...item }
-            //         })
-            //     )
-            // })
+            setReply((prev) => {
+                let data = [];
+                for (let j = 0; j < prev.length; j++) {
+                    if (i === j) {
+                        const newData = prev[j].map((item, index) => {
+                            if (seq == item.seq) return { ...item, count: item.count - 1 };
+                            else return item
+                        })
+                        data.push(newData);
+
+                    } else {
+                        data.push(prev[j]);
+                    }
+                }
+                return data;
+            })
         });
     }
 
@@ -198,7 +211,6 @@ export const FreeBoard = () => {
                                                             dangerouslySetInnerHTML={{ __html: ritem.contents }} />
                                                     </div>
                                                     <div className={styles.likes}>
-                                                        {/* <i className="fa-regular fa-heart" /> */}
                                                         <i className="fa-regular fa-heart"
                                                             onClick={() => { handleLikekAdd(ritem.seq, i); }}
                                                             style={{ display: isLiked[ritem.seq] ? "none" : "inline" }} />

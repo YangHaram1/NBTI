@@ -23,6 +23,11 @@
 		select * from reply where board_seq = ${board_seq} and board_code = ${board_code} order by seq desc
 	</select>
 	
+	<!-- 댓글 개수 -->
+	<select id="countReply" resultType="int">
+		select count(*) from reply where board_seq = ${board_seq} and board_code = ${board_code}
+	</select>
+	
 	<!-- 댓글 삭제 -->
 	<delete id="delete">
 		delete from reply where seq = ${seq}

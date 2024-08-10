@@ -44,14 +44,18 @@ public class ApprovalLineController {
 		int temp_seq = (int)map.get("temp_seq");
 		String comment = (String)map.get("comment");
 		String approvalYN = (String)map.get("approvalYN");
+		String setlist = (String)map.get("setlist");
 		String state="";
+		
 		if(approvalYN.equals("결재승인")) {
 			state = "p";
 		} else {
 			state="r";
 		}
+		
 		map.put("approvalYN",state);
 		map.put("id", id);
+		System.out.println("setlist: " + setlist);
 		System.out.println(approvalYN +":"+id+":"+temp_seq+":"+comment+":"+state);
 //		 본인 결재라인 업데이트
 		alServ.updateMyLine(map);

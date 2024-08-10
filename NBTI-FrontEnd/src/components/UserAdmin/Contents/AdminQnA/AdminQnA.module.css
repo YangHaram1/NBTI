@@ -1,0 +1,190 @@
+.container {
+  width: 100%;
+  min-width: 1000px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.container > h1 {
+  margin: 0;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+}
+
+.container .searchBox {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 30px;
+}
+.container .searchBox .dropdown > select {
+  height: 30px;
+  width: 75px;
+  border-radius: 3px;
+  border: 1px solid #a4c3b2;
+  cursor: pointer;
+  padding: 3px;
+}
+
+.container .searchBox .dropdown > select > option {
+  cursor: pointer;
+}
+
+.container .searchBox > input {
+  width: 170px;
+  height: 30px;
+  margin-left: 5px;
+  border-radius: 3px;
+  border: 1px solid #a4c3b2;
+  padding-left: 10px;
+}
+
+.container .searchBox > button {
+  height: 30px;
+  width: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 5px;
+  margin-left: 5px;
+  background-color: #6b9080;
+  color: white;
+  cursor: pointer;
+  transition-duration: 0.4s;
+}
+
+.container .searchBox > button:hover {
+  background-color: #6b9080cc;
+}
+
+.container .body {
+  width: 100%;
+  /* height: 820px; */
+  height: auto;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.container .body .listTitle {
+  min-width: 800px;
+  height: 30px;
+  display: flex;
+}
+.container .body .listTitle > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #6b9080;
+  color: white;
+  font-size: 0.8rem;
+}
+.container .body .listTitle > div:nth-child(1) {
+  width: 9%;
+}
+.container .body .listTitle > div:nth-child(2) {
+  width: 12%;
+}
+.container .body .listTitle > div:nth-child(3) {
+  width: 59%;
+}
+.container .body .listTitle > div:nth-child(4) {
+  width: 18%;
+}
+.container .body .listTitle > div:nth-child(5) {
+  width: 12%;
+}
+.container .body .listTitle > div:nth-child(6) {
+  width: 10%;
+}
+
+.container .body .list {
+  min-width: 800px;
+  height: 40px;
+  display: flex;
+  border-bottom: 1px solid #6b908061;
+}
+
+.container .body .list > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: #; */
+  font-size: 0.8rem;
+  padding: 10px 0;
+}
+
+.container .body .list .seq {
+  width: 9%;
+}
+.container .body .list .status {
+  width: 12%;
+}
+.container .body .list .title {
+  width: 59%;
+  cursor: pointer;
+}
+.container .body .list .title:hover {
+  color: #50635b;
+}
+.container .body .list .writer {
+  width: 18%;
+}
+.container .body .list .writeDate {
+  width: 12%;
+}
+.container .body .list .viewCount {
+  width: 10%;
+}
+
+.container .pagination {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0 70px 0;
+}
+.container .pagination > a {
+  text-decoration-line: none;
+}
+
+.pagination {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pagination li {
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.pagination a {
+  text-decoration: none;
+  color: #6b9080;
+  /* padding: 0.5em 1em; */
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.pagination a:hover {
+  background-color: #f8f9fa;
+}
+
+.pagination .active a {
+  background-color: #6b9080;
+  color: white;
+}
+
+.previous {
+  display: none;
+}
+.next {
+  display: none;
+}

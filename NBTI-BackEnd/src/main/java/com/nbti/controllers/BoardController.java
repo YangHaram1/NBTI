@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nbti.dto.BoardDTO;
 import com.nbti.services.BoardService;
+import com.nbti.services.ReplyService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -27,6 +28,8 @@ public class BoardController {
 
 	@Autowired
 	private BoardService bserv;
+	@Autowired
+	private ReplyService rserv;
 	@Autowired
 	private HttpSession session;
 	
@@ -48,6 +51,10 @@ public class BoardController {
 	    map.put("end", end);
 	    
 	    List<BoardDTO> list = bserv.selectAll(map);
+	    for(BoardDTO dto : list) {
+	    	int replyCount = rserv.countReply(dto.getSeq(), code);
+	    	dto.setReply_count(replyCount);
+	    }
 	    
 	    // 클라이언트에게 보낼 값 ( 페이지네이션 : 게시글 총 개수, 게시글 목록 )
 	    Map<String, Object> result = new HashMap<>();
@@ -79,6 +86,12 @@ public class BoardController {
 	    
 	    List<BoardDTO> list = bserv.selectMyList(map);
 	    
+	    for(BoardDTO dto : list) {
+	    	int replyCount = rserv.countReply(dto.getSeq(), code);
+	    	dto.setReply_count(replyCount);
+	    }
+	    
+	    
 	    // 클라이언트에게 보낼 값 ( 페이지네이션 : 게시글 총 개수, 게시글 목록 )
 	    Map<String, Object> result = new HashMap<>();
 	    result.put("count", bserv.getMyListCount(map) ); // 전체 게시글 수 계산
@@ -86,6 +99,7 @@ public class BoardController {
 	    
 		return ResponseEntity.ok(result);
 	}
+	
 	
 	// 게시글 출력
 	@GetMapping("/{boardSeq}/{code}")

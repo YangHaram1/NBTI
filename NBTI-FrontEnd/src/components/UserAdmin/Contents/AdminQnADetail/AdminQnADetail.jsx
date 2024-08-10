@@ -1,4 +1,5 @@
-import styles from "./QnADetail.module.css";
+import styles from "./AdminQnADetail.module.css";
+
 import { useEffect, useState, useRef } from "react";
 import { useBoardStore } from "../../../../store/store";
 import axios from "axios";
@@ -8,7 +9,8 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import BoardEditor from "../../../Body/BoardEditor/BoardEditor";
 
-export const QnADetail = () => {
+
+export const AdminQnADetail = () => {
 
     const navi = useNavigate();
 

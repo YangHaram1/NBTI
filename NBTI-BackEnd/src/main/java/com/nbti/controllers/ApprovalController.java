@@ -296,6 +296,14 @@ public class ApprovalController {
 		return list;
 	}
 	
+	// 참조/열람 목록 출력 (결재하기)
+	@GetMapping("/getReferIsMeWait")
+	public List<ListDocDTO> getReferIsMeWait(){
+		String id = (String)session.getAttribute("loginID");
+		List<ListDocDTO> list = aServ.getReferIsMeWait(id);
+		return list;
+	}
+	
 	// 디테일 공통 데이터 출력
 	@GetMapping("/{seq}")
 	public ApprovalDTO getApproval(@PathVariable int seq){

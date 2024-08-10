@@ -10,6 +10,7 @@ public class BoardDTO {
 	private Timestamp write_date;
 	private int view_count;
 	private int board_code;
+	private int reply_count; // 댓글의 개수
 	
 	public BoardDTO() {
 	}
@@ -34,6 +35,30 @@ public class BoardDTO {
 		this.write_date = write_date;
 		this.view_count = view_count;
 		this.board_code = board_code;
+		this.reply_count = 0;
+	}
+
+	public BoardDTO(int seq, String title, String contents, String member_id, Timestamp write_date, int view_count,
+			int board_code, int reply_count) {
+		super();
+		this.seq = seq;
+		this.title = title;
+		this.contents = contents;
+		this.member_id = member_id;
+		this.write_date = write_date;
+		this.view_count = view_count;
+		this.board_code = board_code;
+		this.reply_count = reply_count;
+	}
+	
+	
+
+	public int getReply_count() {
+		return reply_count;
+	}
+
+	public void setReply_count(int reply_count) {
+		this.reply_count = reply_count;
 	}
 
 	public int getSeq() {

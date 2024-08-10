@@ -56,12 +56,24 @@ public class ApprovalDAO {
 		return mybatis.selectOne("Approval.selectApproval",seq);
 	}
 	
+	public List<ListDocDTO> selectReferIsMeWait(String id){
+		return mybatis.selectList("Approval.selectReferIsMeWait",id);
+	}
+	
 	// 문서 정보 최신화
 	public void updateDocState(int temp_seq, String state) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("temp_seq", temp_seq);
 		map.put("state", state);
 		mybatis.update("Approval.updateDocState", map);
+	}
+	
+	// 결재완료 시 문서 번호 생성
+	public void createApprovalSeq(int temp_seq, String docHeader) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("temp_seq", temp_seq);
+		map.put("docHeader", docHeader);
+		mybatis.update("Approval.createApprovalSeq", map);
 	}
 
 }

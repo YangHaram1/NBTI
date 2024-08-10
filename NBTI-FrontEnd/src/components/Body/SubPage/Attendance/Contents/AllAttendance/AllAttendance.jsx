@@ -1,5 +1,5 @@
 // AllAttendance.js
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import koLocale from '@fullcalendar/core/locales/ko';
@@ -63,6 +63,80 @@ export const AllAttendance = () => {
     const { stats, loading } = useAllWeeklyStats();
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredMembers, setFilteredMembers] = useState([]);
+    const [list, setList] = useState();
+
+
+    // 월요일에 표시할 이벤트 생성
+    const handleList = useCallback(() => {
+        // 현재 날짜와 주 시작일 계산
+        const today = new Date();
+        const startOfWeek = getStartOfWeek(today);
+        // 필터링된 멤버 목록 사용 또는 전체 멤버 목록 사용
+        const membersToDisplay = filteredMembers.length > 0 ? filteredMembers : Object.keys(stats).map(memberId => {
+            const memberStats = stats[memberId] || {};
+            const hasAttendance = Object.keys(memberStats).length > 0;
+            return {
+                memberId,
+                name: hasAttendance ? memberStats[Object.keys(memberStats)[0]].name : 'N/A',
+                teamName: hasAttendance ? memberStats[Object.keys(memberStats)[0]].team_name : 'N/A'
+            };
+        });
+
+        const events = membersToDisplay.flatMap(({ memberId, name, teamName }) => {
+            return Array.from({ length: 7 }).map((_, index) => {
+                const date = new Date(startOfWeek);
+                date.setDate(date.getDate() + index);
+                const formattedDate = formatDate(date);
+
+                const { startDate, endDate } = stats[memberId]?.[formattedDate] || {};
+
+                const startTime = startDate ? formatTime(startDate) : 'N/A';
+                const endTime = endDate ? formatTime(endDate) : 'N/A';
+                const workingHours = calculateWorkingHours(startDate, endDate);
+
+                const title = `출근: ${startTime}\n퇴근: ${endTime}\n근무 시간: ${workingHours}\n`;
+
+                const dayOfWeek = getDayOfWeek(date);
+
+                let backgroundColor = 'white';
+                let textColor = 'black';
+
+                if (dayOfWeek === 6) {
+                    textColor = 'red';
+                } else if (dayOfWeek === 5) {
+                    textColor = 'blue';
+                }
+
+                // 월요일에 출근 기록이 없더라도 기본 이벤트 생성
+                if (dayOfWeek === 0) {
+                    // 월요일에 출근 기록이 없으면 기본 이벤트 생성
+                    if (!startDate && !endDate) {
+                        return createDefaultEvent(formattedDate, name, teamName);
+                    }
+                }
+
+                return {
+                    title,
+                    date: formattedDate,
+                    extendedProps: {
+                        backgroundColor,
+                        textColor,
+                        dayOfWeek,
+                        memberName: name,
+                        teamName
+                    }
+                };
+            });
+        });
+        console.log(events);
+        setList(events);
+       
+    }, [filteredMembers])
+
+    useEffect(() => {
+        handleList();
+    }, [handleList])
+
 
     // 검색 처리 함수
     const handleSearch = useCallback(() => {
@@ -93,73 +167,22 @@ export const AllAttendance = () => {
         }
     }, [searchTerm, stats]);
 
+    useEffect(()=>{
+        handleSearch();
+    },[])
+
     if (loading) {
         return <div>Loading...</div>;
     }
 
-    // 현재 날짜와 주 시작일 계산
-    const today = new Date();
-    const startOfWeek = getStartOfWeek(today);
 
-    // 필터링된 멤버 목록 사용 또는 전체 멤버 목록 사용
-    const membersToDisplay = filteredMembers.length > 0 ? filteredMembers : Object.keys(stats).map(memberId => {
-        const memberStats = stats[memberId] || {};
-        const hasAttendance = Object.keys(memberStats).length > 0;
-        return {
-            memberId,
-            name: hasAttendance ? memberStats[Object.keys(memberStats)[0]].name : 'N/A',
-            teamName: hasAttendance ? memberStats[Object.keys(memberStats)[0]].team_name : 'N/A'
-        };
-    });
 
-    // 월요일에 표시할 이벤트 생성
-    const events = membersToDisplay.flatMap(({ memberId, name, teamName }) => {
-        return Array.from({ length: 7 }).map((_, index) => {
-            const date = new Date(startOfWeek);
-            date.setDate(date.getDate() + index);
-            const formattedDate = formatDate(date);
 
-            const { startDate, endDate } = stats[memberId]?.[formattedDate] || {};
 
-            const startTime = startDate ? formatTime(startDate) : 'N/A';
-            const endTime = endDate ? formatTime(endDate) : 'N/A';
-            const workingHours = calculateWorkingHours(startDate, endDate);
 
-            const title = `출근: ${startTime}\n퇴근: ${endTime}\n근무 시간: ${workingHours}\n`;
+ 
 
-            const dayOfWeek = getDayOfWeek(date);
-
-            let backgroundColor = 'white';
-            let textColor = 'black';
-
-            if (dayOfWeek === 6) {
-                textColor = 'red';
-            } else if (dayOfWeek === 5) {
-                textColor = 'blue';
-            }
-
-            // 월요일에 출근 기록이 없더라도, 다른 날짜에 출근 기록이 있는 경우에만 표시
-            if (dayOfWeek === 0) {
-                const hasAttendance = Object.keys(stats[memberId] || {}).length > 0;
-                if (!hasAttendance) {
-                    return createDefaultEvent(formattedDate, name, teamName);
-                }
-            }
-
-            return {
-                title,
-                date: formattedDate,
-                extendedProps: {
-                    backgroundColor,
-                    textColor,
-                    dayOfWeek,
-                    memberName: name,
-                    teamName
-                }
-            };
-        });
-    });
-
+let count=0;
     return (
         <div className={styles.container}>
             <SearchUser
@@ -175,7 +198,7 @@ export const AllAttendance = () => {
                 locale="ko"
                 selectable={true}
                 height="auto"
-                events={events}
+                events={list}
                 firstDay={1}
                 eventContent={({ event }) => {
                     const lines = event.title.split('\n');
@@ -186,15 +209,20 @@ export const AllAttendance = () => {
                             className={styles.eventContent}
                             style={{ backgroundColor: event.extendedProps.backgroundColor, color: event.extendedProps.textColor }}
                         >
-                            {isMonday && (
+                            {(
                                 <div style={{ display: "flex", flexDirection: "column", alignItems: 'flex-start' }}>
                                     <div>이름: {event.extendedProps.memberName}</div>
                                     <div>부서: {event.extendedProps.teamName}</div>
+                                  {count++}
                                 </div>
                             )}
                             <div style={{ display: "flex", flexDirection: "column", textAlign: "center", flex: 1 }}>
                                 {lines.map((line, index) => (
-                                    <div key={index}>{line}</div>
+                                    <div key={index}>{line}
+                            
+                                    
+                                    </div>
+                                    
                                 ))}
                             </div>
                         </div>
