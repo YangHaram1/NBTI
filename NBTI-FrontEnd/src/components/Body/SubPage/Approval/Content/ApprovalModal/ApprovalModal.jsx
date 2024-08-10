@@ -3,7 +3,7 @@ import styles from './Approval.module.css';
 import axios from 'axios';
 import { host } from '../../../../../../config/config';
 
-export const ApprovalModal = ({onClose, approvalYN, seq})=>{
+export const ApprovalModal = ({onClose, approvalYN, seq, setlist})=>{
 
     const [comment, setComment] = useState(''); 
 
@@ -13,7 +13,7 @@ export const ApprovalModal = ({onClose, approvalYN, seq})=>{
     }
 
     const handleSubmit = () => {
-        const data = {temp_seq:seq, comment:comment, approvalYN:approvalYN};
+        const data = {temp_seq:seq, comment:comment, approvalYN:approvalYN, setlist:setlist};
         axios.put(`${host}/approvalLine/insertComment`,data)
         .then((resp)=>{
             console.log(resp);

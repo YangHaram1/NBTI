@@ -18,9 +18,9 @@ export const Detail=()=>{
     //useLoaction으로 값 받아오기 => 객체이기 때문에 구조분할로 받는것이 용이
     const location = useLocation();
     const { seq, setlist, list } = location.state || {};
-    console.log("seq:", seq);
+    // console.log("seq:", seq);
     console.log("setlist:", setlist);
-    console.log("list:", list);
+    // console.log("list:", list);
 
 
     const [approvalData, setApprovalData] = useState([]);
@@ -190,7 +190,7 @@ export const Detail=()=>{
                     </div>
                 </div>
             </div>
-            {showModal && <ApprovalModal approvalYN={approvalYN} onClose={handleCloseModal} seq={seq} />}
+            {showModal && <ApprovalModal approvalYN={approvalYN} onClose={handleCloseModal} seq={seq} setlist={setlist} />}
         </div>
     );
 

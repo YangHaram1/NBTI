@@ -171,6 +171,35 @@
  	<update id="updateDocState">
  		update approval set doc_state = #{state} where temp_seq = ${temp_seq}
  	</update>
+ 	
+ 	<!-- 문서번호 생성 및 관리 -->
+    <update id="createApprovalSeq" parameterType="map">
+        DECLARE
+            v_form_code VARCHAR2(3) := #{docHeader};
+            v_current_year CHAR(2) := TO_CHAR(SYSDATE, 'YY');
+            v_sequence_number NUMBER;
+        BEGIN
+            
+            SELECT COALESCE(MAX(sequence_number), 0) INTO v_sequence_number
+            FROM document_number
+            WHERE form_code = v_form_code AND year = v_current_year;
+            
+            v_sequence_number := v_sequence_number + 1;
+
+            MERGE INTO document_number d
+            USING (SELECT v_form_code AS form_code, v_current_year AS year FROM dual) src
+            ON (d.form_code = src.form_code AND d.year = src.year)
+            WHEN MATCHED THEN
+                UPDATE SET sequence_number = v_sequence_number
+            WHEN NOT MATCHED THEN
+                INSERT (form_code, year, sequence_number)
+                VALUES (src.form_code, src.year, v_sequence_number);
+
+            UPDATE approval
+            SET approval_seq = v_form_code || '-' || v_current_year || '-' || TO_CHAR(v_sequence_number, 'FM000')
+            WHERE temp_seq = #{temp_seq};
+        END;
+    </update>
   
   	
   
