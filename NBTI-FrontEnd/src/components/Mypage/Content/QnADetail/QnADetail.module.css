@@ -118,6 +118,11 @@
   display: flex;
   margin-bottom: 15px;
 }
+.container .reply .count > div {
+  padding-bottom: 10px;
+  border-bottom: 3px solid #6b908061;
+}
+
 .container .reply .count > span:nth-child(1) {
   margin-right: 3px;
   color: #6b9080;

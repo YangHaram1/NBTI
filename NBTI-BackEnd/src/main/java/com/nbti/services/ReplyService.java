@@ -24,12 +24,22 @@ public class ReplyService {
 	// 댓글 출력
 	public List<ReplyDTO> selectReply(int board_seq, int board_code){
 		
-		Map<String, Integer> params = new HashMap<>();
-		params.put("board_seq", board_seq);
-		params.put("board_code", board_code);
+		Map<String, Integer> map = new HashMap<>();
+		map.put("board_seq", board_seq);
+		map.put("board_code", board_code);
 		
-		return rdao.selectReply(params);
+		return rdao.selectReply(map);
 	}
+	
+	// 댓글 개수 조회
+	public int countReply(int board_seq, int board_code){
+	    Map<String, Integer> map = new HashMap<>();
+	    map.put("board_seq", board_seq);
+	    map.put("board_code", board_code);
+	    
+	    return rdao.countReply(map);
+	}
+	
 	
 	// 댓글 삭제
 	public int delete(int seq) {

@@ -28,15 +28,8 @@ export const QnADetail = () => {
     const [isAdmin, setIsAdmin] = useState(false); // 권한 여부 상태
     const [isBookmarked, setIsBookmarked] = useState(false);
 
-    const [isLiked, setIsLiked] = useState({}); // 좋아요 상태를 객체로 저장
-    const [likesCount, setLikesCount] = useState({}); // 댓글별 좋아요 개수
-    // const [like, setLike] = useState([0, 0, 0]); // 댓글별 좋아요 개수
-
     // 게시판 코드
     let code = 3;
-    // if (boardType === "자유") code = 1;
-    // else if (boardType === "공지") code = 2;
-    // else if (boardType === "문의") code = 3;
 
     // 게시글 날짜 타입 변경
     const date = new Date(detail.write_date);
@@ -46,7 +39,7 @@ export const QnADetail = () => {
 
     // 게시글 출력
     useEffect(() => {
-        if (boardSeq === -1) navi("/board"); // detail 화면에서 f5 -> 목록으로 이동
+        if (boardSeq === -1) navi("/mypage/qnaList"); // detail 화면에서 f5 -> 목록으로 이동
         if (boardSeq !== -1) {
             axios.get(`${host}/board/${boardSeq}/${code}`).then((resp) => {
                 setDetail(resp.data); // 취소 시 원본 데이터
@@ -61,26 +54,27 @@ export const QnADetail = () => {
         }
 
         // 로그인 한 사용자 정보
-        // axios.get(`${host}/members`).then((resp) => {
-        //     setCurrentUser(resp.data);
-        // });
+        axios.get(`${host}/members`).then((resp) => {
+            setCurrentUser(resp.data);
+        });
 
-        // 로그인 한 사용자 정보 및 HR 권한 확인
-        // axios.get(`${host}/members`).then((resp) => {
-        //     if (resp.data.member_level === "2") {
-        //         // HR 권한 확인
-        //         axios.get(`${host}/members/selectLevel`).then((resp1) => {
+        // 로그인 한 사용자 정보 및 권한 확인
+        axios.get(`${host}/members`).then((resp) => {
 
-        //             console.log("댓글권한 : ", resp1.data);
+            if (resp.data.member_level === "2") {
+                // 권한 확인
+                axios.get(`${host}/members/selectLevel`).then((resp1) => {
+                    const totalStatus = resp1.data[parseInt(resp.data.member_level) - 1].total; // 배열의 n번째 요소에서 seq 확인
 
-        //             const hrStatus = resp1.data[parseInt(resp.data.member_level) - 1].hr; // 배열의 n번째 요소에서 hr 확인
+                    console.log("권한 : ", resp1.data);
+                    console.log("댓글권한 : ", totalStatus);
 
-        //             if (hrStatus === "Y") {
-        //                 setIsAdmin(true); // Y일 때 true
-        //             }
-        //         });
-        //     }
-        // });
+                    if (totalStatus === "Y") {
+                        setIsAdmin(true); // 2일 때 true
+                    }
+                });
+            }
+        });
 
 
         // 외부 스타일시트를 동적으로 추가
@@ -94,26 +88,6 @@ export const QnADetail = () => {
             document.head.removeChild(link); // 언마운트될 때 스타일시트를 제거
         };
     }, []);
-
-
-    // 로그인 한 사용자 정보 및 HR 권한 확인
-    // useEffect(() => {
-    //     axios.get(`${host}/members`).then((resp) => {
-    //         if (resp.data.member_level === "2") {
-    //             // HR 권한 확인
-    //             axios.get(`${host}/members/selectLevel`).then((resp1) => {
-
-    //                 console.log("댓글권한 : ", resp1.data);
-
-    //                 const hrStatus = resp1.data[parseInt(resp.data.member_level) - 1].hr; // 배열의 n번째 요소에서 hr 확인
-
-    //                 if (hrStatus === "Y") {
-    //                     setIsAdmin(true); // Y일 때 true
-    //                 }
-    //             });
-    //         }
-    //     });
-    // }, []);
 
     /** ================[ 삭 제 ]============= */
     const handleDelBtn = () => {
@@ -199,19 +173,9 @@ export const QnADetail = () => {
     // (좋아요 포함) 댓글 전체 출력
     useEffect(() => {
         axios.get(`${host}/reply/${boardSeq}/${code}`).then((resp) => {
-            const { replies, likes } = resp.data;
-            console.log(replies);
+            const { replies } = resp.data;
             setReply(replies); // 좋아요 count 포함된 댓글 배열
-            setIsLiked(likes); // 좋아요 true / false 상태
 
-            // 좋아요 상태 가져오기
-            replies.forEach((reply) => {
-                axios.get(`${host}/likes/status/${reply.seq}`).then((resp) => {
-                    // boolean 반환
-                    // 좋아요 상태의 prev에 새롭게 true / false를 업데이트
-                    setIsLiked((prev) => ({ ...prev, [reply.seq]: resp.data }));
-                });
-            });
         });
     }, [boardSeq, code]);
 
@@ -223,47 +187,6 @@ export const QnADetail = () => {
             });
         });
     };
-
-    // 댓글 좋아요 클릭
-    const handleLikekAdd = (seq, i) => {
-        console.log("조아요..", seq);
-        setIsLiked((prev) => ({ ...prev, [seq]: true })); // 상태를 true로 변환
-
-        axios.post(`${host}/likes/insert`, { reply_seq: seq }).then((resp) => {
-            if (resp.data === 1) console.log("조아요 성공");
-        });
-
-        setReply((prev) => {
-            console.log("dasda");
-            return prev.map((item, index) => {
-                if (index === i) {
-                    return { ...item, count: item.count + 1 };
-                }
-                return item;
-            });
-        });
-    };
-
-    // 댓글 좋아요 해제
-    const handleLikeRemove = (seq, i) => {
-        setIsLiked((prev) => ({ ...prev, [seq]: false }));
-
-        axios.delete(`${host}/likes/delete/${seq}`).then((resp) => {
-            if (resp.data === 1) console.log("조아요 취소");
-
-            setReply((prev) => {
-                console.log("dasda");
-                return prev.map((item, index) => {
-                    if (index === i) {
-                        return { ...item, count: item.count - 1 };
-                    }
-                    return { ...item };
-                });
-            });
-        });
-    };
-
-
 
 
     return (
@@ -340,12 +263,14 @@ export const QnADetail = () => {
 
 
             {/* --------------[ 댓글 작성 ]------------ */}
-            {isAdmin && (
-                <div className={styles.reply}>
-                    <div className={styles.count}>
+            <div className={styles.reply}>
+                <div className={styles.count}>
+                    <div>
                         <span>{reply.length}</span>
                         <span>개의 댓글</span>
                     </div>
+                </div>
+                {isAdmin && (
                     <div className={styles.replyInput}>
                         <img src={image} alt="" />
                         <div
@@ -357,63 +282,39 @@ export const QnADetail = () => {
                         />
                         <button onClick={handleReplyAdd}>등록</button>
                     </div>
+                )}
 
-                    {/* --------------[ 댓글 출력 ]------------ */}
-                    <div className={styles.replyOutputWrap}>
-                        {reply.map((item, i) => {
-                            // 댓글 날짜 타입 변경
-                            const reply_date = new Date(item.write_date);
-                            const reply_currentDate = !isNaN(reply_date)
-                                ? format(reply_date, "yyyy-MM-dd HH:mm:ss")
-                                : "Invalid Date";
+                {/* --------------[ 댓글 출력 ]------------ */}
+                <div className={styles.replyOutputWrap}>
+                    {reply.map((item, i) => {
+                        // 댓글 날짜 타입 변경
+                        const reply_date = new Date(item.write_date);
+                        const reply_currentDate = !isNaN(reply_date)
+                            ? format(reply_date, "yyyy-MM-dd HH:mm:ss")
+                            : "Invalid Date";
 
-                            return (
-                                <div className={styles.replyOutput} key={i}>
-                                    <img src={image} alt="" />
-                                    <div>
-                                        <div className={styles.writer_writeDate}>
-                                            <span>{item.member_id}</span>
-                                            <span>{reply_currentDate}</span>
-                                        </div>
-                                        <div
-                                            className={styles.replyContent}
-                                            dangerouslySetInnerHTML={{ __html: item.contents }}
-                                        />
+                        return (
+                            <div className={styles.replyOutput} key={i}>
+                                <img src={image} alt="" />
+                                <div>
+                                    <div className={styles.writer_writeDate}>
+                                        <span>{item.member_id}</span>
+                                        <span>{reply_currentDate}</span>
                                     </div>
-                                    <div className={styles.likes}>
-                                        <i
-                                            className="fa-regular fa-heart fa-lg"
-                                            onClick={() => {
-                                                handleLikekAdd(item.seq, i);
-                                            }}
-                                            style={{ display: isLiked[item.seq] ? "none" : "inline" }}
-                                        />
-                                        <i
-                                            className="fa-solid fa-heart fa-lg"
-                                            onClick={() => {
-                                                handleLikeRemove(item.seq, i);
-                                            }}
-                                            style={{ display: isLiked[item.seq] ? "inline" : "none" }}
-                                        />
-                                        {/* <p>5</p> */}
-                                        <p>{item.count}</p>
-                                    </div>
-                                    {currentUser && currentUser.id === item.member_id && (
-                                        <button
-                                            onClick={() => {
-                                                handleDelReplyBtn(item.seq);
-                                            }}
-                                        >
-                                            {" "}
-                                            X{" "}
-                                        </button>
-                                    )}
+                                    <div
+                                        className={styles.replyContent}
+                                        dangerouslySetInnerHTML={{ __html: item.contents }}
+                                    />
                                 </div>
-                            );
-                        })}
-                    </div>
+                                {currentUser && currentUser.id === item.member_id && (
+                                    <button onClick={() => { handleDelReplyBtn(item.seq); }}>X</button>
+                                )}
+                            </div>
+                        );
+                    })}
                 </div>
-            )}
+            </div>
+
         </div>
     )
 }

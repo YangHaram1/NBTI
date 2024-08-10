@@ -1,4 +1,4 @@
-import styles from "./QnAList.module.css";
+import styles from "./AdminQnA.module.css";
 
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -9,11 +9,11 @@ import { host } from "../../../../config/config";
 import ReactPaginate from "react-paginate";
 
 
-export const QnAList = () => {
+export const AdminQnA = () => {
 
     const navi = useNavigate();
     const [boardList, setBoardList] = useState([]);
-    const { setBoardSeq } = useBoardStore();
+    const { boardType, setBoardSeq, setBoardType } = useBoardStore();
     const [target, setTarget] = useState('');  // target 초기 값을 빈 문자열로 설정
     const [keyword, setKeyword] = useState('');     // keyword 초기 값
     const [search, setSearch] = useState(false);
@@ -32,7 +32,7 @@ export const QnAList = () => {
         const end = cpage * recordCountPerPage; // 10
         const params = { code: code, target: target, keyword: keyword, start: start, end: end };
 
-        axios.get(`${host}/board/myList`, { params }).then((resp) => {
+        axios.get(`${host}/board/list`, { params }).then((resp) => {
 
             setBoardList(resp.data.list); // 서버에서 list와 count 보낸 것 중 list만 담기
 
@@ -44,6 +44,7 @@ export const QnAList = () => {
             else {
                 setPageTotalCount(Math.floor(recordTotalCount / recordCountPerPage) + 1);
             }
+
         });
     }, [search, cpage]);
 
@@ -68,9 +69,10 @@ export const QnAList = () => {
         });
     };
 
+
     return (
         <div className={styles.container}>
-            <h1>나의 문의 내역</h1>
+            <h1>문의 내역</h1>
             <div className={styles.searchBox}>
                 <div className={styles.dropdown}>
                     <select value={target} onChange={(e) => setTarget(e.target.value)}>
@@ -100,6 +102,9 @@ export const QnAList = () => {
                         <p>제목</p>
                     </div>
                     <div>
+                        <p>작성자</p>
+                    </div>
+                    <div>
                         <p>작성일</p>
                     </div>
                     <div>
@@ -112,19 +117,19 @@ export const QnAList = () => {
                         ? format(date, "yyyy-MM-dd")
                         : "Invalid Date";
 
-                    const status = item.replyCount > 0 ? "답변완료" : "진행중";
-                    console.log("몇개니: ", item.replyCount)
-
                     return (
                         <div className={styles.list} key={index}>
                             <div className={styles.seq}>
                                 <p>{item.seq}</p>
                             </div>
                             <div className={styles.status}>
-                                <p>{status}</p>
+                                <p>진행중</p>
                             </div>
                             <div className={styles.title}>
                                 <p onClick={() => { handleTitleClick(item.seq) }}>{item.title}</p>
+                            </div>
+                            <div className={styles.writer}>
+                                <p>{item.member_id}</p>
                             </div>
                             <div className={styles.writeDate}>
                                 <p>{currentDate}</p>

@@ -1,20 +1,19 @@
 import { useEffect } from "react";
 import styles from "./Side.module.css";
 import { useNavigate } from "react-router-dom";
-import UserDetail from "../Contents/UserDetail/UserDetail";
 
 export const Side = () => {
   // ===== 메뉴 토글 =====
-//   const [FreeBoard, setFreeBoard] = useState(false);
-//   const [NoticeBoard, setNoticeBoard] = useState(false);
+  //   const [FreeBoard, setFreeBoard] = useState(false);
+  //   const [NoticeBoard, setNoticeBoard] = useState(false);
 
-//   const toggleFreeBoard = () => {
-//     setFreeBoard(!FreeBoard);
-//   };
+  //   const toggleFreeBoard = () => {
+  //     setFreeBoard(!FreeBoard);
+  //   };
 
-//   const toggleNoticeBoard = () => {
-//     setNoticeBoard(!NoticeBoard);
-//   };
+  //   const toggleNoticeBoard = () => {
+  //     setNoticeBoard(!NoticeBoard);
+  //   };
 
   // ===== 아이콘 =====
   useEffect(() => {
@@ -31,29 +30,35 @@ export const Side = () => {
     };
   }, []);
 
-//   const preventPropagation = (e) => {
-//     e.stopPropagation();
-//   };
+  //   const preventPropagation = (e) => {
+  //     e.stopPropagation();
+  //   };
 
   const navi = useNavigate();
+
 
   return (
     <div className={styles.container}>
       <div className={styles.menus}>
         <ul>
-            <li onClick={() => { navi("/useradmin/signup") }}>
-                사용자 등록
-            </li>
+          <li onClick={() => { navi("/useradmin/signup") }}>
+            사용자 등록
+          </li>
         </ul>
         <ul>
-            <li onClick={() => { navi("/useradmin/userlist") }}>
-                사용자 조회
-            </li>
+          <li onClick={() => { navi("/useradmin/userlist") }}>
+            사용자 조회
+          </li>
         </ul>
         <ul>
-            <li onClick={() => { navi("/useradmin/security") }}>
-                보안
-            </li>
+          <li onClick={() => { navi("/useradmin/security") }}>
+            보안
+          </li>
+        </ul>
+        <ul>
+          <li onClick={() => { navi("/useradmin/adminQnA") }}>
+            문의내역 목록
+          </li>
         </ul>
       </div>
     </div>

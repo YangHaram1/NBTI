@@ -10,7 +10,7 @@ public class ReplyDTO {
 	private Timestamp write_date = null;
 	private int board_seq;
 	private int board_code;
-	private int count;
+	private int count; // 좋아요 개수
 	
 	public ReplyDTO() {
 	}
@@ -36,6 +36,7 @@ public class ReplyDTO {
 		this.board_code = board_code;
 		this.count = count;
 	}
+
 
 	public int getCount() {
 		return count;

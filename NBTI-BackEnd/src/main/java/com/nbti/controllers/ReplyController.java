@@ -50,14 +50,11 @@ public class ReplyController {
 	// 댓글 및 좋아요 상태 & 개수 조회
 	@GetMapping("/{board_seq}/{board_code}")
 	public ResponseEntity<Map<String, Object>> selectReply(@PathVariable int board_seq, @PathVariable int board_code){
-//		List<ReplyDTO> list = rserv.selectReply(board_seq, board_code);
-//		return ResponseEntity.ok(list);
 	 
-		List<ReplyDTO> replies = rserv.selectReply(board_seq, board_code);
-	    Map<Integer, Boolean> likesStatus = new HashMap<>();
-	    
-	    
-	    String memberId = (String) session.getAttribute("loginID");
+		String memberId = (String) session.getAttribute("loginID");
+
+		List<ReplyDTO> replies = rserv.selectReply(board_seq, board_code); // 하나의 게시물의 댓글 목록
+	    Map<Integer, Boolean> likesStatus = new HashMap<>(); // 좋아요 상태
 	    
 	    for (ReplyDTO reply : replies) {
 	        Map<String, Object> map = new HashMap<>();
@@ -66,19 +63,21 @@ public class ReplyController {
 	        
 	        boolean isLiked = lserv.isLiked(map); // map 안의 댓글에 담긴 좋아요의 상태( true/false )가 isLiked에 담김
 	        
-	        likesStatus.put(reply.getSeq(), isLiked);
+	        likesStatus.put(reply.getSeq(), isLiked); 
 	        
 	        int count = lserv.likeCount(reply.getSeq());
 	        reply.setCount(count);
 	    }
+	    
+	    // 댓글 개수 조회
+	    int replyCount = rserv.countReply(board_seq, board_code);
 
 	    Map<String, Object> result = new HashMap<>();
 	    result.put("replies", replies);
 	    result.put("likes", likesStatus);
+	    result.put("replyCount", replyCount); // 댓글 개수 추가
 	    
 	    return ResponseEntity.ok(result);
-	
-	
 	}
 	
 	// 댓글 삭제 
