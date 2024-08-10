@@ -18,9 +18,9 @@ export const Detail=()=>{
     //useLoaction으로 값 받아오기 => 객체이기 때문에 구조분할로 받는것이 용이
     const location = useLocation();
     const { seq, setlist, list } = location.state || {};
-    console.log("seq:", seq);
-    console.log("setlist:", setlist);
-    console.log("list:", list);
+    // console.log("seq:", seq);
+    // console.log("setlist:", setlist);
+    // console.log("list:", list);
 
 
     const [approvalData, setApprovalData] = useState([]);
@@ -48,7 +48,7 @@ export const Detail=()=>{
 
                 // 문서 공통 정보 받아오기
                 const docDataResponse = await axios.get(`${host}/approval/${seq}`)
-                // console.log("문서공통정보",docDataResponse);
+                console.log("문서공통정보",docDataResponse);
                 console.log("문서코드", docDataResponse.data.doc_sub_seq);
                 setDocCommonData(docDataResponse.data);
                 let form_code = docDataResponse.data.doc_sub_seq;
@@ -56,19 +56,18 @@ export const Detail=()=>{
                 if(form_code == 1){
                     // 업무기안
                     const docMainDataResponse = await axios.get(`${host}/docDraft/${seq}`);
-                    console.log("업무기안서",docMainDataResponse);
+                    // console.log("업무기안서",docMainDataResponse);
                     setDocDraft(docMainDataResponse.data);
                 }
                 else if(form_code == 2){
                     // 휴직 신청서
                     const docMainDataResponse = await axios.get(`${host}/docLeave/${seq}`);
-                    console.log("휴직신청서 데이터 받아왔지요");
-                    console.log("휴직신청서",docMainDataResponse);
+                    // console.log("휴직신청서",docMainDataResponse);
                     setDocLeave(docMainDataResponse.data);
                 }else if(form_code == 3){
                     // 휴가 신청서
                     const docMainDataResponse = await axios.get(`${host}/docVacation/${seq}`);
-                    console.log("휴가신청서",docMainDataResponse);
+                    // console.log("휴가신청서",docMainDataResponse);
                     setDocVacation(docMainDataResponse.data);
                 }
                 else{
@@ -77,13 +76,17 @@ export const Detail=()=>{
                 // 결재라인 정보 받아오기
                 const approvalLineResponse = await axios.get(`${host}/approvalLine/${seq}`);
                 setApprovalData(approvalLineResponse.data);
-                console.log("결재라인 체크",approvalLineResponse.data);
+                // console.log("결재라인 체크",approvalLineResponse.data);
 
                 // 참조라인 정보 받아오기
                 const referLineResponse = await axios.get(`${host}/referLine/${seq}`);
                 setReferData(referLineResponse.data);
                 // console.log("참조라인확인",referLineResponse.data);
 
+                if(list == '참조/열람 대기'){
+                    axios.put(`${host}/referLine/read/${seq}`);
+                }
+            
     
             } catch (error) {
                 setError(error);
@@ -190,7 +193,7 @@ export const Detail=()=>{
                     </div>
                 </div>
             </div>
-            {showModal && <ApprovalModal approvalYN={approvalYN} onClose={handleCloseModal} seq={seq} />}
+            {showModal && <ApprovalModal approvalYN={approvalYN} onClose={handleCloseModal} seq={seq} setlist={setlist} />}
         </div>
     );
 

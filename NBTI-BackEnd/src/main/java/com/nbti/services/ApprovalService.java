@@ -50,6 +50,11 @@ public class ApprovalService {
 		return adao.selectApprovalBook(id);
 	}
 	
+	// 참조/열람 문서(결재하기)
+	public List<ListDocDTO> getReferIsMeWait(String id){
+		return adao.selectReferIsMeWait(id);
+	}
+	
 	// 디테일 페이지(공통정보 출력)
 	public ApprovalDTO getApproval(int seq){
 		return adao.selectApproval(seq);

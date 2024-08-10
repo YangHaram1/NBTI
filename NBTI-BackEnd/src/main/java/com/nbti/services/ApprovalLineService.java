@@ -40,16 +40,29 @@ public class ApprovalLineService {
 		int order = aldao.selectOrder(map);
 		int seq = (int)map.get("temp_seq");
 		String approvalYN = (String)map.get("approvalYN");
+		String setlist = (String)map.get("setlist");
+		String docHeader = "";
+		
+		// 나중에 코드 개선시 수정하기
+		if(setlist.equals("업무기안서")) {
+			docHeader = "DF";
+		}else if(setlist.equals("휴직신청서")) {
+			docHeader="LE";
+		}else {
+			docHeader="VC";
+		}
 		
 		// 문서 상태가 승인일 때, 
 		if(approvalYN.equals("p")) {
 			// 현재 내 순서가 최종 순서라면 문서상태 완료로 업데이트 후 문서번호 추가
 			if(total_seq == order) {
-				System.out.println("결재종료 문서번호 추가하기");
+				adao.updateDocState(seq, approvalYN);
+				adao.createApprovalSeq(seq, docHeader);
+				
 			// 현재 내 순서가 최종 순서가 아니라면 다음 결재자 상태 업데이트	
 			}else if(total_seq > order) {
 				int updateOrder = (order+(int)1);
-				System.out.println("order 값증가 및 업데이트 필요" +order +":"+ (updateOrder));
+//				System.out.println("order 값증가 및 업데이트 필요" +order +":"+ (updateOrder));
 				map.put("updateOrder",updateOrder);
 				aldao.updateNextApproval(map);
 			}
