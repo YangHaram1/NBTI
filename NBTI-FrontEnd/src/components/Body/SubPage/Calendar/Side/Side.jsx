@@ -4,6 +4,8 @@ import { useCalendarList } from "../../../../../store/store";
 import FullCalendar from '@fullcalendar/react'; // FullCalendar 컴포넌트
 import dayGridPlugin from '@fullcalendar/daygrid'; // 월 보기 플러그인
 import { default as koLocale } from '@fullcalendar/core/locales/ko'; // 한국어 로케일
+import axios from "axios";
+import { host } from "../../../../../config/config";
 
 
 export const Side = ({ setAddOpen , setCalendarModalOpen}) => {
@@ -52,7 +54,7 @@ export const Side = ({ setAddOpen , setCalendarModalOpen}) => {
 
 
   // store
-  const { selectedItem, setSelectedItem , calendarList, setCalendarList , setCalendarSelectList } = useCalendarList();
+  const { selectedItem, setSelectedItem , calendarList, setCalendarList , setCalendarSelectList ,sharedCalendarName ,publicList, setPublicList,setPrivateList} = useCalendarList();
   
   // 공유 일정 [+]
     const handleCalendarAddClick = () => {
@@ -73,6 +75,36 @@ export const Side = ({ setAddOpen , setCalendarModalOpen}) => {
         return item.extendedProps.calendar_title_code === 1; 
       }))
   }
+
+  
+  useEffect(() => {
+    axios.get(`${host}/calendarList`)
+        .then((resp) => {
+            console.log('!!' + JSON.stringify(resp.data));
+
+            // 새로운 배열 생성
+            const newPrivateList = [];
+            const newPublicList = [];
+
+            // 각 이벤트를 분류
+            resp.data.forEach(event => {
+                if (event.calendar_type === 'private') {
+                    newPrivateList.push(event.calendar_name); // 배열에 추가
+                } else if (event.calendar_type === 'public') {
+                    newPublicList.push(event.calendar_name); // 배열에 추가
+                }
+            });
+
+            // 상태 업데이트
+            setPrivateList(newPrivateList); // 최종적으로 한 번에 상태 업데이트
+            setPublicList(newPublicList); // 최종적으로 한 번에 상태 업데이트
+        })
+        .catch((error) => {
+            console.error("데이터를 가져오는데 실패했습니다.", error);
+        });
+}, []);
+  
+  
 
   return (
     <div className={styles.container}>
@@ -122,14 +154,14 @@ export const Side = ({ setAddOpen , setCalendarModalOpen}) => {
           <li onClick={toggleNoticeBoard}>
             <i className="fa-solid fa-people-group"></i>공유 일정 <i className="fa-solid fa-plus" id={styles.plus} onClick={handleCalendarAddClick}/>
             <ul className={`${styles.submenu} ${NoticeBoard ? styles.open : ""}`} onClick={preventPropagation}>
-              {selectedItem.map((item) => ( 
-            <li key={item.seq}> 
-              <span>
-                <i className="fa-solid fa-star fa-sm"></i>
-              </span>
-              <span>{item.name}</span> 
-            </li>
-          ))}
+            {publicList.map((calendar, index) => ( 
+                <li key={index}> 
+                    <span>
+                        <i className="fa-solid fa-star fa-sm"></i>
+                    </span>
+                    <span>{calendar}</span> 
+                </li>
+            ))}
             </ul>
           </li>
         </ul>

@@ -30,7 +30,7 @@ const Members = ( {membersList, setMembersList} ) => {
             // 체크 시 membersList에 해당 멤버 추가
             setMembersList([...membersList, member]);
         }
-        // console.log(membersList)
+        //console.log("membersList"+ JSON.stringify(membersList))
     };
 
     return (
