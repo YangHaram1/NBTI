@@ -61,7 +61,7 @@ function App() {
   useEffect(() => {
     if (loginID != null && loginID !== 'error') {
       axios.get(`${host}/chat/unread`).then((resp) => {
-        console.log(resp.data);
+        if(resp.data!=='error')
         setUnread(parseInt(resp.data));
       })
     }

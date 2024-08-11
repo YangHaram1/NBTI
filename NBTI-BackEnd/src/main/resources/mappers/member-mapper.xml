@@ -7,134 +7,161 @@
 <mapper namespace="Member">
 
 
-    <select id="login" resultType="String">
-           SELECT id FROM members WHERE id=#{id} AND pw=#{pw}
-    </select>
-    
-    <select id="mydata" resultType="com.nbti.dto.MembersDTO">
-    	select * from members where id = #{id}
-    </select>
-	
-<update id="updateUser">
-    UPDATE members
-    SET address = #{address},
-        member_call = #{member_call},
-        email = #{email},
-        team_code = #{team_code},
-        job_code = #{job_code},
-        member_level = #{member_level}
-    WHERE id = #{id}
-</update>
+	<select id="login" resultType="String">
+		SELECT id FROM members WHERE id=#{id} AND pw=#{pw}
+	</select>
 
-<update id="updateMyData">
-	update members set email=#{email},member_call=#{member_call}, address=#{address} , member_img = #{member_img, jdbcType=VARCHAR} where id =#{id}
-</update>
+	<select id="mydata" resultType="com.nbti.dto.MembersDTO">
+		select * from members where id = #{id}
+	</select>
 
-<update id="updateMyDataNoImg">
-	update members set email=#{email},member_call=#{member_call}, address=#{address} where id =#{id}
-</update>
-	
+	<update id="updateUser">
+		UPDATE members
+		SET address = #{address},
+		member_call = #{member_call},
+		email = #{email},
+		team_code = #{team_code},
+		job_code = #{job_code},
+		member_level = #{member_level}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateMyData">
+		update members set email=#{email},member_call=#{member_call},
+		address=#{address} , member_img = #{member_img, jdbcType=VARCHAR}
+		where id =#{id}
+	</update>
+
+	<update id="updateMyDataNoImg">
+		update members set email=#{email},member_call=#{member_call},
+		address=#{address} where id =#{id}
+	</update>
+
 	<select id="selectAll" resultType="com.nbti.dto.MembersDTO">
-		select * from members 
+		select * from members
 	</select>
 	<update id="updateMember">
-		update members set email=#{email}, team_code=#{team_code}, job_code=#{job_code}, member_call=#{member_call}, ent_yn=#{ent_yn},end_date=#{end_date} where id=#{id}
+		update members set email=#{email},
+		team_code=#{team_code}, job_code=#{job_code},
+		member_call=#{member_call}, ent_yn=#{ent_yn},end_date=#{end_date}
+		where id=#{id}
 	</update>
-	
 
-<insert id="insert" parameterType="com.nbti.dto.MembersDTO">
-   INSERT INTO members (
-    id, pw, name, email, team_code, job_code, member_level, member_call, address, birth, gender, ent_yn, vacation_period, enter_date
-) VALUES (
-    #{id}, #{pw}, #{name}, #{email}, #{team_code}, #{job_code}, #{member_level}, #{member_call}, #{address}, #{birth}, #{gender}, #{ent_yn}, #{vacation_period}, SYSDATE
-)
-</insert>
-<delete id="deleteUser" >
-	delete from members where id = #{id}
-</delete>
 
-  <select id="selectMembers" resultType="map">
-        SELECT 
-            m.id,
-            m.pw,
-            m.name,
-            m.email,
-            t.team_name,
-            j.job_name,
-            m.member_level,
-            m.member_call,
-            m.gender,
-            m.ent_yn,
-            m.vacation_period
-        FROM members m
-        LEFT JOIN teams t ON m.team_code = t.team_code
-        LEFT JOIN job j ON m.job_code = j.job_code
-    </select>
+	<insert id="insert" parameterType="com.nbti.dto.MembersDTO">
+		INSERT INTO members (
+		id, pw, name, email, team_code, job_code, member_level, member_call,
+		address, birth, gender, ent_yn, vacation_period, enter_date
+		) VALUES (
+		#{id}, #{pw}, #{name}, #{email}, #{team_code}, #{job_code}, #{member_level},
+		#{member_call}, #{address}, #{birth}, #{gender}, #{ent_yn},
+		#{vacation_period}, SYSDATE
+		)
+	</insert>
+	<delete id="deleteUser">
+		delete from members where id = #{id}
+	</delete>
+
+	<select id="selectMembers" resultType="map">
+		SELECT
+		m.id,
+		m.pw,
+		m.name,
+		m.email,
+		t.team_name,
+		j.job_name,
+		m.member_level,
+		m.member_call,
+		m.gender,
+		m.ent_yn,
+		m.vacation_period
+		FROM members m
+		LEFT JOIN teams t ON m.team_code = t.team_code
+		LEFT JOIN job j ON m.job_code = j.job_code
+	</select>
 	<select id="selectByTeam" resultType="map">
-SELECT 
-    m.id,
-    m.pw,
-    m.name,
-    m.email,
-    t.team_name,
-    j.job_name,
-    m.member_level,
-    m.member_call,
-    m.gender,
-    m.ent_yn,
-    m.vacation_period
-FROM members m
-LEFT JOIN teams t ON m.team_code = t.team_code
-LEFT JOIN job j ON m.job_code = j.job_code
-WHERE m.team_code = #{team_code}
+		SELECT
+		m.id,
+		m.pw,
+		m.name,
+		m.email,
+		t.team_name,
+		j.job_name,
+		m.member_level,
+		m.member_call,
+		m.gender,
+		m.ent_yn,
+		m.vacation_period
+		FROM members m
+		LEFT JOIN teams t ON m.team_code = t.team_code
+		LEFT JOIN job j ON m.job_code = j.job_code
+		WHERE m.team_code = #{team_code}
 
 	</select>
 	<select id="checkPw" resultType="boolean">
-		select count(*) from members where id = #{id} and pw = #{pw}
+		select count(*) from members
+		where id = #{id} and pw = #{pw}
 	</select>
-	
+
 	<update id="changePw">
 		update members set pw = #{pw} where id = #{id}
 	</update>
-	
-	<select id="searchMembers" resultType="com.nbti.dto.MembersDTO">
-		select * from members where team_code = #{team}
-	</select>
-<select id="searchUser" resultType="map">
-    SELECT 
-        m.id,
-        m.pw,
-        m.name,
-        m.email,
-        t.team_name,
-        j.job_name,
-        m.member_level,
-        m.member_call,
-        m.gender,
-        m.ent_yn,
-        m.vacation_period
-    FROM members m
-    LEFT JOIN teams t ON m.team_code = t.team_code
-    LEFT JOIN job j ON m.job_code = j.job_code
-    WHERE m.name LIKE '%' || #{name} || '%'
-    ORDER BY m.name
-</select>
 
-	<select id ="memberData" resultType="map">
-		select 
-			m.id, m.name, 
-			m.team_code, t.team_name, 
-			m.job_code, j.job_name, 
-			t.dept_code, d.dept_name 
-		from members m 
+	<select id="searchMembers" resultType="com.nbti.dto.MembersDTO">
+		select * from members
+		where team_code = #{team}
+	</select>
+	<select id="searchUser" resultType="map">
+		SELECT
+		m.id,
+		m.pw,
+		m.name,
+		m.email,
+		t.team_name,
+		j.job_name,
+		m.member_level,
+		m.member_call,
+		m.gender,
+		m.ent_yn,
+		m.vacation_period
+		FROM members m
+		LEFT JOIN teams t ON m.team_code = t.team_code
+		LEFT JOIN job j ON m.job_code = j.job_code
+		WHERE m.name LIKE '%' || #{name} || '%'
+		ORDER BY m.name
+	</select>
+
+	<select id="memberData" resultType="map">
+		select
+		m.id, m.name,
+		m.team_code, t.team_name,
+		m.job_code, j.job_name,
+		t.dept_code, d.dept_name
+		from members m
 		left outer join teams t on m.team_code = t.team_code
-		left outer join job j on m.job_code = j.job_code
-		left outer join department d on t.dept_code = d.dept_code
+		left outer join job j
+		on m.job_code = j.job_code
+		left outer join department d on t.dept_code
+		= d.dept_code
 		where id = #{id}
 	</select>
-	
+
 	<select id="selectPeriod" resultType="int">
-		select vacation_period from members where id = #{id}
+		select vacation_period from
+		members where id = #{id}
+	</select>
+
+	<!-- 여기부터 채팅관련 멤버 이름 리스트 -->
+	<select id="chatMembersName" parameterType="java.util.List" resultType="java.lang.String">
+		select name from members where id in
+		<foreach item="item" index="index" collection="list" open="("
+			close=")" separator=",">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="getMemberName" resultType="String">
+		select name from members where id= #{id}
 	</select>
 
 </mapper>

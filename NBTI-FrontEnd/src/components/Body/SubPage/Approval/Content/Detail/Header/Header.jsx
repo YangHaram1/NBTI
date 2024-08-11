@@ -62,7 +62,7 @@ export const Header = ({docCommonData, userdata, approvalData}) => {
                 </div>
                 <div className={styles.writer_data}>
                     <div className={styles.writer_title}>문서번호</div>
-                    <div className={styles.writer_content}></div>
+                    <div className={styles.writer_content}>{docCommonData.approval_seq}</div>
                 </div>
             </div>
             <div className={styles.mid}></div>

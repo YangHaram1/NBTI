@@ -10,7 +10,7 @@ import ReactPaginate from "react-paginate";
 export const List = () => {
   const navi = useNavigate();
   const [boardList, setBoardList] = useState([]);
-  const { boardType, setBoardSeq } = useBoardStore();
+  const { boardType, setBoardType, setBoardSeq } = useBoardStore();
   const [target, setTarget] = useState(""); // target 초기 값을 빈 문자열로 설정
   const [keyword, setKeyword] = useState(""); // keyword 초기 값
   const [search, setSearch] = useState(false);
@@ -25,6 +25,11 @@ export const List = () => {
   let code = 1;
   if (boardType === "자유") code = 1;
   else if (boardType === "공지") code = 2;
+
+  // 기본 페이지
+  useEffect(() => {
+    setBoardType("자유");
+  }, [])
 
   // 게시판 목록 출력
   useEffect(() => {
@@ -71,7 +76,10 @@ export const List = () => {
     const requestBox = { seq: seq, board_code: code };
     axios.put(`${host}/board/viewCount`, requestBox).then((resp) => {
       setBoardSeq(seq);
-      navi("/board/detail");
+      let type = "";
+      if (code === 1) type = "free";
+      else if (code === 2) type = "notice";
+      navi(`/board/${type}/${seq}`);
     });
   };
 

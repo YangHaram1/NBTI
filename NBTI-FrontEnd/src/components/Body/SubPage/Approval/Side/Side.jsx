@@ -134,12 +134,12 @@ export const Side = () => {
               className={`${styles.submenu} ${NoticeBoard ? styles.open : ""}`}
               onClick={preventPropagation}
             >
-              <li onClick={()=>{navi("listDocAll")}}>
+              {/* <li onClick={()=>{navi("listDocAll")}}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>
                 </span>
                 <span>전체 문서함</span>
-              </li>
+              </li> */}
               <li onClick={()=>{navi("listDocWrite")}}>
                 <span>
                   <i className="fa-solid fa-clipboard fa-sm"></i>

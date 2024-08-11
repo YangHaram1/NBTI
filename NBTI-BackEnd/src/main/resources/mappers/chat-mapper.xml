@@ -43,7 +43,7 @@
 	<select id="unreadTotal" resultType="int">
 		select count(seq) from chat where group_seq=${group_seq} 
 		and seq between
-		(select last_chat_seq from group_member where group_seq=${group_seq} and member_id=#{member_id})
+		(select max(last_chat_seq) from group_member where group_seq=${group_seq} and member_id=#{member_id})
 		and (select seq from chat where seq=(select max(seq) from chat where group_seq = ${group_seq} ))
 	</select>
 	

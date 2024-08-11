@@ -1,41 +1,56 @@
-/* div {
-    border: 1px solid black;
-  } */
-  
-  .container {
-    background-color: #cce3de;
-    width: 250px;
-    display: flex;
-    flex-direction: column;
-    padding: 20px 25px;
-    position: fixed;
-    top: 60px;
-    left: 0;
-    bottom: 0;
-    box-shadow: 1px 0 8px rgba(0, 0, 0, 0.1); /* 왼쪽에 그림자 추가 */
-  }
-  
-  
-  .container .menus {
-    height: 400px;
-    padding: 0 15px;
-  }
-  
-  .container .menus ul {
-    list-style: none;
-    cursor: pointer;
-    /* margin: 0 0 20px 0; */
-    padding: 0;
-    font-size: 1.0rem;
-    margin-top: 25px;
-  }
+.container {
+  background-color: #cce3de;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 25px;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  bottom: 0;
+  box-shadow: 1px 0 8px rgba(0, 0, 0, 0.1); /* 오른쪽에 그림자 추가 */
+}
 
-  .container .menus ul > li:hover {
-    /* background-color: #c0dcd6; */
-    color: #6B9080;
-    font-weight: 700;
-  }
-  
-  .container .menus ul > li i {
-    margin-right: 10px;
-  }
+.container .menus {
+  height: 400px;
+  padding: 0 15px;
+}
+
+.container .menus ul {
+  list-style: none;
+  cursor: pointer;
+  /* margin: 0 0 10px 0; */
+  padding: 0;
+  font-size: 1rem;
+  margin-top: 25px;
+}
+
+/* .container .menus > ul > li:hover {
+  color: #6b9080;
+} */
+
+/* qna 목록들 */
+.container .menus ul:nth-child(3) > li > ul > li {
+  margin: 0 0 5px 13px;
+  padding: 5px;
+  border-radius: 5px;
+  display: flex;
+}
+.container .menus ul > li > ul > li:hover {
+  background-color: #c0dcd6;
+}
+
+.container .menus ul > li i {
+  margin-right: 10px;
+}
+
+/* Submenu */
+.submenu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.submenu.open {
+  max-height: 300px; /* 충분히 큰 값으로 설정하여 모든 항목이 표시되도록 합니다. */
+}

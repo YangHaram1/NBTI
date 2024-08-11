@@ -23,10 +23,10 @@ export const List = ({setlist}) => {
                 console.log("결재 예정")
                 url = `${host}/approval/getApprovalBook`;
                 break;
-            // case '참조/열람 문서함':
-            //     console.log("참조/열람 문서함");
-            //     url = `${host}/approval/getReferIsMe`
-            //     break;
+            case '참조/열람 대기':
+                console.log("참조/열람 대기");
+                url = `${host}/approval/getReferIsMeWait`
+                break;
             // case '반려 문서함':
             default:
                 return;

@@ -4,9 +4,11 @@ import { host } from '../../../../../config/config';
 import React from 'react';
 import { useState, useContext } from 'react';
 import { ChatsContext } from '../../../../../Context/ChatsContext';
+import { useAuthStore } from './../../../../../store/store';
 const Modal=({modalRef,index,item,profileRef})=>{
     const [modalDisplay, setModalDisplay] = useState(null);
     const {setChatNaviBody} =useContext(ChatsContext);
+    const {loginID} =useAuthStore();
 
     const handleChatRoom=()=>{
         //console.log(item)
@@ -33,7 +35,7 @@ const Modal=({modalRef,index,item,profileRef})=>{
     return(
         <div className={styles.container} ref={el=>modalRef.current[index]=el}>
             <div className={styles.content} onClick={handleChatRoom}>
-                채팅 하기 
+                {(loginID===item.id)?'나와의 채팅하기':'채팅 하기'}
             </div>
             <div className={styles.content} onClick={handleMemberIfo(index)}>
                 사용자 정보

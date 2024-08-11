@@ -1,20 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Side.module.css";
 import { useNavigate } from "react-router-dom";
 import { useBoardStore } from "../../../store/store";
 
 export const Side = () => {
   // ===== 메뉴 토글 =====
-  //   const [FreeBoard, setFreeBoard] = useState(false);
-  //   const [NoticeBoard, setNoticeBoard] = useState(false);
-
-  //   const toggleFreeBoard = () => {
-  //     setFreeBoard(!FreeBoard);
-  //   };
-
-  //   const toggleNoticeBoard = () => {
-  //     setNoticeBoard(!NoticeBoard);
-  //   };
+  const [QnA, setQnA] = useState(false);
+  const toggleQnA = () => {
+    setQnA(!QnA);
+  };
+  const preventPropagation = (e) => {
+    e.stopPropagation();
+  };
 
   // ===== 아이콘 =====
   useEffect(() => {
@@ -31,9 +28,6 @@ export const Side = () => {
     };
   }, []);
 
-  //   const preventPropagation = (e) => {
-  //     e.stopPropagation();
-  //   };
 
   const navi = useNavigate();
   const { setBoardType } = useBoardStore();
@@ -51,14 +45,25 @@ export const Side = () => {
             보안 설정
           </li>
         </ul>
+
+
         <ul>
-          <li onClick={() => { navi("/mypage/qna"); setBoardType("문의"); }}>
-            문의하기
-          </li>
-        </ul>
-        <ul>
-          <li onClick={() => { navi("/mypage/qnaList"); setBoardType("문의"); }}>
-            나의 문의 내역
+          <li onClick={toggleQnA}>
+            <i className="fa-solid fa-chevron-down fa-sm" />Q&A
+            <ul
+              className={`${styles.submenu} ${QnA ? styles.open : ""}`}
+              onClick={preventPropagation}
+            >
+              <li onClick={() => { navi("/mypage/qna"); setBoardType("문의"); }}>
+                문의하기
+              </li>
+              <li onClick={() => { navi("/mypage/qnaList"); setBoardType("문의"); }}>
+                나의 문의 내역
+              </li>
+              <li onClick={() => { navi("/mypage/bookmarkQnA"); setBoardType("문의"); }}>
+                중요 문의 내역
+              </li>
+            </ul>
           </li>
         </ul>
       </div>
