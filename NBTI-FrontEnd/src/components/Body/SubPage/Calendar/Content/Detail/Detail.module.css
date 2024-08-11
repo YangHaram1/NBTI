@@ -85,7 +85,7 @@
 .modal h2 {
     background-color: #6B9080; 
     color: white; 
-    padding: 15px;
+    padding: 5px;
     border-radius: 15px; 
     text-align: center; 
 }
@@ -110,6 +110,7 @@
 .modalInner > div p {
     width: 20%; /* 제목 영역 너비 */
     font-weight: bold;
+    padding:  5px 0;
 }
 
 /* 오른쪽 input, select */
@@ -192,8 +193,15 @@
 }
 
 
-/* 그룹 모달창 */
+
+/* ===== 그룹 모달창 ===== */
 .groupAdd {
     height: 500px;
-    background-color: #fff;
+    /* border: 2px solid #6B9080; */
 }
+.group_contents {display: flex; justify-content: space-evenly; padding-bottom: 15px;}
+.group_name {flex:3; }
+.group_title {flex:7; border: none;}
+.groupBtn {display: flex; border: 1px solid #000;}
+.groupBtn > button {flex: 1; padding: 5px;}
+/* ===== 그룹 모달창 ===== */
