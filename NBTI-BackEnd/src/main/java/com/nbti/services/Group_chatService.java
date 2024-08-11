@@ -44,34 +44,27 @@ public class Group_chatService {
 			List<Group_memberDTO> member_list = new ArrayList<>();
 			String name1 = "";
 			String name2 = "";
-			
+			System.out.println(member_id);
+			if (loginID.equals(member_id)) {
+				Group_memberDTO dto = new Group_memberDTO(group_seq, member_id, 0, "Y", "N", "나와의 채팅");
+				member_list.add(dto);
+			} else {
 				if (list.get(0).equals(member_id)) {
 					name2 = list.get(0);
 					name1 = list.get(1);
-				}
-				else {
+				} else {
 					name2 = list.get(1);
 					name1 = list.get(0);
 				}
-					
-				
-					
-				System.out.println(name1);
-				System.out.println(name2);
-			if(loginID.equals(member_id)) {
-				Group_memberDTO dto = new Group_memberDTO(group_seq, member_id, 0, "Y", "N", "나와의 채팅");
-				member_list.add(dto);
-			}
-			else {
 				Group_memberDTO dto = new Group_memberDTO(group_seq, member_id, 0, "Y", "N", name1);
 				member_list.add(dto);
 				dto = new Group_memberDTO(group_seq, loginID, 0, "Y", "N", name2);
 				member_list.add(dto);
-				mdao.insert(member_list);
 				ChatDTO cdto = new ChatDTO(0, "system", name1 + "님과 " + name2 + "님이 입장하셨습니다!", null, group_seq, 0);
 				cdao.insert(cdto);
 			}
-			
+			mdao.insert(member_list);
+
 		}
 
 	}
