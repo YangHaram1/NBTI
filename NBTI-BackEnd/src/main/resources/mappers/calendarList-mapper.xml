@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="CalendarList">
+  	<select id="list" resultType="com.nbti.dto.CalendarListDTO">
+    	SELECT * FROM calendar_list
+    	WHERE member_id = #{member_id} OR REGEXP_LIKE(member_list, '(^|, )' || #{member_id} || '(, |$)')
+  	</select>
+  	
+  	  	<!-- 입력 -->
+	<insert id="insert">
+       insert into calendar_list 
+   	   values(#{member_id}, #{member_list}, #{calendar_name}, #{calendar_type})
+    </insert>
+  </mapper>

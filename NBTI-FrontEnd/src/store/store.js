@@ -29,6 +29,19 @@ export const useCalendarList = create((set) => ({
 
     calendarSelectList: [],
     setCalendarSelectList: (item) => set({ calendarSelectList: item }), // 캘린더 선택 목록 
+
+    sharedCalendarName: [], // 공유 캘린더 이름 상태
+    setSharedCalendarName: (item) => set((state) => ({
+        sharedCalendarName: [...state.sharedCalendarName, item], // 기존 배열에 새로운 항목 추가
+    })),
+    membersList:[],
+    setMembersList: (item) => set({ membersList: item }),
+
+    // 제목 (개인/공유)
+    privateList:[],
+    setPrivateList: (item) => set({ privateList: item }),
+    publicList:[],
+    setPublicList: (item) => set({ publicList: item }),
 }));
 // 예약
 export const useReservationList = create((set) => ({

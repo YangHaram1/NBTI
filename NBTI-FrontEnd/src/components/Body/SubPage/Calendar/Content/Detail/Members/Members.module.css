@@ -6,12 +6,42 @@
     gap: 20px;
     overflow: auto;
 }
+
+/* ===== 스크롤바 ===== */
+/* 전체 영역 */
+.container::-webkit-scrollbar {
+  width: 12px; /* 스크롤바의 너비 */
+}
+
+/* 스크롤바 전체 영역 */
+.container::-webkit-scrollbar {
+  width: 10px;  /* 수직 스크롤바의 너비 */
+}
+
+/* 스크롤바가 움직이는 배경 영역 */
+.container::-webkit-scrollbar-track {
+  background: #a1d3bc47; height: 50px;
+}
+
+/* 스크롤바의 핸들 */
+.container::-webkit-scrollbar-thumb {
+  background-color: #6B9080; 
+  border-radius: 15px;
+  border: 1px solid rgba(121, 121, 121, 0.197)
+}
+.container::-webkit-scrollbar-thumb:hover {
+  background-color:#516e61; ; 
+}
+/* ===== 스크롤바 ===== */
+
+
 .nbti{
     font-weight: 600;
-    font-size: 20px;
+    font-size: 1rem;
+    border-bottom: 2px solid #6B9080;
     cursor: pointer;
     display: flex;
-    font-family: 'Freesentation-9Black';
+    padding-bottom: 5px;
   }
   .nbtiname{
     display: flex;
@@ -35,7 +65,6 @@
   
   .container .menus {
     height: 400px;
-    padding: 0 15px;
   }
   
   .menus {
@@ -49,30 +78,29 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-  
   }
   
   .dept {
     color: black;
     display: flex;
     font-size: 16px;
-    font-family: "ONE-Mobile-POP";
+    font-weight: bold;
   }
   
   .team {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    color: dodgerblue;
+    color: #6B9080;
     cursor: pointer;
     padding-left: 30px;
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: bold;
   }
   .teams{
     display: flex;
     flex-direction: column;
     gap: 15px;
-    font-family: 'ONE-Mobile-POP';
 
   }
   .team:hover{
@@ -86,12 +114,11 @@
     padding-left: 30px;
   }
   
- 
+
   .member {
     display: flex;
-    width: 150px;
     gap: 10px;
-    font-size: 10px;
+    font-size: 14px;
     color: gray;
   }
   .div2{
@@ -99,7 +126,10 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
+    width: 200px;
   }
+  .div2 > div:first-child{flex: 1;}
+  .div2 > div:last-child{flex: 1;}
   .div1{
     
   }
@@ -109,19 +139,5 @@
   }  
 
 
-
-  @font-face {
-    font-family: 'ONE-Mobile-POP';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-POP.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Freesentation-9Black';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2') format('woff2');
-    font-weight: 900;
-    font-style: normal;
-}
 
   
