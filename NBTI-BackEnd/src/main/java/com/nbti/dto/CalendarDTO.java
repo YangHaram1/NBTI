@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 public class CalendarDTO {
 	private int seq;
 	private String member_id;
-	private int calendar_title_code;
+	private String calendar_title;
 	private String title;
 	private String contents;
 	private Timestamp start_date;
@@ -14,12 +14,12 @@ public class CalendarDTO {
 	public CalendarDTO() {
 		super();
 	}
-	public CalendarDTO(int seq, String member_id, int calendar_title_code, String title, String contents,
+	public CalendarDTO(int seq, String member_id, String calendar_title, String title, String contents,
 			Timestamp start_date, Timestamp end_date) {
 		super();
 		this.seq = seq;
 		this.member_id = member_id;
-		this.calendar_title_code = calendar_title_code;
+		this.calendar_title = calendar_title;
 		this.title = title;
 		this.contents = contents;
 		this.start_date = start_date;
@@ -37,11 +37,11 @@ public class CalendarDTO {
 	public void setMember_id(String member_id) {
 		this.member_id = member_id;
 	}
-	public int getCalendar_title_code() {
-		return calendar_title_code;
+	public String getCalendar_title() {
+		return calendar_title;
 	}
-	public void setCalendar_title_code(int calendar_title_code) {
-		this.calendar_title_code = calendar_title_code;
+	public void setCalendar_title_code(String calendar_title) {
+		this.calendar_title = calendar_title;
 	}
 	public String getTitle() {
 		return title;

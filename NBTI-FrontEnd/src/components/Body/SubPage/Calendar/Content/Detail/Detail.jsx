@@ -13,9 +13,9 @@ import Members from './Members/Members';
 
 
 
-export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModalOpen}) => {
+export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModalOpen}) => {
     // 사이드 바 메뉴 공유 일정 상태
-    const { setSelectedItem , setCalendarList , calendarSelectList } = useCalendarList();
+    const { setSelectedItem , setCalendarList , calendarSelectList , sharedCalendarName, setSharedCalendarName,membersList,setMembersList , publicList, setPublicList,setPrivateList} = useCalendarList();
 
     // const calendarRef = useRef(); // 캘린더 내용 참조를 위한 ref
     const [modalOpen, setModalOpen] = useState(false); // 모달창 열기/닫기 상태
@@ -29,6 +29,10 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
     const [editedTitle, setEditedTitle] = useState('');
     const [editedContents, setEditedContents] = useState('');
 
+    // const [sharedCalendarName, setSharedCalendarName] = useState(''); // 공유 캘린더 이름 상태
+    // const [membersList, setMembersList] = useState([]); 
+    const [inputCalendarName, setInputCalendarName] = useState(''); // 입력 필드 상태
+
     // 인쇄
     const handlePrint = () => {
         window.print(); // 브라우저의 기본 인쇄 다이얼로그 표시
@@ -37,22 +41,30 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
 
     // 모달창 [열기]
     const handleDateClick = (arg) => {
-        setModalOpen(true);  // 모달창 열기
+        if (calendarModalOpen) {
+            setCalendarModalOpen(false); // 공유 일정 모달이 열려있으면 닫기
+        }
+        setModalOpen(true);  // 일정 추가 모달 열기
         setSelectedDate(arg.dateStr); // 현재 날짜 받아오기
         setInsert((prev) => ({ ...prev, start_date: arg.dateStr}));
         setAddOpen(true); // 일정 추가 모달 열기
         setSelectedEvent(null); // 일정 추가할 때 선택된 이벤트 초기화
-        setCalendarModalOpen(true); // 공유 일정 모달창
     };
     // 모달창 [닫기]
     const closeModal = () => {
-        setModalOpen(false); // 모달창 닫기
+        setModalOpen(false); // 일정 추가 모달 닫기
         setSelectedDate(null);
         setAddOpen(false); // 일정 추가 모달 닫기 
         setSelectedEvent(null); // 선택된 이벤트 초기화
-        setCalendarModalOpen(null) // 공유 일정 모달창
+        setCalendarModalOpen(false); // 공유 일정 모달 닫기
     };
-
+    // 공유 일정 [+] 버튼 클릭
+    const handleCalendarAddClick = () => {
+        if (addOpen) {
+            setAddOpen(false); // 일정 추가 모달이 열려있으면 닫기
+        }
+        setCalendarModalOpen(true); // 공유 일정 모달 열기
+    };
 
     // 입력된 값을 insert 상태에 업데이트
     const handleChange = (e) => {
@@ -67,9 +79,9 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
     const handleSave = () => {
         console.log(JSON.stringify(insert));
         // 사용자가 입력한 시작 날짜, 시작 시간, 종료 날짜, 종료 시간, 제목 등 가져와서
-        const { start_date, start_time, end_date, end_time, calendar_title_code, title, contents } = insert;
+        const { start_date, start_time, end_date, end_time, calendar_title, title, contents } = insert;
         // 모두 입력되었는지 확인
-        if (!start_date || !start_time || !end_date || !end_time || !calendar_title_code || !title) {
+        if (!start_date || !start_time || !end_date || !end_time || !calendar_title || !title ) {
             alert('모든 필드를 입력!');
             return;
         }
@@ -105,10 +117,10 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
         // 서버에 데이터 전송
         const postData = {
             title: title, 
-            calendar_title_code: calendar_title_code, 
+            calendar_title: calendar_title, 
             contents: contents || '', 
             start_date: startDate, 
-            end_date: endDate 
+            end_date: endDate
         };
         //console.log('전송할 데이터:', postData);
     
@@ -121,7 +133,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                     ...prev,
                     {
                     
-                        color : calendar_title_code == 1 ? "rgba(164, 195, 178, 10)" : calendar_title_code === 2 ? "rgba(255, 178, 44, 10)" : "rgba(255, 178, 44, 10)",
+                        color : calendar_title == 1 ? "rgba(164, 195, 178, 10)" : "rgba(255, 178, 44, 10)" ,
                         // seq: seq,
                         title: title, //제목
                         start: startDate, //사작
@@ -133,7 +145,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                 ]);
 
                 // 모달 상태 초기화
-                setInsert({ title: '', calendar_title_code: '', contents: '', start_date: '', start_time: '', end_date: '', end_time: '' });
+                setInsert({ title: '', calendar_title: '', contents: '', start_date: '', start_time: '', end_date: '', end_time: '' });
                 setModalOpen(false);
                 setAddOpen(false);
             })
@@ -142,6 +154,34 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
             });
     };
 
+    // 공유 캘린더 추가 핸들러
+    const handleAddSharedCalendar = () => {
+        if (inputCalendarName.trim() === '') {
+            alert('공유 캘린더 이름을 입력하세요.');
+            return;
+        }
+        // 새로운 캘린더 이름을 추가
+        setSharedCalendarName(prev => [...prev, inputCalendarName]); // 배열에 추가
+        setInputCalendarName(''); // 입력 필드 초기화
+        console.log("제목입력값: " + inputCalendarName); // 입력된 값 출력
+        console.log("members: " + JSON.stringify(membersList)); // 멤버 리스트 출력
+
+        // membersList의 id를 하나의 문자열로 연결
+        const memberIds = membersList.map(event => event.id).join(', '); // ','로 구분하여 문자열로 연결
+        console.log("멤버 ID들: " + memberIds); // 최종 문자열 출력
+
+        // 요청할 데이터 객체 생성
+        const calendarData = {
+            member_list: memberIds, // 문자열로 연결된 멤버 ID들
+            calendar_name: inputCalendarName, // 캘린더 이름
+            calendar_type: 'public', // 또는 'private' 등 필요에 따라 설정
+        };
+
+
+        axios.post(`${host}/calendarList`, calendarData).then((resp)=>{
+            console.log("insert 응답:"+ JSON.stringify(resp))
+        })
+    };
 
     // 내 일정 수정
     const updateBtn = () => {
@@ -224,6 +264,10 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
         }
     }, [selectedEvent]);
     
+    // 내 캘린더 보기
+    useEffect(() => {
+        setEvents(calendarSelectList);
+    }, [calendarSelectList]);
     
     //삭제
     const delModal = () => {
@@ -243,17 +287,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
             });
     }
     
-
-
-    //사이드 캘린더 추가
-    const [calendarName, setCalendarName] = useState(''); // 캘린더 이름 상태
-    const handleCalendarNameChange = (e) => {
-        setCalendarName(e.target.value); // 입력값을 상태에 저장
-    };
-
-    useEffect(()=>{
-        setEvents(calendarSelectList)
-    },[calendarSelectList]) 
+    console.log("test: " + publicList)
 
     return (
         <div className={styles.calender}>
@@ -297,7 +331,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
 
                     //일정 추가 이벤트
                     events={events}
-                    dateClick={handleDateClick}
+                    dateClick={handleDateClick} 
                     eventClick={handleEventClick} // 이벤트 클릭 시 상세 정보 보기
                 />
             </div>
@@ -352,10 +386,12 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                             <div className={styles.modalInner}>
                                 <div>
                                     <p>캘린더</p>
-                                    <select value={insert.calendar_title_code} name="calendar_title_code" onChange={handleChange}>
-                                        <option value="0" >선택하세요</option>
+                                    <select value={insert.calendar_title} name="calendar_title" onChange={handleChange}>
+                                        <option value="0">선택하세요</option>
                                         <option value="1">내 캘린더</option>
-                                        <option value="2">공유 캘린더</option>
+                                        {publicList.map((calendar, index) => (
+                                            <option key={index} value={calendar}>{calendar}</option>
+                                        ))}
                                     </select>
                                 </div>
                                 <div>
@@ -390,16 +426,22 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen,setCalendarModal
                     </div>
                 </div>
             )}
+
             {/* 캘린더 추가 모달 */}
             {calendarModalOpen && (
                 <div className={styles.modalOverlay} onClick={closeModal}>
                     <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                         <h2>공유 캘린더</h2>
-                        <input type="text" placeholder="캘린더 이름" value={calendarName} onChange={handleCalendarNameChange}/>
-                        <p>공유 대상</p>
-                        <div className={styles.groupAdd}><Members/></div>
-                        <button onClick={handleSave}>추가</button>
-                        <button onClick={closeModal}>닫기</button>
+                        <div className={styles.group_contents}>
+                            <b className={styles.group_name}>공유 캘린더 명 :</b>
+                            <input type="text" className={styles.group_title} placeholder="공유 캘린더 제목을 입력해주세요." value={inputCalendarName} onChange={(e) => setInputCalendarName(e.target.value)} />
+                        </div>
+
+                        <div className={styles.groupAdd}><Members membersList={membersList} setMembersList={setMembersList}/></div>
+                        <div className={styles.groupBtn}>
+                            <button onClick={handleAddSharedCalendar}>추가</button>
+                            <button onClick={closeModal}>닫기</button>
+                        </div>
                     </div>
                 </div>
             )}

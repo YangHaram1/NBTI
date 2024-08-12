@@ -9,10 +9,10 @@ export const Calendar = () => {
   const [addOpen, setAddOpen] = useState(false); 
   // 사이드바 "공유일정" 추가 모달 상태
   const [calendarModalOpen, setCalendarModalOpen] = useState(false); 
-
+    console.log("2")
     return(
         <div className={styles.container}>
-            <Side setAddOpen={setAddOpen} setCalendarModalOpen={setCalendarModalOpen} />
+            <Side setAddOpen={setAddOpen} setCalendarModalOpen={setCalendarModalOpen}/>
             <Content addOpen={addOpen} setAddOpen={setAddOpen} setCalendarModalOpen={setCalendarModalOpen} calendarModalOpen={calendarModalOpen}/>
         </div>
     )
