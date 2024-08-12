@@ -28,11 +28,11 @@ const Invite = ({ setInvite,chatCheck}) => {
     }, [list]);
     
     useEffect(()=>{
-            setInvited(chatCheck);
+            setInvited(chatCheck); //멤버리스트
     },[])
 
     const handleList = useCallback(() => {
-        if(invited.length>0){
+        if(invited.length>0){ //초대된 사람 전체 멤버에서 필터로 제외시키기
             const result= members.filter((item)=>{
                 let check=false;
                 invited.forEach(element => {
@@ -43,7 +43,7 @@ const Invite = ({ setInvite,chatCheck}) => {
                 });
                 if(check) return false;
                 return true;
-            }).map((item, index) => {
+            }).map((item, index) => {//검색 기능 추가
                 if (item.name.includes(nameSearch)) {
     
                     return item;

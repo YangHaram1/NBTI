@@ -36,6 +36,22 @@ const Chat = () => {
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
   const [updateMember, setUpdateMember] = useState(false);
+  const [checkInvite,setCheckInvite] =useState(false);
+
+
+  useEffect(()=>{ //group_chat 속성 가저오기 나와의채팅인지 아닌지 
+    const { chatSeq } = useCheckList.getState();
+    axios.get(`${host}/group_chat/invite?group_seq=${chatSeq}`).then((resp)=>{
+      console.log(resp.data);
+      if(resp.data==='Y'){
+        setCheckInvite(true)
+      }
+      else{
+        setCheckInvite(false)
+      }
+     
+    })
+  },[])
 
   // WebSocket 연결을 설정하는 useEffect
   useEffect(() => {
@@ -176,9 +192,13 @@ const Chat = () => {
     });
   }
   const handleInvite = () => {
+    if(checkInvite)
     setInvite((prev) => {
       return !prev;
     })
+    else{
+      alert("나와의 채팅에서는 초대 기능이 제한됩니다")
+    }
   }
 
 

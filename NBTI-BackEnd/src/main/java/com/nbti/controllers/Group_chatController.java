@@ -59,6 +59,12 @@ public class Group_chatController {
 		return ResponseEntity.ok(result);
 	}
 	
+	@GetMapping("/invite")
+	public ResponseEntity<String> getInvite(int group_seq) throws Exception{
+		String result =serv.getInvite(group_seq);
+		return ResponseEntity.ok(result);
+	}
+	
 	
 	@DeleteMapping()
 	public ResponseEntity<Void> delete(int seq) throws Exception{
