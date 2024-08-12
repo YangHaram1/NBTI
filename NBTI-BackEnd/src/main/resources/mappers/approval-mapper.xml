@@ -51,7 +51,7 @@
 	        left outer join doc_draft dd on a.TEMP_SEQ = dd.DRAFT_SEQ
 	        left outer join DOC_LEAVE dl on a.temp_seq = dl.LEAVE_SEQ
 	        left outer join DOC_VACATION dv on a.temp_seq = dv.vacation_seq
- 		where referer = #{id} and read='Y'
+ 		where referer = #{id} and read='Y' and a.doc_state not in ('c','r')
  		order by a.temp_seq desc
  	</select>
  	
@@ -73,7 +73,7 @@
 	        left outer join doc_draft dd on a.TEMP_SEQ = dd.DRAFT_SEQ
 	        left outer join DOC_LEAVE dl on a.temp_seq = dl.LEAVE_SEQ
 	        left outer join DOC_VACATION dv on a.temp_seq = dv.vacation_seq
- 		where referer = #{id} and read = 'N'
+ 		where referer = #{id} and read = 'N' and a.doc_state not in ('c','r')
  		order by a.temp_seq desc
  	</select>
  	
