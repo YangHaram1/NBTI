@@ -65,13 +65,9 @@ export const AllAttendance = () => {
     const [filteredMembers, setFilteredMembers] = useState([]);
     const [list, setList] = useState();
 
-
-    // 월요일에 표시할 이벤트 생성
     const handleList = useCallback(() => {
-        // 현재 날짜와 주 시작일 계산
         const today = new Date();
         const startOfWeek = getStartOfWeek(today);
-        // 필터링된 멤버 목록 사용 또는 전체 멤버 목록 사용
         const membersToDisplay = filteredMembers.length > 0 ? filteredMembers : Object.keys(stats).map(memberId => {
             const memberStats = stats[memberId] || {};
             const hasAttendance = Object.keys(memberStats).length > 0;
@@ -98,21 +94,14 @@ export const AllAttendance = () => {
 
                 const dayOfWeek = getDayOfWeek(date);
 
+                // 기본 배경색은 흰색, 텍스트 색상은 검정으로 설정
                 let backgroundColor = 'white';
                 let textColor = 'black';
 
-                if (dayOfWeek === 6) {
-                    textColor = 'red';
-                } else if (dayOfWeek === 5) {
-                    textColor = 'blue';
-                }
-
-                // 월요일에 출근 기록이 없더라도 기본 이벤트 생성
-                if (dayOfWeek === 0) {
-                    // 월요일에 출근 기록이 없으면 기본 이벤트 생성
-                    if (!startDate && !endDate) {
-                        return createDefaultEvent(formattedDate, name, teamName);
-                    }
+                // 출근 기록이 없을 경우 회색 배경으로 설정
+                if (!startDate && !endDate) {
+                    backgroundColor = 'gray';
+                    textColor = 'white';
                 }
 
                 return {
@@ -128,20 +117,15 @@ export const AllAttendance = () => {
                 };
             });
         });
-        console.log(events);
         setList(events);
-       
-    }, [filteredMembers])
+    }, [filteredMembers, stats]);
 
     useEffect(() => {
         handleList();
-    }, [handleList])
+    }, [handleList]);
 
-
-    // 검색 처리 함수
     const handleSearch = useCallback(() => {
         if (searchTerm.trim() === '') {
-            // 검색어가 비어 있으면 모든 데이터를 표시
             const allMembers = Object.keys(stats).map(memberId => {
                 const memberStats = stats[memberId] || {};
                 const hasAttendance = Object.keys(memberStats).length > 0;
@@ -153,7 +137,6 @@ export const AllAttendance = () => {
             });
             setFilteredMembers(allMembers);
         } else {
-            // 검색어에 따른 필터링
             const lowerCaseSearchTerm = searchTerm.toLowerCase();
             const filtered = Object.keys(stats).map(memberId => {
                 const memberStats = stats[memberId] || {};
@@ -167,22 +150,14 @@ export const AllAttendance = () => {
         }
     }, [searchTerm, stats]);
 
-    useEffect(()=>{
+    useEffect(() => {
         handleSearch();
-    },[])
+    }, [searchTerm, stats, handleSearch]);
 
     if (loading) {
         return <div>Loading...</div>;
     }
 
-
-
-
-
-
- 
-
-let count=0;
     return (
         <div className={styles.container}>
             <SearchUser
@@ -202,27 +177,19 @@ let count=0;
                 firstDay={1}
                 eventContent={({ event }) => {
                     const lines = event.title.split('\n');
-                    const isMonday = event.extendedProps.dayOfWeek === 0; // 월요일인지 확인
 
                     return (
                         <div
                             className={styles.eventContent}
                             style={{ backgroundColor: event.extendedProps.backgroundColor, color: event.extendedProps.textColor }}
                         >
-                            {(
-                                <div style={{ display: "flex", flexDirection: "column", alignItems: 'flex-start' }}>
-                                    <div>이름: {event.extendedProps.memberName}</div>
-                                    <div>부서: {event.extendedProps.teamName}</div>
-                                  {count++}
-                                </div>
-                            )}
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: 'flex-start' }}>
+                                <div>이름: {event.extendedProps.memberName}</div>
+                                <div>부서: {event.extendedProps.teamName}</div>
+                            </div>
                             <div style={{ display: "flex", flexDirection: "column", textAlign: "center", flex: 1 }}>
                                 {lines.map((line, index) => (
-                                    <div key={index}>{line}
-                            
-                                    
-                                    </div>
-                                    
+                                    <div key={index}>{line}</div>
                                 ))}
                             </div>
                         </div>
