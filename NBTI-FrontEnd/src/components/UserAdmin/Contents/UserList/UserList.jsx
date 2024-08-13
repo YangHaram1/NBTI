@@ -58,9 +58,11 @@ const UserList = ({ setUserDetail }) => {
                 const lowerCaseUsers = convertKeysToLowerCase(userResponse.data);
                 const lowerCaseTeams = convertKeysToLowerCase(teamResponse.data);
     
+                console.log('Teams Data:', lowerCaseTeams); // 팀 데이터 확인용 로그
+    
                 setUsers(lowerCaseUsers);
                 setTeams(lowerCaseTeams);
-                setFilteredUsers(lowerCaseUsers); // Initially show all users
+                setFilteredUsers(lowerCaseUsers);
                 setLoading(false);
             } catch (err) {
                 console.error('Error fetching data:', err);
@@ -71,29 +73,27 @@ const UserList = ({ setUserDetail }) => {
     
         fetchData();
     }, []);
+    
 
     const fetchFilteredUsers = async () => {
         try {
             let response;
             if (filterType === 'name' && searchTerm) {
-                console.log('Fetching users by name:', searchTerm);
                 response = await axios.get(`${host}/members/searchUser`, {
                     params: { 
                         name: searchTerm
                     }
                 });
             } else if (filterType === 'team' && selectedTeam) {
-                console.log('Fetching users by team:', selectedTeam);
+                console.log('Fetching users for team code:', selectedTeam); // 선택된 팀 코드 로그
                 response = await axios.get(`${host}/members/selectByTeam`, {
                     params: { team_code: selectedTeam }
                 });
             } else {
-                console.log('Fetching all users');
                 response = { data: users };
             }
-            
-            console.log('API Response:', response.data); // Add this line to check the response
-            
+    
+            console.log('Filtered Users API Response:', response.data); // API 응답 데이터 로그
             const lowerCaseData = convertKeysToLowerCase(response.data);
             setFilteredUsers(lowerCaseData);
         } catch (err) {
@@ -101,9 +101,13 @@ const UserList = ({ setUserDetail }) => {
         }
     };
 
+    // 상태가 업데이트된 후에 필터링된 데이터를 가져오기 위해 useEffect 사용
     useEffect(() => {
-        // Initialize or reset filters here if needed
-    }, [users]);
+        if (filterType === 'team' && selectedTeam) {
+            fetchFilteredUsers();
+        }
+    }, [selectedTeam]); // selectedTeam이 변경될 때마다 호출
+    
 
     const handleUserClick = (userId) => {
         setSelectedMember(userId); // 상태에 사용자 ID 저장
@@ -120,7 +124,8 @@ const UserList = ({ setUserDetail }) => {
 
     const handleTeamChange = (e) => {
         const selectedTeamCode = e.target.value;
-        setSelectedTeam(selectedTeamCode); // 선택한 팀 코드로 상태 업데이트
+        console.log('Selected Team Code:', selectedTeamCode); // 선택된 팀 코드 확인
+        setSelectedTeam(selectedTeamCode);
     };
 
     const handleFilterChange = (e) => {
@@ -192,7 +197,7 @@ const UserList = ({ setUserDetail }) => {
                                 <td>{user.job_name || '직급명 없음'}</td>
                                 <td>{getLevelName(user.member_level) || '권한 없음'}</td>
                                 <td>{user.member_call || '전화번호 없음'}</td>
-                                <td>{user.gender === 'M' ? '남성' : user.gender === 'F' ? '여성' : '성별 정보 없음'}</td>
+                                <td>{user.gender === 'M' ? '남성' : user.gender === 'F' ? '여성' : ''}</td>
                                 <td>{user.ent_yn === 'Y' ? '휴직' : '재직'}</td>
                                 <td>{user.vacation_period != null ? `${user.vacation_period}일` : '휴가 정보 없음'}</td>
                             </tr>
