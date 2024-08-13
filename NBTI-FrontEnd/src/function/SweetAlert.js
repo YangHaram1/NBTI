@@ -35,7 +35,7 @@ function SweetAlert(icon, title, text, myfunction) { //여기서 icon 은 succes
             }
               
             ).then((result) => {
-
+                    //취소후 로직 
             });
 
         }

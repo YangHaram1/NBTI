@@ -17,6 +17,7 @@ import Invite from './Invite/Invite.jsx';
 import sanitizeHtml from 'sanitize-html';
 import 'react-toastify/dist/ReactToastify.css'
 import notice from '../../../images/notice.png';
+import Swal from 'sweetalert2';
 axios.defaults.withCredentials = true;
 const Chat = () => {
   const editorRef = useRef(null);
@@ -41,6 +42,7 @@ const Chat = () => {
 
   useEffect(()=>{ //group_chat 속성 가저오기 나와의채팅인지 아닌지 
     const { chatSeq } = useCheckList.getState();
+    if(chatSeq!==0)
     axios.get(`${host}/group_chat/invite?group_seq=${chatSeq}`).then((resp)=>{
       console.log(resp.data);
       if(resp.data==='Y'){
@@ -51,7 +53,7 @@ const Chat = () => {
       }
      
     })
-  },[])
+  },[chatSeq])
 
   // WebSocket 연결을 설정하는 useEffect
   useEffect(() => {
@@ -197,7 +199,11 @@ const Chat = () => {
       return !prev;
     })
     else{
-      alert("나와의 채팅에서는 초대 기능이 제한됩니다")
+      Swal.fire({
+        icon:'error',
+        title:"나와의 채팅",
+        text:'초대 기능이 제한됩니다.'
+      })
     }
   }
 
