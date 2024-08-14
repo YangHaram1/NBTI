@@ -88,7 +88,7 @@ export const MyBoardList = () => {
                         <option value="">전체</option>
                         <option value="title">제목</option>
                         <option value="contents">내용</option>
-                        <option value="member_id">작성자</option>
+                        {/* <option value="name">작성자</option> */}
                     </select>
                 </div>
                 <input
@@ -132,7 +132,7 @@ export const MyBoardList = () => {
                                 <p onClick={() => { handleTitleClick(item.seq) }}>{item.title}</p>
                             </div>
                             <div className={styles.writer}>
-                                <p>{item.member_id}</p>
+                                <p>{item.name}</p>
                             </div>
                             <div className={styles.writeDate}>
                                 <p>{currentDate}</p>

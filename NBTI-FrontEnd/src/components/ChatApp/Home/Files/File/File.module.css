@@ -28,3 +28,7 @@
 .name{
     color: gray;
 }
+.oriname{
+    color: blue;
+    cursor: pointer;
+}

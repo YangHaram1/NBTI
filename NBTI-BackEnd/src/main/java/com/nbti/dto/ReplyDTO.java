@@ -11,6 +11,7 @@ public class ReplyDTO {
 	private int board_seq;
 	private int board_code;
 	private int count; // 좋아요 개수
+	private String name; // 이름 추가
 	
 	public ReplyDTO() {
 	}
@@ -37,6 +38,15 @@ public class ReplyDTO {
 		this.count = count;
 	}
 
+	
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public int getCount() {
 		return count;

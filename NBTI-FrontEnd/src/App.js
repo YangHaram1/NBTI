@@ -12,6 +12,7 @@ import { Slide, ToastContainer } from 'react-toastify';
 import styles from './App.module.css';
 import Draggable from 'react-draggable';
 
+
 axios.defaults.withCredentials = true;
 
 function App() {
@@ -83,7 +84,9 @@ function App() {
       <Router>
         <div className="container">
           {(loginID != null && loginID !== 'error') && <Header />}
-          <Body />
+          <Routes>
+            <Route path='/*' element={<Body />}/>
+          </Routes>
           <Draggable nodeRef={draggableRef}>
             <div className={styles.chatapp} ref={draggableRef}>
                 {chatApp}
