@@ -27,9 +27,9 @@ export const List = () => {
   else if (boardType === "공지") code = 2;
 
   // 기본 페이지
-  useEffect(() => {
-    setBoardType("자유");
-  }, []);
+  // useEffect(() => {
+  //   setBoardType("자유");
+  // }, []);
 
   // 게시판 목록 출력
   useEffect(() => {

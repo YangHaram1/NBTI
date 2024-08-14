@@ -20,7 +20,7 @@
 	        ON 
 	            board.member_id = members.id
 	        <trim prefix="WHERE" prefixOverrides="AND|OR">
-	            board_code = #{board_code}
+	            board_code = ${board_code}
 	            <if test="target == 'title'">
 	                AND board.title LIKE '%' || #{keyword} || '%'
 	            </if>
@@ -187,13 +187,30 @@
 	</update>
 	
 	<!-- 중요(북마크) 게시글 출력 -->
-	<select id="bookmarkList" resultType="com.nbti.dto.BoardDTO">
+<!-- 	<select id="bookmarkList" resultType="com.nbti.dto.BoardDTO">
 		select b.*
 		from board b
 		join board_bookmark bm
 		on b.seq = bm.board_seq
 		where bm.member_id = #{member_id} and b.board_code = ${board_code}
+	</select> -->
+	<select id="bookmarkList" resultType="com.nbti.dto.BoardDTO">
+	    <![CDATA[
+	        SELECT 
+	            b.*, 
+	            m.name AS name
+	        FROM 
+	            board b
+	        JOIN 
+	            board_bookmark bm ON b.seq = bm.board_seq
+	        JOIN 
+	            members m ON b.member_id = m.id
+	        WHERE 
+	            bm.member_id = #{member_id} 
+	            AND b.board_code = ${board_code}
+	    ]]>
 	</select>
+	
 
 
 	<!-- ========================[ 메 인 ]====================== -->
