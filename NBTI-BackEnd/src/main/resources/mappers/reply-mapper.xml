@@ -20,7 +20,20 @@
 	
 	<!-- 댓글 출력 -->
 	<select id="selectReply" resultType="com.nbti.dto.ReplyDTO">
-		select * from reply where board_seq = ${board_seq} and board_code = ${board_code} order by seq desc
+		SELECT 
+	        r.*, 
+	        m.name AS name, 
+	        (SELECT COUNT(*) FROM likes l WHERE l.reply_seq = r.seq) AS count
+	    FROM 
+	        reply r
+	    JOIN 
+	        members m ON r.member_id = m.id
+	    WHERE 
+	        r.board_seq = ${board_seq} 
+	    AND 
+	        r.board_code = ${board_code}
+	    ORDER BY 
+	        r.seq DESC
 	</select>
 	
 	<!-- 댓글 개수 -->

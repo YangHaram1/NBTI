@@ -29,7 +29,7 @@ export const List = () => {
   // 기본 페이지
   useEffect(() => {
     setBoardType("자유");
-  }, [])
+  }, []);
 
   // 게시판 목록 출력
   useEffect(() => {
@@ -92,7 +92,7 @@ export const List = () => {
             <option value="">전체</option>
             <option value="title">제목</option>
             <option value="contents">내용</option>
-            <option value="member_id">작성자</option>
+            <option value="name">작성자</option>
           </select>
         </div>
         <input
@@ -127,6 +127,7 @@ export const List = () => {
             ? format(date, "yyyy-MM-dd")
             : "Invalid Date";
 
+          console.log("item: ", item);
           return (
             <div className={styles.list} key={index}>
               <div className={styles.seq}>
@@ -142,7 +143,7 @@ export const List = () => {
                 </p>
               </div>
               <div className={styles.writer}>
-                <p>{item.member_id}</p>
+                <p>{item.name}</p>
               </div>
               <div className={styles.writeDate}>
                 <p>{currentDate}</p>
