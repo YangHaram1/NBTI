@@ -11,6 +11,7 @@ public class BoardDTO {
 	private int view_count;
 	private int board_code;
 	private int reply_count; // 댓글의 개수
+	private String name; // 이름 추가
 	
 	public BoardDTO() {
 	}
@@ -52,6 +53,15 @@ public class BoardDTO {
 	}
 	
 	
+	
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public int getReply_count() {
 		return reply_count;

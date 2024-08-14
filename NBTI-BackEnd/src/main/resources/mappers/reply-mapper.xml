@@ -20,7 +20,20 @@
 	
 	<!-- 댓글 출력 -->
 	<select id="selectReply" resultType="com.nbti.dto.ReplyDTO">
-		select * from reply where board_seq = ${board_seq} and board_code = ${board_code} order by seq desc
+		SELECT 
+	        r.*, 
+	        m.name AS name, 
+	        (SELECT COUNT(*) FROM likes l WHERE l.reply_seq = r.seq) AS count
+	    FROM 
+	        reply r
+	    JOIN 
+	        members m ON r.member_id = m.id
+	    WHERE 
+	        r.board_seq = ${board_seq} 
+	    AND 
+	        r.board_code = ${board_code}
+	    ORDER BY 
+	        r.seq DESC
 	</select>
 	
 	<!-- 댓글 개수 -->
@@ -37,15 +50,26 @@
 	<!-- 자유게시판 댓글 출력 -->
 	<select id="selectFreeReply" resultType="com.nbti.dto.ReplyDTO">
 	    <![CDATA[
-		    SELECT * 
-		    FROM (
-		        SELECT r.*, ROW_NUMBER() OVER (ORDER BY seq DESC) AS rn
-		        FROM reply r
-		        WHERE board_seq = ${board_seq} AND board_code = 1
-		    )
-		    WHERE rn <= 5
+	        SELECT *
+	        FROM (
+	            SELECT 
+	                r.*, 
+	                m.name AS name, 
+	                ROW_NUMBER() OVER (ORDER BY r.seq DESC) AS rn
+	            FROM 
+	                reply r
+	            JOIN 
+	                members m ON r.member_id = m.id
+	            WHERE 
+	                r.board_seq = ${board_seq} 
+	            AND 
+	                r.board_code = 1
+	        ) subquery
+	        WHERE 
+	            subquery.rn <= 5
 	    ]]>
 	</select>
+
 
 
 	

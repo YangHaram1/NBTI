@@ -7,36 +7,39 @@
 	
 	<!-- 목록 출력 -->
 	<select id="selectAll" resultType="com.nbti.dto.BoardDTO">
-	    SELECT a.* 
+	    SELECT a.*
 	    FROM (
-	        SELECT board.*, ROW_NUMBER() OVER (ORDER BY seq DESC) AS rown 
-	        FROM board
+	        SELECT 
+	            board.*, 
+	            members.name AS name, 
+	            ROW_NUMBER() OVER (ORDER BY board.seq DESC) AS rown 
+	        FROM 
+	            board
+	        JOIN 
+	            members 
+	        ON 
+	            board.member_id = members.id
 	        <trim prefix="WHERE" prefixOverrides="AND|OR">
-	            <!-- 기본 조건: 게시판 코드 -->
-	            board_code = ${board_code}
-	            
-	            <!-- 검색 조건: target이 특정 값일 때 -->
+	            board_code = #{board_code}
 	            <if test="target == 'title'">
-	                AND title LIKE '%' || #{keyword} || '%'
+	                AND board.title LIKE '%' || #{keyword} || '%'
 	            </if>
 	            <if test="target == 'contents'">
-	                AND REGEXP_REPLACE(contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
+	                AND REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
 	            </if>
-	            <if test="target == 'member_id'">
-	                AND member_id = #{keyword}
+	            <if test="target == 'name'">
+	                AND members.name = #{keyword}
 	            </if>
-	            <!-- 검색 조건: target이 빈 문자열일 때 -->
 	            <if test="target == ''">
-	                AND (title LIKE '%' || #{keyword} || '%'
-	                OR REGEXP_REPLACE(contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
-	                OR member_id = #{keyword})
+	                AND (board.title LIKE '%' || #{keyword} || '%'
+	                OR REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
+	                OR members.name = #{keyword})
 	            </if>
 	        </trim>
 	    ) a 
-	    WHERE rown BETWEEN ${start} AND ${end}
+	    WHERE a.rown BETWEEN ${start} AND ${end}
 	</select>
-	
-	
+
 	<!-- 게시글 총 개수 -->
 	<select id="getBoardCount" resultType="int" >
 		select count(*) from board
@@ -58,16 +61,51 @@
 	
 	<!-- 내 글 목록 -->
 	<select id="selectMyList" resultType="com.nbti.dto.BoardDTO">
+	    SELECT a.*
+	    FROM (
+	        SELECT 
+	            board.*, 
+	            members.name AS name, 
+	            ROW_NUMBER() OVER (ORDER BY board.seq DESC) AS rown 
+	        FROM 
+	            board
+	        JOIN 
+	            members 
+	        ON 
+	            board.member_id = members.id
+	        <trim prefix="WHERE" prefixOverrides="AND|OR">
+	            <!-- 기본 조건: 게시판 코드와 작성자 ID -->
+	            board.board_code = #{board_code}
+	            AND board.member_id = #{member_id}
+	            
+	            <!-- 검색 조건: target이 특정 값일 때 -->
+	            <if test="target == 'title'">
+	                AND board.title LIKE '%' || #{keyword} || '%'
+	            </if>
+	            <if test="target == 'contents'">
+	                AND REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
+	            </if>
+	            <if test="target == ''">
+	                AND (board.title LIKE '%' || #{keyword} || '%'
+	                OR REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
+	                OR members.name = #{keyword})
+	            </if>
+	        </trim>
+	    ) a 
+	    WHERE a.rown BETWEEN #{start} AND #{end}
+	</select>
+
+<!-- 	<select id="selectMyList" resultType="com.nbti.dto.BoardDTO">
 	    SELECT a.* 
 	    FROM (
 	        SELECT board.*, ROW_NUMBER() OVER (ORDER BY seq DESC) AS rown 
 	        FROM board
 	        <trim prefix="WHERE" prefixOverrides="AND|OR">
-	            <!-- 기본 조건: 게시판 코드와 작성자 ID -->
+	            기본 조건: 게시판 코드와 작성자 ID
 	            board_code = ${board_code}
 	            AND member_id = #{member_id}
 	            
-	            <!-- 검색 조건: target이 특정 값일 때 -->
+	            검색 조건: target이 특정 값일 때
 	            <if test="target == 'title'">
 	                AND title LIKE '%' || #{keyword} || '%'
 	            </if>
@@ -82,7 +120,7 @@
 	        </trim>
 	    ) a 
 	    WHERE rown BETWEEN ${start} AND ${end}
-	</select>
+	</select> -->
 	
 	<!-- 내 글 총 개수 -->	
 	<select id="getMyListCount" resultType="int" >
@@ -115,7 +153,17 @@
 
 	<!-- 게시글 출력 -->
 	<select id="selectBoard" resultType="com.nbti.dto.BoardDTO">
-		select *from board where seq = ${seq} and board_code = ${board_code}
+	    SELECT 
+	        b.*, 
+	        m.name AS name
+	    FROM 
+	        board b
+	    JOIN 
+	        members m ON b.member_id = m.id
+	    WHERE 
+	        b.seq = ${seq} 
+	    AND 
+	        b.board_code = ${board_code}
 	</select>
 	
 	<!-- 게시글 입력 -->

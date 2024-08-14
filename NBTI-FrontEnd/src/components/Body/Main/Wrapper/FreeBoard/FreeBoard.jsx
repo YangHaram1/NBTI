@@ -203,7 +203,7 @@ export const FreeBoard = () => {
                                                     <img src={image} alt="" />
                                                     <div>
                                                         <div className={styles.writer_writeDate}>
-                                                            <span>{ritem.member_id}</span>
+                                                            <span>{ritem.name}</span>
                                                             <span>{reply_currentDate}</span>
                                                         </div>
                                                         <div
