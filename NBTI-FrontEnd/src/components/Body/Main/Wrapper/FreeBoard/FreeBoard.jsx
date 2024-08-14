@@ -9,7 +9,7 @@ import { format } from "date-fns";
 
 export const FreeBoard = () => {
   const navi = useNavigate();
-  const { boardSeq, setBoardSeq, boardType } = useBoardStore();
+  const { boardSeq, setBoardSeq, boardType, setBoardType } = useBoardStore();
   const [board, setBoard] = useState([]); // 게시글의 data
   const [currentUser, setCurrentUser] = useState(null); // 로그인된 사용자 정보 상태
   const [replyContents, setReplyContents] = useState("");
@@ -25,6 +25,7 @@ export const FreeBoard = () => {
     axios.get(`${host}/board/freeBoard`).then((resp) => {
       setBoard(resp.data.list);
       setReply(resp.data.rlist);
+      setBoardType("자유");
 
       // 좋아요 상태 가져오기
       resp.data.rlist.forEach((reply) => {
