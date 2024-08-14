@@ -87,7 +87,6 @@ function App() {
           <Routes>
             <Route path='/*' element={<Body />}/>
           </Routes>
-          
           <Draggable nodeRef={draggableRef}>
             <div className={styles.chatapp} ref={draggableRef}>
                 {chatApp}

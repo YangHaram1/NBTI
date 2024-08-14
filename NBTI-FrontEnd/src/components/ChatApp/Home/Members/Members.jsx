@@ -50,29 +50,6 @@ const Members = ({ setName }) => {
             return null;
         })
     }
-    /*
-     {
-                    list.filter((item) => {
-                        if (item.id === loginID) {
-                            return false;
-                        }
-                        return true;
-                    }).map((item, index) => {
-                        return (
-                            <React.Fragment key={index}>
-                                <div onContextMenu={handleRightClick(index)} >
-                                    {item.name}
-                                </div>
-                                <Profile profileRef={profileRef} index={index} item={item}></Profile>
-                                <Modal modalRef={modalRef} index={index} item={item} profileRef={profileRef}></Modal>
-                               
-                            </React.Fragment>
-                        );
-                    })
-                }
-    
-    
-    */
 
     //데이터받기
 
