@@ -11,7 +11,7 @@ import ReactPaginate from "react-paginate";
 export const BookmarkQnA = () => {
   const navi = useNavigate();
   const [boardList, setBoardList] = useState([]);
-  const { boardType, setBoardSeq } = useBoardStore();
+  const { boardType, setBoardSeq, setBoardType } = useBoardStore();
   const [target, setTarget] = useState(""); // target 초기 값을 빈 문자열로 설정
   const [keyword, setKeyword] = useState(""); // keyword 초기 값
   const [search, setSearch] = useState(false);
@@ -41,8 +41,8 @@ export const BookmarkQnA = () => {
     };
 
     axios.get(`${host}/board/bookmarkList`, { params }).then((resp) => {
-      console.log("결과 : ", resp.data.list);
       setBoardList(resp.data.list); // 서버에서 list와 count 보내준 것 중 list만 담기
+      setBoardType("문의");
 
       // 페이지네이션
       const recordTotalCount = resp.data.count;
