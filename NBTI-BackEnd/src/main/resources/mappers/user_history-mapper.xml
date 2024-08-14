@@ -22,9 +22,7 @@
    		where rown between ${start} AND ${end}
 	</select>
 	
-	<select id="getHistoryCount" resultType="i
-	
-	nt" >
+	<select id="getHistoryCount" resultType="int" >
 		select count(*) from user_history
 		<if test="target=='ip'">
       		where ip like '%'||#{keyword}||'%'
