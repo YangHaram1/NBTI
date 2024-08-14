@@ -246,7 +246,7 @@ export const QnADetail = () => {
                         )}
                     </div>
                     <div className={styles.innerWriter}>
-                        <p>{detail.member_id}</p>
+                        <p>{detail.name}</p>
                     </div>
                 </div>
                 <div className={styles.writeDate}>
