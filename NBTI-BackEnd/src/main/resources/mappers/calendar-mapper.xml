@@ -13,7 +13,7 @@
   	<!-- 입력 -->
 	<insert id="insert">
        insert into calendar 
-   	   values(calendar_seq.nextval, #{member_id}, #{calendar_title}, #{title}, #{contents}, #{start_date}, #{end_date})
+   	   values(calendar_seq.nextval, #{member_id}, #{calendar_name}, #{title}, #{contents}, #{start_date}, #{end_date})
        <selectKey resultType="int" order="AFTER" keyProperty="seq"> 
             select calendar_seq.currval from dual
       </selectKey>

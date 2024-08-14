@@ -13,15 +13,23 @@ public class CalendarListService {
 	@Autowired
 	private CalendarListDAO cldao;
 	
-	// 목록
+	// 공유 캘린더 목록
     public List<CalendarListDTO> list (String member_id) throws Exception{
     	
     	List<CalendarListDTO> list = cldao.list(member_id);
     	return list;
     }
     
-	// 입력
+	// 공유 캘린더 추가
 	public void insert (CalendarListDTO dto)  throws Exception {
 		cldao.insert(dto);
+	}
+	
+	public int getLastCalendarID() throws Exception {
+		return cldao.getLastCalendarID();
+	}
+
+	public void insertMember(int lastCalID, String calendarMember) throws Exception {
+		cldao.insertMember(lastCalID, calendarMember);
 	}
 }
