@@ -79,7 +79,8 @@ export const List = () => {
       let type = "";
       if (code === 1) type = "free";
       else if (code === 2) type = "notice";
-      navi(`/board/${type}/${seq}`);
+      // navi(`/board/${type}/${seq}`);
+      navi("/board/detail");
     });
   };
 
@@ -127,7 +128,6 @@ export const List = () => {
             ? format(date, "yyyy-MM-dd")
             : "Invalid Date";
 
-          console.log("item: ", item);
           return (
             <div className={styles.list} key={index}>
               <div className={styles.seq}>
