@@ -6,6 +6,9 @@ import { host } from "../../../../../../config/config";
 import { useNavigate } from "react-router-dom";
 import { useBoardStore } from "../../../../../../store/store";
 import { format } from "date-fns";
+import Swal from 'sweetalert2';
+import SweetAlert from "../../../../../../function/SweetAlert";
+
 
 export const Insert = () => {
   const navi = useNavigate();
@@ -84,7 +87,6 @@ export const Insert = () => {
   // 임시 저장된 목록 출력
   const saveTempBoard = () => {
     axios.get(`${host}/tempBoard/tempList/${code}`).then((resp) => {
-      console.log("뭐야? : ", resp.data);
       setTempBoardList(resp.data);
     });
   };
@@ -206,6 +208,7 @@ export const Insert = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.btns}>
+            {/* <button onClick={() => SweetAlert('warning', '게시판', '임시저장 되었습니다.', handleTempSaveBtn)}>임시저장</button> */}
             <button onClick={handleTempSaveBtn}>임시저장</button>
             <button onClick={handleAddBtn}>작성완료</button>
           </div>
@@ -240,8 +243,8 @@ export const Insert = () => {
                   item.board_code === 1
                     ? "자유"
                     : item.board_code === 2
-                    ? "공지"
-                    : "알 수 없음";
+                      ? "공지"
+                      : "알 수 없음";
 
                 return (
                   <div key={i}>

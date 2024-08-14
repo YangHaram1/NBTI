@@ -25,11 +25,12 @@ export const List = () => {
   let code = 1;
   if (boardType === "자유") code = 1;
   else if (boardType === "공지") code = 2;
+  console.log("타입 : ", boardType);
 
   // 기본 페이지
-  useEffect(() => {
-    setBoardType("자유");
-  }, []);
+  // useEffect(() => {
+  //   setBoardType("자유");
+  // }, []);
 
   // 게시판 목록 출력
   useEffect(() => {

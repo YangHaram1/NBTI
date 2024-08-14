@@ -7,38 +7,36 @@
 	
 	<!-- 목록 출력 -->
 	<select id="selectAll" resultType="com.nbti.dto.BoardDTO">
-	    SELECT a.*
+	    SELECT a.*, m.name
 	    FROM (
-	        SELECT 
-	            board.*, 
-	            members.name AS name, 
-	            ROW_NUMBER() OVER (ORDER BY board.seq DESC) AS rown 
-	        FROM 
-	            board
-	        JOIN 
-	            members 
-	        ON 
-	            board.member_id = members.id
+	        SELECT board.*, ROW_NUMBER() OVER (ORDER BY seq DESC) AS rown 
+	        FROM board
 	        <trim prefix="WHERE" prefixOverrides="AND|OR">
+	            <!-- 기본 조건: 게시판 코드 -->
 	            board_code = #{board_code}
+	            
+	            <!-- 검색 조건: target이 특정 값일 때 -->
 	            <if test="target == 'title'">
-	                AND board.title LIKE '%' || #{keyword} || '%'
+	                AND title LIKE '%' || #{keyword} || '%'
 	            </if>
 	            <if test="target == 'contents'">
-	                AND REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
+	                AND REGEXP_REPLACE(contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
 	            </if>
-	            <if test="target == 'name'">
-	                AND members.name = #{keyword}
+	            <if test="target == 'member_id'">
+	                AND member_id = #{keyword}
 	            </if>
+	            <!-- 검색 조건: target이 빈 문자열일 때 -->
 	            <if test="target == ''">
-	                AND (board.title LIKE '%' || #{keyword} || '%'
-	                OR REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
-	                OR members.name = #{keyword})
+	                AND (title LIKE '%' || #{keyword} || '%'
+	                OR REGEXP_REPLACE(contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
+	                OR member_id = #{keyword})
 	            </if>
 	        </trim>
 	    ) a 
-	    WHERE a.rown BETWEEN ${start} AND ${end}
+	    JOIN members m ON a.member_id = m.id
+	    WHERE a.rown BETWEEN #{start} AND #{end}
 	</select>
+
 
 	<!-- 게시글 총 개수 -->
 	<select id="getBoardCount" resultType="int" >
@@ -187,13 +185,30 @@
 	</update>
 	
 	<!-- 중요(북마크) 게시글 출력 -->
-	<select id="bookmarkList" resultType="com.nbti.dto.BoardDTO">
+<!-- 	<select id="bookmarkList" resultType="com.nbti.dto.BoardDTO">
 		select b.*
 		from board b
 		join board_bookmark bm
 		on b.seq = bm.board_seq
 		where bm.member_id = #{member_id} and b.board_code = ${board_code}
+	</select> -->
+	<select id="bookmarkList" resultType="com.nbti.dto.BoardDTO">
+	    <![CDATA[
+	        SELECT 
+	            b.*, 
+	            m.name AS name
+	        FROM 
+	            board b
+	        JOIN 
+	            board_bookmark bm ON b.seq = bm.board_seq
+	        JOIN 
+	            members m ON b.member_id = m.id
+	        WHERE 
+	            bm.member_id = #{member_id} 
+	            AND b.board_code = ${board_code}
+	    ]]>
 	</select>
+	
 
 
 	<!-- ========================[ 메 인 ]====================== -->
