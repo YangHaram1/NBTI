@@ -3,7 +3,7 @@ import React from 'react';
 import { useAuthStore } from '../../../../../store/store';
 import axios from 'axios';
 import { host } from '../../../../../config/config';
-
+import SweetAlert from '../../../../../function/SweetAlert';
 const File = ({ file, setDeleteCheck }) => {
     const { loginID } = useAuthStore();
 
@@ -18,17 +18,13 @@ const File = ({ file, setDeleteCheck }) => {
         }
     }
     const handleDownload = (e) => {
-        const confirm = window.confirm('다운로드를 진행하시겠습니까?');
-        if (confirm) {
-            return true;
-        }
         e.preventDefault();
     }
     return (
         <div className={styles.container}>
             <div className={styles.item}>
                 <div>
-                    <a href={`${host}/files/downloadChat?oriname=${file.oriname}&&sysname=${file.sysname}`} download={file.oriname} onClick={handleDownload}>{file.oriname}</a>
+                    <a href={`${host}/files/downloadChat?oriname=${file.oriname}&&sysname=${file.sysname}`} download={file.oriname} onClick={()=>SweetAlert('warning', '채팅방', '다운로드를 진행하시겠습니까?', handleDownload)}>{file.oriname}</a>
                 </div>
                 <div className={styles.name}>
                     {file.member_id}
