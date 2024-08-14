@@ -213,15 +213,24 @@
 	<!-- 자유 게시판 출력 -->
 	<select id="selectFree" resultType="com.nbti.dto.BoardDTO">
 	    <![CDATA[
-		    SELECT * 
-		    FROM (
-		        SELECT b.*, ROW_NUMBER() OVER (ORDER BY write_date DESC) AS rn
-		        FROM board b
-		        WHERE board_code = 1
-		    ) 
-		    WHERE rn <= 5
+	        SELECT *
+	        FROM (
+	            SELECT 
+	                b.*, 
+	                m.name AS name, 
+	                ROW_NUMBER() OVER (ORDER BY b.write_date DESC) AS rn
+	            FROM 
+	                board b
+	            JOIN 
+	                members m ON b.member_id = m.id
+	            WHERE 
+	                b.board_code = 1
+	        ) subquery
+	        WHERE 
+	            subquery.rn <= 5
 	    ]]>
 	</select>
+
 
 
 </mapper>

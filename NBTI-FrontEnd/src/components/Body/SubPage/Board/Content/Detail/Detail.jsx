@@ -141,6 +141,7 @@ export const Detail = () => {
       contents: replyContents,
     };
     axios.post(`${host}/reply`, requestBody).then((resp) => {
+      console.log("무야: ", resp.data); //  name에 null이 뜬다
       if (resp.data !== "") {
         setReply((prev) => {
           if (prev.length > 0) {
@@ -160,7 +161,6 @@ export const Detail = () => {
   useEffect(() => {
     axios.get(`${host}/reply/${boardSeq}/${code}`).then((resp) => {
       const { replies, likes } = resp.data;
-      console.log(replies);
       setReply(replies); // 좋아요 count 포함된 댓글 배열
       setIsLiked(likes); // 좋아요 true / false 상태
 
@@ -220,9 +220,6 @@ export const Detail = () => {
       });
     });
   };
-
-
-  console.log("detail : ", detail);
 
   //======================================================================================
 
