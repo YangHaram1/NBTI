@@ -49,7 +49,7 @@ const Invite = ({ setInvite,chatCheck}) => {
                     return item;
                 }
                 return null;
-            }).filter((item) => {
+            }).filter((item) => { 
                 return item !== null
             })
     
