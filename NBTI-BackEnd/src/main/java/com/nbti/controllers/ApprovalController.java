@@ -1,5 +1,6 @@
 package com.nbti.controllers;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nbti.dto.ApprovalDTO;
 import com.nbti.dto.ApprovalLineDTO;
 import com.nbti.dto.DocDraftDTO;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 
 
 
@@ -49,14 +53,24 @@ public class ApprovalController {
 	private HttpSession session;
 	
 	@PostMapping
-	public ResponseEntity<Void> Approval(@RequestBody Map<String, Object>  requestData) {
+	public ResponseEntity<Void> Approval(@RequestPart("requestData") String requestData, @RequestPart(value="files",required = false) MultipartFile[] files) {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
-		int docType = (int)requestData.get("docType");
-		boolean emergency = (boolean)requestData.get("emergency");
-		System.out.println("Received: " + requestData);
-		System.out.println(docType +":"+ emergency);
+		ObjectMapper objectMapper = new ObjectMapper();
+	    Map<String, Object> requestDataMap;
+	    try {
+	        requestDataMap = objectMapper.readValue(requestData, Map.class);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return ResponseEntity.badRequest().build();
+	    }
+		
+		int docType = (int)requestDataMap.get("docType");
+		boolean emergency = (boolean)requestDataMap.get("emergency");
+//		System.out.println("Received: " + requestData);
+//		System.out.println(docType +":"+ emergency);
+		
 		DocDraftDTO ddto = new DocDraftDTO();
 		DocVacationDTO dvdto = new DocVacationDTO();
 		DocLeaveDTO dldto = new DocLeaveDTO();
@@ -65,18 +79,19 @@ public class ApprovalController {
 		// 각 객체 배열 변수에 저장하기
 		
 		// 결제라인 (결재자 id, 이름, 순서 = 1,2,3)
-        List<Map<String, Object>> approvalLine = (List<Map<String, Object>>) requestData.get("approvalLine");
+        List<Map<String, Object>> approvalLine = (List<Map<String, Object>>) requestDataMap.get("approvalLine");
         // 참조라인 (참조자 id, 이름, 순서 = 4)
-        List<Map<String, Object>> referLine = (List<Map<String, Object>>) requestData.get("referLine");
-        System.out.println("Received approvalLine: " + approvalLine);
-	    System.out.println("Received referLine: " + referLine);
+        List<Map<String, Object>> referLine = (List<Map<String, Object>>) requestDataMap.get("referLine");
+//        System.out.println("Received approvalLine: " + approvalLine);
+//	    System.out.println("Received referLine: " + referLine);
+//        System.out.println("Received requestData" + requestData);
         
         // 업무 기안서 데이터 저장
 		if(docType == 1) {
 			
 			// 작성날자, 협조부서, 제목, 내용
-			Map<String, Object> docData = (Map<String, Object>) requestData.get("docDraft");
-		    System.out.println("Received docData: " + docData);
+			Map<String, Object> docData = (Map<String, Object>) requestDataMap.get("docDraft");
+//		    System.out.println("Received docData: " + docData);
 		    String date = (String)docData.get("effective_date");
 		    
 			// 시행 일자 String -> timestamp 변환 및 DTO 저장
@@ -92,7 +107,7 @@ public class ApprovalController {
 	            ddto.setEffective_date(new java.sql.Timestamp(parseTime));
 	            ddto.setContent((String) docData.get("content"));
 	            ddto.setCooperation_dept((String) docData.get("cooperation_dept"));
-	            System.out.println(ddto.getEffective_date());
+//	            System.out.println(ddto.getEffective_date());
 				
 			}catch(Exception e) {
 				e.printStackTrace();
@@ -101,14 +116,14 @@ public class ApprovalController {
 		    
 		// 휴가 신청서 데이터 저장    
 		}else if(docType == 3) {
-			Map<String, Object> docVacation = (Map<String, Object>) requestData.get("docVacation");
-		    System.out.println("Received docVacation: " + docVacation);
+			Map<String, Object> docVacation = (Map<String, Object>) requestDataMap.get("docVacation");
+//		    System.out.println("Received docVacation: " + docVacation);
 		    
 		    try {
 		        // 휴가 종류
 		        if (docVacation.get("category") != null) {
 		        	 int category = Integer.parseInt(docVacation.get("category").toString());
-		            System.out.println(category);
+//		            System.out.println(category);
 		            dvdto.setVacation_category(category);
 		        } else {
 		            throw new IllegalArgumentException("Category cannot be null");
@@ -161,7 +176,7 @@ public class ApprovalController {
 		            dvdto.setEnd_half_ap("");
 		        }
 
-		        System.out.println("정보출력 : " + dvdto.getVacation_category() + ":" + dvdto.getVacation_start() + ":" + dvdto.getVacation_end() + ":" + dvdto.getStart_half() + ":" + dvdto.getStart_half_ap() + ":" + dvdto.getEnd_half() + ":" + dvdto.getEnd_half_ap());
+//		        System.out.println("정보출력 : " + dvdto.getVacation_category() + ":" + dvdto.getVacation_start() + ":" + dvdto.getVacation_end() + ":" + dvdto.getStart_half() + ":" + dvdto.getStart_half_ap() + ":" + dvdto.getEnd_half() + ":" + dvdto.getEnd_half_ap());
 
 		    } catch(Exception e) {
 		        e.printStackTrace();
@@ -170,8 +185,8 @@ public class ApprovalController {
 			
 		// 휴직 신청서 데이터 저장	
 		}else if(docType == 2) {
-			Map<String, Object> docLeave = (Map<String, Object>) requestData.get("docLeave");
-			System.out.println("Received docLeave: " + docLeave);
+			Map<String, Object> docLeave = (Map<String, Object>) requestDataMap.get("docLeave");
+//			System.out.println("Received docLeave: " + docLeave);
 			
 			try {
 				// 휴직 시작 날짜
@@ -190,7 +205,7 @@ public class ApprovalController {
 				dldto.setAddress((String)docLeave.get("address"));
 				dldto.setLeave_reason((String)docLeave.get("reason"));
 				dldto.setPhone((String)docLeave.get("phone"));
-				System.out.println(dldto.getAddress() +":"+ dldto.getLeave_reason() +":"+ dldto.getLeave_start()+":"+dldto.getLeave_end()+":"+dldto.getPhone());
+//				System.out.println(dldto.getAddress() +":"+ dldto.getLeave_reason() +":"+ dldto.getLeave_start()+":"+dldto.getLeave_end()+":"+dldto.getPhone());
 				
 			}catch(Exception e) {
 				e.printStackTrace();
@@ -233,8 +248,15 @@ public class ApprovalController {
 	            dto.setApproval_order(order);
 	            approvalline.add(dto);
 	        }
+		 
+		 for (MultipartFile file : files) {
+	            // Process each file (save, validate, etc.)
+	            String filename = file.getOriginalFilename();
+	            System.out.println("파일 이름 출력 : " + filename);
+	            // Save file to disk or database
+	        }
 		
-		fServ.write(docType, adto, approvalline, referline, ddto, dvdto, dldto);
+		fServ.write(docType, adto, approvalline, referline, ddto, dvdto, dldto, files);
 		
 		return ResponseEntity.ok().build();
 	}

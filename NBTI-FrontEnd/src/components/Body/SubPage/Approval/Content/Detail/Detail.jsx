@@ -30,6 +30,8 @@ export const Detail=()=>{
     const [docVacation, setDocVacation] = useState({}); 
     const [docDraft, setDocDraft] = useState({}); 
     const [approvalYN, setApprovalYN] = useState('');
+    const [fileData, setFileData] = useState([]); 
+    const [refer, setRefer] = useState([]);
 
     // 모달 표시 여부
     const [showModal, setShowModal] = useState(false);
@@ -86,8 +88,12 @@ export const Detail=()=>{
                 if(list == '참조/열람 대기'){
                     axios.put(`${host}/referLine/read/${seq}`);
                 }
+
+                // 첨부파일 정보 받아오기
+                const fileResponse = await axios.get(`${host}/files/getFiles/${seq}`);
+                setFileData(fileResponse.data);
+                console.log(fileResponse.data);
             
-    
             } catch (error) {
                 setError(error);
             } finally {
@@ -96,6 +102,19 @@ export const Detail=()=>{
         };
         fetchData();
     }, [seq]);
+
+    useEffect(()=>{
+        console.log("참조라인 데이터 확인",referData);
+        axios.post(`${host}/members/approvalSearch`,referData)
+        .then((resp)=>{
+            // console.log("데이터 확인",resp.data);
+            setRefer(resp.data);
+            console.log(refer);
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+    },[referData])
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error occurred: {error.message}</p>;
@@ -125,6 +144,7 @@ export const Detail=()=>{
     const handleCloseModal = () => {
         setShowModal(false); // 모달 닫기
     };
+
 
 
     return(
@@ -175,21 +195,37 @@ export const Detail=()=>{
                         </div>
                     </div>
                     <div className={styles.files}>
-                        첨부파일 넣기
+                        <div className={styles.files_left}>첨부파일</div>
+                        <div className={styles.files_right}>
+                        {
+                            fileData.length > 0 ? 
+                                fileData.map((file)=>{
+                                    return(
+                                        <div key={file.sysname}>
+                                            <div>{file.oriname}</div>
+                                            <input type='hidden' value={file.sysname} />
+                                        </div>
+                                    );
+                                })
+                            :
+                            <>
+                            </>
+                        }
+                        </div>
                     </div>
                 </div>
                 <div className={styles.content_right}>
                     <div className={styles.content_right_title}>참조/열람자</div>
                     <div className={styles.content_right_content}>
-                    {/* {
-                        referLine.map((refer)=>{
+                    {
+                        refer.map((refer)=>{
                             return(
                                 <div className={styles.refer}>
-                                    {refer.name} 직급 / 다섯글자부 / 다섯글자부
+                                    {refer.NAME} ({refer.JOB_NAME}) / {refer.DEPT_NAME} / {refer.TEAM_NAME}
                                 </div>
                             );
                         })
-                    } */}
+                    }
                     </div>
                 </div>
             </div>
