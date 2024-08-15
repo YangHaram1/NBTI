@@ -7,7 +7,7 @@ import image from "../../../../../../images/user.jpg";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import BoardEditor from "../../../../BoardEditor/BoardEditor";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import SweetAlert from "../../../../../../function/SweetAlert";
 
 export const Detail = () => {
@@ -79,11 +79,11 @@ export const Detail = () => {
 
   /** ================[ 삭 제 ]============= */
   const handleDelBtn = () => {
-      if (boardSeq !== -1) {
-        axios.delete(`${host}/board/${detail.seq}`).then((resp) => {
-          navi("/board/free");
-        });
-      }
+    if (boardSeq !== -1) {
+      axios.delete(`${host}/board/${detail.seq}`).then((resp) => {
+        navi("/board/free");
+      });
+    }
   };
 
   /** ================[ 수 정 ]============= */
@@ -116,10 +116,10 @@ export const Detail = () => {
     axios.post(`${host}/bookmark/insert`, { board_seq: seq }).then((resp) => {
       if (resp.data === 1) {
         Swal.fire({
-          icon:'success',
-          title:"게시판",
-          text:'중요 게시글에 추가되었습니다.'
-        })
+          icon: "success",
+          title: "북마크",
+          text: "중요 게시글에 추가되었습니다.",
+        });
       }
     });
   };
@@ -129,13 +129,13 @@ export const Detail = () => {
     setIsBookmarked(!isBookmarked);
     axios.delete(`${host}/bookmark/delete/${seq}`).then((resp) => {
       console.log("삭제", resp.data);
-      if (resp.data > 0){
+      if (resp.data > 0) {
         Swal.fire({
-          icon:'error',
-          title:"게시판",
-          text:'중요 게시글에 삭제되었습니다.'
-        })
-      } 
+          icon: "error",
+          title: "북마크",
+          text: "중요 게시글에 삭제되었습니다.",
+        });
+      }
     });
   };
 
@@ -145,6 +145,7 @@ export const Detail = () => {
     setReplyContents(htmlContent);
   };
 
+  const [change, setChange] = useState(false);
   // 댓글 입력 및 추가
   const handleReplyAdd = () => {
     const requestBody = {
@@ -152,15 +153,18 @@ export const Detail = () => {
       board_code: code,
       contents: replyContents,
     };
+
     axios.post(`${host}/reply`, requestBody).then((resp) => {
-      console.log("무야: ", resp.data); //  name에 null이 뜬다
       if (resp.data !== "") {
-        setReply((prev) => {
-          if (prev.length > 0) {
-            return [resp.data, ...prev];
-          }
-          return [resp.data];
-        });
+        setChange((prev) => !prev);
+
+        // setReply((prev) => {
+        //   if (prev.length > 0) {
+        //     return [resp.data, ...prev];
+        //   }
+        //   return [resp.data];
+        // });
+
         if (inputRef.current) {
           inputRef.current.innerHTML = ""; // div 내용 비우기
           setReplyContents("");
@@ -185,7 +189,7 @@ export const Detail = () => {
         });
       });
     });
-  }, [boardSeq, code]);
+  }, [boardSeq, code, change]);
 
   // 댓글 삭제
   const handleDelReplyBtn = (replySeq) => {
@@ -258,7 +262,18 @@ export const Detail = () => {
           {currentUser && detail.member_id === currentUser.id && !isEditing ? (
             <>
               <p onClick={handleEditBtn}>수정</p>
-              <p onClick={()=>SweetAlert('warning','게시판','정말 삭제하시겠습니까?',handleDelBtn)}>삭제</p>
+              <p
+                onClick={() =>
+                  SweetAlert(
+                    "warning",
+                    "게시판",
+                    "정말 삭제하시겠습니까?",
+                    handleDelBtn
+                  )
+                }
+              >
+                삭제
+              </p>
             </>
           ) : null}
         </div>

@@ -86,7 +86,6 @@ export const BookmarkQnA = () => {
             <option value="">전체</option>
             <option value="title">제목</option>
             <option value="contents">내용</option>
-            <option value="name">작성자</option>
           </select>
         </div>
         <input
