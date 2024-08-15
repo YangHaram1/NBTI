@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import styles from "./Side.module.css";
 import { useCalendarList } from "../../../../../store/store";
 import FullCalendar from '@fullcalendar/react'; // FullCalendar 컴포넌트
@@ -9,6 +9,8 @@ import { host } from "../../../../../config/config";
 
 
 export const Side = ({ setAddOpen , setCalendarModalOpen}) => {
+  const sharedCalendarCount = useRef(0); // useRef로 초기화
+
 
   // === 공통 메뉴 토글 ===
   const [FreeBoard, setFreeBoard] = useState(true);
@@ -83,6 +85,10 @@ export const Side = ({ setAddOpen , setCalendarModalOpen}) => {
   // ===== 공유 =====
   // [+] 버튼
     const handleCalendarAddClick = () => {
+      if (sharedCalendarCount.current >= 7) { // 공유 캘린더 개수 체크
+        alert("공유 캘린더는 최대 7개까지 추가할 수 있습니다."); // 경고 메시지
+        return;
+      }
       setCalendarModalOpen(true); // 모달 열기
   };
 
@@ -105,8 +111,9 @@ export const Side = ({ setAddOpen , setCalendarModalOpen}) => {
                 }
             });
 
-            // 최종적으로 한 번에 상태 업데이트
-            // setPrivateList(newPrivateList); 
+            // 최종적으로 상태 업데이트
+            sharedCalendarCount.current = publicList.length; // useRef를 사용하여 값 업데이트
+            console.log(sharedCalendarCount.current); // 여기서 개수 확인
             setPublicList(publicList); 
         })
         .catch((error) => {
