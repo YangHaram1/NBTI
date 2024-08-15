@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="Files">
+ 
+ 	<insert id="insertApprovalFile">
+ 		insert into files values(files_seq.nextval, #{oriname}, #{sysname}, #{parent_seq}, #{code}) 
+ 	</insert>
+ 	
+ 	<select id="selectList" resultType="com.nbti.dto.FilesDTO">
+ 		select * from files where parent_seq = ${seq}
+ 	</select>
+ 
+ </mapper>

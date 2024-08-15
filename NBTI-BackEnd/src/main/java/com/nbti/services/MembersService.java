@@ -85,7 +85,13 @@ public class MembersService {
 		List<Map<String, Object>> list = new ArrayList<>();
 		
 		for (Map<String, Object> map : approvalLine) {
+			
 			String id = (String)map.get("id");
+			if(id == null) {
+				id = (String)map.get("referer");
+				System.out.println("referer:"+id);
+			}
+			
 			Map<String, Object> memberDataMap = mdao.memberData(id);
 	        if (memberDataMap != null) {
 	        	map.putAll(memberDataMap);
