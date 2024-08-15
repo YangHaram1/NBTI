@@ -23,6 +23,9 @@ export const Write = ({setlist})=>{
     const { approvalLine, resetApprovalLine } = useApprovalLine();
     const { docLeave } = useDocLeave();
     const { docVacation } = useDocVacation();
+    const [refer, setRefer] = useState([]);
+    const [fileInfo, setFileInfo] = useState([]);
+    const [files, setFiles] = useState([]);
 
     const navi = useNavigate();
 
@@ -48,7 +51,7 @@ export const Write = ({setlist})=>{
     const approvalSubmit = () =>{
 
         let result = window.confirm("긴급 문서로 하시겠습니까?");
-        console.log("개별", date, dept, title, content);
+        // console.log("개별", date, dept, title, content);
         let requestData;
 
         if(setlist === "업무기안서"){
@@ -63,7 +66,8 @@ export const Write = ({setlist})=>{
                 approvalLine: approvalLine,
                 referLine: referLine,
                 emergency: result,
-                docType : setlist === '업무기안서'? 1 : setlist === '휴직신청서' ? 2:3
+                docType : setlist === '업무기안서'? 1 : setlist === '휴직신청서' ? 2:3,
+                files : files
             };  
         }else if(setlist === "휴가신청서"){
             requestData = {
@@ -71,7 +75,8 @@ export const Write = ({setlist})=>{
                 approvalLine: approvalLine,
                 referLine: referLine,
                 emergency: result,
-                docType : setlist === '업무기안서'? 1 : setlist === '휴직신청서' ? 2:3
+                docType : setlist === '업무기안서'? 1 : setlist === '휴직신청서' ? 2:3,
+                files : files
             };
             // console.log("휴가",docVacation);
             // console.log("휴가 신청서");
@@ -84,7 +89,8 @@ export const Write = ({setlist})=>{
                 approvalLine: approvalLine,
                 referLine: referLine,
                 emergency: result,
-                docType : setlist === '업무기안서'? 1 : setlist === '휴직신청서' ? 2:3
+                docType : setlist === '업무기안서'? 1 : setlist === '휴직신청서' ? 2:3,
+                files : files
             };
             // console.log("휴직", docLeave);
             // console.log("휴직 신청서");
@@ -116,6 +122,48 @@ export const Write = ({setlist})=>{
         })
     },[])
 
+    useEffect(()=>{
+        console.log("참조라인 데이터 확인",referLine);
+        axios.post(`${host}/members/approvalSearch`,referLine)
+        .then((resp)=>{
+            // console.log("데이터 확인",resp.data);
+            setRefer(resp.data);
+            console.log(refer);
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+    },[referLine])
+
+    // 파일 첨부
+    const handleFileChange  = (e)=>{
+
+        const selectedFiles = Array.from(e.target.files);
+
+        // Update files array
+        setFiles((prev) => [...prev, ...selectedFiles]);
+
+        // Update fileInfo array
+        const newFileInfo = selectedFiles.map(file => ({
+            name: file.name,
+            size: `${(file.size / 1024).toFixed(2)} KB`, // Size in KB
+            id: file.name + Date.now() // Unique identifier
+        }));
+
+        setFileInfo((prev) => [...prev, ...newFileInfo]);
+
+    }
+
+    const handleFileDelete = (fileId) => {
+        // Remove file from files array
+        const updatedFiles = files.filter((file) => file.name + Date.now() !== fileId);
+        setFiles(updatedFiles);
+
+        // Remove file info from fileInfo array
+        const updatedFileInfo = fileInfo.filter((file) => file.id !== fileId);
+        setFileInfo(updatedFileInfo);
+    };
+
     return(
         <div className={styles.container}>
             <div className={styles.title}>
@@ -136,18 +184,31 @@ export const Write = ({setlist})=>{
                         : <DocDraft userdata={userdata} setDocData={setDocData} setContent={setContent} content={content} setDate={setDate} setDept={setDept} setTitle={setTitle}/>
                         }   
                     </div>
+                    
                     <div className={styles.files}>
-                        첨부파일 넣기
+                        <div className={styles.file_title}> 첨부 파일</div>
+                        <div className={styles.file_content}>
+                            <div className={styles.file_input}>
+                                <input type="file" multiple onChange={handleFileChange}/> <span>파일 첨부는 최대 5개 까지 가능합니다.</span>
+                            </div>
+                            <div className={styles.file_list}>
+                                {fileInfo.map((file, index) => (
+                                    <div key={index} className={styles.file_item}>
+                                        {file.name} ({file.size}) <button  onClick={() => handleFileDelete(file.id)}>X</button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className={styles.content_right}>
                     <div className={styles.content_right_title}>참조/열람자</div>
                     <div className={styles.content_right_content}>
                     {
-                        referLine.map((refer)=>{
+                        refer.map((refer)=>{
                             return(
                                 <div className={styles.refer}>
-                                    {refer.name} 직급 / 다섯글자부 / 다섯글자부
+                                    {refer.name} ({refer.JOB_NAME}) / {refer.DEPT_NAME} / {refer.TEAM_NAME}
                                 </div>
                             );
                         })

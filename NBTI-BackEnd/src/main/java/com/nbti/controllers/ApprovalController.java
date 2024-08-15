@@ -68,8 +68,11 @@ public class ApprovalController {
         List<Map<String, Object>> approvalLine = (List<Map<String, Object>>) requestData.get("approvalLine");
         // 참조라인 (참조자 id, 이름, 순서 = 4)
         List<Map<String, Object>> referLine = (List<Map<String, Object>>) requestData.get("referLine");
-        System.out.println("Received approvalLine: " + approvalLine);
-	    System.out.println("Received referLine: " + referLine);
+        List<Map<String, Object>> files = (List<Map<String, Object>>) requestData.get("files");
+//        System.out.println("Received approvalLine: " + approvalLine);
+//	    System.out.println("Received referLine: " + referLine);
+        System.out.println("Received requestData" + requestData);
+	    System.out.println("Received files: " + files);
         
         // 업무 기안서 데이터 저장
 		if(docType == 1) {
@@ -234,7 +237,7 @@ public class ApprovalController {
 	            approvalline.add(dto);
 	        }
 		
-		fServ.write(docType, adto, approvalline, referline, ddto, dvdto, dldto);
+//		fServ.write(docType, adto, approvalline, referline, ddto, dvdto, dldto);
 		
 		return ResponseEntity.ok().build();
 	}
