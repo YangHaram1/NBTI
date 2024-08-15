@@ -8,11 +8,13 @@ import axios from "axios";
 import { host } from "../../../../../config/config";
 
 
-export const Side = ({ setAddOpen , setCalendarModalOpen}) => {
+export const Side = ({ setAddOpen , setCalendarModalOpen, calendarModalOpen}) => {
+  const { calendarList, setCalendarSelectList ,publicList, setPublicList,setPrivateList} = useCalendarList();
   const sharedCalendarCount = useRef(0); // useRef로 초기화
 
 
-  // === 공통 메뉴 토글 ===
+
+  // ======================== 공통 메뉴 토글 ========================
   const [FreeBoard, setFreeBoard] = useState(true);
   const [NoticeBoard, setNoticeBoard] = useState(false);
   const toggleFreeBoard = () => {
@@ -53,55 +55,51 @@ export const Side = ({ setAddOpen , setCalendarModalOpen}) => {
     setAddOpen(false);
       setSelectedDate(null);
   };
+  // ==============================================================
 
 
-  // store
-  const { calendarList, setCalendarSelectList ,publicList, setPublicList,setPrivateList} = useCalendarList();
   
-  
-  // ===== 전체 캘린더 출력 =====
+  // 전체 캘린더 출력
   const fullCalendar = ()=>{
     // console.log("side 전체 캘린더: "+ JSON.stringify(calendarList));
     setCalendarSelectList(calendarList)
   }
-
-  const sharedCalendar = (calendar)=>{
-    console.log("side 전체 캘린더: "+ JSON.stringify(calendarList));
-    console.log("~~~~~~~~~"+calendar)
-    setCalendarSelectList(calendarList.filter((cal) => {
-      return cal.extendedProps.calendar_name === calendar;
-    }));
-  }
-
-  // ===== 개인 캘린더만 출력 =====
+  
+  // 개인 캘린더만 출력
   const myCalender = ()=>{
     setCalendarSelectList(calendarList.filter((item)=>{
       // console.log("side 개인 캘린더:"+item.extendedProps.calendar_name);
       return item.extendedProps.calendar_name === '1'; 
     }))
   }
+  
+  // 공유 캘린더 출력
+  const sharedCalendar = (calendar)=>{
+    // console.log("side 공유 캘린더: "+ JSON.stringify(calendarList));
+    setCalendarSelectList(calendarList.filter((cal) => {
+      return cal.extendedProps.calendar_name === calendar;
+    }));
+  }
 
 
-  // ===== 공유 =====
-  // [+] 버튼
+  // 공유 [+] 버튼
     const handleCalendarAddClick = () => {
       if (sharedCalendarCount.current >= 7) { // 공유 캘린더 개수 체크
-        alert("공유 캘린더는 최대 7개까지 추가할 수 있습니다."); // 경고 메시지
+        alert("공유 캘린더는 최대 7개까지 추가될 수 있습니다."); 
         return;
       }
       setCalendarModalOpen(true); // 모달 열기
   };
 
+
   // 목록 출력
-  useEffect(() => {
+  const sideCalendarList = () => {
     axios.get(`${host}/calendarList`)
         .then((resp) => {
-            console.log('공유 일정 목록 가져오기 !!!:'+ JSON.stringify(resp.data));
-
-            // 새로운 배열 생성
+  
             const privateList = [];
             const publicList = [];
-
+  
             // 각 이벤트를 분류하고 배열에 추가
             resp.data.forEach(event => {
                 if (event.calendar_type === 'private') {
@@ -110,16 +108,22 @@ export const Side = ({ setAddOpen , setCalendarModalOpen}) => {
                     publicList.push(event.calendar_name); 
                 }
             });
-
+  
             // 최종적으로 상태 업데이트
             sharedCalendarCount.current = publicList.length; // useRef를 사용하여 값 업데이트
             console.log(sharedCalendarCount.current); // 여기서 개수 확인
+  
             setPublicList(publicList); 
         })
         .catch((error) => {
             console.error("error :", error);
         });
-  }, []);
+  }
+  
+  // 목록 업데이트
+  useEffect(() => {
+      sideCalendarList();
+  }, [calendarModalOpen]); 
   
 
   return (

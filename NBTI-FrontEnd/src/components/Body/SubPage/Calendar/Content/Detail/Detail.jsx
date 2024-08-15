@@ -177,6 +177,8 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
         axios.post(`${host}/calendarList`, calendarData).then((resp)=>{
             console.log("insert 응답:"+ JSON.stringify(resp))
         })
+
+        setCalendarModalOpen(false); // 공유 일정 모달 닫기
     };
 
     // 내 일정 수정

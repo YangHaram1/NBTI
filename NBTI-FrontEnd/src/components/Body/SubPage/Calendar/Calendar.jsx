@@ -13,7 +13,7 @@ export const Calendar = () => {
 
     return(
         <div className={styles.container}>
-            <Side setAddOpen={setAddOpen} setCalendarModalOpen={setCalendarModalOpen}/>
+            <Side setAddOpen={setAddOpen} setCalendarModalOpen={setCalendarModalOpen} calendarModalOpen={calendarModalOpen}/>
             <Content addOpen={addOpen} setAddOpen={setAddOpen} setCalendarModalOpen={setCalendarModalOpen} calendarModalOpen={calendarModalOpen}/>
         </div>
     )
