@@ -4,6 +4,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +86,46 @@ public class FilesController {
 		System.out.println("파일 부모 게시글 번호 확인 : "+seq);
 		return serv.getList(seq);
 	}
+	
+	
+	@GetMapping("/downloadApproval")
+	public void downloadApproval(@RequestParam String oriname,@RequestParam String sysname, @RequestParam String temp_seq,HttpServletResponse response) throws Exception{
+		 System.out.println(oriname + " :" + sysname);
+		    String realpath = RealpathConfig.realpath + "approval" + File.separator + temp_seq;
+		    File target = new File(realpath + "/" + sysname);
+
+		    if (!target.exists() || !target.isFile()) {
+		        response.sendError(HttpServletResponse.SC_NOT_FOUND, "File not found");
+		        return;
+		    }
+
+		    // Set content type based on file extension
+		    String contentType;
+		    if (sysname.endsWith(".jpg") || sysname.endsWith(".jpeg")) {
+		        contentType = "image/jpeg";
+		    } else if (sysname.endsWith(".png")) {
+		        contentType = "image/png";
+		    } else if (sysname.endsWith(".pdf")) {
+		        contentType = "application/pdf";
+		    } else {
+		        contentType = "application/octet-stream";
+		    }
+
+		    response.setContentType(contentType);
+		    response.setHeader("Content-Disposition", "attachment; filename=\"" + new String(oriname.getBytes("UTF-8"), "ISO-8859-1") + "\"");
+
+		    try (InputStream in = new FileInputStream(target); OutputStream out = response.getOutputStream()) {
+		        byte[] buffer = new byte[4096];
+		        int bytesRead;
+		        while ((bytesRead = in.read(buffer)) != -1) {
+		            out.write(buffer, 0, bytesRead);
+		        }
+		        out.flush();
+		    }
+	}
+	
+	
+	
 	
 	@ExceptionHandler(Exception.class)
 	public String exceptionHandler(Exception e) {

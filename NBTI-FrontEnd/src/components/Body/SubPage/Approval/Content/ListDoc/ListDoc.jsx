@@ -60,13 +60,15 @@ export const ListDoc = ({setlist}) => {
                 return <div className={styles.state_badge_gray}>결재 완료</div>;
             case 'r':
                 return <div className={styles.state_badge_red}>결재 반려</div>;
+            case 'c':
+                return <div className={styles.state_badge_red}>상신 취소</div>;
             default:
                 return <div className={styles.state_badge_green}>결재진행중</div>;
         }
     };
 
     const handleMove = (tempSeq, docSubName) => {
-        navi("/approval/detail", {state:{seq:tempSeq, setlist:docSubName, list:"doc"}});
+        navi("/approval/detail", {state:{seq:tempSeq, setlist:docSubName, list:setlist}});
     };
 
     return(

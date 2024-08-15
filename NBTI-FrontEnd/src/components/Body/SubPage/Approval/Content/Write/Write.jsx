@@ -121,8 +121,10 @@ export const Write = ({setlist})=>{
             }
         })
         .then(response => {
+            resetReferLine();
+            resetApprovalLine();
             console.log("성공!");
-            // navi("/approval");
+            navi("/approval");
         })
         .catch(error => {
             console.error("문서 제출 실패:", error);
