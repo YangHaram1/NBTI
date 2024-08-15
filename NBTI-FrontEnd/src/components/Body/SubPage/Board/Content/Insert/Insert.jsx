@@ -6,9 +6,8 @@ import { host } from "../../../../../../config/config";
 import { useNavigate } from "react-router-dom";
 import { useBoardStore } from "../../../../../../store/store";
 import { format } from "date-fns";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import SweetAlert from "../../../../../../function/SweetAlert";
-
 
 export const Insert = () => {
   const navi = useNavigate();
@@ -46,13 +45,19 @@ export const Insert = () => {
   // 글 입력 추가버튼
   const handleAddBtn = () => {
     if (board.title.trim() === "" || board.contents.trim() === "") {
-      alert("제목, 내용을 작성해주세요");
+      Swal.fire({
+        icon: "error",
+        text: "제목, 내용을 작성해주세요.",
+      });
       return; // 유효성 검사 통과하지 못하면 함수 종료
     }
 
     // 글 작성 완료
     axios.post(`${host}/board`, board).then((resp) => {
-      alert("글이 작성되었습니다.");
+      Swal.fire({
+        icon: "success",
+        text: "글이 작성되었습니다.",
+      });
       navi("/board/free");
     });
   };
@@ -96,14 +101,18 @@ export const Insert = () => {
     setTempBoard(board); // 작성한 내용을 tempBoard에 담기
 
     if (tempBoardList.length >= 10) {
-      alert(
-        "임시 저장된 게시물이 최대 개수(10개)를 초과했습니다. \n기존 게시물을 삭제한 후 다시 시도해주세요."
-      );
+      Swal.fire({
+        icon: "error",
+        text: "임시 저장된 게시물이 최대 개수(10개)를 초과했습니다. 기존 게시물을 삭제한 후 다시 시도해주세요.",
+      });
       return; // 임시 저장 수행 X
     }
 
     if (board.title.trim() === "" || board.contents.trim() === "") {
-      alert("제목, 내용을 작성해주세요");
+      Swal.fire({
+        icon: "error",
+        text: "제목, 내용을 작성해주세요.",
+      });
       return; // 유효성 검사 통과하지 못하면 함수 종료
     }
 
@@ -114,13 +123,19 @@ export const Insert = () => {
         if (resp.data === 1) {
           const now = new Date();
           setTempSaveTime(format(now, "yyyy-MM-dd HH:mm:ss"));
-          alert("임시저장 되었습니다.");
+          Swal.fire({
+            icon: "success",
+            text: "임시저장 되었습니다.",
+          });
           saveTempBoard(); // 임시 저장된 게시물 목록 업데이트 역할
         }
       })
       .catch((error) => {
         console.error("임시저장 오류: ", error);
-        alert("임시저장에 실패했습니다.");
+        Swal.fire({
+          icon: "error",
+          text: "임시저장에 실패했습니다.",
+        });
       });
   };
 
@@ -149,7 +164,10 @@ export const Insert = () => {
         })
         .catch((error) => {
           console.error("임시저장 삭제 실패: ", error);
-          alert("삭제에 실패했습니다.");
+          Swal.fire({
+            icon: "error",
+            text: "삭제에 실패했습니다.",
+          });
         });
     }
   };
@@ -208,7 +226,6 @@ export const Insert = () => {
         </div>
         <div className={styles.right}>
           <div className={styles.btns}>
-            {/* <button onClick={() => SweetAlert('warning', '게시판', '임시저장 되었습니다.', handleTempSaveBtn)}>임시저장</button> */}
             <button onClick={handleTempSaveBtn}>임시저장</button>
             <button onClick={handleAddBtn}>작성완료</button>
           </div>
@@ -243,8 +260,8 @@ export const Insert = () => {
                   item.board_code === 1
                     ? "자유"
                     : item.board_code === 2
-                      ? "공지"
-                      : "알 수 없음";
+                    ? "공지"
+                    : "알 수 없음";
 
                 return (
                   <div key={i}>
