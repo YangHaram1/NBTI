@@ -40,12 +40,13 @@ public class Group_chatService {
 		list = msdao.chatMembersName(list);
 
 		if (!check) {
-			int group_seq = dao.insert();
+			
 			List<Group_memberDTO> member_list = new ArrayList<>();
 			String name1 = "";
 			String name2 = "";
 			System.out.println(member_id);
 			if (loginID.equals(member_id)) {
+				int group_seq = dao.insert("N");
 				Group_memberDTO dto = new Group_memberDTO(group_seq, member_id, 0, "Y", "N", "나와의 채팅");
 				member_list.add(dto);
 			} else {
@@ -56,6 +57,7 @@ public class Group_chatService {
 					name2 = list.get(1);
 					name1 = list.get(0);
 				}
+				int group_seq = dao.insert("Y");
 				Group_memberDTO dto = new Group_memberDTO(group_seq, member_id, 0, "Y", "N", name1);
 				member_list.add(dto);
 				dto = new Group_memberDTO(group_seq, loginID, 0, "Y", "N", name2);
@@ -67,6 +69,10 @@ public class Group_chatService {
 
 		}
 
+	}
+	
+	public String getInvite(int group_seq) throws Exception{
+		return dao.getInvite(group_seq);
 	}
 
 	public List<Group_chatDTO> getList(List<Group_memberDTO> list) throws Exception {

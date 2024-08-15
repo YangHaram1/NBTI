@@ -16,8 +16,9 @@ public class Group_chatDAO {
 	@Autowired
 	private SqlSession mybatis;
 	
-	public int insert() throws Exception{
+	public int insert(String invite) throws Exception{
 		Group_chatDTO dto =new Group_chatDTO();
+		dto.setInvite(invite);
 		//dto.setName(member_id);
 		mybatis.insert("Group_chat.insert",dto);
 		return dto.getSeq();
@@ -31,6 +32,10 @@ public class Group_chatDAO {
 			return mybatis.selectList("Group_chat.list",map);
 		}
 		return null;
+	}
+	
+	public String getInvite(int group_seq) throws Exception{
+		return mybatis.selectOne("Group_chat.getInvite",group_seq);
 	}
 	
 	public void delete(int seq) throws Exception{

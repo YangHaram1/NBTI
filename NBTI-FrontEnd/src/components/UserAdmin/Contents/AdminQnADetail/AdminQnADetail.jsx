@@ -248,7 +248,7 @@ export const AdminQnADetail = () => {
                         )}
                     </div>
                     <div className={styles.innerWriter}>
-                        <p>{detail.member_id}</p>
+                        <p>{detail.name}</p>
                     </div>
                 </div>
                 <div className={styles.writeDate}>
@@ -300,7 +300,7 @@ export const AdminQnADetail = () => {
                                 <img src={image} alt="" />
                                 <div>
                                     <div className={styles.writer_writeDate}>
-                                        <span>{item.member_id}</span>
+                                        <span>{item.name}</span>
                                         <span>{reply_currentDate}</span>
                                     </div>
                                     <div

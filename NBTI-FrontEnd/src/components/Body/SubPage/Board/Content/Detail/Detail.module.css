@@ -81,6 +81,7 @@
   display: flex;
   align-items: center;
   margin-left: 5px;
+  padding-bottom: 25px;
 }
 
 .container .title .writeDate {

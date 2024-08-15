@@ -38,7 +38,7 @@ public class CalendarController {
         System.out.println(dto.getMember_id());
         System.out.println(dto.getContents());
         System.out.println(dto.getSeq());
-        System.out.println(dto.getCalendar_title_code());
+        System.out.println(dto.getCalendar_title());
         return ResponseEntity.ok().build();
     }
 
@@ -64,7 +64,6 @@ public class CalendarController {
     	return ResponseEntity.ok().build();
     }
 
-    
 	@ExceptionHandler(Exception.class)
 	public String exceptionHandler(Exception e) {
 		e.printStackTrace();
