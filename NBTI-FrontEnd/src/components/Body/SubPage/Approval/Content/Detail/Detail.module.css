@@ -131,8 +131,17 @@
     flex:1.5;
     border: 1px solid black;
     width: 98%;
-    margin-left: 10px;
+    margin-left: 11px;
+    display: flex;
 }
+
+.files_left{
+    flex:1.25; 
+    text-indent: 20px;
+    margin-top: 10px;}
+.files_right{
+    flex:8.75;
+    margin-top: 10px;}
 
 
 

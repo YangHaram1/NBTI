@@ -190,15 +190,11 @@ public class MembersController {
     
     // 작성일 24.08.1 
  	// 작성자 김지연
- 	// 아이디에 따른 이름, 팀코드, 팀명, 부서코드, 부서명, 관리자 권한 코드, 관리자 권한명 추출
+ 	// 접속한 아이디에 따른 이름, 팀코드, 팀명, 부서코드, 부서명, 관리자 권한 코드, 관리자 권한명 추출
      @GetMapping("/docData")
      public ResponseEntity<Map<String, Object>> docData(){
-    	 
     	 String id = (String)session.getAttribute("loginID");
-//    	 System.out.println("데이터 여기까지는 넘어옴" + id);
          Map<String, Object> memberData = mServ.memberData(id);
-         
-         
          return ResponseEntity.ok(memberData);
      }
 	
@@ -207,21 +203,29 @@ public class MembersController {
   	// 아이디에 따른 휴가일수 추출
       @GetMapping("/selectVacation")
       public ResponseEntity<String> selectVacation(){
-     	 
      	 String id = (String)session.getAttribute("loginID");
          String day = String.valueOf(mServ.selectPeriod(id)); 
          return ResponseEntity.ok(day);
-         
       }
       
       
       // 작성일 24.08.7
    	  // 작성자 김지연
-      // 아이디에 따른 이름, 팀코드, 팀명, 부서코드, 부서명, 관리자 권한 코드, 관리자 권한명 추출
+      // 검색할 아이디에 따른 이름, 팀코드, 팀명, 부서코드, 부서명, 관리자 권한 코드, 관리자 권한명 추출
        @GetMapping("/approvaler/{id}")
        public ResponseEntity<Map<String, Object>> docData(@PathVariable String id){
-//      	  System.out.println("데이터 여기까지는 넘어옴" + id);
           Map<String, Object> memberData = mServ.memberData(id);
           return ResponseEntity.ok(memberData);
        }
+       
+       // 작성일 24.08.12
+       // 작성자 김지연
+       // 검색할 아이디에 따른 이름, 팀코드, 팀명, 부서코드, 부서명, 관리자 권한 코드, 관리자 권한명 추출
+       @PostMapping("/approvalSearch")
+        public List<Map<String, Object>> approvalSearch(@RequestBody List<Map<String, Object>> approvalLine){
+        	System.out.println("결재라인 확인 : " + approvalLine);
+        	List<Map<String, Object>> list = mServ.approvalList(approvalLine);
+        	//           Map<String, Object> memberData = mServ.memberData(id);
+           return list;
+        }
 }

@@ -5,13 +5,17 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -21,12 +25,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nbti.commons.RealpathConfig;
+import com.nbti.dto.FilesDTO;
 import com.nbti.dto.MembersDTO;
 import com.nbti.services.FilesService;
 import com.nbti.services.MembersService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/files")
@@ -71,6 +77,12 @@ public class FilesController {
 		//System.out.println(dto.getAddress() +":"+ dto.getEmail() +":"+ dto.getMember_call());
 		serv.mypageUpdate(dto, file);
 		return ResponseEntity.ok().build();
+	}
+	
+	@GetMapping("/getFiles/{seq}")
+	public List<FilesDTO> getList(@PathVariable int seq){
+		System.out.println("파일 부모 게시글 번호 확인 : "+seq);
+		return serv.getList(seq);
 	}
 	
 	@ExceptionHandler(Exception.class)

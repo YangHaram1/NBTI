@@ -5,7 +5,7 @@ import styles from './DocLeave.module.css';
 
 export const DocLeave = ({docLeave, setDocLeave})=>{
 
-    console.log(docLeave);
+    // console.log(docLeave);
     
     
     const leaveStart = format(new Date(docLeave.leave_start),'yyyy-MM-dd');
