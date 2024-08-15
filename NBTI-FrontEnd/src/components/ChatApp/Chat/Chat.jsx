@@ -18,6 +18,7 @@ import sanitizeHtml from 'sanitize-html';
 import 'react-toastify/dist/ReactToastify.css'
 import notice from '../../../images/notice.png';
 import Swal from 'sweetalert2';
+import SweetAlert from '../../../function/SweetAlert.js';
 axios.defaults.withCredentials = true;
 const Chat = () => {
   const editorRef = useRef(null);
@@ -37,23 +38,23 @@ const Chat = () => {
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
   const [updateMember, setUpdateMember] = useState(false);
-  const [checkInvite,setCheckInvite] =useState(false);
+  const [checkInvite, setCheckInvite] = useState(false);
 
 
-  useEffect(()=>{ //group_chat 속성 가저오기 나와의채팅인지 아닌지 
+  useEffect(() => { //group_chat 속성 가저오기 나와의채팅인지 아닌지 
     const { chatSeq } = useCheckList.getState();
-    if(chatSeq!==0)
-    axios.get(`${host}/group_chat/invite?group_seq=${chatSeq}`).then((resp)=>{
-      console.log(resp.data);
-      if(resp.data==='Y'){
-        setCheckInvite(true)
-      }
-      else{
-        setCheckInvite(false)
-      }
-     
-    })
-  },[chatSeq])
+    if (chatSeq !== 0)
+      axios.get(`${host}/group_chat/invite?group_seq=${chatSeq}`).then((resp) => {
+        console.log(resp.data);
+        if (resp.data === 'Y') {
+          setCheckInvite(true)
+        }
+        else {
+          setCheckInvite(false)
+        }
+
+      })
+  }, [chatSeq])
 
   // WebSocket 연결을 설정하는 useEffect
   useEffect(() => {
@@ -120,7 +121,7 @@ const Chat = () => {
       }
 
     }
-    return () => {   
+    return () => {
     };
 
   }, [chatNavi]);
@@ -194,15 +195,15 @@ const Chat = () => {
     });
   }
   const handleInvite = () => {
-    if(checkInvite)
-    setInvite((prev) => {
-      return !prev;
-    })
-    else{
+    if (checkInvite)
+      setInvite((prev) => {
+        return !prev;
+      })
+    else {
       Swal.fire({
-        icon:'error',
-        title:"나와의 채팅",
-        text:'초대 기능이 제한됩니다.'
+        icon: 'error',
+        title: "나와의 채팅",
+        text: '초대 기능이 제한됩니다.'
       })
     }
   }
@@ -220,8 +221,8 @@ const Chat = () => {
       const container = dragRef.current;
       if (Searchbar && container) {
         const containerRect = container.getBoundingClientRect();
-        const x = e.clientX - containerRect.left-305;
-        const y = e.clientY - containerRect.top+20;
+        const x = e.clientX - containerRect.left - 305;
+        const y = e.clientY - containerRect.top + 20;
         Searchbar.style.top = `${y}px`;
         Searchbar.style.left = `${x}px`;
       }
@@ -248,13 +249,12 @@ const Chat = () => {
 
 
   //다운로드 컨트롤
-  const handleDownload = (e) => {
-    e.preventDefault();
-    const userConfirmed = window.confirm("다운로드를 진행하시겠습니까?");
-    if (userConfirmed) {
-      // 사용자가 확인 버튼을 클릭한 경우, 다운로드를 진행
-      window.location.href = e.currentTarget.href;
-    }
+  const handleDownload = (split) => {
+    const linkElement = document.createElement('a');
+    // 2. 링크 속성 설정
+    linkElement.href = `${host}/files/downloadChat?oriname=${split[0]}&sysname=${split[1]}`;
+    linkElement.download = split[0];
+    linkElement.click();
   }
 
   const safeHtml = (html) => {
@@ -314,12 +314,10 @@ const Chat = () => {
           const split = item.message.split(' ');
           fileCheck = true;
           if (split[2] === '2') {
-            file = `<a href=${host}/files/downloadChat?oriname=${split[0]}&&sysname=${split[1]} download=${split[0]}  onClick="return confirm('다운로드를 진행하시겠습니까?');"><p>${split[0]}</p></a>`;
+            file = `<p style="color: blue; cursor: pointer;">${split[0]}</p>`;
           }
           else if (split[2] === '1') {
-            file = `<a href=${host}/files/downloadChat?oriname=${split[0]}&&sysname=${split[1]} download=${split[0]} onClick="return confirm('다운로드를 진행하시겠습니까?');">
-            <p><img src=${host}/images/chat/${split[1]} alt=downloadImage></img></p>
-            </a>`;
+            file = `<p style="color: blue; cursor: pointer;"><img src=${host}/images/chat/${split[1]} alt=downloadImage"></img></p>`;
           }
 
         }
@@ -352,7 +350,7 @@ const Chat = () => {
                         if (el && check) {
                           chatRef.current[count++] = el; //검색한것만 ref 추가
                         }
-                      }} className={idCheck ? styles.mboxReverse : styles.mbox}></div>
+                      }} className={idCheck ? styles.mboxReverse : styles.mbox} onClick={fileCheck ? () => SweetAlert('warning', '채팅방', '다운로드를 진행하시겠습니까?', () => handleDownload(item.message.split(' '))) : undefined}></div>
                     <div style={{ display: "flex" }}>
                       {(chatCheckCount > 0) && (<div className={styles.check}>{chatCheckCount || ''}</div>)}
                       <div className={styles.date}>{formattedTimestamp}</div>
