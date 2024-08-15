@@ -57,19 +57,25 @@ export const Side = ({ setAddOpen , setCalendarModalOpen}) => {
   const { calendarList, setCalendarSelectList ,publicList, setPublicList,setPrivateList} = useCalendarList();
   
   
-  // ===== 전체 =====
+  // ===== 전체 캘린더 출력 =====
   const fullCalendar = ()=>{
+    // console.log("side 전체 캘린더: "+ JSON.stringify(calendarList));
     setCalendarSelectList(calendarList)
-    console.log("side 전체 캘린더: "+ JSON.stringify(calendarList));
   }
 
+  const sharedCalendar = (calendar)=>{
+    console.log("side 전체 캘린더: "+ JSON.stringify(calendarList));
+    console.log("~~~~~~~~~"+calendar)
+    setCalendarSelectList(calendarList.filter((cal) => {
+      return cal.extendedProps.calendar_name === calendar;
+    }));
+  }
 
-  // ===== 개인 =====
+  // ===== 개인 캘린더만 출력 =====
   const myCalender = ()=>{
     setCalendarSelectList(calendarList.filter((item)=>{
-      console.log("myCalender :"+JSON.stringify(item))
-      console.log("side 개인 캘린더:"+item.extendedProps.calendar_title);
-      return item.extendedProps.calendar_title_code == '1'; 
+      // console.log("side 개인 캘린더:"+item.extendedProps.calendar_name);
+      return item.extendedProps.calendar_name === '1'; 
     }))
   }
 
@@ -77,7 +83,6 @@ export const Side = ({ setAddOpen , setCalendarModalOpen}) => {
   // ===== 공유 =====
   // [+] 버튼
     const handleCalendarAddClick = () => {
-      console.log("1")
       setCalendarModalOpen(true); // 모달 열기
   };
 
@@ -85,24 +90,24 @@ export const Side = ({ setAddOpen , setCalendarModalOpen}) => {
   useEffect(() => {
     axios.get(`${host}/calendarList`)
         .then((resp) => {
-            console.log('공유 일정 목록 가져오기 :'+ JSON.stringify(resp.data));
+            console.log('공유 일정 목록 가져오기 !!!:'+ JSON.stringify(resp.data));
 
             // 새로운 배열 생성
-            const newPrivateList = [];
-            const newPublicList = [];
+            const privateList = [];
+            const publicList = [];
 
             // 각 이벤트를 분류하고 배열에 추가
             resp.data.forEach(event => {
                 if (event.calendar_type === 'private') {
-                    newPrivateList.push(event.calendar_name); 
+                    privateList.push(event.calendar_name); 
                 } else if (event.calendar_type === 'public') {
-                    newPublicList.push(event.calendar_name); 
+                    publicList.push(event.calendar_name); 
                 }
             });
 
             // 최종적으로 한 번에 상태 업데이트
-            setPrivateList(newPrivateList); 
-            setPublicList(newPublicList); 
+            // setPrivateList(newPrivateList); 
+            setPublicList(publicList); 
         })
         .catch((error) => {
             console.error("error :", error);
@@ -135,20 +140,13 @@ export const Side = ({ setAddOpen , setCalendarModalOpen}) => {
         <ul>
           <li onClick={toggleFreeBoard}>
             <i className="fa-solid fa-user-large"></i>캘린더
-            <ul
-              className={`${styles.submenu} ${FreeBoard ? styles.open : ""}`}
-              onClick={preventPropagation}
-            >
+            <ul className={`${styles.submenu} ${FreeBoard ? styles.open : ""}`} onClick={preventPropagation}>
               <li onClick={fullCalendar}>
-                <span>
-                  <i className="fa-solid fa-star fa-sm"></i>
-                </span>
+                <span><i className="fa-solid fa-star fa-sm"></i></span>
                 <span>전체 캘린더</span>
               </li>
               <li onClick={myCalender}>
-                <span>
-                  <i className="fa-solid fa-star fa-sm"></i>
-                </span>
+                <span><i className="fa-solid fa-star fa-sm"></i></span>
                 <span>내 캘린더</span>
               </li>
             </ul>
@@ -159,7 +157,7 @@ export const Side = ({ setAddOpen , setCalendarModalOpen}) => {
             <i className="fa-solid fa-people-group"></i>공유 일정 <i className="fa-solid fa-plus" id={styles.plus} onClick={handleCalendarAddClick}/>
             <ul className={`${styles.submenu} ${NoticeBoard ? styles.open : ""}`} onClick={preventPropagation}>
               {publicList.map((calendar, index) => ( 
-                  <li key={index}> 
+                  <li key={index} onClick={()=>sharedCalendar(calendar)}> 
                       <span>
                           <i className="fa-solid fa-star fa-sm"></i>
                       </span>

@@ -15,7 +15,6 @@ public class CalendarListService {
 	
 	// 공유 캘린더 목록
     public List<CalendarListDTO> list (String member_id) throws Exception{
-    	
     	List<CalendarListDTO> list = cldao.list(member_id);
     	return list;
     }

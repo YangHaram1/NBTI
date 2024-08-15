@@ -6,7 +6,7 @@
   
   	<!-- 내가 포함된 공유 캘린더 -->
   	<select id="list" resultType="com.nbti.dto.CalendarListDTO">
-		SELECT cl.calendar_name
+		SELECT *
 		FROM calendar_list cl
 		JOIN calendar_members cm 
   		ON cl.calendar_id = cm.calendar_id

@@ -130,8 +130,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                     ...prev,
                     {
                     
-                        //color : calendar_title == 1 ? "rgba(164, 195, 178, 10)" : "rgba(255, 178, 44, 10)" ,
-                        color : "rgba(164, 195, 178, 10)",
+                        color : calendar_name == 1 ? "rgba(164, 195, 178, 10)" : "rgba(255, 178, 44, 10)" ,
                         // seq: seq,
                         title: title, //제목
                         start: startDate, //사작
@@ -161,20 +160,13 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
         // 새로운 캘린더 이름을 추가
         setSharedCalendarName(prev => [...prev, inputCalendarName]); // 배열에 추가
         setInputCalendarName(''); // 입력 필드 초기화
-        console.log("제목입력값: " + inputCalendarName); // 입력된 값 출력
-        console.log("members: " + JSON.stringify(membersList)); // 멤버 리스트 출력
 
-        // membersList의 id를 하나의 문자열로 연결
-        // const memberIds = membersList.map(event => event.id).join(', '); // ','로 구분하여 문자열로 연결
-        // console.log("멤버 ID들: " + memberIds); // 최종 문자열 출력
         // 요청할 데이터 객체 생성
         const members = [];
 
         membersList.map(e => {
             members.push(e.id)
         });
-
-        console.log("members: " + members)
 
         const calendarData = {
             calendar_name: inputCalendarName, // 캘린더 이름

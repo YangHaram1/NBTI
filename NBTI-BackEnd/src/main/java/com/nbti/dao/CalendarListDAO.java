@@ -20,13 +20,14 @@ public class CalendarListDAO {
 	
     // 공유 캘린더 목록
     public List<CalendarListDTO> list (String member_id)  throws Exception{
+//    	System.out.println("Member ID: " + member_id); 
     	return mybatis.selectList("CalendarList.list", member_id);
     }
     
 	// 공유 캘린더 추가
 	public void insert (CalendarListDTO dto)  throws Exception {
 		mybatis.insert("CalendarList.insert",dto);
-		System.out.println("after : " + dto.getCalendar_id());
+//		System.out.println("after : " + dto.getCalendar_id());
 	}
 	
 	public int getLastCalendarID() throws Exception {

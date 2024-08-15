@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nbti.dto.CalendarDTO;
 import com.nbti.dto.CalendarListDTO;
+import com.nbti.dto.DepartmentDTO;
 import com.nbti.services.CalendarListService;
 
 import jakarta.servlet.http.HttpSession;
@@ -32,41 +32,46 @@ public class CalendarListController {
 	public ResponseEntity<List<CalendarListDTO>> list () throws Exception{
 		String member_id = (String) session.getAttribute("loginID");
     	List<CalendarListDTO> list = clserv.list(member_id);
+    	for(CalendarListDTO l:list) {
+    		System.out.println("calendar id : " + l.getCalendar_id());
+    		System.out.println("member id : " + l.getMember_id());
+    		System.out.println("calendar name : " + l.getCalendar_name());
+    		System.out.println("calendar type : " + l.getCalendar_type());
+    		System.out.println("");
+    	}
     	return ResponseEntity.ok(list);
 	}
-	
-	// 공유 캘린더 추가
-//    @PostMapping
-//    public ResponseEntity<Void> insert(@RequestBody CalendarListDTO dto) throws Exception{
-//        dto.setMember_id((String) session.getAttribute("loginID")); // ID가 일치하는 경우에만 설정
-//        
-//        clserv.insert(dto);
-//        return ResponseEntity.ok().build();
-//    }
+
     
+	// 공유 캘린더 추가 (사용자와 선택된 멤버들을 캘린더에 추가하는 작업)
 	@PostMapping
 	public ResponseEntity<Void> insert(@RequestBody Map<String, Object> requestBody) throws Exception {
-	    // 세션에서 로그인 ID를 가져와 member_id에 설정
 	    String memberId = (String) session.getAttribute("loginID");
-
-	    // 요청 본문에서 각 필드 값을 가져오기
 	    String calendarName = (String) requestBody.get("calendar_name");
 	    String calendarType = (String) requestBody.get("calendar_type");
+	    
+	    // 캘린더 멤버 리스트 가져오는 작업
 	    List<String> calendarMembers = (List<String>) requestBody.get("calendar_members");
 
-	    // 데이터 확인을 위한 출력
-	    System.out.println("Calendar Name: " + calendarName);
-	    System.out.println("Calendar Type: " + calendarType);
-	    System.out.println("Calendar Members: " + calendarMembers);
-	    System.out.println("Member ID: " + memberId);
+	    // 로그인된 사용자 ID를 캘린더 멤버 리스트에 추가
+	    if (!calendarMembers.contains(memberId)) {
+	        calendarMembers.add(memberId);
+	    }
 
-	    // 클 서비스에 저장
+//	    System.out.println("Calendar Name: " + calendarName);
+//	    System.out.println("Calendar Type: " + calendarType);
+//	    System.out.println("Calendar Members: " + calendarMembers);
+//	    System.out.println("Member ID: " + memberId);
+
 	    clserv.insert(new CalendarListDTO(0, memberId, calendarName, calendarType));
 
+	    // 방금 추가한 캘린더의 ID
 	    int lastCalID = clserv.getLastCalendarID();
+	    
+	    // 캘린더 멤버 리스트 
 	    for(String calendarMember : calendarMembers) {
-	    	System.out.println(calendarMember);
-	    	clserv.insertMember(lastCalID,calendarMember);
+//	    	System.out.println(calendarMember); // 각 멤버 ID 출력
+	    	clserv.insertMember(lastCalID,calendarMember); // 해당 멤버를 캘린더에 추가
 	    }
 	    
 	    return ResponseEntity.ok().build();
