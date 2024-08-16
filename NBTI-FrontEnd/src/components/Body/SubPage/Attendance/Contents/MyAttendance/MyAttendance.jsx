@@ -3,9 +3,9 @@ import axios from 'axios';
 import styles from './MyAttendance.module.css';
 import { host } from '../../../../../../config/config';
 import { format } from 'date-fns';
-import useWeeklyStats from './WeeklsyStats/useWeeklyStats'; 
-import WeeklyStats from './WeeklsyStats/WeeklyStats'; 
-import YearlyStats from './YearStats/YearlyStats'; 
+import useWeeklyStats from './WeeklsyStats/useWeeklyStats';
+import WeeklyStats from './WeeklsyStats/WeeklyStats';
+import YearlyStats from './YearStats/YearlyStats';
 import useYearlyStats from './YearStats/useYearlyStats';
 
 export const MyAttendance = () => {
@@ -101,40 +101,42 @@ export const MyAttendance = () => {
     return (
         <div className={styles.container}>
             <YearlyStats stats={yearlyStats} />
-            <div className={styles.titleSection}>
+            <div className={styles.myAttendanceContainer}>
                 <h2>금일 근무 현황</h2>
-            </div>
-            <div className={styles.clockAndWorkInfo}>
-                <div className={styles.clockSection}>
-                    <div className={styles.timeAndButtons}>
-                        <div className={styles.timeDisplay}>
-                            <p>출근 시간: {currentClockIn || '출근 기록 없음'} {isLate && <span>(지각)</span>}</p>
-                            {isAbsent && <p>오늘 출근하지 않아 결근 처리되었습니다.</p>}
-                        </div>
-                        <div className={styles.buttonsContainer}>
-                            <button
-                                onClick={handleClockIn}
-                                className={`${styles.button} ${clockedIn ? styles.disabled : ''}`}
-                                disabled={clockedIn}
-                            >
-                                출근
-                            </button>
+                <div className={styles.clockAndWorkInfo}>
+                    <div className={styles.clockSection}>
+                        <div className={styles.timeAndButtons}>
+                            <div className={styles.timeDisplay}>
+                                <p>출근 시간: {currentClockIn || '출근 기록 없음'}</p>
+                                {isLate && <span className={styles.comment}>지각</span>}
+                                {isAbsent && <p>오늘 출근하지 않아 결근 처리되었습니다.</p>}
+                            </div>
+                            <div className={styles.buttonsContainer}>
+                                <button
+                                    onClick={handleClockIn}
+                                    className={`${styles.button} ${clockedIn ? styles.disabled : ''}`}
+                                    disabled={clockedIn}
+                                >
+                                    출근
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className={styles.clockSection}>
-                    <div className={styles.timeAndButtons}>
-                        <div className={styles.timeDisplay}>
-                            <p>퇴근 시간: {currentClockOut || '퇴근 기록 없음'} {isEarlyLeave && <span>(조기 퇴근)</span>}</p>
-                        </div>
-                        <div className={styles.buttonsContainer}>
-                            <button
-                                onClick={handleClockOut}
-                                className={`${styles.button} ${clockedOut || !clockedIn ? styles.disabled : ''}`}
-                                disabled={clockedOut || !clockedIn}
-                            >
-                                퇴근
-                            </button>
+                    <div className={styles.clockSection}>
+                        <div className={styles.timeAndButtons}>
+                            <div className={styles.timeDisplay}>
+                                <p>퇴근 시간: {currentClockOut || '퇴근 기록 없음'}</p>
+                                {isEarlyLeave && <span className={styles.comment}>조기 퇴근</span>}
+                            </div>
+                            <div className={styles.buttonsContainer}>
+                                <button
+                                    onClick={handleClockOut}
+                                    className={`${styles.button} ${clockedOut || !clockedIn ? styles.disabled : ''}`}
+                                    disabled={clockedOut || !clockedIn}
+                                >
+                                    퇴근
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
