@@ -60,10 +60,11 @@
     align-items: center;
     width: 100%;
     border-bottom: 1px solid black;
+    background-color: white;
 }
 
-.date{flex:0.8; text-align: center;}
-.form{flex:0.8; text-align: center;}
+.date{flex:0.9; text-align: center;}
+.form{flex:0.9; text-align: center;}
 .emergency{flex:0.5;  text-align: center; display: flex; justify-content: center;}
 .content_title{flex:5.5;  text-indent: 70px;}
 .content_title_hover:hover{cursor: pointer;font-weight: 800;}

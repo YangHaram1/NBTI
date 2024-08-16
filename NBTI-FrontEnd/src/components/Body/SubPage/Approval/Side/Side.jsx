@@ -184,11 +184,11 @@ export const Side = () => {
                 임시 저장 문서함
             </li>
         </ul>
-        <ul>
+        {/* <ul>
             <li onClick={()=>{navi("listDocSetting")}}>
                 전자결재 관리
             </li>
-        </ul>
+        </ul> */}
       </div>
 
       <Modal isOpen={isModalOpen} onClose={closeFirstModal}>
