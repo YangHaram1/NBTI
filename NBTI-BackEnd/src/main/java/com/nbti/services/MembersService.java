@@ -1,5 +1,6 @@
 package com.nbti.services;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +77,28 @@ public class MembersService {
 	// 아이디에 따른 이름, 팀코드, 팀명, 부서코드, 부서명, 관리자 권한 코드, 관리자 권한명 추출
 	public Map<String, Object> memberData(String id){
 		return mdao.memberData(id);
+	}
+	
+	// 아이디에 따른 이름, 팀코드, 팀명, 부서코드, 부서명, 관리자 권한 코드, 관리자 권한명 추출
+	public List<Map<String, Object>> approvalList(List<Map<String, Object>> approvalLine){
+		
+		List<Map<String, Object>> list = new ArrayList<>();
+		
+		for (Map<String, Object> map : approvalLine) {
+			
+			String id = (String)map.get("id");
+			if(id == null) {
+				id = (String)map.get("referer");
+				System.out.println("referer:"+id);
+			}
+			
+			Map<String, Object> memberDataMap = mdao.memberData(id);
+	        if (memberDataMap != null) {
+	        	map.putAll(memberDataMap);
+	        }
+	        list.add(map);
+		}
+		return list;
 	}
 	
 	

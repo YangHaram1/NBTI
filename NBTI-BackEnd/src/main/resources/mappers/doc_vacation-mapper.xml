@@ -4,9 +4,14 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="DocVacation">
+ 	
  	<insert id="insert">
- 		insert into doc_vacation values(#{vacation_seq}, #{vacation_category},#{vacation_start},#{start_half},#{start_half_ap},#{vacation_end},#{end_half},#{end_half_ap})
- 	</insert>
+	    insert into doc_vacation (
+	      vacation_seq, vacation_category, vacation_start, start_half, start_half_ap, vacation_end, end_half, end_half_ap
+	    ) values (
+	      #{vacation_seq}, #{vacation_category, jdbcType=NUMERIC}, #{vacation_start, jdbcType=TIMESTAMP}, #{start_half, jdbcType=CHAR}, #{start_half_ap, jdbcType=CHAR}, #{vacation_end, jdbcType=TIMESTAMP}, #{end_half, jdbcType=CHAR}, #{end_half_ap, jdbcType=CHAR}
+	    )
+	  </insert>
  	
  	<select id="selectContent" resultType='com.nbti.dto.DocVacationDTO'>
  		select * from doc_vacation where vacation_seq = #{seq}
