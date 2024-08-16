@@ -5,7 +5,11 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="DocLeave">
  	<insert id="insert">
- 		insert into doc_leave values(${leave_seq}, #{leave_reason}, #{leave_start}, #{leave_end}, #{address}, #{phone})
+ 		insert into doc_leave (
+ 			leave_seq, leave_reason, leave_start, leave_end, address, phone
+ 		) values(
+ 			#{leave_seq}, #{leave_reason, jdbcType=VARCHAR}, #{leave_start, jdbcType=TIMESTAMP}, #{leave_end, jdbcType=TIMESTAMP}, #{address, jdbcType=VARCHAR}, #{phone, jdbcType=VARCHAR}
+ 		)
  	</insert>
  	
  	<select id="selectContent" resultType="com.nbti.dto.DocLeaveDTO">

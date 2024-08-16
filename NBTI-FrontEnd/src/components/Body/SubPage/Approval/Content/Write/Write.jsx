@@ -48,6 +48,7 @@ export const Write = ({setlist})=>{
         // 모달창 가져올 수 있게 하기 (결재선 지정)
     }
 
+    // 기안하기
     const approvalSubmit = () =>{
 
         let result = window.confirm("긴급 문서로 하시겠습니까?");
@@ -63,7 +64,7 @@ export const Write = ({setlist})=>{
              });
          } else {
              console.error("업로드할 파일이 없습니다.");
-             return;
+            //  return;
          }
 
         if(setlist === "업무기안서"){
@@ -113,7 +114,6 @@ export const Write = ({setlist})=>{
             formData.append('files', fileObj.file); // 파일 객체를 FormData에 추가
         });
 
-
         // Send the request
         axios.post(`${host}/approval`, formData, {
             headers: {
@@ -130,6 +130,71 @@ export const Write = ({setlist})=>{
             console.error("문서 제출 실패:", error);
         });
     }
+
+    // 임시저장
+    const tempSubmit = () =>{
+
+        let result = window.confirm("첨부 파일은 저장되지 않습니다.");
+        // console.log("개별", date, dept, title, content);
+        let requestData;
+
+        if(result){
+        if(setlist === "업무기안서"){
+            // docData => 업무기안서 내용 => else if 시 다른 변수로 변경 필요
+            requestData = {
+                docDraft: {
+                    effective_date: date,
+                    cooperation_dept: dept,
+                    title: title,
+                    content: content
+                },
+                approvalLine: approvalLine,
+                referLine: referLine,
+                emergency: false,
+                docType : 1
+            };  
+        }else if(setlist === "휴가신청서"){
+            requestData = {
+                docVacation: docVacation,
+                approvalLine: approvalLine,
+                referLine: referLine,
+                emergency: false,
+                docType : 3
+            };
+            // console.log("휴가",docVacation);
+            // console.log("휴가 신청서");
+            // console.log("휴가 결재",approvalLine);
+            // console.log("휴가 참조",referLine);
+
+        }else if(setlist === "휴직신청서"){
+            requestData = {
+                docLeave: docLeave,
+                approvalLine: approvalLine,
+                referLine: referLine,
+                emergency: false,
+                docType : 2
+            };
+            // console.log("휴직", docLeave);
+            // console.log("휴직 신청서");
+            // console.log("휴직 결재",approvalLine);
+            // console.log("휴직 참조",referLine);
+        }
+
+        // Send the request
+        axios.post(`${host}/approval/tempSave`, requestData)
+        .then(response => {
+            resetReferLine();
+            resetApprovalLine();
+            console.log("성공!");
+            // navi("/approval");
+        })
+        .catch(error => {
+            console.error("문서 제출 실패:", error);
+        });
+
+        }
+    }
+
 
      // 파일 첨부
      const handleFileChange  = (e)=>{
@@ -220,9 +285,10 @@ export const Write = ({setlist})=>{
                 <div className={styles.content_left}>
                     <div className={styles.btns}>
                         <div className={`${styles.approval_submit_btn} ${styles.btn}`} onClick={approvalSubmit}><i class="fa-solid fa-pen-to-square"></i>결재요청</div>
-                        <div className={`${styles.approval_temp_btn} ${styles.btn}`}><i class="fa-regular fa-folder-open"></i>임시저장</div>
+                        <div className={`${styles.approval_temp_btn} ${styles.btn}`} onClick={tempSubmit}><i class="fa-regular fa-folder-open"></i>임시저장</div>
                         {/* <div className={`${styles.approval_prev_btn} ${styles.btn}`}>미리보기</div> */}
                         <div className={`${styles.approval_change_btn} ${styles.btn}`} onClick={handleModal}><i class="fa-solid fa-users"></i>결재선변경</div>
+                        {/* <div className={`${styles.approval_change_btn} ${styles.btn}`} onClick={handleModal}><i class="fa-solid fa-users"></i>임시저장</div> */}
                     </div>
                     <div className={styles.write_box}>
                         {   

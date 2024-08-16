@@ -40,6 +40,10 @@ export const ListDoc = ({setlist}) => {
                 console.log("상신취소 문서함");
                 url = `${host}/approval/getCancle`
                 break;
+            case '임시 저장 문서함':
+                console.log("임시 저장 문서함");
+                url = `${host}/approval/getTemp`
+                break;
             default:
                 return;
         }
@@ -85,7 +89,7 @@ export const ListDoc = ({setlist}) => {
                     <div className={styles.emergency}> 긴급</div>
                     <div className={styles.content_title}> 제목</div>
                     <div className={styles.file}> 첨부</div>
-                    {setlist !== '반려 문서함' && setlist !== '상신취소 문서함' ? (
+                    {setlist !== '반려 문서함' && setlist !== '상신취소 문서함' && setlist !== '임시 저장 문서함'? (
                         <>
                         <div className={styles.writer}> 기안자</div>
                         <div className={styles.doc_number}> 문서번호</div>
@@ -117,7 +121,7 @@ export const ListDoc = ({setlist}) => {
                                     <input type='hidden' value={list.doc_sub_name}></input>
                                 </div>
                                 <div className={styles.file}>Y</div>
-                                {setlist !== '반려 문서함' && setlist !== '상신취소 문서함' ? (
+                                {setlist !== '반려 문서함' && setlist !== '상신취소 문서함' && setlist !== '임시 저장 문서함' ? (
                                 <>
                                 <div className={styles.writer}> {list.name}</div>
                                 <div className={styles.doc_number}>{list.approval_seq}</div>

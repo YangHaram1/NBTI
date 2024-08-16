@@ -6,7 +6,7 @@
  <mapper namespace="Approval">
  
  	<insert id="insert">
- 		insert into approval values(temp_seq.nextval, #{member_id}, sysdate, #{doc_sub_seq}, #{emergency}, 'n', '', 'i')
+ 		insert into approval values(temp_seq.nextval, #{member_id}, sysdate, #{doc_sub_seq}, #{emergency}, 'n', '', #{doc_state_code})
  		<selectKey resultType="int" order="AFTER" keyProperty="temp_seq">
  			select temp_seq.currval from dual
  		</selectKey>
@@ -185,6 +185,27 @@
 			left outer join doc_leave dl on a.temp_seq = dl.leave_seq
 			left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
 			where a.member_id = #{id} and a.doc_state = 'c'
+			order by a.temp_seq desc
+ 	</select>
+ 	
+ 	<select id="selectTemp" resultType="com.nbti.dto.ListDocDTO">
+ 		select 
+		    a.temp_seq, 
+		    a.member_id, 
+		    a.approval_date, 
+		    a.emergency, 
+		    ds.doc_sub_name, 
+		    a.approval_seq,
+		    a.doc_state,
+		    dd.title,
+	 		m.name 
+ 		from approval a 
+ 			left outer join members m on a.member_id = m.id
+			left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
+			left outer join doc_draft dd on a.temp_seq = dd.draft_seq
+			left outer join doc_leave dl on a.temp_seq = dl.leave_seq
+			left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
+			where a.member_id = #{id} and a.doc_state = 't'
 			order by a.temp_seq desc
  	</select>
  	
