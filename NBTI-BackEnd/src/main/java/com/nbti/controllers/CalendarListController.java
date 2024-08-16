@@ -76,4 +76,23 @@ public class CalendarListController {
 	    
 	    return ResponseEntity.ok().build();
 	}
+	
+	@DeleteMapping("/{calendarName}")
+	public ResponseEntity<Void> delete(@PathVariable String calendarName) throws Exception{
+		System.out.println("delete test!!!");
+		System.out.println("calendar name : " + calendarName);
+		
+		int calendarID = getCalendarID(calendarName);
+		System.out.println("calendar id : " + calendarID);
+		
+		clserv.deleteMembers(calendarID);
+		clserv.deleteSchedules(calendarName);
+		clserv.delete(calendarName);
+		
+		return ResponseEntity.ok().build();
+	}
+	
+	public int getCalendarID(String calendarName) throws Exception {
+		return clserv.getCalendarID(calendarName);
+	}
 }

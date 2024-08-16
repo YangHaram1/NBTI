@@ -40,4 +40,21 @@ public class CalendarListDAO {
 		cm.member = calendarMember;
 		mybatis.insert("CalendarList.insertMember", cm);
 	}
+	
+	//삭제
+	public void delete (String calendar_name) throws Exception{
+		mybatis.delete("CalendarList.delete", calendar_name);
+	}
+	
+	public int getCalendarID(String calendarName) throws Exception {
+		return mybatis.selectOne("CalendarList.getCalendarID", calendarName);
+	}
+	
+	public void deleteMembers(int calendarID) throws Exception {
+		mybatis.delete("CalendarList.deleteMembers", calendarID);
+	}
+	
+	public void deleteSchedules(String calendarName) throws Exception {
+		mybatis.delete("CalendarList.deleteSchedules", calendarName);
+	}
 }

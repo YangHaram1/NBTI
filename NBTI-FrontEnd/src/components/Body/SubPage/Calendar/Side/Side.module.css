@@ -99,14 +99,17 @@ div {
   /* Submenu */
   .submenu {
     max-height: 0;
-    overflow: hidden;
+    overflow: auto;
     transition: max-height 0.3s ease-out;
   }
-  
+  .submenu::-webkit-scrollbar {
+    display: none; /* 웹킷 브라우저에서 스크롤바 숨기기 */
+  }
   .submenu.open {
     max-height: 300px; /* 충분히 큰 값으로 설정하여 모든 항목이 표시되도록 합니다. */
   }
-  
+  .submenu > li > button{position: absolute;border: none; right: 0; display: flex;justify-content: center; align-items: center; background-color: initial;}
+  .submenu > li > button > i {color: #000; margin-right: 0;}
   /* 모달창 */
 .modal {
   position: fixed;
@@ -149,5 +152,6 @@ div {
   margin-bottom: 10%;
   font-size: 12px;
 }
+
 
 

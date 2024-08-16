@@ -14,7 +14,9 @@ import Members from './Members/Members';
 
 
 export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModalOpen}) => {
-    const { setSelectedItem , setCalendarList , calendarSelectList , sharedCalendarName, setSharedCalendarName,membersList,setMembersList , publicList, setPublicList,setPrivateList} = useCalendarList();
+    const loginID = localStorage.getItem('loginID') || sessionStorage.getItem('loginID'); //세션에 저장된 내 ID 
+
+    const { calendarList, setSelectedItem , setCalendarList , calendarSelectList , sharedCalendarName, setSharedCalendarName,membersList,setMembersList , publicList, setPublicList,setPrivateList} = useCalendarList();
 
     // ===== 상태 =====
     const [modalOpen, setModalOpen] = useState(false); // 모달창 열기/닫기
@@ -66,9 +68,11 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
     // 입력된 값을 insert 상태에 업데이트
     const handleChange = (e) => {
         const { name, value } = e.target;
+        console.log("handleChange : " + name)
+        console.log("handleChange : " + value)
         setInsert((prev) => ({
             ...prev,
-            [name]: name === 'calendar_title' ? Number(value) : value // title은 number 타입으로 변환
+            [name]: value // title은 number 타입으로 변환
         }));
     };
 
@@ -111,6 +115,8 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
             return;
         }
     
+        console.log("calendar name : " + calendar_name);
+
         // 서버에 데이터 전송
         const postData = {
             title: title, 
@@ -130,7 +136,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                     ...prev,
                     {
                     
-                        color : calendar_name == 1 ? "rgba(164, 195, 178, 10)" : "rgba(255, 178, 44, 10)" ,
+                        color : calendar_name == 1 ? "#33A150" : "#E04038" ,
                         // seq: seq,
                         title: title, //제목
                         start: startDate, //사작
@@ -157,6 +163,12 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
             alert('공유 캘린더 이름을 입력하세요.');
             return;
         }
+
+        if (inputCalendarName.length > 6) {
+            alert('공유 캘린더 이름은 6글자 이내로 입력하세요.');
+            return;
+        }
+
         // 새로운 캘린더 이름을 추가
         setSharedCalendarName(prev => [...prev, inputCalendarName]); // 배열에 추가
         setInputCalendarName(''); // 입력 필드 초기화
@@ -176,6 +188,12 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
 
         axios.post(`${host}/calendarList`, calendarData).then((resp)=>{
             console.log("insert 응답:"+ JSON.stringify(resp))
+            publicList.push(
+                {
+                    calendar_name: inputCalendarName,
+                    member_id: loginID
+                }
+            );
         })
 
         setCalendarModalOpen(false); // 공유 일정 모달 닫기
@@ -187,19 +205,20 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
         setEditedTitle(selectedEvent.calendarTitle); // 선택된 이벤트의 제목을 편집 제목 상태로 설정
         setEditedContents(selectedEvent.extendedProps.contents || ''); // 선택된 이벤트의 내용을 편집 내용 상태로 설정
     };
+
     const handleSaveClick = () => {
         console.log(JSON.stringify(selectedEvent));
-        // console.log(selectedEvent.extendedProps.seq + ":" + editedTitle + ":" +editedContents);
+        console.log("~~"+selectedEvent.extendedProps.seq + ":" + editedTitle + ":" +editedContents);
 
         const updateData = {
             seq: selectedEvent.extendedProps.seq,
-            calendarTitle: editedTitle,
+            title: editedTitle,
             contents: editedContents
         };
     
         axios.put(`${host}/calendar`, updateData)
             .then((resp) => {
-                console.log(resp.data + " 수정 완료");
+                console.log(resp.data + " !!!");
     
                 selectedEvent.setProp('title', editedTitle);
                 selectedEvent.setExtendedProp('contents', editedContents);
@@ -219,9 +238,9 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                 const eventList = resp.data.map(event => {
                     let color = '';
                     if(event.calendar_name == 1 ){
-                        color='rgba(164, 195, 178, 10)';
+                        color='#33A150';
                     }else{
-                        color='rgba(255, 178, 44, 10)';
+                        color='#E04038';
                     }
 
                     return {
@@ -266,6 +285,8 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
     useEffect(() => {
         setEvents(calendarSelectList);
     }, [calendarSelectList]);
+
+
     
     //삭제
     const delModal = () => {
@@ -284,55 +305,55 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                 console.error("삭제 실패:", error);
             });
     }
-    
-    console.log("test: " + publicList)
 
     return (
         <div className={styles.calender}>
-            <div className={styles.innerCalender}>
-                <FullCalendar
-                    // ref={calendarRef} // 프린트
-                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                    initialView="dayGridMonth"
-                    locales={[koLocale]} // 한국어 로케일 설정
-                    locale="ko" 
-                    selectable="true" //달력 드래그 
-
-                    // 기본 (월)
-                    dayMaxEventRows={3} // 각 날짜 셀에 표시되는 이벤트를 5개로 제한
-                    moreLinkText="..." // "+n more" 링크에 표시되는 텍스트
-                    // 뷰가 변경될 때마다 호출되는 핸들러 (주/일)
-                    datesSet={(info) => {
-                        if (info.view.type === 'dayGridMonth') {
-                            // 월 뷰에서는 dayMaxEventRows와 moreLinkText 활성화
-                            info.view.calendar.setOption('dayMaxEventRows', 3);
-                            info.view.calendar.setOption('moreLinkText', '...');
-                        } else {
-                            // 주 뷰 또는 일 뷰에서는 해당 옵션 비활성화
-                            info.view.calendar.setOption('dayMaxEventRows', false);
-                            info.view.calendar.setOption('moreLinkText', '');
-                        }
-                    }}
-
-                    headerToolbar={{
-                        left: 'print dayGridMonth,dayGridWeek,dayGridDay', // 전/후 달로 이동, 오늘로 이동, 인쇄
-                        center: 'title',
-                        right: 'prev,today,next' // 월 주 일
-                    }}
-
-                    customButtons={{
-                        print: {
-                            text: '인쇄하기',
-                            click: handlePrint // 인쇄 함수 연결
-                        }
-                    }}
-
-                    //일정 추가 이벤트
-                    events={events}
-                    dateClick={handleDateClick} 
-                    eventClick={handleEventClick} // 이벤트 클릭 시 상세 정보 보기
-                />
+            <div className={styles.calenderColor}>
+                <div className={styles.my}>개인</div>
+                <div className={styles.full}>공유</div>
             </div>
+            <FullCalendar
+                // ref={calendarRef} // 프린트
+                plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                initialView="dayGridMonth"
+                locales={[koLocale]} // 한국어 로케일 설정
+                locale="ko" 
+                selectable="true" //달력 드래그 
+                
+                // 기본 (월)
+                dayMaxEventRows={3} // 각 날짜 셀에 표시되는 이벤트를 5개로 제한
+                moreLinkText="..." // "+n more" 링크에 표시되는 텍스트
+                // 뷰가 변경될 때마다 호출되는 핸들러 (주/일)
+                datesSet={(info) => {
+                    if (info.view.type === 'dayGridMonth') {
+                        // 월 뷰에서는 dayMaxEventRows와 moreLinkText 활성화
+                        info.view.calendar.setOption('dayMaxEventRows', 3);
+                        info.view.calendar.setOption('moreLinkText', '...');
+                    } else {
+                        // 주 뷰 또는 일 뷰에서는 해당 옵션 비활성화
+                        info.view.calendar.setOption('dayMaxEventRows', false);
+                        info.view.calendar.setOption('moreLinkText', '');
+                    }
+                }}
+
+                headerToolbar={{
+                    left: 'print dayGridMonth,dayGridWeek,dayGridDay', // 전/후 달로 이동, 오늘로 이동, 인쇄
+                    center: 'title',
+                    right: 'prev,today,next' // 월 주 일
+                }}
+
+                customButtons={{
+                    print: {
+                        text: '인쇄하기',
+                        click: handlePrint // 인쇄 함수 연결
+                    }
+                }}
+
+                //일정 추가 이벤트
+                events={events}
+                dateClick={handleDateClick} 
+                eventClick={handleEventClick} // 이벤트 클릭 시 상세 정보 보기
+            />
             {/* 일정추가 모달창과 제목수정 서로 충돌방지 조건 */}
             {(addOpen || modalOpen) && !calendarModalOpen &&(
                 <div className={styles.modalOverlay} onClick={closeModal}>
@@ -343,7 +364,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                             {isEditing ? ( //수정 누르면 수정
                                 <div className={styles.modalInner}>
                                     <div className={styles.detail}>
-                                        <p>{selectedEvent.extendedProps.calendar_name === 1 ? '내 캘린더' : '공유 캘린더'}</p>
+                                        <p>{selectedEvent.extendedProps.calendar_name == 1 ? '내 캘린더' : selectedEvent.extendedProps.calendar_name}</p>
                                         <hr/>
                                         <p>
                                             제목 : <input type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
@@ -362,7 +383,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                             ) : ( // 수정 누르기 전 
                                 <div className={styles.modalInner}>
                                 <div className={styles.detail}>
-                                    <p>{selectedEvent.extendedProps.calendar_name === 1 ? '내 캘린더' : '공유 캘린더'}</p>
+                                    <p>{selectedEvent.extendedProps.calendar_name == 1 ? '내 캘린더' : selectedEvent.extendedProps.calendar_name}</p>
                                     <hr/>
                                     <p>제목 : {selectedEvent.title}</p>
                                     <p>시작 : {selectedEvent.start.toLocaleString()}</p>
@@ -388,7 +409,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                                         <option value="0">선택하세요</option>
                                         <option value="1">내 캘린더</option>
                                         {publicList.map((calendar, index) => (
-                                            <option key={index} value={calendar}>{calendar}</option>
+                                            <option key={index} value={calendar.calendar_name}>{calendar.calendar_name}</option>
                                         ))}
                                     </select>
                                 </div>
@@ -400,7 +421,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                                     <p>시작</p>
                                     <input type="date" className={styles.inputBox} value={insert.start_date} name="start_date" onChange={handleChange}/>
                                     <div className={styles.dateBox}>
-                                        <input type="time" id="startTime" name="start_time" value={insert.start_time} onChange={handleChange}/>
+                                        <input type="time" id="startTime" name="start_time" value={insert.start_time} onChange={handleChange} />
                                     </div>
                                 </div>
                                 <div>

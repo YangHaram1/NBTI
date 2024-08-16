@@ -13,6 +13,10 @@
 		WHERE cm.member_id = #{member_id}
   	</select>
   	
+  	<select id="getCalendarID" resultType="int">
+  		select calendar_id from calendar_list where calendar_name = #{calendar_name}
+  	</select>
+  	
   	<!-- 공유 캘린더 추가하기 -->
 	<insert id="insert">
        insert into calendar_list 
@@ -28,4 +32,17 @@
     	SELECT MAX(calendar_id)
 		FROM calendar_list
     </select>
+    
+    <!-- 삭제 -->
+    <delete id="delete">
+    	delete from calendar_list where calendar_name = #{calendarName}
+    </delete>
+    
+    <delete id="deleteMembers">
+    	delete from calendar_members where calendar_id = #{calendarID}
+    </delete>
+    
+    <delete id="deleteSchedules">
+    	delete from calendar where calendar_name = #{calendarName}
+    </delete>
   </mapper>

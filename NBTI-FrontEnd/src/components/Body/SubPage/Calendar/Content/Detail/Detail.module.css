@@ -1,25 +1,42 @@
 :root {
-    --fc-today-bg-color: #a1d3bc47 !important;
-    --fc-border-color: #6B9080;
+    --fc-today-bg-color: #fef1a08c  !important;
+    --fc-border-color: #A4C3B2;
 }
 
 .calender {
-    flex: 8;
-    padding: 5%;
-    position: relative;
-    overflow-y: auto;  /* 내부 내용이 많을 경우 스크롤 가능하도록 설정 */
-    box-sizing: border-box; /* padding을 포함한 크기 계산 */
-    background-color: white;
-}
-.innerCalender{
-    background-color: #EAF4F4;
-    padding: 5%; 
-    border: 5px solid white;
-    box-shadow: 0px 0px 3px #818181; /* 모든 방향으로 동일한 그림자 */
-    border-radius: 20px;
     height: 100%;
-
+    margin: 3%;
+    background-color: white;
+    padding-top: 10px;
+    border-radius: 10px;
+    min-width: 700px;
 }
+
+/* 내 캘린더 / 공유캘린더 */
+.calenderColor {display: flex;justify-content: right; margin: 10px 0;}
+.calenderColor > .my, .calenderColor > .full {
+    position: relative;
+    padding-left: 20px; 
+    margin-right: 20px;
+    margin-bottom: 8px;
+}
+.calenderColor > .my::before, .calenderColor > .full::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px; 
+    border-radius: 50%; 
+}
+.calenderColor > .my::before {
+    background-color: #33A150; 
+}
+.calenderColor > .full::before {
+    background-color: #E04038; 
+}
+
 /* 툴바 배경색 설정 */
 .fc-toolbar {
     background-color: #f0f0f0; /* 원하는 배경색으로 설정 */
@@ -39,7 +56,6 @@
 .fc-button:hover {
     background-color: #4A6D6F; /* 호버 시 배경색 */
 }
-
 /* 타이틀 스타일 */
 .fc-toolbar h2 {
     font-size: 24px; /* 타이틀 폰트 크기 */
@@ -52,11 +68,15 @@
 .fc-button-print {
     margin-left: 5px; /* 버튼 간격 조정 */
 }
+.fc {
+    height: 100%; /* FullCalendar 높이를 부모에 맞추기 */
+}
 
+.fc-view-container {
+    height: calc(100% - 40px); /* 툴바 높이 만큼 여백 조정 */
+    overflow-y: auto; /* 내부 스크롤 활성화 (이벤트가 많을 경우) */
+}
 
-
-/*.fc-scrollgrid {height: 100% !important; 캘린더 높이를 100%로 설정 */
-/*.fc-daygrid-event {white-space: nowrap; 일정이 줄바꿈되지 않도록 설정 */
 
 /* ========================== */
 /* 날짜 클릭시 나오는 일정 추가 모달창 */

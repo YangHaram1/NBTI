@@ -31,4 +31,22 @@ public class CalendarListService {
 	public void insertMember(int lastCalID, String calendarMember) throws Exception {
 		cldao.insertMember(lastCalID, calendarMember);
 	}
+	
+	//삭제
+	public void delete (String calendar_name) throws Exception{
+		cldao.delete(calendar_name);
+	}
+	
+	public int getCalendarID(String calendarName) throws Exception {
+		System.out.println("calendarName : " + calendarName);
+		return cldao.getCalendarID(calendarName);
+	}
+	
+	public void deleteMembers(int calendarID) throws Exception {
+		cldao.deleteMembers(calendarID);
+	}
+	
+	public void deleteSchedules(String calendarName) throws Exception {
+		cldao.deleteSchedules(calendarName);
+	}
 }
