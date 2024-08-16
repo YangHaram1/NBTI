@@ -2,14 +2,24 @@
 import { format } from 'date-fns';
 import { Header } from '../Header/Header';
 import styles from './DocLeave.module.css';
+import { useEffect, useState } from 'react';
 
 export const DocLeave = ({docLeave, setDocLeave})=>{
 
     // console.log(docLeave);
     
-    
-    const leaveStart = format(new Date(docLeave.leave_start),'yyyy-MM-dd');
-    const leaveEnd = format(new Date(docLeave.leave_end),'yyyy-MM-dd');
+    const [leaveStart, setLeaveStart] = useState();
+    const [leaveEnd, setLeaveEnd] = useState();
+
+    useEffect(()=>{
+        if(docLeave.leave_start){
+        setLeaveStart(format(new Date(docLeave.leave_start),'yyyy-MM-dd'));
+        }
+        if(docLeave.leave_end){
+        setLeaveEnd(format(new Date(docLeave.leave_end),'yyyy-MM-dd'));
+        }
+    },[docLeave.leave_start,docLeave.leave_end])
+
 
 
     return(
@@ -24,8 +34,7 @@ export const DocLeave = ({docLeave, setDocLeave})=>{
                 </div>
                 <div className={`${styles.reason}  ${styles.row}`}>
                     <div className={styles.title}> 사유 </div>
-                    <textarea className={styles.content} value={docLeave.leave_reason}disabled>
-                
+                    <textarea className={styles.content} value={docLeave.leave_reason} disabled>
                     </textarea>
                 </div>
                 <div className={`${styles.address}  ${styles.row}`}>
