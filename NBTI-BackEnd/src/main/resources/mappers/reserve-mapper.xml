@@ -92,9 +92,9 @@
 		JOIN 
 		    members m ON r.member_id = m.id 
 		WHERE 
-		    r.state = 'Y' AND r.member_id = #{memberId}
+		    r.state = 'Y'
 		ORDER BY 
-		    r.seq
+		    r.start_time DESC
 	</select>
 
 	<!-- 승인 관리 -> 반려 목록 출력 -->
@@ -120,7 +120,7 @@
 		WHERE 
 		    r.state = 'R'
 		ORDER BY 
-		    r.seq
+		    r.start_time DESC
 	</select>
 	
 	<!-- 승인 Y 업데이트 -->

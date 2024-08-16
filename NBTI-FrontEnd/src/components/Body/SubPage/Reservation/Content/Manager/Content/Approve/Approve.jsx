@@ -3,6 +3,7 @@ import styles from './Approve.module.css'
 import { host } from '../../../../../../../../config/config';
 import { useReservationList } from '../../../../../../../../store/store';
 import { useEffect } from 'react';
+
 export const Approve = () => {
     const { approve, setApprove } = useReservationList();
 
@@ -13,7 +14,9 @@ export const Approve = () => {
             axios.get(`${host}/reserve/approveList`)
                 .then((resp) => {
                     console.log(JSON.stringify(resp))
+                    console.log('API Response:', resp.data); // 응답 데이터 확인
                     setApprove(resp.data); // 예약 목록 상태 업데이트
+                    console.log('Approve State after update:', approve); // 상태 업데이트 후 로그
                 })
                 .catch((error) => {
                     console.error('Error: ', error);
@@ -22,6 +25,8 @@ export const Approve = () => {
 
         fetchReservations(); // 컴포넌트가 마운트될 때 예약 목록 가져오기
     }, [setApprove]); // 의존성 배열에 추가
+
+    console.log("!!!"+JSON.stringify(approve))
 
     return(
         <div className={styles.container}>

@@ -51,8 +51,8 @@ public class ReserveDAO {
     }
     
     //승인 관리 - 승인 목록 출력
-    public List<ReserveDTO> approveList (String memberId) throws Exception {
-    	return mybatis.selectList("Reserve.approveList",memberId);
+    public List<ReserveDTO> approveList () throws Exception {
+    	return mybatis.selectList("Reserve.approveList");
     }
     
     //승인 관리 - 반려 목록 출력
