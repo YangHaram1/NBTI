@@ -56,6 +56,10 @@ public class ApprovalDAO {
 		return mybatis.selectOne("Approval.selectApproval",seq);
 	}
 	
+	public List<ListDocDTO> selectTemp(String id){
+		return mybatis.selectList("Approval.selectTemp",id);
+	}
+	
 	public List<ListDocDTO> selectReferIsMeWait(String id){
 		return mybatis.selectList("Approval.selectReferIsMeWait",id);
 	}

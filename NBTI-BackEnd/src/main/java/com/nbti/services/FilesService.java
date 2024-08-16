@@ -187,7 +187,7 @@ public class FilesService {
     // 작성일 24.08.4
   	// 작성자 김지연
   	// 전자결재 결재라인, 참조라인, 공통정보, 문서별 데이터, 첨부파일 트랜잭션으로 저장
-    @Transactional
+    @Transactional(rollbackFor = IOException.class)
 	public void write(int type, ApprovalDTO adto, List<ApprovalLineDTO> alist, List<ReferLineDTO> rlist, DocDraftDTO ddto, DocVacationDTO dvdto, DocLeaveDTO dldto, MultipartFile[] files) {
     	
     	// 공통정보 입력
