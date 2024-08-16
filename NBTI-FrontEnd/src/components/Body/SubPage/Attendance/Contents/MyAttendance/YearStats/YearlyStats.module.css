@@ -1,19 +1,36 @@
 .statsContainer {
-    padding: 16px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
+  width: 100%;
+  padding: 16px 0 25px 0;
+}
+.statsContainer > h2 {
+  padding: 0;
+  margin: 0;
+  font-size: 22px;
+}
+
+.statsContainer > ul {
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+  padding: 10px 0;
+  margin: 20px 40px;
+  border: 1px solid #ddd;
+  background-color: white;
+  border-radius: 5px;
 }
 
 .statItem {
-    margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .statLabel {
-    font-weight: bold;
-    margin-right: 8px;
+  font-weight: bold;
+  margin: 0 20px;
 }
 
 .statValue {
-    color: #333;
+  color: #333;
+  margin-top: 10px;
 }

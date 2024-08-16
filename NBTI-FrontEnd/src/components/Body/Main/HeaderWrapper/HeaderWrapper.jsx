@@ -86,13 +86,13 @@ export const HeaderWrapper = () => {
                         <p>휴가/외출신청</p>
                     </div>
                 </div>
-                <div className={styles.circle_wrap}>
+                <div className={styles.circle_wrap} onClick={() => { handleNavi("attendance") }}>
                     <div className={styles.circle_menu}>
                         <div className={styles.icon}>
                             <i className="fa-solid fa-briefcase fa-xl"></i>
                         </div>
                     </div>
-                    <div className={styles.circle_name} onClick={() => { handleNavi("attendance") }}>
+                    <div className={styles.circle_name}>
                         <p>근무현황</p>
                     </div>
                 </div>
