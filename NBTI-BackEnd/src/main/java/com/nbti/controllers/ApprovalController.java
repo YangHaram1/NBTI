@@ -29,6 +29,7 @@ import com.nbti.services.ReferLineService;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -331,6 +332,14 @@ public class ApprovalController {
 	public ApprovalDTO getApproval(@PathVariable int seq){
 		ApprovalDTO dto = aServ.getApproval(seq);
 		return dto; 
+	}
+	
+	// 상신 취소 
+	@PutMapping("/cancleByMe/{seq}")
+	public ResponseEntity<Void> cancleByMe(@PathVariable int seq) {
+		aServ.cancleByMe(seq);
+		System.out.println("문서 상신 취소");
+		return ResponseEntity.ok().build();
 	}
 
 }

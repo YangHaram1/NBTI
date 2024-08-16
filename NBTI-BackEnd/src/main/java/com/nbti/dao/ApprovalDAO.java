@@ -75,5 +75,9 @@ public class ApprovalDAO {
 		map.put("docHeader", docHeader);
 		mybatis.update("Approval.createApprovalSeq", map);
 	}
+	
+	public void updateDocStateCancle(int seq) {
+		mybatis.update("Approval.updateDocStateCancle", seq);
+	}
 
 }

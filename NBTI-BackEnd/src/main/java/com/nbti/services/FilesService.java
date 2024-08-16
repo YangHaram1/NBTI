@@ -1,6 +1,7 @@
 package com.nbti.services;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -219,20 +220,27 @@ public class FilesService {
 		}
 		
 		// 첨부파일 추가
-		String realpath=RealpathConfig.realpath+"approval"+File.separator+temp_seq;
+		String realpath=RealpathConfig.realpath+"approval"+File.separator+temp_seq+File.separator;
     	File realPathFile =new File(realpath);
     	FilesDTO dto = new FilesDTO();
-		if(!realPathFile.exists()) {realPathFile.mkdir();}
+		if(!realPathFile.exists()) {realPathFile.mkdirs();}
 		
 		if(files!=null) {
 			for (MultipartFile file : files) {
-				String oriName =file.getOriginalFilename();
-				String sysName= UUID.randomUUID() +"_"+ oriName;
-				dto.setSysname(sysName);
-				dto.setOriname(oriName);
+				String oriname =file.getOriginalFilename();
+				String sysname= UUID.randomUUID() +"_"+ oriname;
+				dto.setSysname(sysname);
+				dto.setOriname(oriname);
 				dto.setParent_seq(temp_seq);
 				dto.setCode(2);
 				fdao.insertApprovalFile(dto);
+				File targetFile = new File(realPathFile, sysname);
+				try {
+				    file.transferTo(targetFile);
+				} catch (IOException e) {
+				    e.printStackTrace();
+				    // 적절한 예외 처리를 추가합니다.
+				}
 			}
 		}
 		else {

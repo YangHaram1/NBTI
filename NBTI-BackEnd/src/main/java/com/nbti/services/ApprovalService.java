@@ -59,5 +59,9 @@ public class ApprovalService {
 	public ApprovalDTO getApproval(int seq){
 		return adao.selectApproval(seq);
 	}
+	// 상신취소
+	public void cancleByMe(int seq) {
+		adao.updateDocStateCancle(seq);
+	}
 
 }
