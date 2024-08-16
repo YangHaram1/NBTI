@@ -43,8 +43,6 @@ public class BoardController {
 	        @RequestParam int start,
 	        @RequestParam int end){
 		
-		System.out.println("타입 : " + code);
-		
 		Map<String, Object> map = new HashMap<>();
 	    map.put("board_code", code);
 	    map.put("target", target);
@@ -53,8 +51,6 @@ public class BoardController {
 	    map.put("end", end);
 	    
 	    List<BoardDTO> list = bserv.selectAll(map);
-	    
-	    System.out.println("list : "+ list);
 	    
 	    for(BoardDTO dto : list) {
 	    	int replyCount = rserv.countReply(dto.getSeq(), code);
@@ -65,8 +61,6 @@ public class BoardController {
 	    Map<String, Object> result = new HashMap<>();
 	    result.put("count", bserv.getBoardCount(map) );
 	    result.put("list", list );
-	    
-	    System.out.println("몇갠데 : " +list.size());
 	    
 		return ResponseEntity.ok(result);
 	}

@@ -5,7 +5,10 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
  <mapper namespace="DocDraft">
  	<insert id="insert">
- 		insert into doc_draft values(#{draft_seq}, #{effective_date}, #{cooperation_dept}, #{title},#{content})
+ 		insert into doc_draft (
+ 			draft_seq, effective_date, cooperation_dept, title, content
+ 		) values(
+ 			#{draft_seq}, #{effective_date, jdbcType=TIMESTAMP}, #{cooperation_dept, jdbcType=VARCHAR}, #{title, jdbcType=VARCHAR},#{content, jdbcType=VARCHAR})
  	</insert>
  	
  	<select id="selectContent" resultType="com.nbti.dto.DocDraftDTO">

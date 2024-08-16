@@ -213,14 +213,14 @@ hr{width: 100%;}
     border-top: 1px solid black;
     border-bottom: 1px solid black;
     height: 40px;
-    width: 1200px;
+    width: 95%;
     align-items: center;
     /* justify-content: center; */
 }
 
 .body{
     display: flex;
-    width: 1200px;
+    width: 95%;
     height: 280px;
     flex-direction: column;
     overflow: hidden;

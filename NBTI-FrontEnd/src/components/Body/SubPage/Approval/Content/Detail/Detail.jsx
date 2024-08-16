@@ -30,12 +30,15 @@ export const Detail=()=>{
     const [docVacation, setDocVacation] = useState({}); 
     const [docDraft, setDocDraft] = useState({}); 
     const [approvalYN, setApprovalYN] = useState('');
+    const [fileData, setFileData] = useState([]); 
+    const [refer, setRefer] = useState([]);
 
     // 모달 표시 여부
     const [showModal, setShowModal] = useState(false);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [checkFA, setCheckFA] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -74,8 +77,12 @@ export const Detail=()=>{
                     console.log("값이 안나오는 중");
                 }
                 // 결재라인 정보 받아오기
+                console.log("날짜 있는지 확인", checkFA);
                 const approvalLineResponse = await axios.get(`${host}/approvalLine/${seq}`);
                 setApprovalData(approvalLineResponse.data);
+                if(approvalLineResponse.data[0].APPROVAL_DATE == null){
+                    setCheckFA(true);
+                }
                 // console.log("결재라인 체크",approvalLineResponse.data);
 
                 // 참조라인 정보 받아오기
@@ -86,8 +93,12 @@ export const Detail=()=>{
                 if(list == '참조/열람 대기'){
                     axios.put(`${host}/referLine/read/${seq}`);
                 }
+
+                // 첨부파일 정보 받아오기
+                const fileResponse = await axios.get(`${host}/files/getFiles/${seq}`);
+                setFileData(fileResponse.data);
+                console.log(fileResponse.data);
             
-    
             } catch (error) {
                 setError(error);
             } finally {
@@ -96,6 +107,19 @@ export const Detail=()=>{
         };
         fetchData();
     }, [seq]);
+
+    useEffect(()=>{
+        console.log("참조라인 데이터 확인",referData);
+        axios.post(`${host}/members/approvalSearch`,referData)
+        .then((resp)=>{
+            // console.log("데이터 확인",resp.data);
+            setRefer(resp.data);
+            console.log(refer);
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+    },[referData])
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error occurred: {error.message}</p>;
@@ -126,6 +150,46 @@ export const Detail=()=>{
         setShowModal(false); // 모달 닫기
     };
 
+    // 제목 클릭시 sysname, oriname 받아오기
+    const handleFileDownload = (sysname, oriname) =>{
+        console.log("파일 oriname:", oriname);
+        console.log("파일 sysname:", sysname);
+        
+        // const url = `${host}/downloadApproval?oriname=${encodeURIComponent(oriname)}&sysname=${encodeURIComponent(sysname)}`;
+
+        axios.get(`${host}/files/downloadApproval?oriname=${encodeURIComponent(oriname)}&sysname=${encodeURIComponent(sysname)}&temp_seq=${seq}`, { responseType: 'blob' })
+        .then(response => {
+            const contentType = response.headers['content-type'];
+            const blob = new Blob([response.data], { type: contentType });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', oriname);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
+            console.error("파일 다운로드 실패:", error);
+        });
+    }
+
+    const handleApprovalCancle = ()=>{
+        
+        const result = window.confirm("기안 문서를 취소하겠습니까?");
+        if(result){
+        axios.put(`${host}/approval/cancleByMe/${seq}`)
+        .then((resp)=>{
+            console.log(resp);
+            console.log("취소 성공~!")
+        })
+        .catch((err)=>{
+            console.log(err);
+        })}
+    }
+
+
 
     return(
         <div className={styles.container}>
@@ -135,13 +199,14 @@ export const Detail=()=>{
             <div className={styles.content_box} id='content-to-print'>
                 <div className={styles.content_left}>
                     {
-                        list == 'doc' ?
+                        list == '기안 문서함' || list == '결재 문서함' ||list == '참조/열람 문서함'||list == '반려 문서함' ||list == '상신취소 문서함'?
                         <>
                         <div className={styles.btns}>
                             <div className={`${styles.approval_submit_btn} ${styles.btn}`}><i class="fa-solid fa-pen-to-square"></i>재기안</div>
                             <div className={`${styles.approval_temp_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div>
                             {/* <div className={`${styles.approval_prev_btn} ${styles.btn}`}>미리보기</div> */}
                             <div className={`${styles.approval_change_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
+                            {checkFA == true && list == '기안 문서함'? <div className={`${styles.approval_cancle_btn} ${styles.btn}`} onClick={handleApprovalCancle}> <i class="fa-regular fa-circle-xmark"></i>상신취소</div> : <></>}
                         </div>
                         </>
                         : list == '결재 대기' ?
@@ -175,21 +240,37 @@ export const Detail=()=>{
                         </div>
                     </div>
                     <div className={styles.files}>
-                        첨부파일 넣기
+                        <div className={styles.files_left}>첨부파일 ({fileData.length})</div>
+                        <div className={styles.files_right}>
+                        {
+                            fileData.length > 0 ? 
+                                fileData.map((file)=>{
+                                    return(
+                                        <div key={file.sysname} >
+                                            <div className={styles.file_text} onClick={() => handleFileDownload(file.sysname, file.oriname)}>{file.oriname}</div>
+                                            <input type='hidden' value={file.sysname} />
+                                        </div>
+                                    );
+                                })
+                            :
+                            <>
+                            </>
+                        }
+                        </div>
                     </div>
                 </div>
                 <div className={styles.content_right}>
                     <div className={styles.content_right_title}>참조/열람자</div>
                     <div className={styles.content_right_content}>
-                    {/* {
-                        referLine.map((refer)=>{
+                    {
+                        refer.map((refer)=>{
                             return(
                                 <div className={styles.refer}>
-                                    {refer.name} 직급 / 다섯글자부 / 다섯글자부
+                                    {refer.NAME} ({refer.JOB_NAME}) / {refer.DEPT_NAME} / {refer.TEAM_NAME}
                                 </div>
                             );
                         })
-                    } */}
+                    }
                     </div>
                 </div>
             </div>

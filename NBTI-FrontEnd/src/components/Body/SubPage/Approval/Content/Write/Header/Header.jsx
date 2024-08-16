@@ -1,7 +1,9 @@
 // import { useEffect, useState } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useApprovalLine } from '../../../../../../../store/store';
 import styles from './Header.module.css';
+import axios from 'axios';
+import { host } from '../../../../../../../config/config';
 
 export const Header = ({userdata}) => {
 
@@ -11,6 +13,19 @@ export const Header = ({userdata}) => {
     const month = (`0${TimeData.getMonth() + 1}`).slice(-2);
     const day = (`0${TimeData.getDate()}`).slice(-2);
     const Today = `${year}-${month}-${day}`;
+    const [approval, setApproval] = useState([]);
+
+    useEffect(()=>{
+        // console.log("작성시 전결라인",approvalLine);
+        axios.post(`${host}/members/approvalSearch`,approvalLine)
+        .then((resp)=>{
+            // console.log("데이터 확인",resp.data);
+            setApproval(resp.data);
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+    },[approvalLine])
 
 
     return (
@@ -36,7 +51,7 @@ export const Header = ({userdata}) => {
             <div className={styles.mid}></div>
             <div className={styles.right}>
                 {
-                    approvalLine.map((approvaler) => {
+                    approval.map((approvaler) => {
 
                         return (
                             <div className={styles.approval_box}>
@@ -46,7 +61,7 @@ export const Header = ({userdata}) => {
                                     }
                                 </div>
                                 <div className={styles.approval_box_main}>
-                                    <div className={styles.approval_job}>파트장</div>
+                                    <div className={styles.approval_job}>{approvaler.JOB_NAME}</div>
                                     <div className={styles.approval_member}>{approvaler.name}</div>
                                     <div className={styles.approval_date}></div>
                                 </div>

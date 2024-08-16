@@ -1,6 +1,7 @@
 package com.nbti.services;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import com.nbti.dao.Chat_uploadDAO;
 import com.nbti.dao.DocDraftDAO;
 import com.nbti.dao.DocLeaveDAO;
 import com.nbti.dao.DocVacationDAO;
+import com.nbti.dao.FilesDAO;
 import com.nbti.dao.Group_memberDAO;
 import com.nbti.dao.MembersDAO;
 import com.nbti.dao.ReferLineDAO;
@@ -30,6 +32,7 @@ import com.nbti.dto.Chat_uploadDTO;
 import com.nbti.dto.DocDraftDTO;
 import com.nbti.dto.DocLeaveDTO;
 import com.nbti.dto.DocVacationDTO;
+import com.nbti.dto.FilesDTO;
 import com.nbti.dto.Group_memberDTO;
 import com.nbti.dto.MembersDTO;
 import com.nbti.dto.ReferLineDTO;
@@ -66,6 +69,9 @@ public class FilesService {
 	
 	@Autowired
 	private DocLeaveDAO dldao;
+	
+	@Autowired
+	private FilesDAO fdao;
 	
 	public List<Map<String, Object>> upload(String realpath,MultipartFile[] files,int group_seq,String member_id) throws Exception {
 
@@ -181,8 +187,8 @@ public class FilesService {
     // 작성일 24.08.4
   	// 작성자 김지연
   	// 전자결재 결재라인, 참조라인, 공통정보, 문서별 데이터, 첨부파일 트랜잭션으로 저장
-    @Transactional
-	public void write(int type, ApprovalDTO adto, List<ApprovalLineDTO> alist, List<ReferLineDTO> rlist, DocDraftDTO ddto, DocVacationDTO dvdto, DocLeaveDTO dldto) {
+    @Transactional(rollbackFor = IOException.class)
+	public void write(int type, ApprovalDTO adto, List<ApprovalLineDTO> alist, List<ReferLineDTO> rlist, DocDraftDTO ddto, DocVacationDTO dvdto, DocLeaveDTO dldto, MultipartFile[] files) {
     	
     	// 공통정보 입력
     	int temp_seq = adao.write(adto);
@@ -205,14 +211,46 @@ public class FilesService {
 			aldao.insert(dto);
 		}
 
-		// 참조라인 입력
-		for(ReferLineDTO dto: rlist) {
-			dto.setTemp_seq(temp_seq);
-			rldao.insert(dto);
+		if(rlist.size() > 0) {
+			// 참조라인 입력
+			for(ReferLineDTO dto: rlist) {
+				dto.setTemp_seq(temp_seq);
+				rldao.insert(dto);
+			}
 		}
 		
 		// 첨부파일 추가
+		String realpath=RealpathConfig.realpath+"approval"+File.separator+temp_seq+File.separator;
+    	File realPathFile =new File(realpath);
+    	FilesDTO dto = new FilesDTO();
+		if(!realPathFile.exists()) {realPathFile.mkdirs();}
+		
+		if(files!=null) {
+			for (MultipartFile file : files) {
+				String oriname =file.getOriginalFilename();
+				String sysname= UUID.randomUUID() +"_"+ oriname;
+				dto.setSysname(sysname);
+				dto.setOriname(oriname);
+				dto.setParent_seq(temp_seq);
+				dto.setCode(2);
+				fdao.insertApprovalFile(dto);
+				File targetFile = new File(realPathFile, sysname);
+				try {
+				    file.transferTo(targetFile);
+				} catch (IOException e) {
+				    e.printStackTrace();
+				    // 적절한 예외 처리를 추가합니다.
+				}
+			}
+		}
+		else {
+			System.out.println("첨부파일 없음");
+		}
 	}
+    
+    public List<FilesDTO> getList(int seq){
+    	return fdao.getList(seq);
+    }
 
 
 	

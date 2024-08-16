@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { Detail } from '../components/Body/SubPage/Approval/Content/Detail/Detail';
 
 /*공통*/
 export const useAuthStore = create((set) => {
