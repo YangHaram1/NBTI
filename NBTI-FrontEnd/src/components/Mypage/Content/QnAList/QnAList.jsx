@@ -117,8 +117,6 @@ export const QnAList = () => {
             : "Invalid Date";
 
           const status = item.reply_count > 0 ? "답변완료" : "진행중";
-          console.log("몇개니: ", item);
-          console.log("몇개니: ", item.reply_count);
 
           return (
             <div className={styles.list} key={index}>

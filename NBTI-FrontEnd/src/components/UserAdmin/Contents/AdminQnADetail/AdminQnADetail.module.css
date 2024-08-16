@@ -144,6 +144,8 @@
   width: 88%;
   height: auto;
   min-height: 34px;
+  max-height: 100px;
+  overflow-y: scroll;
   margin: 0 20px;
   padding: 4px 16px 4px 5px;
   border: 1px solid #d6d6d6;
