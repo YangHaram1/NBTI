@@ -12,6 +12,7 @@ import avatar from '../../../../images/user.jpg'
 const Members = ({ setName }) => {
     const [list, setList] = useState([]);
     const [modalDisplay, setModalDisplay] = useState(null);
+    const [profileDisplay,setProfileDisplay]=useState(null);
     const { members } = useMemberStore();
     const { loginID } = useAuthStore();
     const { dragRef } = useContext(ChatsContext);
@@ -193,7 +194,7 @@ const Members = ({ setName }) => {
                                                                                             </div>
                                                                                         </div>
                                                                                         <Profile profileRef={profileRef} index={index} item={member}></Profile>
-                                                                                        <Modal modalRef={modalRef} index={index} item={member} profileRef={profileRef}></Modal>
+                                                                                        <Modal modalRef={modalRef} index={index} item={member} profileRef={profileRef} setProfileDisplay={setProfileDisplay}></Modal>
                                                                                     </React.Fragment>
                                                                                 )
                                                                             );

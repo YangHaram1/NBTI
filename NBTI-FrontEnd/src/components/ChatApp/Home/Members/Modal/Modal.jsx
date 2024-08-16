@@ -5,8 +5,8 @@ import React from 'react';
 import { useState, useContext } from 'react';
 import { ChatsContext } from '../../../../../Context/ChatsContext';
 import { useAuthStore } from './../../../../../store/store';
-const Modal = ({ modalRef, index, item, profileRef }) => {
-    const [modalDisplay, setModalDisplay] = useState(null);
+const Modal = ({ modalRef, index, item, profileRef ,setProfileDisplay}) => {
+   // const [modalDisplay, setModalDisplay] = useState(null);
     const { setChatNaviBody, dragRef } = useContext(ChatsContext);
     const { loginID } = useAuthStore();
 
@@ -18,10 +18,10 @@ const Modal = ({ modalRef, index, item, profileRef }) => {
     }
     const handleMemberIfo = (index) => (e) => {
         const rect = dragRef.current.getBoundingClientRect(); //부모요소~ 드래그 되는애
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const x = e.clientX - rect.left+40;
+        const y = e.clientY - rect.top -100;
         e.preventDefault();
-        setModalDisplay((prev) => {
+        setProfileDisplay((prev) => {
             if (prev != null) {
                 prev.style.display = 'none'
             }
