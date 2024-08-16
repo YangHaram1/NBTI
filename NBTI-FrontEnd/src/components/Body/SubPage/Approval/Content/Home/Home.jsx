@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from './Home.module.css';
 import axios from 'axios';
 import { host } from '../../../../../../config/config';
-import { format } from 'date-fns';
+import { format, setQuarter } from 'date-fns';
 import { ApprovalModal } from '../ApprovalModal/ApprovalModal';
 import { HomeApprovalModal } from '../HomeApprovalModal/HomeApprovalModal';
 import { ListDoc } from '../ListDoc/ListDoc';
@@ -15,7 +15,10 @@ export const Home = ()=>{
     const [approvalData, setApprovalData] = useState([]);  
     const [lists, setLists] = useState([]);
     const [listss, setListss] = useState([]);
+    const [seq, setSeq] = useState();
     const navi = useNavigate();
+    const [fileExistenceMap, setFileExistenceMap] = useState({});
+    const [fileExistenceMap2, setFileExistenceMap2] = useState({});
     
     useEffect(()=>{
         axios.get(`${host}/approval/getApprovalWait`)
@@ -25,25 +28,107 @@ export const Home = ()=>{
         })
     },[])
 
-    useEffect(()=>{
+
+    useEffect(() => {
+        const fetchFileExistence = async (data, setFileMap) => {
+            try {
+                const filePromises = data.map(async (list) => {
+                    try {
+                        const fileResp = await axios.get(`${host}/files/getFiles/${list.temp_seq}`);
+                        return { temp_seq: list.temp_seq, files: fileResp.data };
+                    } catch (err) {
+                        console.error(err);
+                        return { temp_seq: list.temp_seq, files: false };
+                    }
+                });
+
+                const files = await Promise.all(filePromises);
+                const fileMap = files.reduce((acc, { temp_seq, files }) => ({
+                    ...acc, [temp_seq]: files
+                }), {});
+
+                setFileMap(fileMap);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
         axios.get(`${host}/approval/getWriterIsMe`)
-        .then((resp)=>{
-            setLists(resp.data);
-            console.log("홈 기안문서출력",resp.data);
-        })
-    },[])
+            .then((resp) => {
+                setLists(resp.data);
+                fetchFileExistence(resp.data, setFileExistenceMap);
+            });
 
-    useEffect(()=>{
-        axios.get(`${host}/approval/getReferIsMe`)
-        .then((resp)=>{
-            setListss(resp.data);
-            console.log("홈 참조문서출력",resp.data);
-        })
-    },[])
+        axios.get(`${host}/approval/getReferIsMeWait`)
+            .then((resp) => {
+                setListss(resp.data);
+                fetchFileExistence(resp.data, setFileExistenceMap2);
+            });
+    }, []);
+
+    // useEffect(()=>{
+    //     axios.get(`${host}/approval/getWriterIsMe`)
+    //     .then(async (resp) => {
+    //         console.log(resp.data);
+    //         setLists(resp.data);
+
+    //         const filePromises = resp.data.map(async (list) => {
+    //             try {
+    //                 let seq = list.temp_seq;
+    //                 const fileResp = await axios.get(`${host}/files/getFiles/${seq}`);
+    //                 return { temp_seq: seq, files: fileResp.data };
+    //             } catch (err) {
+    //                 console.error(err);
+    //                 return { temp_seq: list.temp_seq, files: false };
+    //             }
+    //         });
+            
+    //         const files = await Promise.all(filePromises);
+    //         const fileMap = files.reduce((acc, { temp_seq, files }) => ({
+    //             ...acc, [temp_seq]: files
+    //         }), {});
+            
+    //         setFileExistenceMap(fileMap);
+    //     })
+    //     .catch((error) => {
+    //         console.error(error);
+    //     });
+    // },[setLists])
+
+    // useEffect(()=>{
+    //     axios.get(`${host}/approval/getReferIsMe`)
+    //     .then(async (resp) => {
+    //         console.log(resp.data);
+    //         setListss(resp.data);
+
+    //         const filePromises = resp.data.map(async (list) => {
+    //             try {
+    //                 let seq = list.temp_seq;
+    //                 const fileResp = await axios.get(`${host}/files/getFiles/${seq}`);
+    //                 return { temp_seq: seq, files: fileResp.data };
+    //             } catch (err) {
+    //                 console.error(err);
+    //                 return { temp_seq: list.temp_seq, files: false };
+    //             }
+    //         });
+            
+    //         const files = await Promise.all(filePromises);
+    //         const fileMap = files.reduce((acc, { temp_seq, files }) => ({
+    //             ...acc, [temp_seq]: files
+    //         }), {});
+            
+    //         setFileExistenceMap2(fileMap);
+    //     })
+    //     .catch((error) => {
+    //         console.error(error);
+    //     });
+    // },[setListss])
 
 
-    const HandleSubmit = (e) =>{
+    const HandleSubmit = (seq) =>{
         setShowModal(true);
+        console.log("홈 버블 번호", seq);
+        setSeq(seq);
     }
 
     const handleCloseModal = () => {
@@ -66,8 +151,12 @@ export const Home = ()=>{
         navi("/approval/detail", {state:{seq:tempSeq, setlist:docSubName, list:"doc"}});
     };
 
-    console.log("approvalData length:", approvalData.length);
-
+    // console.log("approvalData length:", approvalData.length);
+    
+    const handleDetail = (seq, doc_sub_name ) => {
+        console.log(seq);
+        navi("/approval/detail", {state:{seq:seq, setlist:doc_sub_name, list:'결재 대기'}});
+    }
 
     return(
         <div className={styles.container}>
@@ -78,12 +167,12 @@ export const Home = ()=>{
                     approvalData.map((approval)=>{
                         return(
                             <div className={styles.bubble}>
-                                <div className={styles.bubble_state}>
+                                <div className={styles.bubble_state} >
                                     {
                                         approval.emergency == "Y  " ?  <div className={styles.emergency_badge_bubble}>긴급</div> :"" 
                                     }
                                 </div>
-                                <div className={styles.bubble_title}>
+                                <div className={styles.bubble_title} onClick={()=>{handleDetail(approval.temp_seq, approval.doc_sub_name)}}>
                                     {approval.title != null ? approval.title : approval.doc_sub_name}
                                 </div>
                                 <div className={styles.approvaler}>
@@ -99,9 +188,9 @@ export const Home = ()=>{
                                     </div>     
                                 </div>
                                 <div className={styles.btn}>
-                                    <button onClick={HandleSubmit}>결재하기</button>
+                                    <button onClick={()=>{HandleSubmit(approval.temp_seq)}}>결재하기</button>
+                                    {showModal && <HomeApprovalModal onClose={handleCloseModal} seq={seq} setlist={approval.doc_sub_name} />}
                                 </div>
-                                {showModal && <HomeApprovalModal onClose={handleCloseModal} seq={approval.temp_seq} setlist={approval.doc_sub_name} />}
                             </div>
                         );
                     })
@@ -122,7 +211,7 @@ export const Home = ()=>{
                         <div className={styles.emergency}> 긴급</div>
                         <div className={styles.content_title}> 제목</div>
                         <div className={styles.file}> 첨부</div>
-                        <div className={styles.writer}> 기안자</div>
+                        {/* <div className={styles.writer}> 기안자</div> */}
                         <div className={styles.doc_number}> 문서번호</div>
                         <div className={styles.doc_state}> 문서상태</div>
                     </div>
@@ -149,8 +238,13 @@ export const Home = ()=>{
                                         <input type='hidden' value={list.temp_seq}></input>
                                         <input type='hidden' value={list.doc_sub_name}></input>
                                     </div>
-                                    <div className={styles.file}>Y</div>
-                                    <div className={styles.writer}> {list.name}</div>
+                                    <div className={styles.file}>
+                                    {
+                                    fileExistenceMap[list.temp_seq] != undefined
+                                    ? Array.from(fileExistenceMap[list.temp_seq]).length > 0 ? <i class="fa-solid fa-paperclip"></i> : ''
+                                    : '...'} {/* 로딩 중일 때는 '...' 표시 */}
+                                     </div>
+                                    {/* <div className={styles.writer}> {list.name}</div> */}
                                     <div className={styles.doc_number}>{list.approval_seq}</div>
                                     <div className={styles.doc_state}>
                                         {renderDocStateBadge(list.doc_state)}
@@ -202,7 +296,13 @@ export const Home = ()=>{
                                         <input type='hidden' value={list.temp_seq}></input>
                                         <input type='hidden' value={list.doc_sub_name}></input>
                                         </div>
-                                        <div className={styles.file}>Y</div>
+                                        <div className={styles.file}>
+                                            {console.log("참조/열람대기",fileExistenceMap2[list.temp_seq])}
+                                        {
+                                        fileExistenceMap2[list.temp_seq] != undefined
+                                        ? Array.from(fileExistenceMap2[list.temp_seq]).length > 0 ? <i class="fa-solid fa-paperclip"></i> : ''
+                                        : '...'} {/* 로딩 중일 때는 '...' 표시 */}
+                                        </div>
                                         <div className={styles.writer}> {list.name}</div>
                                         <div className={styles.doc_number}>{list.approval_seq}</div>
                                         <div className={styles.doc_state}> {renderDocStateBadge(list.doc_state)}</div>

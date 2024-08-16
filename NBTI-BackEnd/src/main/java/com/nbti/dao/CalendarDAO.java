@@ -18,7 +18,7 @@ public class CalendarDAO {
 		//dto.setMember_id("test");
 		System.out.println("dto seq : " + dto.getSeq());
 		System.out.println("dto member id : " + dto.getMember_id());
-		System.out.println("dto title : " + dto.getCalendar_title());
+		System.out.println("dto title : " + dto.getCalendar_name());
 		System.out.println("dto title : " + dto.getTitle());
 		System.out.println("dto contents : " + dto.getContents());
 		System.out.println("dto start date : " + dto.getStart_date());

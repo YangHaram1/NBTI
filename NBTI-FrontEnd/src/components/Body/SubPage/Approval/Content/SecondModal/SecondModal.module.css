@@ -70,16 +70,27 @@
   }
 
   .refer_member{
-    flex: 0 1 calc(30% - 10px);
+    flex: 0 1 calc(45% - 10px);
     width: 150px;
     height: 20px;
     font-size: 13px;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     border-radius: 5px;
     margin:10px;
+    margin-left: 18px;
     text-align: center;
+    background-color: #9db8b2;
   }
 
+  .refer_member button{
+    background-color: #9db8b200;
+    border: 0px;
+    color: #364b46;
+  }
+
+  .refer_member button:hover{
+    cursor: pointer;
+  }
   /* .form_check{
     flex:5;
     border: 1px solid black;

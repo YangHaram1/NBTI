@@ -83,11 +83,11 @@ public class FilesController {
 	
 	@GetMapping("/getFiles/{seq}")
 	public List<FilesDTO> getList(@PathVariable int seq){
-		System.out.println("파일 부모 게시글 번호 확인 : "+seq);
+//		System.out.println("파일 부모 게시글 번호 확인 : "+seq);
 		return serv.getList(seq);
 	}
 	
-	
+	// 전자결재 파일 다운로드
 	@GetMapping("/downloadApproval")
 	public void downloadApproval(@RequestParam String oriname,@RequestParam String sysname, @RequestParam String temp_seq,HttpServletResponse response) throws Exception{
 		 System.out.println(oriname + " :" + sysname);
@@ -123,8 +123,6 @@ public class FilesController {
 		        out.flush();
 		    }
 	}
-	
-	
 	
 	
 	@ExceptionHandler(Exception.class)

@@ -7,13 +7,20 @@
     
     <!-- 목록 -->
     <select id="list" resultType="com.nbti.dto.CalendarDTO" >
-        SELECT * FROM calendar WHERE member_id = #{memberId}
+        SELECT DISTINCT c.*
+		FROM calendar c
+		LEFT JOIN calendar_list cl
+		    ON c.calendar_name = cl.calendar_name
+		LEFT JOIN calendar_members cm
+		    ON cl.calendar_id = cm.calendar_id
+		WHERE cm.member_id = #{member_id}
+		    OR c.member_id = #{member_id}
     </select> 
     
   	<!-- 입력 -->
 	<insert id="insert">
        insert into calendar 
-   	   values(calendar_seq.nextval, #{member_id}, #{calendar_title}, #{title}, #{contents}, #{start_date}, #{end_date})
+   	   values(calendar_seq.nextval, #{member_id}, #{calendar_name}, #{title}, #{contents}, #{start_date}, #{end_date})
        <selectKey resultType="int" order="AFTER" keyProperty="seq"> 
             select calendar_seq.currval from dual
       </selectKey>

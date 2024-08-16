@@ -200,39 +200,43 @@ export const Write = ({setlist})=>{
      const handleFileChange  = (e)=>{
 
         const selectedFiles = Array.from(e.target.files);
+        const currentFileNames = files.map(fileObj => fileObj.file.name);
         // const count = 0;
         console.log("파일 목록 보기", selectedFiles);
+        const date = Date.now();
+
+        // 중복 파일 체크 및 필터링
+        const nonDuplicateFiles = selectedFiles.filter(file => !currentFileNames.includes(file.name));
+        
+        if (nonDuplicateFiles.length === 0) {
+            alert("이미 선택된 파일입니다.");
+            return;
+        }
 
         const newFileInfo = selectedFiles.map(file => ({
             name: file.name,
             size: `${(file.size / 1024).toFixed(2)} KB`, // Size in KB
-            id: file.name + Date.now() // Unique identifier
+            id: file.name + date // Unique identifier
         }));
 
         const newFile = selectedFiles.map(file => ({
             file, // 원본 파일 객체
-            id: file.name + Date.now() // 고유 식별자
+            id: file.name + date // 고유 식별자
         }));
 
-        setFiles(prev => [...prev, ...newFile]); // 파일 객체를 그대로 저장
+        if (files.length + newFile.length > 5) {
+            alert("파일은 최대 5개까지 첨부할 수 있습니다.");
+            return;
+        }
 
-        // setFiles(prev => {
-        //     const updatedFiles = [...prev, ...selectedFiles.map((file, index) => ({
-        //         ...file,
-        //         id: newFileInfo[index].id // Assign unique ID
-        //     }))];
-        //     console.log("업데이트된 파일 배열:", updatedFiles);
-        //     return updatedFiles;
-        // });
+        setFiles(prev => [...prev, ...newFile]); // 파일 객체를 그대로 저장
 
         setFileInfo(prev => {
             const updatedFileInfo = [...prev, ...newFileInfo];
             console.log("업데이트된 파일 정보 배열:", updatedFileInfo);
+            console.log("setfiles데이터", files);
             return updatedFileInfo;
         });
-
-        console.log("파일 배열:", files);
-
     }
 
     const handleFileDelete = (fileId) => {
@@ -259,7 +263,7 @@ export const Write = ({setlist})=>{
     },[])
 
     useEffect(()=>{
-        console.log("참조라인 데이터 확인",referLine);
+        // console.log("참조라인 데이터 확인",referLine);
         axios.post(`${host}/members/approvalSearch`,referLine)
         .then((resp)=>{
             // console.log("데이터 확인",resp.data);

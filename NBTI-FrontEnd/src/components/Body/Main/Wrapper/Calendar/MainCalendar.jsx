@@ -24,15 +24,15 @@ export const MainCalendar = () => {
 
                         let color = '';
                         // calendar_title_code에 따른 색상 설정
-                        if(event.calendar_title_code == 1 ){
-                            color='rgba(164, 195, 178, 10)';
+                        if(event.calendar_name == 1 ){
+                            color='#33A150';
                         }else{
-                            color='rgba(255, 178, 44, 10)';
+                            color='#E04038';
                         }
     
                         return {
                             seq: event.seq,
-                            title: event.contents,
+                            title: event.title,
                             start: event.start_date,
                             end: event.end_date,
                             color : color,
