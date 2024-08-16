@@ -5,11 +5,9 @@ div {
   .container {
     width: calc(100% - 250px);
     margin-left: 250px;
-    overflow: auto;
-    padding: 0px 20px 20px;
-    background-color: white;
+    height: 100%;
+    /* padding: 0px 20px 20px; */
     min-height: 930px;
-    /* float: right; */
-    /* height: 100%; 100vh ? */
-    /* will-change: width; */
+    float: right;
+    background-color: rgba(220, 220, 220, 0.155);
   }

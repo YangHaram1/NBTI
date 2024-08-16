@@ -3,14 +3,46 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="CalendarList">
+  
+  	<!-- 내가 포함된 공유 캘린더 -->
   	<select id="list" resultType="com.nbti.dto.CalendarListDTO">
-    	SELECT * FROM calendar_list
-    	WHERE member_id = #{member_id} OR REGEXP_LIKE(member_list, '(^|, )' || #{member_id} || '(, |$)')
+		SELECT *
+		FROM calendar_list cl
+		JOIN calendar_members cm 
+  		ON cl.calendar_id = cm.calendar_id
+		WHERE cm.member_id = #{member_id}
   	</select>
   	
-  	  	<!-- 입력 -->
+  	<select id="getCalendarID" resultType="int">
+  		select calendar_id from calendar_list where calendar_name = #{calendar_name}
+  	</select>
+  	
+  	<!-- 공유 캘린더 추가하기 -->
 	<insert id="insert">
        insert into calendar_list 
-   	   values(#{member_id}, #{member_list}, #{calendar_name}, #{calendar_type})
+   	   values(calendar_id.nextval, #{member_id}, #{calendar_name}, #{calendar_type})
     </insert>
+    
+    <insert id="insertMember">
+    	insert into calendar_members
+    	values(calendar_members_seq.nextval, #{id}, #{member})
+    </insert>
+    
+    <select id="getLastCalendarID" resultType="int">
+    	SELECT MAX(calendar_id)
+		FROM calendar_list
+    </select>
+    
+    <!-- 삭제 -->
+    <delete id="delete">
+    	delete from calendar_list where calendar_name = #{calendarName}
+    </delete>
+    
+    <delete id="deleteMembers">
+    	delete from calendar_members where calendar_id = #{calendarID}
+    </delete>
+    
+    <delete id="deleteSchedules">
+    	delete from calendar where calendar_name = #{calendarName}
+    </delete>
   </mapper>

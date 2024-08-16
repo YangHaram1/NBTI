@@ -38,7 +38,7 @@ public class CalendarController {
         System.out.println(dto.getMember_id());
         System.out.println(dto.getContents());
         System.out.println(dto.getSeq());
-        System.out.println(dto.getCalendar_title());
+        System.out.println(dto.getCalendar_name());
         return ResponseEntity.ok().build();
     }
 
@@ -53,6 +53,9 @@ public class CalendarController {
     // 수정
     @PutMapping
     public ResponseEntity<Void> update (@RequestBody CalendarDTO dto) throws Exception{
+    	System.out.println("update : " + dto.getSeq());
+    	System.out.println("update : " + dto.getTitle());
+    	System.out.println("update : " + dto.getContents());
     	cserv.update(dto);
     	return ResponseEntity.ok().build();
     }
