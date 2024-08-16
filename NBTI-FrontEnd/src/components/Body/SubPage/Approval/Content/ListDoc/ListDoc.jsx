@@ -3,7 +3,7 @@ import styles from './ListDoc.module.css';
 import axios from 'axios';
 import { host } from '../../../../../../config/config';
 import { format } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
+import { Await, useNavigate } from 'react-router-dom';
 
 
 export const ListDoc = ({setlist}) => {
@@ -11,6 +11,7 @@ export const ListDoc = ({setlist}) => {
     // DTO 하나 생성하기 -> 기안일, 결재양식, 긴급, 제목, 첨부, 기안자, 문서번호, 문서 상태, 임시번호
     const [lists, setLists] = useState([]);
     const navi = useNavigate();
+    const [fileExistenceMap, setFileExistenceMap] = useState({});
 
     useEffect(()=>{
         let url = '';
@@ -40,17 +41,39 @@ export const ListDoc = ({setlist}) => {
                 console.log("상신취소 문서함");
                 url = `${host}/approval/getCancle`
                 break;
+            case '임시 저장 문서함':
+                console.log("임시 저장 문서함");
+                url = `${host}/approval/getTemp`
+                break;
             default:
                 return;
         }
         axios.get(url)
-            .then((resp) => {
-                console.log(resp.data);
-                setLists(resp.data);
-            })
-            .catch((error) => {
-                console.error(error);
+        .then(async (resp) => {
+            console.log(resp.data);
+            setLists(resp.data);
+
+            const filePromises = resp.data.map(async (list) => {
+                try {
+                    let seq = list.temp_seq;
+                    const fileResp = await axios.get(`${host}/files/getFiles/${seq}`);
+                    return { temp_seq: seq, files: fileResp.data };
+                } catch (err) {
+                    console.error(err);
+                    return { temp_seq: list.temp_seq, files: false };
+                }
             });
+            
+            const files = await Promise.all(filePromises);
+            const fileMap = files.reduce((acc, { temp_seq, files }) => ({
+                ...acc, [temp_seq]: files
+            }), {});
+            
+            setFileExistenceMap(fileMap);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
     },[setlist])
 
 
@@ -60,13 +83,17 @@ export const ListDoc = ({setlist}) => {
                 return <div className={styles.state_badge_gray}>결재 완료</div>;
             case 'r':
                 return <div className={styles.state_badge_red}>결재 반려</div>;
+            case 'c':
+                return <div className={styles.state_badge_red}>상신 취소</div>;
+            case 't':
+            return <div className={styles.state_badge_red}>임시 저장</div>;
             default:
                 return <div className={styles.state_badge_green}>결재진행중</div>;
         }
     };
 
     const handleMove = (tempSeq, docSubName) => {
-        navi("/approval/detail", {state:{seq:tempSeq, setlist:docSubName, list:"doc"}});
+        navi("/approval/detail", {state:{seq:tempSeq, setlist:docSubName, list:setlist}});
     };
 
     return(
@@ -83,7 +110,7 @@ export const ListDoc = ({setlist}) => {
                     <div className={styles.emergency}> 긴급</div>
                     <div className={styles.content_title}> 제목</div>
                     <div className={styles.file}> 첨부</div>
-                    {setlist !== '반려 문서함' && setlist !== '상신취소 문서함' ? (
+                    {setlist !== '반려 문서함' && setlist !== '상신취소 문서함' && setlist !== '임시 저장 문서함'? (
                         <>
                         <div className={styles.writer}> 기안자</div>
                         <div className={styles.doc_number}> 문서번호</div>
@@ -114,8 +141,14 @@ export const ListDoc = ({setlist}) => {
                                     <input type='hidden' value={list.temp_seq}></input>
                                     <input type='hidden' value={list.doc_sub_name}></input>
                                 </div>
-                                <div className={styles.file}>Y</div>
-                                {setlist !== '반려 문서함' && setlist !== '상신취소 문서함' ? (
+                                <div className={styles.file}>
+                                    {console.log("콘솔로 찍어보깅",fileExistenceMap[list.temp_seq])}
+                                    {
+                                    fileExistenceMap[list.temp_seq] != undefined
+                                    ? Array.from(fileExistenceMap[list.temp_seq]).length > 0 ? <i class="fa-solid fa-paperclip"></i> : ''
+                                    : '...'} {/* 로딩 중일 때는 '...' 표시 */}
+                                </div>
+                                {setlist !== '반려 문서함' && setlist !== '상신취소 문서함' && setlist !== '임시 저장 문서함' ? (
                                 <>
                                 <div className={styles.writer}> {list.name}</div>
                                 <div className={styles.doc_number}>{list.approval_seq}</div>

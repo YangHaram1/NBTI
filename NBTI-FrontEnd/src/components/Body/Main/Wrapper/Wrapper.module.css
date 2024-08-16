@@ -22,7 +22,7 @@
 }
 .container .side .approval {
   height: 120px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   border-radius: 8px;
   margin: 10px;
   display: flex;

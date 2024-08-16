@@ -56,6 +56,10 @@ public class ApprovalDAO {
 		return mybatis.selectOne("Approval.selectApproval",seq);
 	}
 	
+	public List<ListDocDTO> selectTemp(String id){
+		return mybatis.selectList("Approval.selectTemp",id);
+	}
+	
 	public List<ListDocDTO> selectReferIsMeWait(String id){
 		return mybatis.selectList("Approval.selectReferIsMeWait",id);
 	}
@@ -74,6 +78,10 @@ public class ApprovalDAO {
 		map.put("temp_seq", temp_seq);
 		map.put("docHeader", docHeader);
 		mybatis.update("Approval.createApprovalSeq", map);
+	}
+	
+	public void updateDocStateCancle(int seq) {
+		mybatis.update("Approval.updateDocStateCancle", seq);
 	}
 
 }

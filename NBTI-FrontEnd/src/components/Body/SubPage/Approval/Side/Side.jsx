@@ -114,13 +114,13 @@ export const Side = () => {
               </li>
               <li onClick={()=>{navi("listReserved")}}>
                 <span>
-                  <i className="fa-solid fa-star fa-sm"></i>
+                <i class="fa-regular fa-clock"></i>
                 </span>
                 <span>결재 예정</span>
               </li>
               <li onClick={()=>{navi("listAll")}}>
                 <span>
-                  <i className="fa-solid fa-clipboard fa-sm"></i>
+                <i class="fa-solid fa-users"></i>
                 </span>
                 <span>참조/열람 대기</span>
               </li>
@@ -142,13 +142,13 @@ export const Side = () => {
               </li> */}
               <li onClick={()=>{navi("listDocWrite")}}>
                 <span>
-                  <i className="fa-solid fa-clipboard fa-sm"></i>
+                  <i class="fa-solid fa-file-pen"></i>
                 </span>
                 <span>기안 문서함</span>
               </li>
               <li onClick={()=>{navi("listDocApproval")}}>
                 <span>
-                  <i className="fa-solid fa-clipboard fa-sm"></i>
+                <i class="fa-solid fa-clipboard-check"></i>
                 </span>
                 <span>결재 문서함</span>
               </li>
@@ -160,19 +160,19 @@ export const Side = () => {
               </li> */}
               <li onClick={()=>{navi("listDocReference")}}>
                 <span>
-                  <i className="fa-solid fa-clipboard fa-sm"></i>
+                <i class="fa-solid fa-users"></i>
                 </span>
                 <span>참조/열람 문서함</span>
               </li>
               <li onClick={()=>{navi("listDocBan")}}>
                 <span>
-                  <i className="fa-solid fa-clipboard fa-sm"></i>
+                  <i class="fa-solid fa-rotate-left"></i>
                 </span>
                 <span>반려 문서함</span>
               </li>
               <li onClick={()=>{navi("listDocCancle")}}>
                 <span>
-                  <i className="fa-solid fa-star fa-sm"></i>
+                  <i class="fa-solid fa-square-xmark"></i>
                 </span>
                 <span>상신취소 문서함</span>
               </li>
@@ -184,11 +184,11 @@ export const Side = () => {
                 임시 저장 문서함
             </li>
         </ul>
-        <ul>
+        {/* <ul>
             <li onClick={()=>{navi("listDocSetting")}}>
                 전자결재 관리
             </li>
-        </ul>
+        </ul> */}
       </div>
 
       <Modal isOpen={isModalOpen} onClose={closeFirstModal}>

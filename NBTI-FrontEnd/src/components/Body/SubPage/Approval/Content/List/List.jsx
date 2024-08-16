@@ -10,6 +10,7 @@ export const List = ({setlist}) => {
 
     const navi = useNavigate();
     const [lists, setLists] = useState([]);
+    const [fileExistenceMap, setFileExistenceMap] = useState({});
 
     useEffect(()=>{
         let url = '';
@@ -32,13 +33,31 @@ export const List = ({setlist}) => {
                 return;
         }
         axios.get(url)
-            .then((resp) => {
-                console.log(resp.data);
-                setLists(resp.data);
-            })
-            .catch((error) => {
-                console.error(error);
+        .then(async (resp) => {
+            console.log(resp.data);
+            setLists(resp.data);
+
+            const filePromises = resp.data.map(async (list) => {
+                try {
+                    let seq = list.temp_seq;
+                    const fileResp = await axios.get(`${host}/files/getFiles/${seq}`);
+                    return { temp_seq: seq, files: fileResp.data };
+                } catch (err) {
+                    console.error(err);
+                    return { temp_seq: list.temp_seq, files: false };
+                }
             });
+            
+            const files = await Promise.all(filePromises);
+            const fileMap = files.reduce((acc, { temp_seq, files }) => ({
+                ...acc, [temp_seq]: files
+            }), {});
+            
+            setFileExistenceMap(fileMap);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
     },[setlist])
 
     const handleMove = (tempSeq, docSubName) => {
@@ -83,7 +102,13 @@ export const List = ({setlist}) => {
                                         list.title !== null ? list.title : list.doc_sub_name 
                                     }
                                 </div>
-                                <div className={styles.file}>Y</div>
+                                <div className={styles.file}>
+                                    {console.log("콘솔로 찍어보깅",fileExistenceMap[list.temp_seq])}
+                                    {
+                                    fileExistenceMap[list.temp_seq] != undefined
+                                    ? Array.from(fileExistenceMap[list.temp_seq]).length > 0 ? <i class="fa-solid fa-paperclip"></i> : ''
+                                    : '...'} {/* 로딩 중일 때는 '...' 표시 */}
+                                </div>
                                 <div className={styles.writer}> {list.name}</div>
                             </div>
                             );

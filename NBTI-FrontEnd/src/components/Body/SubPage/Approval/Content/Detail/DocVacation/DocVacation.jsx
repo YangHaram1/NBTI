@@ -9,6 +9,8 @@ export const DocVacation = ({setDocVacation, docVacation})=>{
     const category = docVacation.vacation_category;
     const [categoryName, setCategoryName] = useState(''); 
     const [vPeriod, setVPeriod] = useState('');
+    const [vacationStart, setVacationStart] = useState();
+    const [vacationEnd, setVacationEnd] = useState(); 
 
     useEffect(()=>{
         axios.get(`${host}/vacationCategroy/${category}`)
@@ -18,13 +20,28 @@ export const DocVacation = ({setDocVacation, docVacation})=>{
         })
     },[docVacation])
 
-    const vacationStart = format(new Date(docVacation.vacation_start),'yyyy-MM-dd');
-    const vacationEnd = format(new Date(docVacation.vacation_end),'yyyy-MM-dd');
+    useEffect(()=>{
+        if(docVacation.vacation_start){
+            setVacationStart(format(new Date(docVacation.vacation_start),'yyyy-MM-dd'));
+        }
+        if(docVacation.vacation_end){
+            setVacationEnd(format(new Date(docVacation.vacation_end),'yyyy-MM-dd'));
+        }
+    },[docVacation.vacation_start, docVacation.vacation_end])
 
     const { start_half, end_half, start_half_ap, end_half_ap } = docVacation;
-    const isChecked = (value) => value.trim() === 'true';
-    const isSelected = (apValue, expectedValue) => apValue.trim() === expectedValue;
-    
+    const isChecked = (value) => {
+        if(value != null){
+            return (value.trim() === 'true');
+        }
+        else{return (false);}
+    };
+    const isSelected = (apValue, expectedValue) => {
+        if(apValue != null){
+            return (apValue.trim() === expectedValue);
+        }
+        else{return (false);}
+    }
     //잔여 연차
     useEffect(() => {
         axios.get(`${host}/members/selectVacation`)
