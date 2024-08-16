@@ -208,9 +208,15 @@ export const FreeBoard = () => {
                             <span>{ritem.name}</span>
                             <span>{reply_currentDate}</span>
                           </div>
-                          <div
+                          {/* <div
                             className={styles.replyContent}
                             dangerouslySetInnerHTML={{ __html: ritem.contents }}
+                          /> */}
+                          <div
+                            className={styles.replyContent}
+                            dangerouslySetInnerHTML={{
+                              __html: ritem.contents.replace(/\n/g, "<br />"),
+                            }}
                           />
                         </div>
                         <div className={styles.likes}>
