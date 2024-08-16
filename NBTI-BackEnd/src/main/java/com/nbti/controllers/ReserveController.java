@@ -82,9 +82,9 @@ public class ReserveController {
     @GetMapping("/approveList")
     public ResponseEntity<List<ReserveDTO>> ApproveList() throws Exception {
     	// 세션에서 로그인한 사용자의 ID 가져오기
-        String memberId = (String) session.getAttribute("loginID");
+//        String memberId = (String) session.getAttribute("loginID");
         
-        List<ReserveDTO> approveList = rserv.approveList(memberId);
+        List<ReserveDTO> approveList = rserv.approveList();
         return ResponseEntity.ok(approveList);
     }
     //승인 관리 - 반려 목록 출력

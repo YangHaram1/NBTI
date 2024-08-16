@@ -39,8 +39,8 @@ public class ReserveService {
 	}
 	
 	//승인 관리 - 승인 목록 출력
-	public List<ReserveDTO> approveList(String memberId) throws Exception{
-		return rdao.approveList(memberId);
+	public List<ReserveDTO> approveList() throws Exception{
+		return rdao.approveList();
 	}
 
 	//승인 관리 - 반려 목록 출력
