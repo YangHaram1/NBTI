@@ -88,7 +88,7 @@ export const Wait = () => {
                                     <td>{wait.reserve_title_code}</td>
                                     <td>{wait.purpose}</td>
                                     <td>{`${new Date(wait.start_time).toLocaleString()} ~ ${new Date(wait.end_time).toLocaleString()}`}</td>
-                                    <td>
+                                    <td className={styles.btn}>
                                         <button onClick={() => approveReservation(wait.seq)}>승인</button>
                                         <button onClick={() => reject(wait.seq)}>반려</button>
                                     </td>
