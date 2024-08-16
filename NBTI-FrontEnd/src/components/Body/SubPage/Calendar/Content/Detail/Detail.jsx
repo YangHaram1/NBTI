@@ -349,7 +349,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                 locales={[koLocale]} // 한국어 로케일 설정
                 locale="ko" 
                 selectable="true" //달력 드래그 
-                
+                height="auto"
                 // 기본 (월)
                 dayMaxEventRows={3} // 각 날짜 셀에 표시되는 이벤트를 5개로 제한
                 moreLinkText="..." // "+n more" 링크에 표시되는 텍스트
