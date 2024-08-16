@@ -2,13 +2,16 @@
 import styles from './SecondModal.module.css'; // 스타일시트 경로는 동일하게 유지
 import { useDocFormStore, useReferLine } from '../../../../../../store/store';
 import { ApprovalLine } from './ApprovalLine/ApprovalLine';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import axios from 'axios';
+import { host } from '../../../../../../config/config';
 
 const SecondModal = ({ isOpen, onClose }) => {
 
-  const {referLine} = useReferLine();
+  const {referLine, setReferLine} = useReferLine();
   const {docForm} = useDocFormStore();
+  const [refer, setRefer] = useState();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -16,7 +19,18 @@ const SecondModal = ({ isOpen, onClose }) => {
     onClose(); // 제출 후 모달 닫기
   };
 
-  useEffect(()=>{},[]);
+  useEffect(()=>{
+    console.log("참조라인 데이터 확인",referLine);
+    axios.post(`${host}/members/approvalSearch`,referLine)
+    .then((resp)=>{
+        // console.log("데이터 확인",resp.data);
+        setRefer(resp.data);
+        console.log(refer);
+    })
+    .catch((err)=>{
+        console.log(err);
+    })
+  },[referLine])
 
   const navi = useNavigate();
 
@@ -38,6 +52,18 @@ const SecondModal = ({ isOpen, onClose }) => {
     onClose();
   }
 
+  const deleteRefer = (id) => {
+    console.log(id);
+    // referLine에서 해당 id와 일치하지 않는 항목들만 필터링하여 새로운 배열을 생성
+    // 현재 기존 배열에 새로 만들어진 배열이 추가로 들어가는 상황 발생 => 수정 필요
+    const updatedReferLine = referLine.filter(refer => refer.id !== id);
+    setReferLine(updatedReferLine);
+    console.log("삭제시 참조라인",referLine);
+
+    // refer에서 해당 id와 일치하지 않는 항목들만 필터링하여 새로운 배열을 생성
+    const updatedRefer = refer.filter(r => r.id !== id);
+    setRefer(updatedRefer);
+  }
 
   if (!isOpen) return null;
 
@@ -56,9 +82,10 @@ const SecondModal = ({ isOpen, onClose }) => {
               <div className={styles.form_refer}>
                 <div className={styles.form_refer_box}>
                   {
-                    referLine.map((refer)=>{
+                    refer.map((refer)=>{
                       return(
-                        <div key={refer.id} className={styles.refer_member}>{refer.name} 대리 / 품질관리팀</div>
+                        <div key={refer.id} className={styles.refer_member}>
+                           {refer.NAME} ({refer.JOB_NAME}) / {refer.TEAM_NAME} <button onClick={()=>{deleteRefer(refer.id)}}>x</button></div>
                       );
                     })
                   }
