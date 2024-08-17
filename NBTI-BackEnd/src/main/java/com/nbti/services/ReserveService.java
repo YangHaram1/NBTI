@@ -22,6 +22,10 @@ public class ReserveService {
 	public List<ReserveDTO> waitingList(String memberId) throws Exception{
 		return rdao.waitingList(memberId);
 	}
+	//예약 목록 출력 
+	public List<ReserveDTO> reservationList(String memberId) throws Exception{
+		return rdao.reservationList(memberId);
+	}
 	
     // 예약 상태 업데이트 N->Y
 	public void update(int reservationSeq) throws Exception {

@@ -38,29 +38,23 @@ export const Content = () => {
         setSelectedDate(e.target.value);
     };
 
-    // 저장 처리
+    // 예약
     const handleSave = () => {
         const { reserve_title_code, start_time, end_time, purpose, state } = reserveData;
 
         // 날짜와 시간을 합쳐서 Timestamp로 변환
-        const fullStartTime = selectedDate ? `${selectedDate}T${reserveData.start_time}` : null;
-        const fullEndTime = selectedDate ? `${selectedDate}T${reserveData.end_time}` : null;
+        const fullStartTime = selectedDate ? new Date(`${selectedDate}T${start_time}:00`).toISOString() : null;
+        const fullEndTime = selectedDate ? new Date(`${selectedDate}T${end_time}:00`).toISOString() : null;
 
         // 데이터 검증
         if (!reserve_title_code || !fullStartTime || !fullEndTime || !purpose || !start_time || !end_time) {
             alert('모든 필드를 입력하세요.');
             return;
         }
-        // const selectedDateObj = new Date(selectedDate);
+
         const now = new Date();
         const startTimeObj = new Date(fullStartTime);
         const endTimeObj = new Date(fullEndTime);
-
-        // // 과거 날짜 체크
-        // if (selectedDateObj < now) {
-        //     alert('과거 날짜는 예약할 수 없습니다.');
-        //     return;
-        // }
 
         // 현재 시간 체크
         if (startTimeObj < now) {
