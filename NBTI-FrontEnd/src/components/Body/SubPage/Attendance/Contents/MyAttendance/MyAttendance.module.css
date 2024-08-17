@@ -11,7 +11,7 @@
 
 .myAttendanceContainer {
   width: 100%;
-  margin-bottom: 45px;
+  margin-bottom: 30px;
 }
 
 .myAttendanceContainer > h2 {
@@ -97,7 +97,7 @@
   background-color: #6b9080;
   color: white;
   box-sizing: border-box;
-  opacity: 1;
+  /* opacity: 1; */
 }
 
 .buttonsContainer > button:hover {
