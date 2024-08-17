@@ -181,7 +181,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
         });
 
         const calendarData = {
-            calendar_name: inputCalendarName, // 캘린더 이름
+            calendar_name: inputCalendarName.trim(), // 캘린더 이름
             calendar_type: 'public', // 또는 'private' 등 필요에 따라 설정
             calendar_members: members,
         };
