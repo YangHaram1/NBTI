@@ -87,11 +87,11 @@ function App() {
           <Routes>
             <Route path='/*' element={<Body />}/>
           </Routes>
-          <Draggable nodeRef={draggableRef}>
+         {(loginID != null && loginID !== 'error') && <Draggable nodeRef={draggableRef}>
             <div className={styles.chatapp} ref={draggableRef}>
                 {chatApp}
             </div>
-          </Draggable>
+          </Draggable>}
         </div>
         <ToastContainer
           position="top-right"

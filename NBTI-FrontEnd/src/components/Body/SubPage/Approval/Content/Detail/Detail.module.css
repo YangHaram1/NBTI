@@ -1,5 +1,5 @@
 .container{
-    width: 85%;
+    width: 90%;
     height: 1100px;
     display: flex;
     flex-direction: column;
@@ -19,6 +19,7 @@
 .content_box{
     flex:9.6;
     display: flex;
+    /* width: 100%; */
     /* border: 1px solid black; */
 }
 
