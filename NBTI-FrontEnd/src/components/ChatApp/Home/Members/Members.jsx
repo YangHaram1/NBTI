@@ -134,7 +134,7 @@ const Members = ({ setName }) => {
         })
         setAllmember(true);
     }
-
+  
     return (
         <div className={styles.container} onClick={handleClick}>
             <div className={styles.nbti} >
@@ -142,14 +142,14 @@ const Members = ({ setName }) => {
                     {mainDisplay ? '➖' : '➕'}
                 </div>
                 <div className={styles.nbtiname} onClick={handleAll}>
-                    NBTI ({modalRef.current.length})
+                    NBTI ({members.length})
                 </div>
             </div>
             {mainDisplay && (<div className={styles.menus}>
                 {
                     list.map((dItem, dindex) => {
                         const teams = dItem.teams;
-                        const totalMembers = teams.reduce((sum, team) => sum + team.members.length, 0);
+                        const totalMembersTeam = teams.reduce((sum, team) => sum + team.members.length, 0);
                         return (
                             <div className={styles.menu} key={dindex} >
                                 <div className={styles.dept}>
@@ -157,7 +157,7 @@ const Members = ({ setName }) => {
                                         {listDisplay[dindex] ? '➖' : '➕'}
                                     </div>
                                     <div className={styles.deptname} onClick={() => handleDept(dindex)}>
-                                        {dItem.dept}  ({totalMembers})
+                                        {dItem.dept}  ({totalMembersTeam})
                                     </div>
                                 </div>
                                 {listDisplay[dindex] && (
