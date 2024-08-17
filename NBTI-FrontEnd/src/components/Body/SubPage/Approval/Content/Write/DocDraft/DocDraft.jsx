@@ -31,12 +31,12 @@ export const DocDraft = ({userdata, content ,setDocData, setContent, setDate, se
                 <input className={styles.submain_content} type='date' onChange={handleDate}></input>
                 {/* <div className={styles.submain_content}>2024-08-01</div> */}
                 <div className={styles.submain_title}>협조 부서</div>
-                <div className={styles.submain_content} contentEditable="true" onInput={handleDept} suppressContentEditableWarning='true'>다섯글자팀</div>
+                <div className={styles.submain_content} contentEditable="true" onInput={handleDept} suppressContentEditableWarning='true'></div>
                 {/* </div> */}
             </div>
             <div className={styles.subtitle}>
                 <div className={styles.subtitle_title}> 제목 </div>
-                <div className={styles.subtitle_content} contentEditable="true" onInput={handleTitle} suppressContentEditableWarning='true'> 제목 어쩌구 저쩌구 </div>
+                <div className={styles.subtitle_content} contentEditable="true" onInput={handleTitle} suppressContentEditableWarning='true'></div>
             </div>
             <div className={styles.content}>
                 <ApprovalEditor setContent={setContent} content = {content} />
