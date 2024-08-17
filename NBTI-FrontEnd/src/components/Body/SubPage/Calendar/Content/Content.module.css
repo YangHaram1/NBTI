@@ -10,4 +10,5 @@ div {
     min-height: 930px;
     float: right;
     background-color: rgba(220, 220, 220, 0.155);
+    padding: 20px;
   }

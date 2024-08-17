@@ -4,10 +4,7 @@
 }
 
 .calender {
-    height: 100%;
-    margin: 3%;
-    background-color: white;
-    padding-top: 10px;
+    padding: 0 20px;
     border-radius: 10px;
     min-width: 700px;
 }
