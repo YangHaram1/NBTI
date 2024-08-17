@@ -43,9 +43,10 @@
 .submain_title{
     flex:2.5;
     background-color: #CCE3DE;
-    text-indent: 15px;
+    text-indent: 10px;
     display: flex;
     align-items: center;
+    font-size: 15px;
 }
 .submain_content{
     flex:7.5;
@@ -74,7 +75,8 @@
 .subtitle_title{
     flex:1.25;
     background-color: #CCE3DE;
-    text-indent: 15px;
+    font-size: 15px;
+    text-indent: 10px;
     display: flex;
     align-items: center;
 }

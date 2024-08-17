@@ -547,7 +547,7 @@ public class ApprovalController {
 		return list;
 	}
 	
-	// 참조/열람 목록 출력 (결재하기)
+	// 임시저장 목록 출력
 	@GetMapping("/getTemp")
 	public List<ListDocDTO> getTemp(){
 		String id = (String)session.getAttribute("loginID");
