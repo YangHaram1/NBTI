@@ -43,9 +43,9 @@
 	                AND board.title LIKE '%' || #{keyword} || '%'
 	            </if>
 	            <if test="target == 'contents'">
-	                <![CDATA[
-	                AND REGEXP_REPLACE(board.contents, '<[^>]+>', '') LIKE '%' || #{keyword} || '%'
-	                ]]>
+	              
+	                AND REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
+	             
 	            </if>
 	            <if test="target == 'member_id'">
 	                AND board.member_id = #{keyword}

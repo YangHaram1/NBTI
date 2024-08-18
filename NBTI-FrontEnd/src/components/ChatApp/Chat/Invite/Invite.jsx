@@ -36,7 +36,6 @@ const Invite = ({ setInvite,chatCheck}) => {
             const result= members.filter((item)=>{
                 let check=false;
                 invited.forEach(element => {
-                
                    if(item.id===element.member_id){
                         check=true;
                    } 
@@ -84,7 +83,7 @@ const Invite = ({ setInvite,chatCheck}) => {
     return (
         <div className={styles.container}>
             <div>
-                🔍 <input type="text" placeholder='이름 검색' value={nameSearch} onChange={handleNameSearch} />
+                🔍 <input type="text" placeholder='이름 검색' value={nameSearch} onChange={handleNameSearch} /> <input type="checkbox" />
             </div>
             <div className={styles.list}>
                 {
