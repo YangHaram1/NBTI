@@ -39,11 +39,12 @@ const Chat = () => {
   const [invite, setInvite] = useState(false);
   const [updateMember, setUpdateMember] = useState(false);
   const [checkInvite, setCheckInvite] = useState(false);
+  const [RoomName, setRoomName] = useState('');
 
 
   useEffect(() => { //group_chat 속성 가저오기 나와의채팅인지 아닌지 
     const { chatSeq } = useCheckList.getState();
-    if (chatSeq !== 0)
+    if (chatSeq !== 0) {
       axios.get(`${host}/group_chat/invite?group_seq=${chatSeq}`).then((resp) => {
         console.log(resp.data);
         if (resp.data === 'Y') {
@@ -54,6 +55,12 @@ const Chat = () => {
         }
 
       })
+      axios.get(`${host}/group_member/member?group_seq=${chatSeq}`).then((resp) => {
+
+        setRoomName(resp.data.name);
+      })
+    }
+
   }, [chatSeq])
 
   // WebSocket 연결을 설정하는 useEffect
@@ -311,7 +318,8 @@ const Chat = () => {
         let fileCheck = false;
         let file = '';
         if (item.upload_seq !== 0) {
-          const split = item.message.split(' ');
+          const split = item.message.split('*');
+
           fileCheck = true;
           if (split[2] === '2') {
             file = `<p style="color: blue; cursor: pointer;">${split[0]}</p>`;
@@ -350,7 +358,7 @@ const Chat = () => {
                         if (el && check) {
                           chatRef.current[count++] = el; //검색한것만 ref 추가
                         }
-                      }} className={idCheck ? styles.mboxReverse : styles.mbox} onClick={fileCheck ? () => SweetAlert('warning', '채팅방', '다운로드를 진행하시겠습니까?', () => handleDownload(item.message.split(' '))) : undefined}></div>
+                      }} className={idCheck ? styles.mboxReverse : styles.mbox} onClick={fileCheck ? () => SweetAlert('warning', '채팅방', '다운로드를 진행하시겠습니까?', () => handleDownload(item.message.split('*'))) : undefined}></div>
                     <div style={{ display: "flex" }}>
                       {(chatCheckCount > 0) && (<div className={styles.check}>{chatCheckCount || ''}</div>)}
                       <div className={styles.date}>{formattedTimestamp}</div>
@@ -386,6 +394,7 @@ const Chat = () => {
 
   useEffect(() => {//group_seq에 맞는 member list 뽑기
     axios.get(`${host}/group_member?group_seq=${chatSeq}`).then((resp) => {
+      console.log(resp.data)
       setChatCheck(resp.data);
     })
   }, [invite, updateMember, chatNavi]);
@@ -400,7 +409,7 @@ const Chat = () => {
         <div className={styles.container} ref={containerRef}>
           <div className={styles.header}>
             <div className={styles.header1}>
-              방제목
+              {RoomName}
             </div>
             <div className={styles.header2}>
               <button onClick={handleInvite}>➕</button>
