@@ -28,6 +28,7 @@ import com.nbti.dao.MembersDAO;
 import com.nbti.dao.ReferLineDAO;
 import com.nbti.dto.ApprovalDTO;
 import com.nbti.dto.ApprovalLineDTO;
+import com.nbti.dto.ChatDTO;
 import com.nbti.dto.Chat_uploadDTO;
 import com.nbti.dto.DocDraftDTO;
 import com.nbti.dto.DocLeaveDTO;
@@ -73,6 +74,7 @@ public class FilesService {
 	@Autowired
 	private FilesDAO fdao;
 	
+	@Transactional
 	public List<Map<String, Object>> upload(String realpath,MultipartFile[] files,int group_seq,String member_id) throws Exception {
 
 		File realPathFile =new File(realpath);
@@ -93,6 +95,10 @@ public class FilesService {
 				map.put("oriname", oriName);
 				map.put("sysname", sysName);
 				map.put("code", code);
+				String fileMessage=map.get("oriname")+"*"+map.get("sysname")+"*"+map.get("code");
+				ChatDTO dto = new ChatDTO(0, member_id,fileMessage, null, group_seq,(int)(map.get("upload_seq")));
+				dto = cdao.insert(dto);
+				map.put("dto", dto);
 				uploadList.add(map);
 			}
 		}		

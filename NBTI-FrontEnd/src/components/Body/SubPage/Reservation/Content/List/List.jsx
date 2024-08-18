@@ -7,36 +7,55 @@ import { useReservationList } from '../../../../../../store/store';
 export const List = ()=>{
 
     const { approve, setApprove , reservations, setReservations} = useReservationList();
+    
     useEffect(() => {
-        // 대기 목록을 가져오는 함수
-        const fetchReservations = () => {
-            axios.get(`${host}/reserve`)
-                .then(resp => {
-                    console.log("대기 목록"+JSON.stringify(resp))
-                    setReservations(resp.data); // 예약 목록 상태 업데이트
-                })
-                .catch((error) => {
-                    console.error('Error: ', error);
-                });
-        };
-        fetchReservations(); // 컴포넌트가 마운트될 때 예약 목록 가져오기
-    }, [setReservations]); // 의존성 배열에 추가
-
-    useEffect(() => {
-        // 예약 목록을 가져오는 함수
+        // 예약 목록
         const fetchApproveList = () => {
             axios.get(`${host}/reserve/reservationList`)
                 .then(resp => {
-                    console.log("~~~"+JSON.stringify(resp))
-                    setApprove(resp.data); // 승인된 예약 목록 상태 업데이트
+                    setApprove(resp.data); // 승인된 목록 상태 업데이트
                 })
                 .catch((error) => {
-                    console.error('Error: ', error);
+                    console.error('예약 목록 오류 발생:', error);
                 });
         };
         fetchApproveList(); // 컴포넌트가 마운트될 때 예약 목록 가져오기
     }, [setApprove]); // 의존성 배열에 추가
 
+
+    useEffect(() => {
+        // 대기 목록
+        const fetchReservations = () => {
+            axios.get(`${host}/reserve`)
+                .then(resp => {
+                    console.log("대기 목록"+JSON.stringify(resp))
+                    // 응답 데이터가 배열이 아닐 경우 배열로 변환
+                    const data = Array.isArray(resp.data) ? resp.data : [resp.data];
+                    setReservations(data); // 목록 상태 업데이트
+                })
+                .catch((error) => {
+                    console.error('대기 목록 오류 발생:', error);
+                });
+        };
+        fetchReservations(); // 컴포넌트가 마운트될 때 대기 목록 가져오기
+    }, [setReservations]); // 의존성 배열에 추가
+
+
+    const cancelReservation = (seq) => {
+        // 예약 취소
+        console.log(seq);
+        axios.delete(`${host}/reserve/${seq}`)
+            .then(resp => {
+                // console.log("예약 취소 성공:", resp);
+                setReservations(prevItems => 
+                    prevItems.filter(reservation => reservation.seq !== seq)
+                );
+            })
+            .catch(error => {
+                console.error('예약 취소 중 오류 발생:', error);
+            });
+    };
+    
 
     return(
         <div className={styles.container}>
@@ -90,13 +109,13 @@ export const List = ()=>{
                             </tr>
                         </thead>
                         <tbody>
-                            {reservations.length > 0 ? (
+                            {Array.isArray(reservations) && reservations.length > 0 ? (
                                 reservations.map((wait) => (
                                     <tr key={wait.seq}>
                                         <td>{wait.reserve_title_code}</td>
                                         <td>{wait.reserve_title_code}</td>
                                         <td>{`${new Date(wait.start_time).toLocaleString()} ~ ${new Date(wait.end_time).toLocaleString()}`}</td>
-                                        <td>{wait.state === 'N' ? '승인 대기 중' : wait.state}</td>
+                                        <td className={styles.state}><span>{wait.state === 'N' ? '승인 대기 중' : wait.state}</span><button onClick={()=>cancelReservation(wait.seq)}>예약 취소하기</button></td>
                                     </tr>
                                 ))
                             ) : (

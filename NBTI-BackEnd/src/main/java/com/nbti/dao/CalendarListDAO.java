@@ -42,19 +42,19 @@ public class CalendarListDAO {
 	}
 	
 	//삭제
-	public void delete (String calendar_name) throws Exception{
-		mybatis.delete("CalendarList.delete", calendar_name);
+	public void delete (int calendar_id) throws Exception{
+		mybatis.delete("CalendarList.delete", calendar_id);
 	}
 	
 	public int getCalendarID(String calendarName) throws Exception {
 		return mybatis.selectOne("CalendarList.getCalendarID", calendarName);
 	}
 	
-	public void deleteMembers(int calendarID) throws Exception {
-		mybatis.delete("CalendarList.deleteMembers", calendarID);
+	public void deleteMembers(int calendar_id) throws Exception {
+		mybatis.delete("CalendarList.deleteMembers", calendar_id);
 	}
 	
-	public void deleteSchedules(String calendarName) throws Exception {
-		mybatis.delete("CalendarList.deleteSchedules", calendarName);
+	public void deleteSchedules(int calendar_id) throws Exception {
+		mybatis.delete("CalendarList.deleteSchedules", calendar_id);
 	}
 }

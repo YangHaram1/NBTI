@@ -255,8 +255,8 @@
 	</select>
 	
 	<!-- 예약 취소 -->
-<!-- 	<delete id="delete">
+ 	<delete id="delete">
 		delete from reserve where seq = #{seq}
-	</delete> -->
+	</delete> 
 	
 </mapper>

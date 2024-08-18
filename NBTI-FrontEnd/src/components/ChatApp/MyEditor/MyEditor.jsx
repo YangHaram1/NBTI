@@ -61,10 +61,7 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
     }
   }, [emoticonDisplay]);
 
-  const handleEmoticon = (e) => {
-    console.log("emt");
 
-  }
 
   //localStorage.removeItem('editorContent');
 

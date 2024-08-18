@@ -18,6 +18,8 @@
 .container input{
     border-radius: 20px;
     background-color: rgb(203, 201, 201);
+    width: 90%;
+    font-family: 'Freesentation-9Black';
 }
 .list{
     overflow: auto;
@@ -28,6 +30,7 @@
 .item{
     display: flex;
     gap: 10px;
+    font-family: 'ONE-Mobile-POP';
 }
 .itemDiv1{
     flex: 1;
@@ -71,4 +74,19 @@
 }
 .btn2{
     background-color: rgb(240, 219, 219);
+}
+
+@font-face {
+    font-family: 'Freesentation-9Black';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'ONE-Mobile-POP';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-POP.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }

@@ -92,10 +92,13 @@ const Invite = ({ setInvite,chatCheck}) => {
                         return (
                             <div key={index} className={styles.item}>
                                 <div className={styles.itemDiv1}>
-                                    <img src={avatar} alt="" className={styles.avatar} />
+                                    <img src={(item.member_img === null) ? `${avatar}` : `${host}/images/avatar/${item.id}/${item.member_img}`} alt="" className={styles.avatar} />
                                 </div>
                                 <div className={styles.itemDiv2}>
                                     {item.name}
+                                </div>
+                                <div className={styles.itemDiv2}>
+                                    {item.job_code}
                                 </div>
                                 <div className={styles.checkbox}>
                                     <input type="checkbox" checked={isChecked[index] || false} onChange={(e) => { handleCheck(index) }}  value={item.id}/>

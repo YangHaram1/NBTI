@@ -17,17 +17,17 @@
   		select calendar_id from calendar_list where calendar_name = #{calendar_name}
   	</select>
   	
-  	<!-- 공유 캘린더 추가하기 -->
+  	<!-- 공유 캘린더 추가 -->
 	<insert id="insert">
        insert into calendar_list 
    	   values(calendar_id.nextval, #{member_id}, #{calendar_name}, #{calendar_type})
     </insert>
-    
+    <!-- 공유 캘린더에 접근할 수 있는 멤버들 추가 -->
     <insert id="insertMember">
     	insert into calendar_members
     	values(calendar_members_seq.nextval, #{id}, #{member})
     </insert>
-    
+    <!-- 제일 최근에 추가된 공유 캘린더 ID 가져옴 -->
     <select id="getLastCalendarID" resultType="int">
     	SELECT MAX(calendar_id)
 		FROM calendar_list
@@ -35,14 +35,14 @@
     
     <!-- 삭제 -->
     <delete id="delete">
-    	delete from calendar_list where calendar_name = #{calendarName}
+    	delete from calendar_list where calendar_id = #{calendar_id}
     </delete>
     
     <delete id="deleteMembers">
-    	delete from calendar_members where calendar_id = #{calendarID}
+    	delete from calendar_members where calendar_id = #{calendar_id}
     </delete>
     
     <delete id="deleteSchedules">
-    	delete from calendar where calendar_name = #{calendarName}
+    	delete from calendar where calendar_id = #{calendar_id}
     </delete>
   </mapper>
