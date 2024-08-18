@@ -10,6 +10,13 @@ import BoardEditor from "../../../../BoardEditor/BoardEditor";
 import Swal from "sweetalert2";
 import SweetAlert from "../../../../../../function/SweetAlert";
 
+// HTML 태그 제거 함수
+const stripHtmlTags = (html) => {
+  const tmp = document.createElement("div");
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || "";
+};
+
 export const Detail = () => {
   const navi = useNavigate();
 

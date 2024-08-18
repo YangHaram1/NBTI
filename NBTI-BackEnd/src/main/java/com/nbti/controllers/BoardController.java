@@ -40,6 +40,7 @@ public class BoardController {
 			@RequestParam int code,
 	        @RequestParam(required = false) String target,
 	        @RequestParam(required = false) String keyword,
+	        @RequestParam(required = false) String status,
 	        @RequestParam int start,
 	        @RequestParam int end){
 		
@@ -49,6 +50,13 @@ public class BoardController {
 	    map.put("keyword", keyword);
 	    map.put("start", start);
 	    map.put("end", end);
+	    
+	    // 상태 필터 추가
+	    if ("ing".equals(status)) {
+	        map.put("status", "ing");
+	    } else if ("ok".equals(status)) {
+	        map.put("status", "ok");
+	    }
 	    
 	    List<BoardDTO> list = bserv.selectAll(map);
 	    
@@ -72,6 +80,7 @@ public class BoardController {
 			@RequestParam int code,
 	        @RequestParam(required = false) String target,
 	        @RequestParam(required = false) String keyword,
+	        @RequestParam(required = false) String status,
 	        @RequestParam int start,
 	        @RequestParam int end){
 		
@@ -84,6 +93,13 @@ public class BoardController {
 	    map.put("start", start);
 	    map.put("end", end);
 	    map.put("member_id", member_id);
+	    
+	    // 상태 필터 추가
+	    if ("ing".equals(status)) {
+	        map.put("status", "ing");
+	    } else if ("ok".equals(status)) {
+	        map.put("status", "ok");
+	    }
 	    
 	    List<BoardDTO> list = bserv.selectMyList(map);
 	    

@@ -193,6 +193,11 @@
   font-size: 0.75rem;
 }
 
+.replyOutputWrap .replyOutput .replyContent {
+  max-height: 130px;
+  overflow-y: scroll;
+}
+
 .replyOutputWrap .replyOutput .likes {
   width: 30px;
   margin-right: 3px;
