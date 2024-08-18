@@ -47,6 +47,7 @@ export const Side = ({ setAddOpen , setCalendarModalOpen, calendarModalOpen}) =>
   const [selectedDate, setSelectedDate] = useState(null);
   //모달창 열기
   const handleDateClick = (arg) => {
+      console.log("handleDateClick");
       setSelectedDate(arg.dateStr);
       setAddOpen(true);
   };
@@ -68,18 +69,21 @@ export const Side = ({ setAddOpen , setCalendarModalOpen, calendarModalOpen}) =>
   // 개인 캘린더만 출력
   const myCalender = ()=>{
     setCalendarSelectList(calendarList.filter((item)=>{
-      // console.log("side 개인 캘린더:"+item.extendedProps.calendar_name);
-      return item.extendedProps.calendar_name === '1'; 
+      console.log("side 개인 캘린더 : " + item.calendar_id);
+      return item.calendar_id === 1; 
     }))
   }
 
   // 공유 캘린더 출력
   const sharedCalendar = (calendar)=>{
     // console.log("side 전체 캘린더: "+ JSON.stringify(calendarList));
-    // console.log("calendar_name의 JSON 문자열:", JSON.stringify(calendar));
-    
+    console.log("calendar_name의 JSON 문자열:", JSON.stringify(calendar));
+    console.log(calendarList);
+
     setCalendarSelectList(calendarList.filter((item) => {
-      return item.extendedProps.calendar_name === calendar;
+      console.log(calendar);
+      console.log(item.calendar_id);
+      return item.calendar_id === calendar;
     }));
   }
 
@@ -105,11 +109,13 @@ export const Side = ({ setAddOpen , setCalendarModalOpen, calendarModalOpen}) =>
             resp.data.forEach(event => {
                 if (event.calendar_type === 'private') {
                     privateList.push({
+                      calendar_id: event.calendar_id,
                       calendar_name:event.calendar_name, 
                       member_id:event.member_id
                     }); 
                 } else if (event.calendar_type === 'public') {
                     publicList.push({
+                      calendar_id: event.calendar_id,
                       calendar_name:event.calendar_name,
                       member_id:event.member_id
                     }); 
@@ -131,11 +137,11 @@ export const Side = ({ setAddOpen , setCalendarModalOpen, calendarModalOpen}) =>
   },[publicList.length])
 
 // 삭제 핸들러
-const handleDeleteSharedCalendar = (calendarName) => {
-  const confirmDelete = window.confirm(`${calendarName} 캘린더를 정말 삭제하시겠습니까?`);
+const handleDeleteSharedCalendar = (calendar_id) => {
+  const confirmDelete = window.confirm(`캘린더를 정말 삭제하시겠습니까?`);
   if (!confirmDelete) return;
 
-  axios.delete(`${host}/calendarList/${calendarName}`) // 삭제 요청
+  axios.delete(`${host}/calendarList/${calendar_id}`) // 삭제 요청
   .then(() => {
     // 삭제 성공 후 서버에서 목록 가져오기 
     return axios.get(`${host}/calendarList`);
@@ -148,7 +154,7 @@ const handleDeleteSharedCalendar = (calendarName) => {
     // 공유 캘린더 개수 업데이트
     sharedCalendarCount.current = updatedPublicList.length;
 
-    alert(`${calendarName} 캘린더가 삭제되었습니다.`);
+    alert(`캘린더가 삭제되었습니다.`);
   })
   .catch((error) => {
     console.error("캘린더 삭제 실패:", error);
@@ -199,14 +205,14 @@ const handleDeleteSharedCalendar = (calendarName) => {
             <i className="fa-solid fa-people-group"></i>공유 일정 <i className="fa-solid fa-plus" id={styles.plus} onClick={handleCalendarAddClick}/>
             <ul className={`${styles.submenu} ${NoticeBoard ? styles.open : ""}`} onClick={preventPropagation}>
               {publicList.map((calendar, index) => ( 
-                  <li key={index} onClick={()=>sharedCalendar(calendar.calendar_name)}> 
+                  <li key={index} onClick={()=>sharedCalendar(calendar.calendar_id)}> 
                       <span>
                           <i className="fa-solid fa-circle" style={{ color: '#E04038' }}></i>
                       </span>
                       <span>{calendar.calendar_name}</span> 
 
                       {calendar.member_id === loginID && ( // 공유캘린더 생성자만 삭제 버튼
-                        <button onClick={() => handleDeleteSharedCalendar(calendar.calendar_name)}><i className="fa-solid fa-trash"></i></button>
+                        <button onClick={() => handleDeleteSharedCalendar(calendar.calendar_id)}><i className="fa-solid fa-trash"></i></button>
                       )}
 
                   </li>
