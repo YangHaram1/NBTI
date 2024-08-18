@@ -43,3 +43,16 @@
 tr,td {
     border: 1px solid #000;
 }
+
+/* 상태 (승인 대기 / 취소) */
+.state {
+    display: flex;
+}
+.state > span{
+    flex: 1; text-align: center;
+}
+.state > button{
+    flex: 1;
+    border-radius: 5px;
+    cursor: pointer;
+}

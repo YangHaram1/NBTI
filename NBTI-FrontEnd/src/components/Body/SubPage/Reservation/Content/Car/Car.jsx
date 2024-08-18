@@ -42,6 +42,7 @@ export const Car = () => {
                     initialView="timeGridDay"
                     locales={[koLocale]} // 한국어 로케일 설정
                     locale="ko"
+                    height="auto"
                     headerToolbar={{
                         left: 'title',
                         center: '',
