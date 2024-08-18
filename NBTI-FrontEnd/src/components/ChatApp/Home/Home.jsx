@@ -84,7 +84,7 @@ const Home = () => {
                 </div>
                 <div className={styles.div1_3}>
                     {settiing && (<Setting setSetting={setSetting} />)}
-                    <button className={styles.button} onClick={handleSetting}><i className="fa-solid fa-gear fa-lg"></i></button>
+                    {/* <button className={styles.button} onClick={handleSetting}><i className="fa-solid fa-gear fa-lg"></i></button> */}
                     <button className={styles.button} onClick={handleCancel}>❌</button>
                 </div>
             </div>
