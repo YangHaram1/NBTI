@@ -25,9 +25,9 @@ export const List = ()=>{
     useEffect(() => {
         // 예약 목록을 가져오는 함수
         const fetchApproveList = () => {
-            axios.get(`${host}/reserve/approveList`)
+            axios.get(`${host}/reserve/reservationList`)
                 .then(resp => {
-                    console.log(JSON.stringify(resp))
+                    console.log("~~~"+JSON.stringify(resp))
                     setApprove(resp.data); // 승인된 예약 목록 상태 업데이트
                 })
                 .catch((error) => {

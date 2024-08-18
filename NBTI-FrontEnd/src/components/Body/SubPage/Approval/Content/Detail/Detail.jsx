@@ -4,7 +4,7 @@ import styles from './Detail.module.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useApprovalLine, useDocLeave, useDocVacation, useReferLine } from '../../../../../../store/store';
-import html2pdf from 'html2pdf.js';
+// import html2pdf from 'html2pdf.js';
 import { DocLeave } from './DocLeave/DocLeave';
 import { Header } from './Header/Header';
 import { DocDraft } from './DocDraft/DocDraft';
@@ -27,9 +27,9 @@ export const Detail=()=>{
     const [approvalData, setApprovalData] = useState([]);
     const [referData, setReferData] = useState([]); 
     const [docCommonData, setDocCommonData] = useState({}); 
-    const [docLeave, setDocLeave] = useState({}); 
-    const [docVacation, setDocVacation] = useState({}); 
-    const [docDraft, setDocDraft] = useState({}); 
+    const [docLeaves, setDocLeaves] = useState({}); 
+    const [docVacations, setDocVacations] = useState({}); 
+    const [docDrafts, setDocDrafts] = useState({}); 
     const [approvalYN, setApprovalYN] = useState('');
     const [fileData, setFileData] = useState([]); 
     const [refer, setRefer] = useState([]);
@@ -41,9 +41,13 @@ export const Detail=()=>{
     const [error, setError] = useState(null);
     const [checkFA, setCheckFA] = useState(false);
 
+    const { approvalLine, setApprovalLine ,resetApprovalLine } = useApprovalLine();
+    const { referLine, setReferLine, resetReferLine } = useReferLine();
+    const { docLeave, setDocLeave } = useDocLeave();
+    const { docVacation, setDocVacation } = useDocVacation();
+
     useEffect(() => {
         const fetchData = async () => {
-            console.log("=============여기가 시작점===============");
             setLoading(true);
             try {
                 // 내 정보 받아오기 (이게 필요할까..?)
@@ -62,18 +66,18 @@ export const Detail=()=>{
                     // 업무기안
                     const docMainDataResponse = await axios.get(`${host}/docDraft/${seq}`);
                     // console.log("업무기안서",docMainDataResponse);
-                    setDocDraft(docMainDataResponse.data);
+                    setDocDrafts(docMainDataResponse.data);
                 }
                 else if(form_code == 2){
                     // 휴직 신청서
                     const docMainDataResponse = await axios.get(`${host}/docLeave/${seq}`);
                     // console.log("휴직신청서",docMainDataResponse);
-                    setDocLeave(docMainDataResponse.data);
+                    setDocLeaves(docMainDataResponse.data);
                 }else if(form_code == 3){
                     // 휴가 신청서
                     const docMainDataResponse = await axios.get(`${host}/docVacation/${seq}`);
                     // console.log("휴가신청서",docMainDataResponse);
-                    setDocVacation(docMainDataResponse.data);
+                    setDocVacations(docMainDataResponse.data);
                 }
                 else{
                     console.log("값이 안나오는 중");
@@ -128,17 +132,17 @@ export const Detail=()=>{
 
     // 문서 다운로드 
     const handleDownload = () => {
-        const element = document.getElementById('content-to-print');
+        // const element = document.getElementById('content-to-print');
         console.log("다운로드 클릭");
-        const opt = {
-            margin:       1,
-            filename:     'document.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2 },
-            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-        };
+        // const opt = {
+        //     margin:       1,
+        //     filename:     'document.pdf',
+        //     image:        { type: 'jpeg', quality: 0.98 },
+        //     html2canvas:  { scale: 2 },
+        //     jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        // };
 
-        html2pdf().set(opt).from(element).save();
+        // html2pdf().set(opt).from(element).save();
     };
 
 
@@ -192,7 +196,27 @@ export const Detail=()=>{
         })}
     }
 
+    const handleRewrite = () =>{
 
+        resetApprovalLine();
+        // console.log("approval",approvalData);
+        approvalData.map((data) => {
+           const array = {
+                id: data.APPROVAL_ID,
+                name: data.NAME,
+                order: data.APPROVAL_ORDER
+            }
+            setApprovalLine(array);
+        });
+        resetReferLine();
+        console.log("refer",refer);
+        const newRefer = refer.map((data)=>{
+            return ({id:data.ID, name: data.NAME,order:4 });
+        })
+        setReferLine(...newRefer);
+
+        navi("/approval/write", { state: { setlist: setlist } });
+    }
 
     return(
         <div className={styles.container}>
@@ -223,9 +247,10 @@ export const Detail=()=>{
                         :
                         <>
                         <div className={styles.btns}>
-                            <div className={`${styles.approval_submit_btn} ${styles.btn}`}><i class="fa-solid fa-pen-to-square"></i>재기안</div>
+                            <div className={`${styles.approval_submit_btn} ${styles.btn}`} onClick={handleRewrite}><i class="fa-solid fa-pen-to-square"></i>재기안</div>
                             <div className={`${styles.approval_download_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div>
                             <div className={`${styles.approval_copy_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
+                            <div className={`${styles.approval_copy_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>삭제하기</div>
                         </div>
                         </>
                     }
@@ -236,9 +261,9 @@ export const Detail=()=>{
                         </div>
                         <div className={styles.write_container}>
                         {   
-                        setlist === '휴가신청서' ?  <DocVacation docVacation={docVacation} setDocVacation ={setDocVacation}/>
-                        : setlist === '휴직신청서' ? <DocLeave docLeave={docLeave} setDocLeave={setDocLeave}/>
-                        : <DocDraft setDocDraft={setDocDraft} docDraft={docDraft}/>
+                        setlist === '휴가신청서' ?  <DocVacation docVacation={docVacations} setDocVacation ={setDocVacations}/>
+                        : setlist === '휴직신청서' ? <DocLeave docLeave={docLeaves} setDocLeave={setDocLeaves}/>
+                        : <DocDraft setDocDraft={setDocDrafts} docDraft={docDrafts}/>
                         }   
                         </div>
                     </div>

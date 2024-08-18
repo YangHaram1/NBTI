@@ -31,6 +31,9 @@ public class ReserveDAO {
 	public List<ReserveDTO> waitList () throws Exception{
 		return mybatis.selectList("Reserve.waitList");
 	}
+	public List<ReserveDTO> reservationList (String memberId) throws Exception{
+		return mybatis.selectList("Reserve.reservationList",memberId);
+	}
 	
 	// 승인
     public void update(int reservationSeq, String state) throws Exception {

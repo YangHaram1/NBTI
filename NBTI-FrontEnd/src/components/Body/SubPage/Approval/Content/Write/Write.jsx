@@ -6,12 +6,12 @@ import styles from './Write.module.css';
 import { host } from '../../../../../../config/config';
 import axios from 'axios';
 import { useApprovalLine, useDocLeave, useDocVacation, useReferLine } from '../../../../../../store/store';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import {faPenToSquare} from '@fortawesome/free-solid-svg-icons';
 
-export const Write = ({setlist})=>{
+export const Write = (props)=>{
 
     const [userdata, setUserData] = useState({}); 
     const [docdata, setDocData] = useState({effective_date:'', cooperation_dept:'', title:'', content:'', emergency:'' });
@@ -21,11 +21,14 @@ export const Write = ({setlist})=>{
     const [title, setTitle] = useState('');
     const { referLine, resetReferLine} = useReferLine();
     const { approvalLine, resetApprovalLine } = useApprovalLine();
-    const { docLeave } = useDocLeave();
+    const { docLeave, setDocLeave } = useDocLeave();
     const { docVacation } = useDocVacation();
     const [refer, setRefer] = useState([]);
     const [fileInfo, setFileInfo] = useState([]);
     const [files, setFiles] = useState([]);
+
+    const location = useLocation();
+    const setlist = props.setlist || location.state?.setlist || "기본 문서 제목";
 
     const navi = useNavigate();
 
