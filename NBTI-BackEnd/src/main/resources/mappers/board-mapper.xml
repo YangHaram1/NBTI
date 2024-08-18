@@ -11,23 +11,41 @@
 	        SELECT 
 	            board.*, 
 	            m.name,
+	            COALESCE(reply_count.reply_count, 0) AS reply_count, -- 댓글 수를 가져옵니다
 	            ROW_NUMBER() OVER (ORDER BY board.seq DESC) AS rown
 	        FROM 
 	            board
 	        JOIN 
-	            members m 
-	        ON 
-	            board.member_id = m.id
+	            members m ON board.member_id = m.id
+	        LEFT JOIN (  -- reply 테이블과 조인하여 댓글 수를 계산합니다
+	            SELECT 
+	                board_seq, 
+	                COUNT(*) AS reply_count 
+	            FROM 
+	                reply 
+	            GROUP BY 
+	                board_seq
+	        ) reply_count ON board.seq = reply_count.board_seq
 	        <trim prefix="WHERE" prefixOverrides="AND|OR">
 	            <!-- 기본 조건: 게시판 코드 -->
 	            board.board_code = #{board_code}
+	
+	            <!-- 상태 필터 조건 추가 -->
+	            <if test="status == 'ing'">
+	                AND COALESCE(reply_count.reply_count, 0) = 0  <!-- 진행중인 경우 -->
+	            </if>
+	            <if test="status == 'ok'">
+	                AND COALESCE(reply_count.reply_count, 0) > 0  <!-- 답변 완료인 경우 -->
+	            </if>
 	
 	            <!-- 검색 조건: target이 특정 값일 때 -->
 	            <if test="target == 'title'">
 	                AND board.title LIKE '%' || #{keyword} || '%'
 	            </if>
 	            <if test="target == 'contents'">
-	                AND REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
+	                <![CDATA[
+	                AND REGEXP_REPLACE(board.contents, '<[^>]+>', '') LIKE '%' || #{keyword} || '%'
+	                ]]>
 	            </if>
 	            <if test="target == 'member_id'">
 	                AND board.member_id = #{keyword}
@@ -38,17 +56,17 @@
 	
 	            <!-- 검색 조건: target이 빈 문자열일 때 -->
 	            <if test="target == ''">
+	                <![CDATA[
 	                AND (board.title LIKE '%' || #{keyword} || '%'
-	                OR REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
+	                OR REGEXP_REPLACE(board.contents, '<[^>]+>', '') LIKE '%' || #{keyword} || '%'
 	                OR m.name LIKE '%' || #{keyword} || '%'
 	                OR board.member_id = #{keyword})
+	                ]]>
 	            </if>
 	        </trim>
 	    ) a 
 	    WHERE a.rown BETWEEN #{start} AND #{end}
 	</select>
-
-
 
 
 	<!-- 게시글 총 개수 -->
@@ -77,19 +95,34 @@
 	        SELECT 
 	            board.*, 
 	            members.name AS name, 
+	            COALESCE(reply_count.reply_count, 0) AS reply_count, -- 댓글 수를 가져옵니다
 	            ROW_NUMBER() OVER (ORDER BY board.seq DESC) AS rown 
 	        FROM 
 	            board
 	        JOIN 
-	            members 
-	        ON 
-	            board.member_id = members.id
+	            members ON board.member_id = members.id
+	        LEFT JOIN (  -- reply 테이블과 조인하여 댓글 수를 계산합니다
+	            SELECT 
+	                board_seq, 
+	                COUNT(*) AS reply_count 
+	            FROM 
+	                reply 
+	            GROUP BY 
+	                board_seq
+	        ) reply_count ON board.seq = reply_count.board_seq
 	        <trim prefix="WHERE" prefixOverrides="AND|OR">
-	            <!-- 기본 조건: 게시판 코드와 작성자 ID -->
 	            board.board_code = #{board_code}
 	            AND board.member_id = #{member_id}
 	            
-	            <!-- 검색 조건: target이 특정 값일 때 -->
+	            <!-- 상태 필터 조건 추가 -->
+	            <if test="status == 'ing'">
+	                AND COALESCE(reply_count.reply_count, 0) = 0  <!-- 진행중인 경우 -->
+	            </if>
+	            <if test="status == 'ok'">
+	                AND COALESCE(reply_count.reply_count, 0) > 0  <!-- 답변 완료인 경우 -->
+	            </if>
+	
+	            <!-- 검색 조건 -->
 	            <if test="target == 'title'">
 	                AND board.title LIKE '%' || #{keyword} || '%'
 	            </if>
@@ -105,6 +138,8 @@
 	    ) a 
 	    WHERE a.rown BETWEEN #{start} AND #{end}
 	</select>
+
+
 
 	
 	<!-- 내 글 총 개수 -->	

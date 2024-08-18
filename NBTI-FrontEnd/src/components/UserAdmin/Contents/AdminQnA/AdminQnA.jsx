@@ -11,10 +11,12 @@ import ReactPaginate from "react-paginate";
 export const AdminQnA = () => {
   const navi = useNavigate();
   const [boardList, setBoardList] = useState([]);
-  const { boardType, setBoardSeq, setBoardType } = useBoardStore();
+  const { setBoardSeq } = useBoardStore();
   const [target, setTarget] = useState(""); // target 초기 값을 빈 문자열로 설정
   const [keyword, setKeyword] = useState(""); // keyword 초기 값
   const [search, setSearch] = useState(false);
+  const [statusFilter, setStatusFilter] = useState(""); // 상태 필터를 위한 변수 추가
+
 
   // 페이지네이션
   const navi_count_per_page = 5;
@@ -34,6 +36,7 @@ export const AdminQnA = () => {
       keyword: keyword,
       start: start,
       end: end,
+      status: statusFilter
     };
 
     axios.get(`${host}/board/list`, { params }).then((resp) => {
@@ -49,7 +52,7 @@ export const AdminQnA = () => {
         );
       }
     });
-  }, [search, cpage]);
+  }, [search, cpage, statusFilter]);
 
   // 페이지네이션
   const handlePageClick = (data) => {
@@ -59,6 +62,7 @@ export const AdminQnA = () => {
   // 검색 버튼 클릭 핸들러
   const handleSearch = () => {
     setSearch((prev) => {
+      // setCpage(1);
       return !prev;
     });
   };
@@ -76,21 +80,31 @@ export const AdminQnA = () => {
     <div className={styles.container}>
       <h1>문의 내역</h1>
       <div className={styles.searchBox}>
-        <div className={styles.dropdown}>
-          <select value={target} onChange={(e) => setTarget(e.target.value)}>
+        <div>
+          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
             <option value="">전체</option>
-            <option value="title">제목</option>
-            <option value="contents">내용</option>
-            <option value="name">작성자</option>
+            <option value="ing">진행중</option>
+            <option value="ok">답변완료</option>
           </select>
         </div>
-        <input
-          type="text"
-          placeholder="검색"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-        />
-        <button onClick={handleSearch}>검색</button>
+        <div>
+
+          <div className={styles.dropdown}>
+            <select value={target} onChange={(e) => setTarget(e.target.value)}>
+              <option value="">전체</option>
+              <option value="title">제목</option>
+              <option value="contents">내용</option>
+              <option value="name">작성자</option>
+            </select>
+          </div>
+          <input
+            type="text"
+            placeholder="검색"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+          />
+          <button onClick={handleSearch}>검색</button>
+        </div>
       </div>
       <div className={styles.body}>
         <div className={styles.listTitle}>
@@ -108,9 +122,6 @@ export const AdminQnA = () => {
           </div>
           <div>
             <p>작성일</p>
-          </div>
-          <div>
-            <p>조회수</p>
           </div>
         </div>
         {boardList.map((item, index) => {
@@ -142,9 +153,6 @@ export const AdminQnA = () => {
               </div>
               <div className={styles.writeDate}>
                 <p>{currentDate}</p>
-              </div>
-              <div className={styles.viewCount}>
-                <p>{item.view_count}</p>
               </div>
             </div>
           );
