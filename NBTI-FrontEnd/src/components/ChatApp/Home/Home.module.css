@@ -90,19 +90,21 @@
   height: 70px;
   margin: 5px 0 0px 8px;
 }
-.name {
+.id {
   display: flex;
   justify-content: center;
   align-items: center;
   flex: 1;
-  font-family: "Courier New", Courier, monospace;
+  font-family: 'ONE-Mobile-POP';
+  
 }
-.status {
+.name {
   display: flex;
   justify-content: center;
   align-items: center;
   flex: 1 !important;
-  color: red;
+  color: rgba(136, 213, 36, 0.6);
+  font-family: 'ONE-Mobile-POP';
 }
 .button {
   width: 30px;
@@ -118,4 +120,12 @@
 
 .div1_3 > button:nth-child(2) {
   line-height: 0px;
+}
+
+@font-face {
+  font-family: 'ONE-Mobile-POP';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-POP.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  
 }

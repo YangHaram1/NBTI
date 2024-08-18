@@ -75,11 +75,11 @@ const Home = () => {
                     <img src={(user[0].member_img === null) ? `${avatar}` : `${host}/images/avatar/${user[0].id}/${user[0].member_img}`} alt='' className={styles.avatar}></img>
                 </div>
                 <div className={styles.div1_2}>
-                    <div className={styles.name}>
-                        {loginID}
+                    <div className={styles.id}>
+                        {user[0].id}
                     </div>
-                    <div className={styles.status}>
-                        온라인
+                    <div className={styles.name}>
+                        {user[0].name}
                     </div>
                 </div>
                 <div className={styles.div1_3}>
