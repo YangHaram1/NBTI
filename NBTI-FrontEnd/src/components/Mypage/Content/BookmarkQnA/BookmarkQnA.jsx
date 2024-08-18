@@ -102,17 +102,17 @@ export const BookmarkQnA = () => {
             <p>No</p>
           </div>
           <div>
-            <p>제목</p>
+            <p>답변</p>
           </div>
           <div>
-            <p>작성자</p>
+            <p>제목</p>
           </div>
           <div>
             <p>작성일</p>
           </div>
-          <div>
+          {/* <div>
             <p>조회수</p>
-          </div>
+          </div> */}
         </div>
         {boardList.map((item, index) => {
           const date = new Date(item.write_date);
@@ -120,10 +120,15 @@ export const BookmarkQnA = () => {
             ? format(date, "yyyy-MM-dd")
             : "Invalid Date";
 
+          const status = item.reply_count > 0 ? "답변완료" : "진행중";
+
           return (
             <div className={styles.list} key={index}>
               <div className={styles.seq}>
                 <p>{item.seq}</p>
+              </div>
+              <div className={styles.status}>
+                <p>{status}</p>
               </div>
               <div className={styles.title}>
                 <p
@@ -134,15 +139,15 @@ export const BookmarkQnA = () => {
                   {item.title}
                 </p>
               </div>
-              <div className={styles.writer}>
+              {/* <div className={styles.writer}>
                 <p>{item.name}</p>
-              </div>
+              </div> */}
               <div className={styles.writeDate}>
                 <p>{currentDate}</p>
               </div>
-              <div className={styles.viewCount}>
+              {/* <div className={styles.viewCount}>
                 <p>{item.view_count}</p>
-              </div>
+              </div> */}
             </div>
           );
         })}

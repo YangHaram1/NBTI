@@ -22,7 +22,24 @@
   justify-content: flex-end;
   padding: 0 30px;
 }
-.container .searchBox .dropdown > select {
+.container .searchBox > div:nth-child(1) {
+  flex: 1;
+}
+.container .searchBox > div:nth-child(1) > select {
+  height: 30px;
+  width: 100px;
+  border-radius: 3px;
+  border: 1px solid #a4c3b2;
+  cursor: pointer;
+  padding: 3px;
+}
+
+.container .searchBox > div:nth-child(2) {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+.container .searchBox > div:nth-child(2) .dropdown > select {
   height: 30px;
   width: 75px;
   border-radius: 3px;
@@ -31,11 +48,7 @@
   padding: 3px;
 }
 
-.container .searchBox .dropdown > select > option {
-  cursor: pointer;
-}
-
-.container .searchBox > input {
+.container .searchBox > div:nth-child(2) > input {
   width: 170px;
   height: 30px;
   margin-left: 5px;
@@ -44,7 +57,7 @@
   padding-left: 10px;
 }
 
-.container .searchBox > button {
+.container .searchBox > div:nth-child(2) > button {
   height: 30px;
   width: 55px;
   display: flex;
@@ -59,7 +72,7 @@
   transition-duration: 0.4s;
 }
 
-.container .searchBox > button:hover {
+.container .searchBox > div:nth-child(2) > button:hover {
   background-color: #6b9080cc;
 }
 
@@ -92,16 +105,13 @@
   width: 12%;
 }
 .container .body .listTitle > div:nth-child(3) {
-  width: 59%;
+  width: 58%;
 }
 .container .body .listTitle > div:nth-child(4) {
-  width: 18%;
+  width: 17%;
 }
 .container .body .listTitle > div:nth-child(5) {
-  width: 12%;
-}
-.container .body .listTitle > div:nth-child(6) {
-  width: 10%;
+  width: 14%;
 }
 
 .container .body .list {
@@ -115,7 +125,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background-color: #; */
   font-size: 0.8rem;
   padding: 10px 0;
 }
@@ -127,20 +136,17 @@
   width: 12%;
 }
 .container .body .list .title {
-  width: 59%;
+  width: 58%;
   cursor: pointer;
 }
 .container .body .list .title:hover {
   color: #50635b;
 }
 .container .body .list .writer {
-  width: 18%;
+  width: 17%;
 }
 .container .body .list .writeDate {
-  width: 12%;
-}
-.container .body .list .viewCount {
-  width: 10%;
+  width: 14%;
 }
 
 .container .pagination {
