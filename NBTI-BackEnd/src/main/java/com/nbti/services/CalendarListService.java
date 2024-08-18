@@ -33,8 +33,8 @@ public class CalendarListService {
 	}
 	
 	//삭제
-	public void delete (String calendar_name) throws Exception{
-		cldao.delete(calendar_name);
+	public void delete (int calendar_id) throws Exception{
+		cldao.delete(calendar_id);
 	}
 	
 	public int getCalendarID(String calendarName) throws Exception {
@@ -42,11 +42,11 @@ public class CalendarListService {
 		return cldao.getCalendarID(calendarName);
 	}
 	
-	public void deleteMembers(int calendarID) throws Exception {
-		cldao.deleteMembers(calendarID);
+	public void deleteMembers(int calendar_id) throws Exception {
+		cldao.deleteMembers(calendar_id);
 	}
 	
-	public void deleteSchedules(String calendarName) throws Exception {
-		cldao.deleteSchedules(calendarName);
+	public void deleteSchedules(int calendar_id) throws Exception {
+		cldao.deleteSchedules(calendar_id);
 	}
 }

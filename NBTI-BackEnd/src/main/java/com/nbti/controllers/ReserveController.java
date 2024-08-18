@@ -45,6 +45,7 @@ public class ReserveController {
 		List<ReserveDTO> list = rserv.waitingList(memberId);
 		return ResponseEntity.ok(list);
 	}
+	
 	//예약 목록
 	@GetMapping("/reservationList")
 	public ResponseEntity<List<ReserveDTO>> reservationList () throws Exception{
@@ -55,7 +56,15 @@ public class ReserveController {
 		return ResponseEntity.ok(list);
 	}
 	
-
+    //예약 신청 취소
+    @DeleteMapping("/{seq}")
+    public ResponseEntity<Void> delete (@PathVariable int seq) throws Exception{
+    	rserv.delete(seq);
+    	return ResponseEntity.ok().build();
+    }
+    
+    
+    
 	//승인 N -> Y 
 	@PostMapping("/approve")
 	public ResponseEntity<Void> update(@RequestBody Map<String, Integer> request) throws Exception {
@@ -96,7 +105,6 @@ public class ReserveController {
     @GetMapping("/rejectList")
     public ResponseEntity<List<ReserveDTO>> rejectList () throws Exception {
     	List<ReserveDTO> rejectList = rserv.rejectList();
-//    	System.out.println(rejectList.size());
     	return ResponseEntity.ok(rejectList);
     }
     
@@ -117,6 +125,8 @@ public class ReserveController {
     	//System.out.println(rejectList.size());
     	return ResponseEntity.ok(meetingRoomList);
     }
+    
+    
 
     
     
