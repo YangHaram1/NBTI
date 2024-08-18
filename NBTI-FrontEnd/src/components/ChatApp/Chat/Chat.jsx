@@ -66,7 +66,6 @@ const Chat = () => {
   // WebSocket 연결을 설정하는 useEffect
   useEffect(() => {
     //const url = host.replace(/^https?:/, '')
-
     if (loginID != null && loginID !== 'error') {
       ws.current.onclose = () => {
         console.log('Disconnected from WebSocket');
@@ -95,7 +94,7 @@ const Chat = () => {
           let chat = JSON.parse(e.data);
           const { chatSeq } = useCheckList.getState();
           //메세지 온거에 맞게 group_seq 사용해서 멤버 list받기 이건 chatSeq 없이 채팅 꺼저있을떄를 위해서 해놈
-          if (chatSeq === 0)
+          if (chatSeq === 0) {
             axios.get(`${host}/group_member?group_seq=${chat.group_seq}`).then((resp) => {
               setOnmessage();
               if (chat.member_id !== loginID) {
@@ -106,28 +105,36 @@ const Chat = () => {
                 })
               }
             })
-
-          //////
-          if (chat.group_seq === chatSeq) {
+          }
+          else if (chat.group_seq === chatSeq) {
             setChats((prev) => {
-
               return [...prev, chat]
             })
             if ((chatSeq !== 0)) { //이것도 멤버 last_chat_seq 업데이트
               axios.patch(`${host}/group_member?group_seq=${chatSeq}&&last_chat_seq=${chat.seq}`).then((resp) => {
-                setOnmessage();
+                setOnmessage(); //이건 메시지 온거를 state로 관리할라고 해논거
                 setUpdateMember((prev) => {
                   return !prev;
                 });
+                // setChatCheck((prev)=>{//이게 지금 멤버 리스트임
+                //   return(
+                //     prev.map((item,index)=>{ //전체 멤버 리스트에서 내부분 찾아서 마지막 seq 업데이트 하는 로직
+                //       if(item.member_id===loginID){
+                //         return {...item,last_chat_seq:chat.seq};
+                //       }
+                //       return item;
+                //     })
+                //   )
+                // }) 
               })
             }
-
           }
-          console.log("메세지보냄");
         }
       }
 
     }
+
+
     return () => {
     };
 
@@ -217,7 +224,7 @@ const Chat = () => {
 
 
 
-  const handleSearch = (e) => {
+  const handleSearch = (e) => { //여기가 지금 serch component 보이게 하는곳
     const Searchbar = searchRef.current;
     Searchbar.style.display = searchDisplay ? "flex" : "none";
     if (!searchDisplay) {
@@ -226,12 +233,12 @@ const Chat = () => {
     }
     else {
       const container = dragRef.current;
-      if (Searchbar && container) {
+      if (Searchbar && container) { //이건 클릭한 위치에서 동적으로 설정할라고 한건데 여기선 고정값이 더 좋아서 안씀
         const containerRect = container.getBoundingClientRect();
         const x = e.clientX - containerRect.left - 305;
         const y = e.clientY - containerRect.top + 20;
-        Searchbar.style.top = `${y}px`;
-        Searchbar.style.left = `${x}px`;
+        // Searchbar.style.top = `${y}px`;
+        // Searchbar.style.left = `${x}px`;
       }
     }
     setSearchDisplay(!searchDisplay);
@@ -239,7 +246,7 @@ const Chat = () => {
 
 
   const handleSearchData = useCallback((item) => {
-    let result = '';
+    let result = ''; //여긴 검색한 값들 스타일 변경해주는곳
     if (!searchDisplay) {
       if (searchList.length > 0) {
         searchList.forEach((s_item) => {
@@ -374,7 +381,7 @@ const Chat = () => {
   }, [chats, handleSearchData, chatCheck])
 
   useEffect(() => {
-    chatRef.current = []; //이거떄문에 class remove전에 닫으면 오류나는데 이부분 고민할필요가있다 
+    chatRef.current = []; //이거떄문에 class remove전에 닫으면 오류나는데 이부분 고민할필요가있다 초기화는 하긴해야함
     handleChatsData();
   }, [handleChatsData])
 
@@ -394,7 +401,7 @@ const Chat = () => {
 
   useEffect(() => {//group_seq에 맞는 member list 뽑기
     axios.get(`${host}/group_member?group_seq=${chatSeq}`).then((resp) => {
-      console.log(resp.data)
+    // console.log(resp.data);
       setChatCheck(resp.data);
     })
   }, [invite, updateMember, chatNavi]);
