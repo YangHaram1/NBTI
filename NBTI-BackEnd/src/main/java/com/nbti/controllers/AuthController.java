@@ -1,6 +1,7 @@
 package com.nbti.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,14 +42,14 @@ public class AuthController {
 	private User_historyService uServ;
 	
 	   @PostMapping
-	   public ResponseEntity<String> login(@RequestBody MembersDTO dto) throws Exception {
-		   String encryptedPassword = EncryptionUtils.getSHA512(dto.getPw());
-	        dto.setPw(encryptedPassword);
+	   public ResponseEntity<String> login( @RequestBody Map<String, String> maps) throws Exception {
+		   String encryptedPassword = EncryptionUtils.getSHA512(maps.get("pw"));
+		   MembersDTO dto =new MembersDTO();
+	       dto.setPw(encryptedPassword);
+	       dto.setId(maps.get("id"));
 		   
 	      boolean result = mServ.login(dto);   
 	      
-	      System.out.println(dto.getId()+":"+dto.getPw());
-	      System.out.println(result);
 	      if(!result) {
 	         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("login Failed");
 	         // 실패했다고 알려주기위해 우리가 임의로 상태를 알려준다

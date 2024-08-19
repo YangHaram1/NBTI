@@ -6,22 +6,25 @@ import { format } from 'date-fns';
 import ReactPaginate from 'react-paginate';
 const Security = () => {
     const [history, setHistory] = useState([]);
+
     const [cpage, setCpage] = useState(1);
     const [page_total_count, setPage_total_count] = useState();
     const [target, setTarget] = useState('');
     const [keyword, setKeyword] = useState('');
     const [search,setSearch] =useState(false);
-    const record_count_per_page = 25;
+
+    const record_count_per_page = 20;
     const navi_count_per_page = 5;
 
 
     useEffect(() => {
         const start = cpage * record_count_per_page - (record_count_per_page - 1); //1
         const end = cpage * record_count_per_page; //10
+        
         axios.get(`${host}/user_history?start=${start}&&end=${end}&&target=${target}&&keyword=${keyword}`).then((resp) => {
            // console.log(resp.data)
             setHistory((prev) => {
-                const record_total_count = resp.data.count;
+                const record_total_count = resp.data.count;//106 10 // 10
                 if (record_total_count % record_count_per_page === 0) {
                     setPage_total_count(Math.floor(record_total_count / record_count_per_page));
                 }
@@ -37,15 +40,6 @@ const Security = () => {
         setCpage(selectedPage.selected + 1);
     }
 
-    const pageSetting = useCallback(() => {
-
-    }, [history])
-
-    useEffect(() => {
-        if (history.length > 0) {
-            pageSetting();
-        }
-    }, [pageSetting])
 
     const handleSearch=()=>{
         setSearch((prev)=>{
@@ -111,7 +105,7 @@ const Security = () => {
                 }
             </div>
             <ReactPaginate
-                pageCount={page_total_count} // 페이지 수
+                pageCount={page_total_count} // 페이지 총 개수
                 pageRangeDisplayed={navi_count_per_page} // 현재 페이지를 기준으로 표시할 페이지 범위 수
                 marginPagesDisplayed={1} // 양쪽 끝에 표시할 페이지 수
                 onPageChange={handlePage} // 페이지 변경 핸들러
