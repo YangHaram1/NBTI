@@ -43,6 +43,7 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    width: 100%;
 }
 
 .button:hover {
@@ -52,4 +53,25 @@
 .alert {
     color: #e74c3c;
     margin-top: 10px;
+}
+
+.links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.linkButton {
+    background: none;
+    border: none;
+    color: #6B9080;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: underline;
+    padding: 0;
+}
+
+.linkButton:hover {
+    color: #5a7f68;
+    text-decoration: none;
 }

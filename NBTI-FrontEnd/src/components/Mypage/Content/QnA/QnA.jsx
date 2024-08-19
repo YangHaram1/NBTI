@@ -136,10 +136,11 @@ export const QnA = () => {
     return (
         <div className={styles.container}>
             <div className={styles.box}>
+                <div></div>
                 <div>
-                </div>
-                <div>
-                    <p onClick={openPopup}>임시보관 된 게시물 ( {tempBoardList.length} )</p>
+                    <p onClick={openPopup}>
+                        임시보관 된 게시물 ( {tempBoardList.length} )
+                    </p>
                 </div>
             </div>
             <div className={styles.top}>
@@ -168,41 +169,60 @@ export const QnA = () => {
                 </div>
             </div>
             <div className={styles.contents}>
-                <BoardEditor board={board} setBoard={setBoard} contents={board.contents} />
+                <BoardEditor
+                    board={board}
+                    setBoard={setBoard}
+                    contents={board.contents}
+                />
             </div>
 
             {/* 팝업 창 */}
             {isPopupOpen && (
-                <div className={styles.popupOverlay} >
+                <div className={styles.popupOverlay}>
                     <div className={styles.popup}>
                         <h3>임시 저장된 글 목록</h3>
                         <div className={styles.tempSaveList}>
-                            {
-                                tempBoardList.map((item, i) => {
-                                    const date = new Date(item.write_date);
-                                    const currentDate = !isNaN(date)
-                                        ? format(date, "yyyy-MM-dd HH:mm:ss")
-                                        : "Invalid Date";
+                            {tempBoardList.map((item, i) => {
+                                const date = new Date(item.write_date);
+                                const currentDate = !isNaN(date)
+                                    ? format(date, "yyyy-MM-dd HH:mm:ss")
+                                    : "Invalid Date";
 
-                                    const boardCodeValue = item.board_code === 3 ? "문의" : "알 수 없음";
+                                const boardCodeValue =
+                                    item.board_code === 3 ? "문의" : "알 수 없음";
 
-                                    return (
-                                        <div key={i}>
-                                            <div className={styles.tempSaveValue}>{boardCodeValue}</div>
-                                            <div className={styles.tempSaveTitle}>{item.title}</div>
-                                            <div className={styles.tempSaveTime}>{currentDate}</div>
-                                            <div className={styles.tempSaveBtns}>
-                                                <button className={styles.mod} onClick={() => { tempBoardModify(item.seq) }}>수정</button>
-                                                <button className={styles.del} onClick={() => { handleTempSavaDel(item.seq) }}>삭제</button>
-                                            </div>
+                                return (
+                                    <div key={i}>
+                                        <div className={styles.tempSaveValue}>
+                                            {boardCodeValue}
                                         </div>
-                                    )
-                                })
-                            }
+                                        <div className={styles.tempSaveTitle}>{item.title}</div>
+                                        <div className={styles.tempSaveTime}>{currentDate}</div>
+                                        <div className={styles.tempSaveBtns}>
+                                            <button
+                                                className={styles.mod}
+                                                onClick={() => {
+                                                    tempBoardModify(item.seq);
+                                                }}
+                                            >
+                                                수정
+                                            </button>
+                                            <button
+                                                className={styles.del}
+                                                onClick={() => {
+                                                    handleTempSavaDel(item.seq);
+                                                }}
+                                            >
+                                                삭제
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                         <span>
-                            저장된 글은 최대 10개까지 저장되며, 가장 오래된 순서대로
-                            삭제됩니다. <br />
+                            저장된 글은 최대 10개까지 저장 가능합니다.
+                            <br />
                             첨부한 이미지나 파일은 저장되지 않습니다.
                         </span>
                         <button onClick={closePopup}>닫기</button>
@@ -210,5 +230,5 @@ export const QnA = () => {
                 </div>
             )}
         </div>
-    )
+    );
 }

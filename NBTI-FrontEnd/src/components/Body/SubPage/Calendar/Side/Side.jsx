@@ -69,7 +69,7 @@ export const Side = ({ setAddOpen , setCalendarModalOpen, calendarModalOpen}) =>
   // 개인 캘린더만 출력
   const myCalender = ()=>{
     setCalendarSelectList(calendarList.filter((item)=>{
-      console.log("side 개인 캘린더 : " + item.calendar_id);
+      // console.log("side 개인 캘린더 : " + item.calendar_id);
       return item.calendar_id === 1; 
     }))
   }
@@ -77,12 +77,12 @@ export const Side = ({ setAddOpen , setCalendarModalOpen, calendarModalOpen}) =>
   // 공유 캘린더 출력
   const sharedCalendar = (calendar)=>{
     // console.log("side 전체 캘린더: "+ JSON.stringify(calendarList));
-    console.log("calendar_name의 JSON 문자열:", JSON.stringify(calendar));
-    console.log(calendarList);
+    // console.log("calendar_name의 JSON 문자열:", JSON.stringify(calendar));
+    // console.log(calendarList);
 
     setCalendarSelectList(calendarList.filter((item) => {
-      console.log(calendar);
-      console.log(item.calendar_id);
+      // console.log(calendar);
+      // console.log(item.calendar_id);
       return item.calendar_id === calendar;
     }));
   }
@@ -127,7 +127,7 @@ export const Side = ({ setAddOpen , setCalendarModalOpen, calendarModalOpen}) =>
             setPublicList(publicList);
         })
         .catch((error) => {
-            console.error("error :", error);
+            console.error("목록 출력 error :", error);
         });
   };
 
@@ -187,22 +187,22 @@ const handleDeleteSharedCalendar = (calendar_id) => {
       <div className={styles.menus}>
         <ul>
           <li onClick={toggleFreeBoard}>
-            <i className="fa-solid fa-user-large"></i>캘린더
+            <i className="fa-solid fa-user-large"></i>일정
             <ul className={`${styles.submenu} ${FreeBoard ? styles.open : ""}`} onClick={preventPropagation}>
               <li onClick={fullCalendar}>
                 <span><i className="fa-solid fa-circle"></i></span>
-                <span>전체 캘린더</span>
+                <span>전체 일정</span>
               </li>
               <li onClick={myCalender}>
                 <span><i className="fa-solid fa-circle" style={{ color: '#33A150' }}></i></span>
-                <span>내 캘린더</span>
+                <span>내 일정</span>
               </li>
             </ul>
           </li>
         </ul>
         <ul>
           <li onClick={toggleNoticeBoard}>
-            <i className="fa-solid fa-people-group"></i>공유 일정 <i className="fa-solid fa-plus" id={styles.plus} onClick={handleCalendarAddClick}/>
+            <i className="fa-solid fa-people-group"></i>공유 일정<i className="fa-solid fa-plus" id={styles.plus} onClick={handleCalendarAddClick}/>
             <ul className={`${styles.submenu} ${NoticeBoard ? styles.open : ""}`} onClick={preventPropagation}>
               {publicList.map((calendar, index) => ( 
                   <li key={index} onClick={()=>sharedCalendar(calendar.calendar_id)}> 
