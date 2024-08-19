@@ -137,7 +137,7 @@ export const Content = () => {
                                 <select name="reserve_title_code" value={reserveData.reserve_title_code} onChange={handleChange}>
                                     <option value="">선택하세요</option>
                                     <option value="1">회의실</option>
-                                    <option value="2">비품</option>
+                                    <option value="2">노트북</option>
                                     <option value="3">차량</option>
                                 </select>
                             </div>

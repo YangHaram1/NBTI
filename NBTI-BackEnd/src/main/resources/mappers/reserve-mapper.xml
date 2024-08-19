@@ -17,7 +17,7 @@
 		    r.member_id,
 		    CASE 
 		        WHEN r.reserve_title_code = '1' THEN '회의실'
-		        WHEN r.reserve_title_code = '2' THEN '비품'
+		        WHEN r.reserve_title_code = '2' THEN '노트북'
 		        WHEN r.reserve_title_code = '3' THEN '차량'
 		        ELSE '기타' 
 		    END AS reserve_title_code,
@@ -53,7 +53,7 @@
 		    m.name,  
 		    CASE 
 		        WHEN r.reserve_title_code = '1' THEN '회의실'
-		        WHEN r.reserve_title_code = '2' THEN '비품'
+		        WHEN r.reserve_title_code = '2' THEN '노트북'
 		        WHEN r.reserve_title_code = '3' THEN '차량'
 		        ELSE '기타' 
 		    END AS reserve_title_code,
@@ -79,7 +79,7 @@
             m.name,  
             CASE 
                 WHEN r.reserve_title_code = '1' THEN '회의실'
-                WHEN r.reserve_title_code = '2' THEN '비품'
+                WHEN r.reserve_title_code = '2' THEN '노트북'
                 WHEN r.reserve_title_code = '3' THEN '차량'
                 ELSE '기타' 
             END AS reserve_title_code,
@@ -106,7 +106,7 @@
             m.name,  
             CASE 
                 WHEN r.reserve_title_code = '1' THEN '회의실'
-                WHEN r.reserve_title_code = '2' THEN '비품'
+                WHEN r.reserve_title_code = '2' THEN '노트북'
                 WHEN r.reserve_title_code = '3' THEN '차량'
                 ELSE '기타' 
             END AS reserve_title_code,
@@ -132,7 +132,7 @@
 	          m.name,  
 	          CASE 
 	              WHEN r.reserve_title_code = '1' THEN '회의실'
-	              WHEN r.reserve_title_code = '2' THEN '비품'
+	              WHEN r.reserve_title_code = '2' THEN '노트북'
 	              WHEN r.reserve_title_code = '3' THEN '차량'
 	              ELSE '기타' 
 	          END AS reserve_title_code,
@@ -156,7 +156,7 @@
           m.name,  
           CASE 
               WHEN r.reserve_title_code = '1' THEN '회의실'
-              WHEN r.reserve_title_code = '2' THEN '비품'
+              WHEN r.reserve_title_code = '2' THEN '노트북'
               WHEN r.reserve_title_code = '3' THEN '차량'
               ELSE '기타' 
           END AS reserve_title_code,

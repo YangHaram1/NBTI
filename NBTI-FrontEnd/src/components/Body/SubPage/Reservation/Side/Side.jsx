@@ -152,7 +152,7 @@ export const Side = () => {
       </div>
       <div className={styles.mainBtn}>
         <button onClick={()=> {navi('supplies')}} >
-          <p>비품</p>
+          <p>노트북</p>
         </button>
       </div>
       <div className={styles.mainBtn}>
@@ -179,7 +179,7 @@ export const Side = () => {
                                 <select name="reserve_title_code" value={reserveData.reserve_title_code} onChange={handleChange}>
                                     <option value="">선택하세요</option>
                                     <option value="1">회의실</option>
-                                    <option value="2">비품</option>
+                                    <option value="2">노트북</option>
                                     <option value="3">차량</option>
                                 </select>
                             </div>

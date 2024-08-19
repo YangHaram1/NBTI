@@ -37,7 +37,7 @@ export const Supplies = ({modalOpen , setModalOpen})=>{
             <div className={styles.reservationContent}>
                 {/* 사용자 정의 제목 */}
                 <div className={styles.customTitle}>
-                    비품 
+                    노트북 
                 </div>
                 <FullCalendar
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
