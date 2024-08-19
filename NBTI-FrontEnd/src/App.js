@@ -24,6 +24,7 @@ function App() {
   const [unread, setUnread] = useState();
   const draggableRef = useRef(null);
 
+ 
   useEffect(() => {
     setLoginID(sessionStorage.getItem("loginID"));
   }, []); // 의존성 배열에 setMembers 추가
@@ -87,11 +88,11 @@ function App() {
           <Routes>
             <Route path='/*' element={<Body />}/>
           </Routes>
-          <Draggable nodeRef={draggableRef}>
+         {(loginID != null && loginID !== 'error') && <Draggable nodeRef={draggableRef}>
             <div className={styles.chatapp} ref={draggableRef}>
                 {chatApp}
             </div>
-          </Draggable>
+          </Draggable>}
         </div>
         <ToastContainer
           position="top-right"

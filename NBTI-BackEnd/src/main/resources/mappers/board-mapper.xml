@@ -3,221 +3,269 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="Board">	
-	
+<mapper namespace="Board">
+
 	<!-- 목록 출력 -->
 	<select id="selectAll" resultType="com.nbti.dto.BoardDTO">
-	    SELECT * FROM (
-	        SELECT 
-	            board.*, 
-	            m.name,
-	            ROW_NUMBER() OVER (ORDER BY board.seq DESC) AS rown
-	        FROM 
-	            board
-	        JOIN 
-	            members m 
-	        ON 
-	            board.member_id = m.id
-	        <trim prefix="WHERE" prefixOverrides="AND|OR">
-	            <!-- 기본 조건: 게시판 코드 -->
-	            board.board_code = #{board_code}
-	
-	            <!-- 검색 조건: target이 특정 값일 때 -->
-	            <if test="target == 'title'">
-	                AND board.title LIKE '%' || #{keyword} || '%'
-	            </if>
-	            <if test="target == 'contents'">
-	                AND REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
-	            </if>
-	            <if test="target == 'member_id'">
-	                AND board.member_id = #{keyword}
-	            </if>
-	            <if test="target == 'name'">
-	                AND m.name = #{keyword}
-	            </if>
-	
-	            <!-- 검색 조건: target이 빈 문자열일 때 -->
-	            <if test="target == ''">
+		SELECT * FROM (
+		SELECT
+		board.*,
+		m.name,
+		COALESCE(reply_count.reply_count, 0) AS reply_count, -- 댓글 수를 가져옵니다
+		ROW_NUMBER() OVER (ORDER BY board.seq DESC) AS rown
+		FROM
+		board
+		JOIN
+		members m ON board.member_id = m.id
+		LEFT JOIN ( -- reply 테이블과 조인하여 댓글 수를 계산합니다
+		SELECT
+		board_seq,
+		COUNT(*) AS reply_count
+		FROM
+		reply
+		GROUP BY
+		board_seq
+		) reply_count ON board.seq = reply_count.board_seq
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<!-- 기본 조건: 게시판 코드 -->
+			board.board_code = #{board_code}
+
+			<!-- 상태 필터 조건 추가 -->
+			<if test="status == 'ing'">
+				AND COALESCE(reply_count.reply_count, 0) = 0  <!-- 진행중인 경우 -->
+			</if>
+			<if test="status == 'ok'">
+				AND COALESCE(reply_count.reply_count, 0) > 0  <!-- 답변 완료인 경우 -->
+			</if>
+
+			<!-- 검색 조건: target이 특정 값일 때 -->
+			<if test="target == 'title'">
+				AND board.title LIKE '%' || #{keyword} || '%'
+			</if>
+			<if test="target == 'contents'">
+
+				AND REGEXP_REPLACE(
+				REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', ''),
+				'&amp;nbsp;', ''
+				) LIKE '%' || #{keyword} || '%'
+
+			</if>
+			<if test="target == 'member_id'">
+				AND board.member_id = #{keyword}
+			</if>
+			<if test="target == 'name'">
+				AND m.name = #{keyword}
+			</if>
+
+			<!-- 검색 조건: target이 빈 문자열일 때 -->
+			<if test="target == ''">
+	                <![CDATA[
 	                AND (board.title LIKE '%' || #{keyword} || '%'
-	                OR REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
+	                OR REGEXP_REPLACE(board.contents, '<[^>]+>', '') LIKE '%' || #{keyword} || '%'
 	                OR m.name LIKE '%' || #{keyword} || '%'
 	                OR board.member_id = #{keyword})
-	            </if>
-	        </trim>
-	    ) a 
-	    WHERE a.rown BETWEEN #{start} AND #{end}
+	                ]]>
+			</if>
+		</trim>
+		) a
+		WHERE a.rown BETWEEN #{start} AND #{end}
 	</select>
-
-
 
 
 	<!-- 게시글 총 개수 -->
-	<select id="getBoardCount" resultType="int" >
+	<select id="getBoardCount" resultType="int">
 		select count(*) from board
 
-			<!-- 기본 조건: 게시판 코드 -->
-	            where board_code = ${board_code}
-		
-			<!-- 검색 조건: target이 특정 값일 때 -->
-			<if test="target=='title'">
-	      		and title like '%'||#{keyword}||'%'
-	   		</if>
-	   		<if test="target=='contents'">
-	      		and REGEXP_REPLACE(contents,'&lt;[^>]+&gt;', '') like '%'||#{keyword}||'%'
-	   		</if>
-	   		<if test="target=='id'">
-	      		and member_id=#{keyword}
-	   		</if>
-	</select>
-	
-	<!-- 내 글 목록 -->
-	<select id="selectMyList" resultType="com.nbti.dto.BoardDTO">
-	    SELECT a.*
-	    FROM (
-	        SELECT 
-	            board.*, 
-	            members.name AS name, 
-	            ROW_NUMBER() OVER (ORDER BY board.seq DESC) AS rown 
-	        FROM 
-	            board
-	        JOIN 
-	            members 
-	        ON 
-	            board.member_id = members.id
-	        <trim prefix="WHERE" prefixOverrides="AND|OR">
-	            <!-- 기본 조건: 게시판 코드와 작성자 ID -->
-	            board.board_code = #{board_code}
-	            AND board.member_id = #{member_id}
-	            
-	            <!-- 검색 조건: target이 특정 값일 때 -->
-	            <if test="target == 'title'">
-	                AND board.title LIKE '%' || #{keyword} || '%'
-	            </if>
-	            <if test="target == 'contents'">
-	                AND REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
-	            </if>
-	            <if test="target == ''">
-	                AND (board.title LIKE '%' || #{keyword} || '%'
-	                OR REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
-	                OR members.name = #{keyword})
-	            </if>
-	        </trim>
-	    ) a 
-	    WHERE a.rown BETWEEN #{start} AND #{end}
+		<!-- 기본 조건: 게시판 코드 -->
+		where board_code = ${board_code}
+
+		<!-- 검색 조건: target이 특정 값일 때 -->
+		<if test="target=='title'">
+			and title like '%'||#{keyword}||'%'
+		</if>
+		<if test="target=='contents'">
+			and REGEXP_REPLACE(contents,'&lt;[^>]+&gt;', '') like
+			'%'||#{keyword}||'%'
+		</if>
+		<if test="target=='id'">
+			and member_id=#{keyword}
+		</if>
 	</select>
 
-	
-	<!-- 내 글 총 개수 -->	
-	<select id="getMyListCount" resultType="int" >
+	<!-- 내 글 목록 -->
+	<select id="selectMyList" resultType="com.nbti.dto.BoardDTO">
+		SELECT a.*
+		FROM (
+		SELECT
+		board.*,
+		members.name AS name,
+		COALESCE(reply_count.reply_count, 0) AS reply_count, -- 댓글 수를 가져옵니다
+		ROW_NUMBER() OVER (ORDER BY board.seq DESC) AS rown
+		FROM
+		board
+		JOIN
+		members ON board.member_id = members.id
+		LEFT JOIN ( -- reply 테이블과 조인하여 댓글 수를 계산합니다
+		SELECT
+		board_seq,
+		COUNT(*) AS reply_count
+		FROM
+		reply
+		GROUP BY
+		board_seq
+		) reply_count ON board.seq = reply_count.board_seq
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			board.board_code = #{board_code}
+			AND board.member_id = #{member_id}
+
+			<!-- 상태 필터 조건 추가 -->
+			<if test="status == 'ing'">
+				AND COALESCE(reply_count.reply_count, 0) = 0  <!-- 진행중인 경우 -->
+			</if>
+			<if test="status == 'ok'">
+				AND COALESCE(reply_count.reply_count, 0) > 0  <!-- 답변 완료인 경우 -->
+			</if>
+
+			<!-- 검색 조건 -->
+			<if test="target == 'title'">
+				AND board.title LIKE '%' || #{keyword} || '%'
+			</if>
+			<if test="target == 'contents'">
+				AND REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' ||
+				#{keyword} || '%'
+			</if>
+			<if test="target == ''">
+				AND (board.title LIKE '%' || #{keyword} || '%'
+				OR REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' ||
+				#{keyword} || '%'
+				OR members.name = #{keyword})
+			</if>
+		</trim>
+		) a
+		WHERE a.rown BETWEEN #{start} AND #{end}
+	</select>
+
+
+
+
+	<!-- 내 글 총 개수 -->
+	<select id="getMyListCount" resultType="int">
 		SELECT COUNT(*)
-		   FROM board
-		   <trim prefix="WHERE" prefixOverrides="AND|OR">
-		    <!-- 기본 조건: 게시판 코드와 작성자 ID -->
-		    board_code = #{board_code}
-		    AND member_id = #{member_id}
-		    
-		    <!-- 검색 조건: target이 특정 값일 때 -->
-		    <if test="target == 'title'">
-		        AND title LIKE '%' || #{keyword} || '%'
-		    </if>
-		    <if test="target == 'contents'">
-		        AND REGEXP_REPLACE(contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
-		    </if>
-		    <if test="target == 'member_id'">
-		        AND member_id = #{keyword}
-		    </if>
-		    <!-- 검색 조건: target이 빈 문자열일 때 -->
-		    <if test="target == ''">
-		        AND (title LIKE '%' || #{keyword} || '%'
-		        OR REGEXP_REPLACE(contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
-		        OR member_id = #{keyword})
-		    </if>
+		FROM board
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<!-- 기본 조건: 게시판 코드와 작성자 ID -->
+			board_code = #{board_code}
+			AND member_id = #{member_id}
+
+			<!-- 검색 조건: target이 특정 값일 때 -->
+			<if test="target == 'title'">
+				AND title LIKE '%' || #{keyword} || '%'
+			</if>
+			<if test="target == 'contents'">
+				AND REGEXP_REPLACE(contents, '&lt;[^>]+&gt;', '') LIKE '%' ||
+				#{keyword} || '%'
+			</if>
+			<if test="target == 'member_id'">
+				AND member_id = #{keyword}
+			</if>
+			<!-- 검색 조건: target이 빈 문자열일 때 -->
+			<if test="target == ''">
+				AND (title LIKE '%' || #{keyword} || '%'
+				OR REGEXP_REPLACE(contents, '&lt;[^>]+&gt;', '') LIKE '%' ||
+				#{keyword} || '%'
+				OR member_id = #{keyword})
+			</if>
 		</trim>
 	</select>
-	
+
 
 	<!-- 게시글 출력 -->
 	<select id="selectBoard" resultType="com.nbti.dto.BoardDTO">
-	    SELECT 
-	        b.*, 
-	        m.name AS name
-	    FROM 
-	        board b
-	    JOIN 
-	        members m ON b.member_id = m.id
-	    WHERE 
-	        b.seq = ${seq} 
-	    AND 
-	        b.board_code = ${board_code}
+		SELECT
+		b.*,
+		m.name AS name
+		FROM
+		board b
+		JOIN
+		members m ON b.member_id = m.id
+		WHERE
+		b.seq = ${seq}
+		AND
+		b.board_code = ${board_code}
 	</select>
-	
+
 	<!-- 게시글 입력 -->
 	<insert id="insert">
-		insert into board values(board_seq.nextval, #{title}, #{contents}, #{member_id}, sysdate, 0, ${board_code})
+		insert into board values(board_seq.nextval, #{title},
+		#{contents}, #{member_id}, sysdate, 0, ${board_code})
 	</insert>
-	
+
 	<!-- 게시글 삭제 -->
 	<delete id="delete">
 		delete from board where seq = ${seq}
 	</delete>
-	
+
 	<!-- 게시글 수정 -->
 	<update id="modify">
-		update board set title = #{title}, contents = #{contents} where seq = ${seq} and board_code = ${board_code}
+		update board set title = #{title}, contents =
+		#{contents} where seq = ${seq} and board_code = ${board_code}
 	</update>
-	
+
 	<!-- 조회수 증가 -->
-	<update id="updateViewCount"> 
-		update board set view_count = view_count +1 where seq = ${seq} and board_code = ${board_code}
+	<update id="updateViewCount">
+		update board set view_count = view_count +1 where seq = ${seq} and
+		board_code = ${board_code}
 	</update>
-	
-	<!-- 중요(북마크) 게시글 출력 -->	
+
+	<!-- 중요(북마크) 게시글 출력 -->
 	<select id="bookmarkList" resultType="com.nbti.dto.BoardDTO">
-	    SELECT * FROM (
-	        SELECT 
-	            b.*, 
-	            m.name AS name,
-	            ROW_NUMBER() OVER (ORDER BY b.seq DESC) AS rown
-	        FROM 
-	            board b
-	        JOIN 
-	            board_bookmark bm ON b.seq = bm.board_seq
-	        JOIN 
-	            members m ON b.member_id = m.id
-	        WHERE 
-	            bm.member_id = #{member_id} 
-	            AND b.board_code = #{board_code}
-	        <trim prefix="AND" prefixOverrides="AND|OR">
-	            <!-- 검색 조건: target이 특정 값일 때 -->
-	            <if test="target == 'title'">
-	                AND b.title LIKE '%' || #{keyword} || '%'
-	            </if>
-	            <if test="target == 'contents'">
-	                AND REGEXP_REPLACE(b.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
-	            </if>
-	            <if test="target == 'member_id'">
-	                AND b.member_id = #{keyword}
-	            </if>
-	            <if test="target == 'name'">
-	                AND m.name LIKE '%' || #{keyword} || '%'
-	            </if>
-	
-	            <!-- 검색 조건: target이 빈 문자열일 때 -->
-	            <if test="target == ''">
-	                AND (b.title LIKE '%' || #{keyword} || '%'
-	                OR REGEXP_REPLACE(b.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
-	                OR m.name LIKE '%' || #{keyword} || '%'
-	                OR b.member_id = #{keyword})
-	            </if>
-	        </trim>
-	    ) subquery
-	    WHERE subquery.rown BETWEEN #{start} AND #{end}
+		SELECT * FROM (
+		SELECT
+		b.*,
+		m.name AS name,
+		ROW_NUMBER() OVER (ORDER BY b.seq DESC) AS rown
+		FROM
+		board b
+		JOIN
+		board_bookmark bm ON b.seq = bm.board_seq
+		JOIN
+		members m ON b.member_id = m.id
+		WHERE
+		bm.member_id = #{member_id}
+		AND b.board_code = #{board_code}
+		<trim prefix="AND" prefixOverrides="AND|OR">
+			<!-- 검색 조건: target이 특정 값일 때 -->
+			<if test="target == 'title'">
+				AND b.title LIKE '%' || #{keyword} || '%'
+			</if>
+			<if test="target == 'contents'">
+				AND REGEXP_REPLACE(b.contents, '&lt;[^>]+&gt;', '') LIKE '%' ||
+				#{keyword} || '%'
+			</if>
+			<if test="target == 'member_id'">
+				AND b.member_id = #{keyword}
+			</if>
+			<if test="target == 'name'">
+				AND m.name LIKE '%' || #{keyword} || '%'
+			</if>
+
+			<!-- 검색 조건: target이 빈 문자열일 때 -->
+			<if test="target == ''">
+				AND (b.title LIKE '%' || #{keyword} || '%'
+				OR REGEXP_REPLACE(b.contents, '&lt;[^>]+&gt;', '') LIKE '%' ||
+				#{keyword} || '%'
+				OR m.name LIKE '%' || #{keyword} || '%'
+				OR b.member_id = #{keyword})
+			</if>
+		</trim>
+		) subquery
+		WHERE subquery.rown BETWEEN #{start} AND #{end}
 	</select>
 
-	
-	
-	
-	
+
+
+
+
 
 
 	<!-- ========================[ 메 인 ]====================== -->

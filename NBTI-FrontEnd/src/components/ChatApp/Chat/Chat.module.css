@@ -16,8 +16,9 @@
     flex: 1;
     align-items: center;
     font-size: 20px;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'Freesentation-9Black';
     font-weight: bolder;
+    padding-left: 10px;
 }
 
 .header2 {
@@ -207,5 +208,14 @@
     font-family: 'PTNoeulB';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408@1.0/PTNoeulB.woff2') format('woff2');
     font-weight: 800;
+    font-style: normal;
+}
+
+
+
+@font-face {
+    font-family: 'Freesentation-9Black';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2') format('woff2');
+    font-weight: 900;
     font-style: normal;
 }

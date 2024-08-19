@@ -41,11 +41,16 @@ public class CalendarListController {
     	}
     	return ResponseEntity.ok(list);
 	}
+	
+	@GetMapping("/lastCalendarID")
+	public ResponseEntity<Integer> getLastCalendarID () throws Exception{
+		return ResponseEntity.ok(clserv.getLastCalendarID());
+	}
 
     
 	// 공유 캘린더 추가 (사용자와 선택된 멤버들을 캘린더에 추가하는 작업)
 	@PostMapping
-	public ResponseEntity<Void> insert(@RequestBody Map<String, Object> requestBody) throws Exception {
+	public ResponseEntity<Integer> insert(@RequestBody Map<String, Object> requestBody) throws Exception {
 	    String memberId = (String) session.getAttribute("loginID");
 	    String calendarName = (String) requestBody.get("calendar_name");
 	    String calendarType = (String) requestBody.get("calendar_type");
@@ -74,20 +79,22 @@ public class CalendarListController {
 	    	clserv.insertMember(lastCalID,calendarMember); // 해당 멤버를 캘린더에 추가
 	    }
 	    
-	    return ResponseEntity.ok().build();
+	    return ResponseEntity.ok(lastCalID);
 	}
 	
-	@DeleteMapping("/{calendarName}")
-	public ResponseEntity<Void> delete(@PathVariable String calendarName) throws Exception{
+	@DeleteMapping("/{calendar_id}")
+	public ResponseEntity<Void> delete(@PathVariable int calendar_id) throws Exception{
 		System.out.println("delete test!!!");
-		System.out.println("calendar name : " + calendarName);
 		
-		int calendarID = getCalendarID(calendarName);
-		System.out.println("calendar id : " + calendarID);
+//		int calendarID = getCalendarID(calendar_name);
 		
-		clserv.deleteMembers(calendarID);
-		clserv.deleteSchedules(calendarName);
-		clserv.delete(calendarName);
+//		clserv.deleteMembers(Integer.parseInt(calendar_id));
+//		clserv.deleteSchedules(Integer.parseInt(calendar_id));
+//		clserv.delete(Integer.parseInt(calendar_id));
+		
+		clserv.deleteMembers(calendar_id);
+		clserv.deleteSchedules(calendar_id);
+		clserv.delete(calendar_id);
 		
 		return ResponseEntity.ok().build();
 	}

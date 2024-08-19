@@ -1,16 +1,13 @@
 import styles from "./Side.module.css";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Content from "../Content/Content";
 import axios from "axios";
 import { host } from "../../../../../config/config";
-const Side = () => {
-    const [list, setList] = useState([]);
-    const [listDisplay, setListDisplay] = useState([]);
-    const [teamDisplay, setTeamDisplay] = useState([[]]);
-    const [mainDisplay, setMainDisplay] = useState(true);
+import { useMemberStore } from "../../../../../store/store";
+const Side = ({ list, setList, listDisplay, setListDisplay, teamDisplay, setTeamDisplay, mainDisplay, setMainDisplay }) => {
     const [allMember, setAllmember] = useState(true);
-    let top = 100;
+    const { members } = useMemberStore();
+
+    //let top = 100;
     useEffect(() => {
         // 외부 스타일시트를 동적으로 추가
         const link = document.createElement("link");
@@ -118,13 +115,14 @@ const Side = () => {
                         {mainDisplay ? '➖' : '➕'}
                     </div>
                     <div className={styles.nbtiname} onClick={handleAll}>
-                        nbti
+                        NBTI ({members.length})
                     </div>
                 </div>
                 {mainDisplay && (<div className={styles.menus}>
                     {
                         list.map((dItem, dindex) => {
                             const teams = dItem.teams;
+                            const totalMembersTeam = teams.reduce((sum, team) => sum + team.members.length, 0);
                             return (
                                 <div className={styles.menu} key={dindex} >
                                     <div className={styles.dept}>
@@ -132,7 +130,7 @@ const Side = () => {
                                             {listDisplay[dindex] ? '➖' : '➕'}
                                         </div>
                                         <div className={styles.deptname} onClick={() => handleDept(dindex)}>
-                                            {dItem.dept}
+                                            {dItem.dept}  ({totalMembersTeam})
                                         </div>
                                     </div>
                                     {listDisplay[dindex] && (
@@ -147,27 +145,22 @@ const Side = () => {
                                                                 <div className={styles.team} onClick={() => handleTeamDisplay(dindex, tindex)} >
                                                                     {team.name} ({members.length})
                                                                 </div>
-                                                                {teamDisplay[dindex][tindex] && (<div className={allMember ? styles.members : styles.membersTop} style={{ top: allMember ? `${(top++ % 100) * 150 + top}px` : '0px' }}>
-                                                                   {members.length>0 && (<div>
-                                                                       {team.name}
+                                                                {/* {teamDisplay[dindex][tindex] && (<div className={allMember ? styles.members : styles.membersTop} style={{ top: allMember ? `${(top++ % 100) * 150 + top}px` : '0px' }}>
+                                                                    {members.length > 0 && (<div>
+                                                                        {team.name}
                                                                     </div>)}
-                                                                    <div style={{display:"flex"}}>
+                                                                    <div style={{ display: "flex" }}>
                                                                         {
-                                                                            members.map((member, mindex) => {
-
-                                                                                return (
-
-                                                                                    (
-                                                                                        <React.Fragment key={mindex}  >
-                                                                                            <Content member={member} name={team.name}></Content>
-                                                                                        </React.Fragment>
-                                                                                    )
-                                                                                );
-
-                                                                            })
+                                                                            // members.map((member, mindex) => {
+                                                                            //     return (
+                                                                            //         <React.Fragment key={mindex}  >
+                                                                            //             <Content member={member} name={team.name}></Content>
+                                                                            //         </React.Fragment>
+                                                                            //     );
+                                                                            // })
                                                                         }
                                                                     </div>
-                                                                </div>)}
+                                                                </div>)} */}
                                                             </div>
                                                         </React.Fragment>
                                                     );

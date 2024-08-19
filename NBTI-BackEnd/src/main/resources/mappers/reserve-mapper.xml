@@ -45,9 +45,62 @@
         <result property="state" column="state"/>
     </resultMap>
     
+    <!-- 승인 전 목록 출력 -->
+	<select id="approve" parameterType="String" resultMap="reserveResultMap">
+		SELECT 
+		    r.seq,
+		    r.member_id,
+		    m.name,  
+		    CASE 
+		        WHEN r.reserve_title_code = '1' THEN '회의실'
+		        WHEN r.reserve_title_code = '2' THEN '비품'
+		        WHEN r.reserve_title_code = '3' THEN '차량'
+		        ELSE '기타' 
+		    END AS reserve_title_code,
+		    r.purpose,
+		    r.start_time,
+		    r.end_time,
+		    r.state
+		FROM 
+		    reserve r
+		JOIN 
+		    members m ON r.member_id = m.id 
+		WHERE 
+		    r.state = 'Y'AND r.member_id = #{memberId}
+		ORDER BY 
+		    r.start_time DESC
+	</select>
+	
+	<!-- 승인 전 예약 목록 출력 -->
+	<select id="reservationList" resultMap="reserveResultMap">
+        SELECT 
+            r.seq,
+            r.member_id,
+            m.name,  
+            CASE 
+                WHEN r.reserve_title_code = '1' THEN '회의실'
+                WHEN r.reserve_title_code = '2' THEN '비품'
+                WHEN r.reserve_title_code = '3' THEN '차량'
+                ELSE '기타' 
+            END AS reserve_title_code,
+            r.purpose,
+            r.start_time,
+            r.end_time,
+            r.state
+        FROM 
+            reserve r
+        JOIN 
+            members m ON r.member_id = m.id 
+        WHERE 
+            r.state = 'Y' AND r.member_id = #{memberId}
+        ORDER BY 
+            r.start_time
+    </select>
+	
+    <!-- 관리자 -->
 	<!-- 승인 관리 -> 대기 목록 출력 -->
     <select id="waitList" resultMap="reserveResultMap">
-        SELECT 
+                    SELECT 
             r.seq,
             r.member_id,
             m.name,  
@@ -202,8 +255,8 @@
 	</select>
 	
 	<!-- 예약 취소 -->
-<!-- 	<delete id="delete">
+ 	<delete id="delete">
 		delete from reserve where seq = #{seq}
-	</delete> -->
+	</delete> 
 	
 </mapper>

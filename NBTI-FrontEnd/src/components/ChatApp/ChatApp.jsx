@@ -36,6 +36,23 @@ const ChatApp = ({websocketRef,draggableRef}) => {
       if(dragRef.current)
         dragRef.current.style.display='none';
     }
+
+    const handleEscKey = (event) => {
+      if (event.key === 'Escape') {
+        // Esc 키가 눌렸을 때 실행될 코드
+        setChatNavi('');
+      }
+    };
+  
+    useEffect(() => {
+      // 컴포넌트가 마운트될 때 이벤트 리스너를 추가합니다.
+      document.addEventListener('keydown', handleEscKey);
+  
+      // 컴포넌트가 언마운트될 때 이벤트 리스너를 제거합니다.
+      return () => {
+        document.removeEventListener('keydown', handleEscKey);
+      };
+    }, []);
     return (
       
 

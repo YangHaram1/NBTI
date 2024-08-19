@@ -31,6 +31,15 @@ public class ReserveDAO {
 	public List<ReserveDTO> waitList () throws Exception{
 		return mybatis.selectList("Reserve.waitList");
 	}
+	public List<ReserveDTO> reservationList (String memberId) throws Exception{
+		return mybatis.selectList("Reserve.reservationList",memberId);
+	}
+	
+    //예약 신청 취소
+    public void delete(int seq) throws Exception{
+    	mybatis.delete("Reserve.delete",seq);
+    }
+    
 	
 	// 승인
     public void update(int reservationSeq, String state) throws Exception {
@@ -60,25 +69,21 @@ public class ReserveDAO {
     	return mybatis.selectList("Reserve.rejectList");
     }
     
-    //캘린더 car
+    // 캘린더 차량 
     public List<ReserveDTO> carList () throws Exception {
     	return mybatis.selectList("Reserve.carList");
     }
 
-    //캘린더 suppliesList
+    // 캘린더 비품 
     public List<ReserveDTO> suppliesList () throws Exception {
     	return mybatis.selectList("Reserve.suppliesList");
     }
     
-    //캘린더 meetingRoomList
+    // 캘린더 회의실
     public List<ReserveDTO> meetingRoomList () throws Exception {
     	return mybatis.selectList("Reserve.meetingRoomList");
     }
-    
-    //예약 취소
-//    public void delete(int seq) throws Exception{
-//    	mybatis.delete("Reserve.delete",seq);
-//    }
+   
 
 
 

@@ -10,8 +10,7 @@ const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch, cha
     const {chatSeq} =useCheckList();
 
     useEffect(() => {
-        // console.log("셋팅")
-        setCount(chatRef.current.length);
+        setCount(chatRef.current.length); //이건 지금 검색한 ref 갯수 셋팅 
     }, [chatRef.current])
 
     const handleSearchDate = (e) => {
@@ -33,7 +32,7 @@ const Search = ({ search, setSearch, searchRef, setSearchList, handleSearch, cha
 
     const handleUp = () => {
         if (divRef.current) {
-            setCount((prev) => {
+            setCount((prev) => { //검색한 목록에 애니메이션 기능 추가하기
                 if (prev-1>=0) {
                     const temp = prev - 1;
                     chatRef.current[temp].scrollIntoView({ behavior: 'smooth', block: 'center' });

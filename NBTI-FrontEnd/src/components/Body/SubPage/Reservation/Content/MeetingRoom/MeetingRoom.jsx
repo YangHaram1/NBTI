@@ -14,7 +14,7 @@ export const MeetingRoom = ({modalOpen , setModalOpen}) => {
     const [events, setEvents] = useState([]); // 이벤트 상태
 
     useEffect(() => {
-        axios.get(`${host}/reserve/meetingRoom`)
+        axios.get(`${host}/reserve/meetingRoomList`)
             .then((resp) => {
                 console.log("목록출력" + JSON.stringify(resp.data));
                 const list = resp.data.map(e => {
@@ -45,6 +45,7 @@ export const MeetingRoom = ({modalOpen , setModalOpen}) => {
                     initialView="timeGridDay"
                     locales={[koLocale]} // 한국어 로케일 설정
                     locale="ko"
+                    height="auto"
                     headerToolbar={{
                         left: 'title',
                         center: '',

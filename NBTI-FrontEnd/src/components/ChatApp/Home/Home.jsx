@@ -1,23 +1,42 @@
 import styles from './Home.module.css';
-import { useState, useContext, React } from 'react';
+import { useState, useContext, React, useEffect } from 'react';
 import Members from './Members/Members';
 import Chats from './Chats/Chats';
 import Files from './Files/Files';
 import avatar from '../../../images/user.jpg';
 import axios from 'axios';
-import { useAuthStore } from '../../../store/store';
+import { useAuthStore,useMemberStore } from '../../../store/store';
 import { ChatsContext } from './../../../Context/ChatsContext';
 import Setting from './Setting/Setting';
+import { host } from '../../../config/config';
 axios.defaults.withCredentials = true;
 
 const Home = () => {
 
-    //이미지는 <a href="/kr">Freeimages.com</a>에서 가져왔습니다.
-    const [color, setColor] = useState({ member: false, chat: false, file: false });
+    const [color, setColor] = useState({ member: false, chat: true, file: false });
     const [name, setName] = useState();
     const { loginID, setLoginID } = useAuthStore();
+    const { members } = useMemberStore();
     const { setChatNavi, chatNaviBody, setChatNaviBody, chatNavi } = useContext(ChatsContext);
     const [settiing, setSetting] = useState(false);
+    const [user,setUser] =useState([{}]);
+
+    useEffect(()=>{
+        if(loginID!=null && loginID !=='error'){
+            setUser(()=>{
+                return (
+                    members.filter((item,index)=>{
+                        if(item.id===loginID){
+                            return true;
+                        }
+                        return false;
+                    })
+                );  
+            })
+        }
+
+    },[loginID])
+  
     const handleMemberList = (e) => {
         setColor((prev) => {
             return { member: true, chat: false, file: false };
@@ -53,19 +72,19 @@ const Home = () => {
         <div className={styles.container}>
             <div className={styles.div1}>
                 <div className={styles.div1_1}>
-                    <img src={avatar} alt='' className={styles.avatar}></img>
+                    <img src={(user[0].member_img === null) ? `${avatar}` : `${host}/images/avatar/${user[0].id}/${user[0].member_img}`} alt='' className={styles.avatar}></img>
                 </div>
                 <div className={styles.div1_2}>
-                    <div className={styles.name}>
-                        {loginID}
+                    <div className={styles.id}>
+                        {user[0].id}
                     </div>
-                    <div className={styles.status}>
-                        온라인
+                    <div className={styles.name}>
+                        {user[0].name}
                     </div>
                 </div>
                 <div className={styles.div1_3}>
                     {settiing && (<Setting setSetting={setSetting} />)}
-                    <button className={styles.button} onClick={handleSetting}><i className="fa-solid fa-gear fa-lg"></i></button>
+                    {/* <button className={styles.button} onClick={handleSetting}><i className="fa-solid fa-gear fa-lg"></i></button> */}
                     <button className={styles.button} onClick={handleCancel}>❌</button>
                 </div>
             </div>

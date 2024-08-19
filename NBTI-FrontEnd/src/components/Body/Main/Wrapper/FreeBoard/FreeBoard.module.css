@@ -167,6 +167,8 @@
 
 .replyOutputWrap .replyOutput > div .replyContent {
   font-size: 13px;
+  max-height: 100px;
+  overflow-y: scroll;
 }
 
 .replyOutputWrap .replyOutput .likes {

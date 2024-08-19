@@ -39,6 +39,7 @@ public class CalendarController {
         System.out.println(dto.getContents());
         System.out.println(dto.getSeq());
         System.out.println(dto.getCalendar_name());
+        System.out.println(dto.getCalendar_id());
         return ResponseEntity.ok().build();
     }
 

@@ -16,7 +16,7 @@
     gap: 15px;
 }
 .room:hover{
-    background-color: rgb(230, 210, 210);
+    background-color: rgba(10, 252, 18, 0.162);
 }
 
 .avatar{
@@ -25,8 +25,9 @@
 }
 
 .message{
+   
     flex: 3;
-    
+  
 }
 .name{
     font-family: 'Freesentation-9Black';
@@ -34,16 +35,24 @@
     gap: 30px;
     font-size: 18px;
 }
+
 .size{
     font-size: 13px;
     color: gray;
+    flex: 1; 
+}
+
+.bookmark{
+    color: dodgerblue;
+    flex: 1;
 }
 
 
 .content{
     color: gray;
-    font-size: 14px;
+    font-size: 12px;
     flex: 1;
+    font-family: 'ONE-Mobile-POP';
 }
 .write_date{
     color: gray;
@@ -53,12 +62,12 @@
 
 .alarm{
     display: flex;
-    justify-content: center;
-    align-items: flex-end;
+    color: red;
 }
+
 .line{
     width: 350px;
-    border: 2px solid gray;
+    border: 1px solid rgba(30, 143, 255, 0.31);
 }
 
 .unread{
@@ -94,5 +103,11 @@
     font-family: 'Freesentation-9Black';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2') format('woff2');
     font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ONE-Mobile-POP';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-POP.woff') format('woff');
     font-style: normal;
 }

@@ -139,7 +139,7 @@ const Chats = () => {
                                 </div>
                                 <div className={styles.message}>
                                     <div className={styles.name}>
-                                        <div>
+                                        <div style={{flex:3}}>
                                             {item.name}
                                         </div>
                                         <div className={styles.bookmark}>
@@ -159,7 +159,7 @@ const Chats = () => {
                                     </div>
 
                                 </div>
-                                <div>
+                                <div style={{display:"flex",gap:"10px",paddingRight:"10px"}}>
                                     <div className={styles.write_date}>
                                         {formattedTimestamp}
                                     </div>

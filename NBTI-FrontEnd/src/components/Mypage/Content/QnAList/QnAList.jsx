@@ -15,6 +15,7 @@ export const QnAList = () => {
   const [target, setTarget] = useState(""); // target 초기 값을 빈 문자열로 설정
   const [keyword, setKeyword] = useState(""); // keyword 초기 값
   const [search, setSearch] = useState(false);
+  const [statusFilter, setStatusFilter] = useState(""); // 상태 필터를 위한 변수 추가
 
   // 페이지네이션
   const navi_count_per_page = 5;
@@ -34,6 +35,7 @@ export const QnAList = () => {
       keyword: keyword,
       start: start,
       end: end,
+      status: statusFilter
     };
 
     axios.get(`${host}/board/myList`, { params }).then((resp) => {
@@ -49,7 +51,7 @@ export const QnAList = () => {
         );
       }
     });
-  }, [search, cpage]);
+  }, [search, cpage, statusFilter]);
 
   // 페이지네이션
   const handlePageClick = (data) => {
@@ -77,20 +79,29 @@ export const QnAList = () => {
     <div className={styles.container}>
       <h1>나의 문의 내역</h1>
       <div className={styles.searchBox}>
-        <div className={styles.dropdown}>
-          <select value={target} onChange={(e) => setTarget(e.target.value)}>
+        <div>
+          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
             <option value="">전체</option>
-            <option value="title">제목</option>
-            <option value="contents">내용</option>
+            <option value="ing">진행중</option>
+            <option value="ok">답변완료</option>
           </select>
         </div>
-        <input
-          type="text"
-          placeholder="검색"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-        />
-        <button onClick={handleSearch}>검색</button>
+        <div>
+          <div className={styles.dropdown}>
+            <select value={target} onChange={(e) => setTarget(e.target.value)}>
+              <option value="">전체</option>
+              <option value="title">제목</option>
+              <option value="contents">내용</option>
+            </select>
+          </div>
+          <input
+            type="text"
+            placeholder="검색"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+          />
+          <button onClick={handleSearch}>검색</button>
+        </div>
       </div>
       <div className={styles.body}>
         <div className={styles.listTitle}>
@@ -106,9 +117,9 @@ export const QnAList = () => {
           <div>
             <p>작성일</p>
           </div>
-          <div>
+          {/* <div>
             <p>조회수</p>
-          </div>
+          </div> */}
         </div>
         {boardList.map((item, index) => {
           const date = new Date(item.write_date);
@@ -138,9 +149,9 @@ export const QnAList = () => {
               <div className={styles.writeDate}>
                 <p>{currentDate}</p>
               </div>
-              <div className={styles.viewCount}>
+              {/* <div className={styles.viewCount}>
                 <p>{item.view_count}</p>
-              </div>
+              </div> */}
             </div>
           );
         })}
