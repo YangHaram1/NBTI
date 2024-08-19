@@ -172,3 +172,8 @@ body::-webkit-scrollbar-thumb:hover {
 }
 /* ================= */
 .dayGridWeek .fc-col-header {font-size: 12px;}
+
+/*하람 */
+.selected-date {
+  background-color: #ffeb3b !important; /* 원하는 배경색으로 변경 */
+}

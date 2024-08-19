@@ -19,6 +19,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import notice from '../../../images/notice.png';
 import Swal from 'sweetalert2';
 import SweetAlert from '../../../function/SweetAlert.js';
+import Calendar from './Calendar/Calendar';
+
 axios.defaults.withCredentials = true;
 const Chat = () => {
   const editorRef = useRef(null);
@@ -40,13 +42,15 @@ const Chat = () => {
   const [updateMember, setUpdateMember] = useState(false);
   const [checkInvite, setCheckInvite] = useState(false);
   const [RoomName, setRoomName] = useState('');
+  const [calendar, setCalendar] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null); //이거 날짜
 
 
   useEffect(() => { //group_chat 속성 가저오기 나와의채팅인지 아닌지 
     const { chatSeq } = useCheckList.getState();
     if (chatSeq !== 0) {
       axios.get(`${host}/group_chat/invite?group_seq=${chatSeq}`).then((resp) => {
-      //  console.log(resp.data);
+        //  console.log(resp.data);
         if (resp.data === 'Y') {
           setCheckInvite(true)
         }
@@ -80,11 +84,11 @@ const Chat = () => {
 
       ws.current.onmessage = (e) => {
         if (e.data === 'chatController') {
-         // console.log("delete");
+          // console.log("delete");
           setChatController();
         }
         else if (e.data === "updateMember") {
-         // console.log(e.data);
+          // console.log(e.data);
           setUpdateMember((prev) => {
             return !prev;
           });
@@ -146,7 +150,7 @@ const Chat = () => {
       if (chatSeq !== 0) {
         axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {//채팅목록 가저오기
           setChats(resp.data);
-         // console.log("채팅목록가저오기");
+          // console.log("채팅목록가저오기");
           if (resp.data.length > 0) //멤버 last_chat_seq 업데이트
             axios.patch(`${host}/group_member?group_seq=${chatSeq}&&last_chat_seq=${resp.data[resp.data.length - 1].seq}`).then((resp) => {
               ws.current.send("updateMember");
@@ -222,6 +226,10 @@ const Chat = () => {
     }
   }
 
+  const handleCalendar = () => {
+    setCalendar((prev) => { return !prev });
+  }
+
 
 
   const handleSearch = (e) => { //여기가 지금 serch component 보이게 하는곳
@@ -244,6 +252,24 @@ const Chat = () => {
     setSearchDisplay(!searchDisplay);
   }
 
+  useEffect(() => {
+    if (selectedDate != null) {
+      console.log(selectedDate)
+      // 특정 클래스명을 가진 요소들 모두 가져오기
+      const elements = document.getElementsByClassName(styles.dateSeparator);
+      // 요소들에 대해 작업 수행
+      Array.from(elements).forEach(e => {
+       
+        console.log(e.innerHTML); // 요소 확인
+        // 여기서 원하는 작업을 수행할 수 있습니다.
+        if(e.innerHTML===selectedDate){
+          e.scrollIntoView({ behavior: 'smooth', block: 'center' });
+         
+        }
+      });
+    }
+  }, [selectedDate])
+
 
   const handleSearchData = useCallback((item) => {
     let result = ''; //여긴 검색한 값들 스타일 변경해주는곳
@@ -253,6 +279,7 @@ const Chat = () => {
           if (item.seq === s_item.seq) {
             const temp = item.message.replace(search, `<span style="background-color: red !important;">${search}</span>`);
             result = temp;
+
 
           }
         })
@@ -401,7 +428,7 @@ const Chat = () => {
 
   useEffect(() => {//group_seq에 맞는 member list 뽑기
     axios.get(`${host}/group_member?group_seq=${chatSeq}`).then((resp) => {
-    // console.log(resp.data);
+      // console.log(resp.data);
       setChatCheck(resp.data);
     })
   }, [invite, updateMember, chatNavi]);
@@ -419,6 +446,7 @@ const Chat = () => {
               {RoomName}
             </div>
             <div className={styles.header2}>
+              <button onClick={handleCalendar}>📅</button>
               <button onClick={handleInvite}>➕</button>
               <button onClick={handleSearch}>🔍 </button>
               <button onClick={handleCancel}>❌</button>
@@ -436,6 +464,7 @@ const Chat = () => {
         <Search search={search} setSearch={setSearch} searchRef={searchRef} setSearchList={setSearchList} handleSearch={handleSearch} chatRef={chatRef} divRef={divRef}></Search>
         <Emoticon sidebarRef={sidebarRef} editorRef={editorRef} />
         {invite && (<Invite setInvite={setInvite} chatCheck={chatCheck}></Invite>)}
+        {calendar && (<Calendar setSelectedDate={setSelectedDate} />)}
       </React.Fragment>
     );
   }
