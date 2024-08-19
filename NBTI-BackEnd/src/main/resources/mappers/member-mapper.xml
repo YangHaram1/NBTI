@@ -38,7 +38,11 @@
 	</update>
 
 	<select id="selectAll" resultType="com.nbti.dto.MembersDTO">
-		select * from members
+		select m.id,m.name,m.gender,m.birth,t.team_name as team_code,
+		j.job_name as job_code
+		from members m
+		LEFT JOIN job j ON m.job_code = j.job_code
+		LEFT JOIN teams t ON m.team_code = t.team_code
 	</select>
 	<update id="updateMember">
 		update members set email=#{email},

@@ -14,11 +14,22 @@
     z-index: 9999;
     flex-direction: column;
     gap: 25px;
+    font-size: 11px;
 }
+.search{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.search div:nth-child(2){
+    flex: 6;
+    display: flex;
+}
+
 .container input{
     border-radius: 20px;
+    width: 100%;
     background-color: rgb(203, 201, 201);
-    width: 90%;
     font-family: 'Freesentation-9Black';
 }
 .list{

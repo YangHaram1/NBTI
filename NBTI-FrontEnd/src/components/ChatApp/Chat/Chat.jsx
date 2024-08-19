@@ -46,7 +46,7 @@ const Chat = () => {
     const { chatSeq } = useCheckList.getState();
     if (chatSeq !== 0) {
       axios.get(`${host}/group_chat/invite?group_seq=${chatSeq}`).then((resp) => {
-        console.log(resp.data);
+      //  console.log(resp.data);
         if (resp.data === 'Y') {
           setCheckInvite(true)
         }
@@ -80,11 +80,11 @@ const Chat = () => {
 
       ws.current.onmessage = (e) => {
         if (e.data === 'chatController') {
-          console.log("delete");
+         // console.log("delete");
           setChatController();
         }
         else if (e.data === "updateMember") {
-          console.log(e.data);
+         // console.log(e.data);
           setUpdateMember((prev) => {
             return !prev;
           });
@@ -146,7 +146,7 @@ const Chat = () => {
       if (chatSeq !== 0) {
         axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {//채팅목록 가저오기
           setChats(resp.data);
-          console.log("채팅목록가저오기");
+         // console.log("채팅목록가저오기");
           if (resp.data.length > 0) //멤버 last_chat_seq 업데이트
             axios.patch(`${host}/group_member?group_seq=${chatSeq}&&last_chat_seq=${resp.data[resp.data.length - 1].seq}`).then((resp) => {
               ws.current.send("updateMember");
