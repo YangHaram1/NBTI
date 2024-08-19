@@ -32,7 +32,7 @@ export const Reject = () => {
 
             axios.get(`${host}/reserve/rejectList?start=${start}&&end=${end}`)
             .then((resp)=>{
-
+                console.log(JSON.stringify(resp))
                 const record_total_count = resp.data.count;
                 if (record_total_count % record_count_per_page === 0) {
                     setPage_total_count(Math.floor(record_total_count / record_count_per_page));
@@ -56,8 +56,8 @@ export const Reject = () => {
                         <tr>
                             <th>요청자</th>
                             <th>카테고리</th>
-                            <th>자원</th>
                             <th>사용용도</th>
+                            <th>예약 시간</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,8 +66,8 @@ export const Reject = () => {
                                 <tr key={reject.seq}>
                                     <td>{reject.member_id}</td>
                                     <td>{reject.reserve_title_code}</td>
-                                    <td>{reject.reserve_title_code}</td>
                                     <td>{reject.purpose}</td>
+                                    <td>{`${new Date(reject.start_time).toLocaleString()} ~ ${new Date(reject.end_time).toLocaleString()}`}</td>
                                 </tr>
                             ))
                         ) : (
