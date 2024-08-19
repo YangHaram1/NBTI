@@ -35,7 +35,7 @@ export const QnAList = () => {
       keyword: keyword,
       start: start,
       end: end,
-      status: statusFilter
+      status: statusFilter,
     };
 
     axios.get(`${host}/board/myList`, { params }).then((resp) => {
@@ -43,6 +43,7 @@ export const QnAList = () => {
 
       // 페이지네이션
       const recordTotalCount = resp.data.count;
+      console.log("카운트 : ", resp.data.count);
       if (recordTotalCount % recordCountPerPage === 0) {
         setPageTotalCount(Math.floor(recordTotalCount / recordCountPerPage));
       } else {
@@ -80,7 +81,10 @@ export const QnAList = () => {
       <h1>나의 문의 내역</h1>
       <div className={styles.searchBox}>
         <div>
-          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
             <option value="">전체</option>
             <option value="ing">진행중</option>
             <option value="ok">답변완료</option>
