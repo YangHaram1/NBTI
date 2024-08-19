@@ -106,6 +106,49 @@ public class MembersService {
 		return mdao.selectPeriod(id);
 	}
 
+	   public Map<String, Integer> applyForVacation(String memberId, int days) {
+	        // 현재 남은 휴가 일수 가져오기
+	        int remainingVacation = mdao.selectPeriod(memberId);
+	        System.out.println("applyForVacation 호출됨");  // 호출 여부 확인
+	        // 남은 휴가 일수가 부족한지 확인
+	        if (remainingVacation < days) {
+	            throw new IllegalArgumentException("남은 휴가 일수가 부족합니다.");
+	        }
+
+	        // 휴가 신청으로 인한 남은 휴가 일수 업데이트
+	        Map<String, Object> params = new HashMap<>();
+	        params.put("id", memberId);
+	        params.put("days", days);
+	        mdao.updateVacationPeriod(params);
+
+	        // 업데이트 후의 남은 휴가 일수 계산
+	        remainingVacation -= days;
+
+	        // 결과 반환
+	        Map<String, Integer> vacationInfo = new HashMap<>();
+	        vacationInfo.put("total", 15); // 총 휴가 일수 (고정값)
+	        vacationInfo.put("used", 15 - remainingVacation); // 사용한 휴가 일수
+	        vacationInfo.put("remaining", remainingVacation); // 남은 휴가 일수
+
+	        return vacationInfo;
+	    }
+
+	    public String findIdByEmailAndName(String email, String name) {
+	        return mdao.findIdByEmailAndName(email, name);
+	    }
+
+	    public String findPwByIdNameAndBirth(String id, String name, String birth) {
+	        return mdao.findPwByIdNameAndBirth(id, name, birth);
+	    }
+	    public boolean verifyUser(String id, String name, String birth) {
+	        Map<String, String> params = new HashMap<>();
+	        params.put("id", id);
+	        params.put("name", name);
+	        params.put("birth", birth);
+
+	        return mdao.verifyUser(params);
+	    }
+	      
 	
 	
 

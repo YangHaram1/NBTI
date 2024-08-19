@@ -164,5 +164,24 @@
 		select name from members where id= #{id}
 	</select>
 
+    <update id="updateVacationPeriod" parameterType="map">
+    UPDATE members 
+    SET vacation_period = vacation_period - #{days, jdbcType=INTEGER}
+    WHERE id = #{id, jdbcType=VARCHAR}
+    </update>
+    <select id="findIdByEmailAndName" resultType="String">
+        SELECT id FROM members WHERE email = #{email} AND name = #{name}
+    </select>
+
+    <select id="findPwByIdNameAndBirth" resultType="String">
+        SELECT pw FROM members WHERE id = #{id} AND name = #{name} AND birth = #{birth}
+    </select>
+        <select id="verifyUser" resultType="int">
+        SELECT COUNT(*)
+        FROM members
+        WHERE id = #{id}
+          AND name = #{name}
+          AND birth = #{birth}
+    </select>
 </mapper>
 
