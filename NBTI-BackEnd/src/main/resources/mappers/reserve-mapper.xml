@@ -126,54 +126,50 @@
 
 	<!-- 승인 관리 -> 승인 목록 출력 -->
 	<select id="approveList" parameterType="String" resultMap="reserveResultMap">
-		SELECT 
-		    r.seq,
-		    r.member_id,
-		    m.name,  
-		    CASE 
-		        WHEN r.reserve_title_code = '1' THEN '회의실'
-		        WHEN r.reserve_title_code = '2' THEN '비품'
-		        WHEN r.reserve_title_code = '3' THEN '차량'
-		        ELSE '기타' 
-		    END AS reserve_title_code,
-		    r.purpose,
-		    r.start_time,
-		    r.end_time,
-		    r.state
-		FROM 
-		    reserve r
-		JOIN 
-		    members m ON r.member_id = m.id 
-		WHERE 
-		    r.state = 'Y'
-		ORDER BY 
-		    r.start_time DESC
+	   SELECT 
+	          r.seq,
+	          r.member_id,
+	          m.name,  
+	          CASE 
+	              WHEN r.reserve_title_code = '1' THEN '회의실'
+	              WHEN r.reserve_title_code = '2' THEN '비품'
+	              WHEN r.reserve_title_code = '3' THEN '차량'
+	              ELSE '기타' 
+	          END AS reserve_title_code,
+	          r.purpose,
+	          r.start_time,
+	          r.end_time,
+	          r.state,
+	          r.rown
+	      FROM( 
+	      select reserve.*,ROW_NUMBER() OVER (ORDER BY start_time DESC) AS rown from
+	          reserve where state = 'Y' )r
+	      JOIN 
+	          members m ON r.member_id = m.id WHERE r.rown between ${start} AND ${end}
 	</select>
 
 	<!-- 승인 관리 -> 반려 목록 출력 -->
 	<select id="rejectList" resultMap="reserveResultMap">
-		SELECT 
-		    r.seq,
-		    r.member_id,
-		    m.name,  
-		    CASE 
-		        WHEN r.reserve_title_code = '1' THEN '회의실'
-		        WHEN r.reserve_title_code = '2' THEN '비품'
-		        WHEN r.reserve_title_code = '3' THEN '차량'
-		        ELSE '기타' 
-		    END AS reserve_title_code,
-		    r.purpose,
-		    r.start_time,
-		    r.end_time,
-		    r.state
-		FROM 
-		    reserve r
-		JOIN 
-		    members m ON r.member_id = m.id 
-		WHERE 
-		    r.state = 'R'
-		ORDER BY 
-		    r.start_time DESC
+     SELECT 
+          r.seq,
+          r.member_id,
+          m.name,  
+          CASE 
+              WHEN r.reserve_title_code = '1' THEN '회의실'
+              WHEN r.reserve_title_code = '2' THEN '비품'
+              WHEN r.reserve_title_code = '3' THEN '차량'
+              ELSE '기타' 
+          END AS reserve_title_code,
+          r.purpose,
+          r.start_time,
+          r.end_time,
+          r.state,
+          r.rown
+      FROM( 
+      select reserve.*,ROW_NUMBER() OVER (ORDER BY start_time DESC) AS rown from
+          reserve where state = 'R' )r
+      JOIN 
+          members m ON r.member_id = m.id WHERE r.rown between ${start} AND ${end}
 	</select>
 	
 	<!-- 승인 Y 업데이트 -->
@@ -258,5 +254,20 @@
  	<delete id="delete">
 		delete from reserve where seq = #{seq}
 	</delete> 
+	
+	
+	<!-- 승인 총 개수 -->
+	<select id="count" resultType="int">
+        SELECT count(*) FROM reserve r
+        JOIN members m ON r.member_id = m.id 
+        where  r.state = 'Y'
+	</select>
+	
+	<!-- 반려 총 개수 -->
+	<select id="countR" resultType="int">
+        SELECT count(*) FROM reserve r
+        JOIN members m ON r.member_id = m.id 
+        where  r.state = 'R'
+	</select>
 	
 </mapper>

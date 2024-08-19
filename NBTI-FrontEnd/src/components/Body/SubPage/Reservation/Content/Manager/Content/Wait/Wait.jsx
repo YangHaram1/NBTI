@@ -59,11 +59,6 @@ export const Wait = () => {
                 console.error('Error', error);
             });
     }
-
-    
-    
-    
-    
     
 
     return(
@@ -101,6 +96,7 @@ export const Wait = () => {
                         )}
                     </tbody>
             </table>
+
             <p className={styles.num}>총 {wait.length}개</p>
         </div>
     )
