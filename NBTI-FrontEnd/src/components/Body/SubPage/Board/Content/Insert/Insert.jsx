@@ -291,8 +291,8 @@ export const Insert = () => {
               })}
             </div>
             <span>
-              저장된 글은 최대 10개까지 저장되며, 가장 오래된 순서대로
-              삭제됩니다. <br />
+              저장된 글은 최대 10개까지 저장 가능합니다.
+              <br />
               첨부한 이미지나 파일은 저장되지 않습니다.
             </span>
             <button onClick={closePopup}>닫기</button>

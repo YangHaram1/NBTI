@@ -54,7 +54,7 @@ public class TempBoardController {
 	    map.put("board_code", board_code); 
 
 	    List<TempBoardDTO> list = tserv.selectAll(map);
-
+	    
 	    return ResponseEntity.ok(list);
 	}
 	

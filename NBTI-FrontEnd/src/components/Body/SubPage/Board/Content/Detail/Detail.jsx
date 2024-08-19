@@ -33,11 +33,10 @@ export const Detail = () => {
   const inputRef = useRef(null);
 
   const [currentUser, setCurrentUser] = useState(null); // 로그인된 사용자 정보 상태
+  const [isAdmin, setIsAdmin] = useState(false); // 권한 여부 상태
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   const [isLiked, setIsLiked] = useState({}); // 좋아요 상태를 객체로 저장
-  const [likesCount, setLikesCount] = useState({}); // 댓글별 좋아요 개수
-  // const [like, setLike] = useState([0, 0, 0]); // 댓글별 좋아요 개수
 
   // 게시판 코드
   let code = 1;
@@ -62,14 +61,24 @@ export const Detail = () => {
 
       // 북마크 상태 확인
       axios.get(`${host}/bookmark/${boardSeq}`).then((resp) => {
-        console.log("북마크 ", resp.data);
         setIsBookmarked(resp.data);
       });
     }
 
-    // 로그인 한 사용자 정보
+    // 로그인 한 사용자 정보 및 HR 권한 확인
     axios.get(`${host}/members`).then((resp) => {
       setCurrentUser(resp.data);
+
+      // HR 권한 확인
+      if (resp.data.member_level === "2" || resp.data.member_level === "3") {
+        axios.get(`${host}/members/selectLevel`).then((resp1) => {
+          const hrStatus = resp1.data[parseInt(resp.data.member_level) - 1]?.hr; // 배열의 n번째 요소에서 hr 확인
+
+          if (hrStatus === "Y") {
+            setIsAdmin(true); // Y일 때 true
+          }
+        });
+      }
     });
 
     // 외부 스타일시트를 동적으로 추가
@@ -209,7 +218,6 @@ export const Detail = () => {
 
   // 댓글 좋아요 클릭
   const handleLikekAdd = (seq, i) => {
-    console.log("조아요..", seq);
     setIsLiked((prev) => ({ ...prev, [seq]: true })); // 상태를 true로 변환
 
     axios.post(`${host}/likes/insert`, { reply_seq: seq }).then((resp) => {
@@ -266,7 +274,9 @@ export const Detail = () => {
           ></i>
         </div>
         <div className={styles.right}>
-          {currentUser && detail.member_id === currentUser.id && !isEditing ? (
+          {currentUser &&
+          !isEditing &&
+          (detail.member_id === currentUser.id || isAdmin) ? (
             <>
               <p onClick={handleEditBtn}>수정</p>
               <p

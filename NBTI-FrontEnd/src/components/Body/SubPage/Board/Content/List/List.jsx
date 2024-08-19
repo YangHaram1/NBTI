@@ -25,7 +25,6 @@ export const List = () => {
   let code = 1;
   if (boardType === "자유") code = 1;
   else if (boardType === "공지") code = 2;
-  console.log("타입 : ", boardType);
 
   // 기본 페이지
   // useEffect(() => {
@@ -47,6 +46,7 @@ export const List = () => {
     axios.get(`${host}/board/list`, { params }).then((resp) => {
       setBoardList(resp.data.list); // 서버에서 list와 count 보내준 것 중 list만 담기
 
+      console.log("count : ", resp.data.count);
       // 페이지네이션
       const recordTotalCount = resp.data.count;
       if (recordTotalCount % recordCountPerPage === 0) {
