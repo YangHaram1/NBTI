@@ -19,9 +19,8 @@ const Members = ( {membersList, setMembersList} ) => {
 
     // 체크박스 상태 변경 핸들러
     const handleCheckboxChange = (member) => {
-        // console.log(member)
         // 이미 체크된 멤버인지 확인
-        const isChecked = membersList.some(item => item.id === member.id);
+        const isChecked = membersList.some(item => item.id === member.id); 
         
         if (isChecked) {
             // 체크 해제 시 membersList에서 해당 멤버 제거
@@ -30,7 +29,6 @@ const Members = ( {membersList, setMembersList} ) => {
             // 체크 시 membersList에 해당 멤버 추가
             setMembersList([...membersList, member]);
         }
-        //console.log("membersList"+ JSON.stringify(membersList))
     };
 
     return (

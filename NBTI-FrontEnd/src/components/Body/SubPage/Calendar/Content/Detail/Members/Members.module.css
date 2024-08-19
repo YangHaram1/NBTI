@@ -56,12 +56,9 @@
     background-color: rgba(128, 128, 128, 0.378);
   }
   
-  
   .button:hover{
     background-color: white;
   }
-  
-  
   
   .container .menus {
     height: 400px;
@@ -97,15 +94,17 @@
     font-size: 14px;
     font-weight: bold;
   }
+
   .teams{
     display: flex;
     flex-direction: column;
     gap: 15px;
-
   }
+
   .team:hover{
     background-color: rgba(128, 128, 128, 0.378);
   }
+
   .members{
     display: flex;
     overflow: auto;
@@ -114,7 +113,6 @@
     padding-left: 30px;
   }
   
-
   .member {
     display: flex;
     gap: 10px;
@@ -130,14 +128,7 @@
   }
   .div2 > div:first-child{flex: 1;}
   .div2 > div:last-child{flex: 1;}
-  .div1{
-    
-  }
   .div1 img{
     width: 30px;
     height: 30px;
-  }  
-
-
-
-  
+  }    

@@ -32,7 +32,7 @@ export const Reject = () => {
 
             axios.get(`${host}/reserve/rejectList?start=${start}&&end=${end}`)
             .then((resp)=>{
-                console.log(JSON.stringify(resp))
+                // console.log(JSON.stringify(resp))
                 const record_total_count = resp.data.count;
                 if (record_total_count % record_count_per_page === 0) {
                     setPage_total_count(Math.floor(record_total_count / record_count_per_page));

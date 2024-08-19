@@ -93,7 +93,7 @@ export const Side = () => {
   const fetchReservations = () => {
     axios.get(`${host}/reserve`)
         .then((resp) => {
-            console.log(JSON.stringify(resp.data))
+            // console.log(JSON.stringify(resp.data))
             setReservations(resp.data); // 주스탠드 상태 업데이트
         })
         .catch((error) => {
@@ -119,7 +119,7 @@ export const Side = () => {
       if (resp.data.member_level === "2" || resp.data.member_level === "4") {
         // reservation 권한 확인
         axios.get(`${host}/members/selectLevel`).then((resp1) => {
-          console.log(resp1.data[parseInt(resp.data.member_level) - 1]?.reservation)
+          // console.log(resp1.data[parseInt(resp.data.member_level) - 1]?.reservation)
           const reservationStatus = resp1.data[parseInt(resp.data.member_level) - 1]?.reservation; // 배열의 n번째 요소에서 hr 확인
 
           if (reservationStatus === "Y") {

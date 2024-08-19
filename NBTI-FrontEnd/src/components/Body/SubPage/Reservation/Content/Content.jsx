@@ -15,6 +15,9 @@ export const Content = () => {
 
     const {selectedDate,modalOpen,setModalOpen, setSelectedDate, setReservations } = useReservationList();
 
+    // 현재 날짜를 "YYYY-MM-DD" 형식으로 얻음 (지난 날짜 막기)
+    const today = new Date().toISOString().split('T')[0];
+
     // 입력 데이터 상태
     const [reserveData, setReserveData] = useState({ 
         reserve_title_code: '', // 선택된 자원 이름을 저장
@@ -91,7 +94,7 @@ export const Content = () => {
     const fetchReservations = () => {
         axios.get(`${host}/reserve`)
             .then((resp) => {
-                console.log(JSON.stringify(resp.data))
+                // console.log(JSON.stringify(resp.data))
                 setReservations(resp.data); // 주스탠드 상태 업데이트
             })
             .catch((error) => {
@@ -140,7 +143,7 @@ export const Content = () => {
                             </div>
                             <div>
                                 <p>날짜</p>
-                                <input type="date" name="date" onChange={handleDateChange} />
+                                <input type="date" name="date" min={today} onChange={handleDateChange} />
                             </div>
                             <div>
                                 <p>시작</p>

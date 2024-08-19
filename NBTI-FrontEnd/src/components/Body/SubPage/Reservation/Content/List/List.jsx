@@ -28,7 +28,7 @@ export const List = ()=>{
         const fetchReservations = () => {
             axios.get(`${host}/reserve`)
                 .then(resp => {
-                    console.log("대기 목록"+JSON.stringify(resp))
+                    // console.log("대기 목록"+JSON.stringify(resp))
                     // 응답 데이터가 배열이 아닐 경우 배열로 변환
                     const data = Array.isArray(resp.data) ? resp.data : [resp.data];
                     setReservations(data); // 목록 상태 업데이트
@@ -43,7 +43,6 @@ export const List = ()=>{
 
     const cancelReservation = (seq) => {
         // 예약 취소
-        console.log(seq);
         axios.delete(`${host}/reserve/${seq}`)
             .then(resp => {
                 // console.log("예약 취소 성공:", resp);

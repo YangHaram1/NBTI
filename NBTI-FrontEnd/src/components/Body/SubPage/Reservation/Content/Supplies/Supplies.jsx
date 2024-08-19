@@ -15,7 +15,7 @@ export const Supplies = ({modalOpen , setModalOpen})=>{
     useEffect(() => {
         axios.get(`${host}/reserve/suppliesList`)
             .then((resp) => {
-                console.log("목록출력" + JSON.stringify(resp.data));
+                // console.log("목록출력" + JSON.stringify(resp.data));
                 const list = resp.data.map(e => {
                     return {
                         seq: e.seq, 
