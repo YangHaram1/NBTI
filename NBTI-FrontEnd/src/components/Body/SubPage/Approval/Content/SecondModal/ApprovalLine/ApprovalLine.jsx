@@ -29,7 +29,7 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
       },[])
     
       const handleTeamChange =(e)=>{
-        console.log(e.target.value);
+        // console.log(e.target.value);
         setSelectTeam(e.target.value);
       }
     
@@ -37,7 +37,7 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
         if (selectTeam !== '') {
           axios.get(`${host}/members/searchMembers/${selectTeam}`)
             .then((member) => {
-            //   console.log(member.data);
+              console.log("data",member.data);
               setMembers(member.data);
             })
             .catch((err) => {
@@ -93,11 +93,11 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
         </div>
         <div className={styles.approval_name}>
             <select onChange={handleMemberChange}>
-                <option defaultValue="none" >선택</option>
+                <option value="none">선택</option>
                 {
                     members.map((member) => {
                         // job_code 조인해서 job_name으로 바꾸기
-                        return (<option key={member.id} value={JSON.stringify({id:member.id, name:member.name})}>{member.name} {member.job_code}</option>);
+                        return (<option key={member.ID} value={JSON.stringify({id:member.ID, name:member.NAME})}>{member.NAME}({member.JOB_NAME})</option>);
                     })
                 }
             </select>

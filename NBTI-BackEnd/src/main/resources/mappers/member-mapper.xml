@@ -111,10 +111,20 @@
 		update members set pw = #{pw} where id = #{id}
 	</update>
 
-	<select id="searchMembers" resultType="com.nbti.dto.MembersDTO">
-		select * from members
-		where team_code = #{team}
+	<select id="searchMembers" resultType="map">
+		select
+		m.id, m.name,
+		m.team_code, t.team_name,
+		m.job_code, j.job_name,
+		t.dept_code, d.dept_name
+		from teams t
+		left outer join members m on t.team_code = m.team_code
+		left outer join job j on m.job_code = j.job_code
+		left outer join department d on t.dept_code = d.dept_code
+		where t.team_code = #{team}
+		order by j.job_code asc
 	</select>
+	
 	<select id="searchUser" resultType="map">
 		SELECT
 		m.id,

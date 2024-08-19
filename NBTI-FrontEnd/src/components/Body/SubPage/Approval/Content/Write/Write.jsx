@@ -7,6 +7,7 @@ import { host } from '../../../../../../config/config';
 import axios from 'axios';
 import { useApprovalLine, useDocLeave, useDocVacation, useReferLine } from '../../../../../../store/store';
 import { useLocation, useNavigate } from 'react-router-dom';
+import SecondModal from '../SecondModal/SecondModal';
 
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import {faPenToSquare} from '@fortawesome/free-solid-svg-icons';
@@ -29,6 +30,7 @@ export const Write = (props)=>{
 
     const location = useLocation();
     const setlist = props.setlist || location.state?.setlist || "기본 문서 제목";
+    const [isSecondModalOpen, setIsSecondModalOpen] = useState(false); // 두 번째 모달 상태
 
     const navi = useNavigate();
 
@@ -47,9 +49,18 @@ export const Write = (props)=>{
         };
     }, []);
 
+    // 결재션 변경 창 열기
     const handleModal = () =>{
-        // 모달창 가져올 수 있게 하기 (결재선 지정)
+        setIsSecondModalOpen(true);
+        resetApprovalLine(); // 결재선 초기화
+        // 모달 창 열기
     }
+
+    // 결재선 변경 창 닫기
+    const closeSecondModal = () => {
+        setIsSecondModalOpen(false); // 두 번째 모달 닫기
+      };
+
 
     // 기안하기
     const approvalSubmit = () =>{
@@ -126,7 +137,7 @@ export const Write = (props)=>{
         .then(response => {
             resetReferLine();
             resetApprovalLine();
-            console.log("성공!");
+            // console.log("성공!");
             navi("/approval");
         })
         .catch(error => {
@@ -336,6 +347,7 @@ export const Write = (props)=>{
                     </div>
                 </div>
             </div>
+            <SecondModal isOpen={isSecondModalOpen} onClose={closeSecondModal}/> 
         </div>
     );
 }
