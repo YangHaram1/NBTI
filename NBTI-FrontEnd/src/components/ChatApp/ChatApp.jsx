@@ -40,9 +40,7 @@ const ChatApp = ({websocketRef,draggableRef}) => {
     const handleEscKey = (event) => {
       if (event.key === 'Escape') {
         // Esc 키가 눌렸을 때 실행될 코드
-        console.log('Esc 키가 눌렸습니다!');
         setChatNavi('');
-        // 여기서 원하는 동작을 수행
       }
     };
   
