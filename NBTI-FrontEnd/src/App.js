@@ -11,7 +11,7 @@ import { host } from './config/config';
 import { Slide, ToastContainer } from 'react-toastify';
 import styles from './App.module.css';
 import Draggable from 'react-draggable';
-
+import { host2 } from './config/config';
 
 axios.defaults.withCredentials = true;
 
@@ -44,7 +44,7 @@ function App() {
   useEffect(() => {
     if (loginID !== null && loginID !== 'error') {
       const url = host.replace(/^https?:/, '')
-      websocketRef.current = new WebSocket(`${url}/chatWebsocket`);
+      websocketRef.current = new WebSocket(`ws:${url}/chatWebsocket`);
     }
     if (websocketRef.current != null) {
       websocketRef.current.onopen = () => {

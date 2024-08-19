@@ -56,7 +56,7 @@ const Members = ({ setName }) => {
 
     useEffect(() => {
         axios.get(`${host}/group`).then((resp) => {
-            console.log(resp.data)
+           // console.log(resp.data)
             setList(resp.data);
             setListDisplay(() => {
                 return (

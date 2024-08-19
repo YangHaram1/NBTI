@@ -49,7 +49,7 @@ const ApprovalEditor = ({setContent, content}) => {
         }}
         init={{
           height: 450,
-          menubar: true,
+          menubar: false,
           plugins: "wordcount anchor code image", //image
           toolbar:
             "fileupload emoticon| forecolor backcolor  blocks fontfamily fontsize fontcolor | bold italic underline strikethrough | link image media table mergetags  | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat ",

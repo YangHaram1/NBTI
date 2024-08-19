@@ -11,7 +11,7 @@ const SecondModal = ({ isOpen, onClose }) => {
 
   const {referLine, setReferLine} = useReferLine();
   const {docForm} = useDocFormStore();
-  const [refer, setRefer] = useState();
+  const [refer, setRefer] = useState([]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -82,12 +82,14 @@ const SecondModal = ({ isOpen, onClose }) => {
               <div className={styles.form_refer}>
                 <div className={styles.form_refer_box}>
                   {
-                    refer.map((refer)=>{
+                    refer.length  > 0 ?
+                    refer.map((referr)=>{
                       return(
-                        <div key={refer.id} className={styles.refer_member}>
-                           {refer.NAME} ({refer.JOB_NAME}) / {refer.TEAM_NAME} <button onClick={()=>{deleteRefer(refer.id)}}>x</button></div>
+                        <div key={referr.id} className={styles.refer_member}>
+                           {referr.NAME} ({referr.JOB_NAME}) / {referr.TEAM_NAME} <button onClick={()=>{deleteRefer(referr.id)}}>x</button></div>
                       );
                     })
+                    :''
                   }
                 </div>
               </div>

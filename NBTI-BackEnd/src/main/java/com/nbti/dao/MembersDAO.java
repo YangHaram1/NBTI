@@ -75,7 +75,7 @@ public boolean login(MembersDTO dto) {
 	}
 	
 	// 팀 코드에 의한 사용자 검색
-	public List<MembersDTO> searchMembers(String team){
+	public List<Map<String, Object>> searchMembers(String team){
 		return mybatis.selectList("Member.searchMembers",team);
 	}
 	
