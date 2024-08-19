@@ -14,7 +14,7 @@ export const Car = () => {
     useEffect(() => {
         axios.get(`${host}/reserve/carList`)
             .then((resp) => {
-                console.log("목록출력" + JSON.stringify(resp.data));
+                // console.log("목록출력" + JSON.stringify(resp.data));
                 const list = resp.data.map(e => {
                     return {
                         seq: e.seq, 

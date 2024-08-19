@@ -1,5 +1,6 @@
 package com.nbti.controllers;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nbti.dto.ReserveDTO;
@@ -97,15 +99,36 @@ public class ReserveController {
 	}
     //승인 관리 - 승인 목록 출력
     @GetMapping("/approveList")
-    public ResponseEntity<List<ReserveDTO>> ApproveList() throws Exception {
-        List<ReserveDTO> approveList = rserv.approveList();
-        return ResponseEntity.ok(approveList);
+    public ResponseEntity<Map<String, Object>> ApproveList(@RequestParam int start,@RequestParam int end) throws Exception {
+    	
+    	Map<String, Object> params= new HashMap<>();
+    	params.put("start", start);
+    	params.put("end", end);
+    	
+        List<ReserveDTO> approveList = rserv.approveList(params);
+        int count = rserv.count();
+        Map<String, Object> result = new HashMap<>();
+        result.put("count", count);
+        result.put("list", approveList);
+        
+        return ResponseEntity.ok(result);
     }
     //승인 관리 - 반려 목록 출력
     @GetMapping("/rejectList")
-    public ResponseEntity<List<ReserveDTO>> rejectList () throws Exception {
-    	List<ReserveDTO> rejectList = rserv.rejectList();
-    	return ResponseEntity.ok(rejectList);
+    public ResponseEntity<Map<String, Object>> rejectList (@RequestParam int start, @RequestParam int end) throws Exception {
+    	
+    	Map<String, Object> params = new HashMap<>();
+    	params.put("start", start);
+    	params.put("end", end);
+    	
+    	List<ReserveDTO> rejectList = rserv.rejectList(params);
+    	int count = rserv.countR();
+    	
+    	Map<String, Object> result = new HashMap<>();
+    	result.put("count", count);
+    	result.put("list", rejectList);
+    	
+    	return ResponseEntity.ok(result);
     }
     
     @GetMapping("/carList")
@@ -126,7 +149,7 @@ public class ReserveController {
     	return ResponseEntity.ok(meetingRoomList);
     }
     
-    
+
 
     
     

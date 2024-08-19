@@ -23,38 +23,74 @@ export const List = ()=>{
     }, [setApprove]); // 의존성 배열에 추가
 
 
-    useEffect(() => {
-        // 대기 목록
-        const fetchReservations = () => {
-            axios.get(`${host}/reserve`)
-                .then(resp => {
-                    console.log("대기 목록"+JSON.stringify(resp))
-                    // 응답 데이터가 배열이 아닐 경우 배열로 변환
-                    const data = Array.isArray(resp.data) ? resp.data : [resp.data];
-                    setReservations(data); // 목록 상태 업데이트
-                })
-                .catch((error) => {
-                    console.error('대기 목록 오류 발생:', error);
-                });
-        };
-        fetchReservations(); // 컴포넌트가 마운트될 때 대기 목록 가져오기
-    }, [setReservations]); // 의존성 배열에 추가
+    // useEffect(() => {
+    //     // 대기 목록
+    //     const fetchReservations = () => {
+    //         axios.get(`${host}/reserve`)
+    //             .then(resp => {
+    //                 // console.log("대기 목록"+JSON.stringify(resp))
+    //                 // 응답 데이터가 배열이 아닐 경우 배열로 변환
+    //                 const data = Array.isArray(resp.data) ? resp.data : [resp.data];
+    //                 setReservations(data); // 목록 상태 업데이트
+    //             })
+    //             .catch((error) => {
+    //                 console.error('대기 목록 오류 발생:', error);
+    //             });
+    //     };
+    //     fetchReservations(); // 컴포넌트가 마운트될 때 대기 목록 가져오기
+    // }, [setReservations]); // 의존성 배열에 추가
+
+
+    // const cancelReservation = (seq) => {
+    //     // 예약 취소
+    //     axios.delete(`${host}/reserve/${seq}`)
+    //         .then(resp => {
+    //             console.log("예약 취소 성공:", resp);
+    //             setReservations(prevItems => 
+    //                 prevItems.filter(reservation => reservation.seq !== seq)
+    //             );
+    //         })
+    //         .catch(error => {
+    //             console.error('예약 취소 중 오류 발생:', error);
+    //         });
+    // };
 
 
     const cancelReservation = (seq) => {
         // 예약 취소
-        console.log(seq);
         axios.delete(`${host}/reserve/${seq}`)
             .then(resp => {
                 // console.log("예약 취소 성공:", resp);
-                setReservations(prevItems => 
-                    prevItems.filter(reservation => reservation.seq !== seq)
-                );
+                // 예약 취소 후 대기 목록을 다시 불러오기
+                fetchReservations();
             })
             .catch(error => {
                 console.error('예약 취소 중 오류 발생:', error);
             });
     };
+    
+    const fetchReservations = () => {
+        axios.get(`${host}/reserve`)
+            .then(resp => {
+                // 응답 데이터가 배열이 아닐 경우 배열로 변환
+                const data = Array.isArray(resp.data) ? resp.data : [resp.data];
+                setReservations(data); // 목록 상태 업데이트
+            })
+            .catch((error) => {
+                console.error('대기 목록 오류 발생:', error);
+            });
+    };
+    
+    useEffect(() => {
+        // 컴포넌트가 마운트될 때 대기 목록 가져오기
+        fetchReservations();
+    }, []); // 빈 배열로 설정하여 컴포넌트가 마운트될 때만 실행
+    
+
+
+    
+    
+    
     
 
     return(

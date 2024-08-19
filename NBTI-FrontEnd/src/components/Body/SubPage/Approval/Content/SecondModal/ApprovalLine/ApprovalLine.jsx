@@ -17,19 +17,15 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
     useEffect(()=>{
         axios.get(`${host}/members/selectDepartment`)
         .then((dept)=>{
-          setDeptCode(dept.data);
-        //   console.log("dept", dept.data);
-    
+          setDeptCode(dept.data);   
           axios.get(`${host}/members/selectTeam`)
           .then((team)=>{
             setTeamCode(team.data);
-            // console.log("team", team.data);
           })
         })
       },[])
     
       const handleTeamChange =(e)=>{
-        // console.log(e.target.value);
         setSelectTeam(e.target.value);
       }
     
@@ -37,7 +33,6 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
         if (selectTeam !== '') {
           axios.get(`${host}/members/searchMembers/${selectTeam}`)
             .then((member) => {
-              console.log("data",member.data);
               setMembers(member.data);
             })
             .catch((err) => {
@@ -50,11 +45,7 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
         const value = JSON.parse(e.target.value);
         const id = value.id;
         const name = value.name;
-        console.log(value.id);
-        console.log(value.name);
-        // console.log(e.target.innerText);
         setSelectMember({id:id, name: name});
-        console.log("테스트중",selectMember);
       }
 
       useEffect(() => {
@@ -62,7 +53,7 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
             if(setOrder !== "4"){
                 const newApproval = {id: selectMember.id, name:selectMember.name, order: setOrder};
                 setApprovalLine(newApproval);
-                console.log("선택", newApproval);
+                // console.log("선택", newApproval);
             }
             // return(console.log("결과",approvalLine));
         }

@@ -15,7 +15,7 @@ export const Supplies = ({modalOpen , setModalOpen})=>{
     useEffect(() => {
         axios.get(`${host}/reserve/suppliesList`)
             .then((resp) => {
-                console.log("목록출력" + JSON.stringify(resp.data));
+                // console.log("목록출력" + JSON.stringify(resp.data));
                 const list = resp.data.map(e => {
                     return {
                         seq: e.seq, 
@@ -37,7 +37,7 @@ export const Supplies = ({modalOpen , setModalOpen})=>{
             <div className={styles.reservationContent}>
                 {/* 사용자 정의 제목 */}
                 <div className={styles.customTitle}>
-                    비품 
+                    노트북 
                 </div>
                 <FullCalendar
                     plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}

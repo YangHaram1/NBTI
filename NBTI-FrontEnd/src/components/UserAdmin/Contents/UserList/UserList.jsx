@@ -7,7 +7,7 @@ import { useMemberStore } from '../../../../store/store';
 import SearchUser from './SearchUser/SearchUser';
 import Team from './Team/Team';
 
-const UserList = ({ setUserDetail }) => {
+const UserList = () => {
     const convertKeysToLowerCase = (obj) => {
         if (Array.isArray(obj)) {
             return obj.map(convertKeysToLowerCase);
@@ -109,7 +109,7 @@ const UserList = ({ setUserDetail }) => {
     }, [selectedTeam]); // selectedTeam이 변경될 때마다 호출
     
 
-    const handleUserClick = (userId) => {
+    const handleEditClick = (userId) => {
         setSelectedMember(userId); // 상태에 사용자 ID 저장
         navigate(`/useradmin/userdetail/${userId}`); // 사용자 업데이트 페이지로 이동
     };
@@ -170,7 +170,6 @@ const UserList = ({ setUserDetail }) => {
                         <tr>
                             <th>이름</th>
                             <th>아이디</th>
-                            <th>비밀번호</th>
                             <th>이메일</th>
                             <th>팀명</th>
                             <th>직급명</th>
@@ -179,19 +178,14 @@ const UserList = ({ setUserDetail }) => {
                             <th>성별</th>
                             <th>재직 상태</th>
                             <th>남은 휴가</th>
+                            <th>수정</th> {/* 수정 버튼 추가 */}
                         </tr>
                     </thead>
                     <tbody>
                         {filteredUsers.map(user => (
                             <tr key={user.id}>
-                                <td 
-                                    onClick={() => handleUserClick(user.id)} 
-                                    style={{ cursor: 'pointer' }}
-                                >
-                                    {user.name || '이름 없음'}
-                                </td>
+                                <td>{user.name || '이름 없음'}</td>
                                 <td>{user.id || '아이디 없음'}</td>
-                                <td>{'*'.repeat(8)}</td>
                                 <td>{user.email || '이메일 없음'}</td>
                                 <td>{user.team_name || '팀명 없음'}</td>
                                 <td>{user.job_name || '직급명 없음'}</td>
@@ -200,6 +194,14 @@ const UserList = ({ setUserDetail }) => {
                                 <td>{user.gender === 'M' ? '남성' : user.gender === 'F' ? '여성' : ''}</td>
                                 <td>{user.ent_yn === 'Y' ? '휴직' : '재직'}</td>
                                 <td>{user.vacation_period != null ? `${user.vacation_period}일` : '휴가 정보 없음'}</td>
+                                <td>
+                                    <button 
+                                        onClick={() => handleEditClick(user.id)} 
+                                        className={styles.editButton} // 스타일 클래스 추가
+                                    >
+                                        수정하기
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>

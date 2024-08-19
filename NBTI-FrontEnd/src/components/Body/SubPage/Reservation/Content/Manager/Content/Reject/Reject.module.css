@@ -1,21 +1,33 @@
 .container{
-    height: 100%;
+    height: 100vh;
     overflow-y: hidden;
     padding-top: 3%;
 }
 
-.list thead th, 
-.list thead th {
+.list {
+    /* height: 600px; */
+    margin-bottom: 3%;
+    table-layout: auto;
+}
+.list td{
+    max-height: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis; /*텍스트가 넘칠 경우 밑줄임표 처리*/
+}
+
+.list > thead th, 
+.list > thead th {
     background-color: #A4C3B2; 
     color: white;
     letter-spacing: 2px;
     font-weight: 400;
     text-shadow: 1px 1px 1px #9b9b9b;
-    padding: 14px 10px 14px 15px
+    padding: 14px 10px 14px 15px;
 }
-.list tbody td, 
-.list tbody td {
-    padding: 12px 10px 12px 15px
+.list > tbody td, 
+.list > tbody td {
+    text-align: center;
+    padding: 14px 10px 14px 15px;
 }
 .list {
     border: 1px solid gainsboro;
@@ -24,9 +36,42 @@
     border-radius: 5px;
     padding: 5px;
 }
-tr,td {
-    /* border: 1px solid #000; */
-}
-.num{
-    padding-top: 2%;
-}
+.list tbody tr {}
+
+
+/* 페이지네이션 */
+.pagination {
+    display: flex; justify-content: center;
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+  }
+  
+  .pagination li {
+    cursor: pointer;
+    margin: 0 5px;
+  }
+  
+  .pagination a {
+    text-decoration: none;
+    color: #6b9080;
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .pagination a:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .pagination .active a {
+    background-color: #6b9080;
+    color: white;
+  }
+  .next {
+    display: none;
+  }
+  .previous {
+    display: none;
+  }
+  

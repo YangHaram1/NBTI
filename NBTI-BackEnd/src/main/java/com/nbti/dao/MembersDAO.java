@@ -99,4 +99,29 @@ public boolean login(MembersDTO dto) {
 		return mybatis.selectOne("Member.getMemberName",id);
 	}
 
+
+    public void updateVacationPeriod(Map<String, Object> params) {
+          mybatis.update("Member.updateVacationPeriod", params);
+          System.out.println("ㄴㅇㄹㄴㅇㄹ");
+      }
+
+      public String findIdByEmailAndName(String email, String name) {
+          Map<String, Object> param = new HashMap<>();
+          param.put("email", email);
+          param.put("name", name);
+          return mybatis.selectOne("Member.findIdByEmailAndName", param);
+      }
+      
+      public String findPwByIdNameAndBirth(String id, String name, String birth) {
+          Map<String, Object> param = new HashMap<>();
+          param.put("id", id);
+          param.put("name", name);
+          param.put("birth", birth);
+          return mybatis.selectOne("Member.findPwByIdNameAndBirth", param);
+      }
+      
+      public boolean verifyUser(Map<String, String> params) {
+          Integer result = mybatis.selectOne("Member.verifyUser", params);
+          return result != null && result > 0; // 사용자가 존재하면 true 반환
+      }
 }
