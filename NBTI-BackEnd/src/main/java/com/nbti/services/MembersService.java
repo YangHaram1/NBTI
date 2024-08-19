@@ -1,5 +1,6 @@
 package com.nbti.services;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,6 +68,10 @@ public class MembersService {
 	// 비밀번호 변경
 	public boolean changePw(HashMap<String, String> map) {
 		return mdao.changePw(map);
+	}
+	
+	public Timestamp getPwChangeDate(String id) {
+		return mdao.selectChangeDate(id);
 	}
 	
 	// 팀 코드에 의한 사용자 검색

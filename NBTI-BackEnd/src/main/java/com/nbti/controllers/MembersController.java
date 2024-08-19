@@ -1,5 +1,6 @@
 package com.nbti.controllers;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,11 +52,13 @@ public class MembersController {
 	private HttpSession session;
 	
 	@GetMapping
-	public MembersDTO myPage() {
+	public Map<String, Object> myPage() {
 		String id = (String)session.getAttribute("loginID");
+		MembersDTO dto = mServ.selectMyData(id);
+		Map<String, Object> memberData = mServ.memberData(id);
+		memberData.put("dto", dto);
 		
-		
-		return mServ.selectMyData(id);
+		return memberData;
 	}
 	 @GetMapping("/{id}")
 	    public ResponseEntity<MembersDTO> selectById(@PathVariable("id") String id) {
@@ -193,7 +196,7 @@ public class MembersController {
 	@PostMapping("/checkPw")
 	public ResponseEntity<Boolean> checkPw(@RequestBody Map<String, String> request){
 		String pw = EncryptionUtils.getSHA512(request.get("pw"));
-		System.out.println("pw:" + pw);
+//		System.out.println("pw:" + pw);
 		
 		String id = (String)session.getAttribute("loginID");
 		
@@ -226,13 +229,21 @@ public class MembersController {
 	@PostMapping("/changePw")
 	public ResponseEntity<Boolean> changePw(@RequestBody Map<String, String> request){
 		String pw = EncryptionUtils.getSHA512((String)request.get("pw"));
-		System.out.println("pw:" + pw);
+//		System.out.println("pw:" + pw);
 		String id = (String)session.getAttribute("loginID");
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("id", id);
 		map.put("pw", pw);
 		Boolean result = mServ.changePw(map);
 		return ResponseEntity.ok(result);
+	}
+	
+	// 패스워드 변경 날짜 출력
+	@GetMapping("/getPwChangeDate")
+	public ResponseEntity<Timestamp> getPwChangeDate(){
+		String id = (String)session.getAttribute("loginID");
+		Timestamp date = mServ.getPwChangeDate(id);
+		return ResponseEntity.ok(date);
 	}
 	
 	// 작성일 24.07.31 
@@ -279,7 +290,7 @@ public class MembersController {
        // 검색할 아이디에 따른 이름, 팀코드, 팀명, 부서코드, 부서명, 관리자 권한 코드, 관리자 권한명 추출
        @PostMapping("/approvalSearch")
         public List<Map<String, Object>> approvalSearch(@RequestBody List<Map<String, Object>> approvalLine){
-        	System.out.println("결재라인 확인 : " + approvalLine);
+//        	System.out.println("결재라인 확인 : " + approvalLine);
         	List<Map<String, Object>> list = mServ.approvalList(approvalLine);
         	//           Map<String, Object> memberData = mServ.memberData(id);
            return list;
