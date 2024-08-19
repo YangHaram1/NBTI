@@ -219,6 +219,9 @@
 .group_contents {display: flex; justify-content: space-evenly; padding-bottom: 15px;}
 .group_name {flex:3; }
 .group_title {flex:7; border: none;}
-.groupBtn {display: flex; border: 1px solid #000;}
-.groupBtn > button {flex: 1; padding: 5px;}
+.groupBtn {display: flex; border: none; margin-top: 10px;}
+.groupBtn > button {flex: 1; padding: 5px; background-color: #6B9080;border: none; cursor: pointer; transition: all ease-in 0.2s; font-weight: bold;}
+.groupBtn > button:first-child{background-color: #6B9080;}
+.groupBtn > button:last-child{background-color: white;}
+.groupBtn > button:hover{opacity: 0.9;}
 /* ===== 그룹 모달창 ===== */

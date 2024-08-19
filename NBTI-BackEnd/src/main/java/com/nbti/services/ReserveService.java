@@ -1,6 +1,7 @@
 package com.nbti.services;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,13 +49,13 @@ public class ReserveService {
 	}
 	
 	// 승인 관리 - 승인 목록 출력
-	public List<ReserveDTO> approveList() throws Exception{
-		return rdao.approveList();
+	public List<ReserveDTO> approveList(Map<String, Object> params) throws Exception{
+		return rdao.approveList(params);
 	}
 
 	// 승인 관리 - 반려 목록 출력
-	public List<ReserveDTO> rejectList () throws Exception{
-		return rdao.rejectList();
+	public List<ReserveDTO> rejectList (Map<String, Object> params) throws Exception{
+		return rdao.rejectList(params);
 	}
 	
 	// 캘린더 차량 
@@ -68,6 +69,13 @@ public class ReserveService {
 	// 캘린더 회의실
 	public List<ReserveDTO> meetingRoomList () throws Exception{
 		return rdao.meetingRoomList();
+	}
+	
+	public int count () throws Exception {
+		return rdao.count();
+	}
+	public int countR () throws Exception {
+		return rdao.countR();
 	}
 
 	
