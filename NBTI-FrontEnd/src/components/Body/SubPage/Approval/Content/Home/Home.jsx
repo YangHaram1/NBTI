@@ -21,10 +21,10 @@ export const Home = ()=>{
     const [fileExistenceMap2, setFileExistenceMap2] = useState({});
     
     useEffect(()=>{
-        axios.get(`${host}/approval/getApprovalWait`)
+        axios.get(`${host}/approval/getApprovalWait?start=1&end=5&target=''&keyword=''`)
         .then((resp)=>{
-            setApprovalData(resp.data);
-            console.log("홈 목록출력",resp.data);
+            setApprovalData(resp.data.list);
+            console.log("버블 목록출력",resp.data.list);
         })
     },[])
 
@@ -53,77 +53,20 @@ export const Home = ()=>{
             }
         };
 
-        axios.get(`${host}/approval/getWriterIsMe`)
+        axios.get(`${host}/approval/getWriterIsMe?start=1&end=5&target=''&keyword=''`)
             .then((resp) => {
-                setLists(resp.data);
-                fetchFileExistence(resp.data, setFileExistenceMap);
+                setLists(resp.data.list);
+                console.log("lists",resp.data.list);
+                fetchFileExistence(resp.data.list, setFileExistenceMap);
             });
 
-        axios.get(`${host}/approval/getReferIsMeWait`)
+        axios.get(`${host}/approval/getReferIsMeWait?start=1&end=5&target=''&keyword=''`)
             .then((resp) => {
-                setListss(resp.data);
-                fetchFileExistence(resp.data, setFileExistenceMap2);
+                setListss(resp.data.list);
+                console.log("listss",resp.data.list);
+                fetchFileExistence(resp.data.list, setFileExistenceMap2);
             });
     }, []);
-
-    // useEffect(()=>{
-    //     axios.get(`${host}/approval/getWriterIsMe`)
-    //     .then(async (resp) => {
-    //         console.log(resp.data);
-    //         setLists(resp.data);
-
-    //         const filePromises = resp.data.map(async (list) => {
-    //             try {
-    //                 let seq = list.temp_seq;
-    //                 const fileResp = await axios.get(`${host}/files/getFiles/${seq}`);
-    //                 return { temp_seq: seq, files: fileResp.data };
-    //             } catch (err) {
-    //                 console.error(err);
-    //                 return { temp_seq: list.temp_seq, files: false };
-    //             }
-    //         });
-            
-    //         const files = await Promise.all(filePromises);
-    //         const fileMap = files.reduce((acc, { temp_seq, files }) => ({
-    //             ...acc, [temp_seq]: files
-    //         }), {});
-            
-    //         setFileExistenceMap(fileMap);
-    //     })
-    //     .catch((error) => {
-    //         console.error(error);
-    //     });
-    // },[setLists])
-
-    // useEffect(()=>{
-    //     axios.get(`${host}/approval/getReferIsMe`)
-    //     .then(async (resp) => {
-    //         console.log(resp.data);
-    //         setListss(resp.data);
-
-    //         const filePromises = resp.data.map(async (list) => {
-    //             try {
-    //                 let seq = list.temp_seq;
-    //                 const fileResp = await axios.get(`${host}/files/getFiles/${seq}`);
-    //                 return { temp_seq: seq, files: fileResp.data };
-    //             } catch (err) {
-    //                 console.error(err);
-    //                 return { temp_seq: list.temp_seq, files: false };
-    //             }
-    //         });
-            
-    //         const files = await Promise.all(filePromises);
-    //         const fileMap = files.reduce((acc, { temp_seq, files }) => ({
-    //             ...acc, [temp_seq]: files
-    //         }), {});
-            
-    //         setFileExistenceMap2(fileMap);
-    //     })
-    //     .catch((error) => {
-    //         console.error(error);
-    //     });
-    // },[setListss])
-
 
     const HandleSubmit = (seq) =>{
         setShowModal(true);
