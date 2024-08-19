@@ -7,123 +7,124 @@
 
 	<!-- 목록 출력 -->
 	<select id="selectAll" resultType="com.nbti.dto.BoardDTO">
-	    SELECT * FROM (
-	        SELECT
-	            board.*,
-	            m.name,
-	            COALESCE(reply_count.reply_count, 0) AS reply_count, -- 댓글 수를 가져옴
-	            ROW_NUMBER() OVER (ORDER BY board.seq DESC) AS rown
-	        FROM
-	            board
-	        JOIN
-	            members m ON board.member_id = m.id
-	        LEFT JOIN (
-	            -- reply 테이블과 조인하여 댓글 수 계산
-	            SELECT
-	                board_seq,
-	                COUNT(*) AS reply_count
-	            FROM
-	                reply
-	            GROUP BY
-	                board_seq
-	        ) reply_count ON board.seq = reply_count.board_seq
-	        <trim prefix="WHERE" prefixOverrides="AND|OR">
-	            <!-- 기본 조건: 게시판 코드 -->
-	            board.board_code = ${board_code}
-	
-	            <!-- 상태 필터 조건 추가 -->
-	            <if test="status == 'ing'">
-	                AND COALESCE(reply_count.reply_count, 0) = 0  <!-- 진행중인 경우 -->
-	            </if>
-	            <if test="status == 'ok'">
-	                AND COALESCE(reply_count.reply_count, 0) > 0  <!-- 답변 완료인 경우 -->
-	            </if>
-	
-	            <!-- 검색 조건: target이 특정 값일 때 -->
-	            <if test="target == 'title'">
-	                AND board.title LIKE '%' || #{keyword} || '%'
-	            </if>
-	            <if test="target == 'contents'">
-	                AND REGEXP_REPLACE(
-	                    REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', ''),
-	                    '&amp;nbsp;', ''
-	                ) LIKE '%' || #{keyword} || '%'
-	            </if>
-	            <if test="target == 'name'">
-	                AND m.name = #{keyword}
-	            </if>
-	           
-	            <!-- 검색 조건: target이 빈 문자열일 때 -->
-	            <if test="target == ''">
+		SELECT * FROM (
+		SELECT
+		board.*,
+		m.name,
+		COALESCE(reply_count.reply_count, 0) AS reply_count, -- 댓글 수를 가져옴
+		ROW_NUMBER() OVER (ORDER BY board.seq DESC) AS rown
+		FROM
+		board
+		JOIN
+		members m ON board.member_id = m.id
+		LEFT JOIN (
+		-- reply 테이블과 조인하여 댓글 수 계산
+		SELECT
+		board_seq,
+		COUNT(*) AS reply_count
+		FROM
+		reply
+		GROUP BY
+		board_seq
+		) reply_count ON board.seq = reply_count.board_seq
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<!-- 기본 조건: 게시판 코드 -->
+			board.board_code = ${board_code}
+
+			<!-- 상태 필터 조건 추가 -->
+			<if test="status == 'ing'">
+				AND COALESCE(reply_count.reply_count, 0) = 0  <!-- 진행중인 경우 -->
+			</if>
+			<if test="status == 'ok'">
+				AND COALESCE(reply_count.reply_count, 0) > 0  <!-- 답변 완료인 경우 -->
+			</if>
+
+			<!-- 검색 조건: target이 특정 값일 때 -->
+			<if test="target == 'title'">
+				AND board.title LIKE '%' || #{keyword} || '%'
+			</if>
+			<if test="target == 'contents'">
+				AND REGEXP_REPLACE(
+				REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', ''),
+				'&amp;nbsp;', ''
+				) LIKE '%' || #{keyword} || '%'
+			</if>
+			<if test="target == 'name'">
+				AND m.name = #{keyword}
+			</if>
+
+			<!-- 검색 조건: target이 빈 문자열일 때 -->
+			<if test="target == ''">
 	                <![CDATA[
 	                AND (board.title LIKE '%' || #{keyword} || '%'
 	                    OR REGEXP_REPLACE(board.contents, '<[^>]+>', '') LIKE '%' || #{keyword} || '%'
 	                    OR m.name LIKE '%' || #{keyword} || '%'
 	                    OR board.member_id = #{keyword})
 	                ]]>
-	            </if>
-	        </trim>
-	    ) a
-	    WHERE a.rown BETWEEN ${start} AND ${end}
+			</if>
+		</trim>
+		) a
+		WHERE a.rown BETWEEN ${start} AND ${end}
 	</select>
 
 
 	<!-- 게시글 총 개수 -->
 	<select id="getBoardCount" resultType="int">
-	    SELECT COUNT(*) 
-	    FROM board
-	    JOIN members m ON board.member_id = m.id <!-- members 테이블과 조인 -->
-	
-	    <!-- 기본 조건: 게시판 코드 -->
-	    WHERE board.board_code = #{board_code}
-	
-	    <!-- 상태 필터 조건 추가 -->
-	    <if test="status == 'ing'">
-	        AND COALESCE((SELECT COUNT(*) 
-	                      FROM reply r 
-	                      WHERE r.board_seq = board.seq), 0) = 0  <!-- 진행중인 경우 -->
-	    </if>
-	    <if test="status == 'ok'">
-	        AND COALESCE((SELECT COUNT(*) 
-	                      FROM reply r 
-	                      WHERE r.board_seq = board.seq), 0) > 0  <!-- 답변 완료인 경우 -->
-	    </if>
-	
-	    <!-- 검색 조건: target이 특정 값일 때 -->
-	    <if test="target == 'title'">
-	        AND board.title LIKE '%' || #{keyword} || '%'
-	    </if>
-	    <if test="target == 'contents'">
-	        AND REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
-	    </if>
-	    <if test="target == 'name'"> <!-- target이 'name'인 경우 -->
-	        AND m.name = #{keyword} <!-- 작성자 이름으로 검색 -->
-	    </if>
+		SELECT COUNT(*)
+		FROM board
+		JOIN members m ON board.member_id = m.id <!-- members 테이블과 조인 -->
+
+		<!-- 기본 조건: 게시판 코드 -->
+		WHERE board.board_code = #{board_code}
+
+		<!-- 상태 필터 조건 추가 -->
+		<if test="status == 'ing'">
+			AND COALESCE((SELECT COUNT(*)
+			FROM reply r
+			WHERE r.board_seq = board.seq), 0) = 0  <!-- 진행중인 경우 -->
+		</if>
+		<if test="status == 'ok'">
+			AND COALESCE((SELECT COUNT(*)
+			FROM reply r
+			WHERE r.board_seq = board.seq), 0) > 0  <!-- 답변 완료인 경우 -->
+		</if>
+
+		<!-- 검색 조건: target이 특정 값일 때 -->
+		<if test="target == 'title'">
+			AND board.title LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="target == 'contents'">
+			AND REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' ||
+			#{keyword} || '%'
+		</if>
+		<if test="target == 'name'"> <!-- target이 'name'인 경우 -->
+			AND m.name = #{keyword} <!-- 작성자 이름으로 검색 -->
+		</if>
 	</select>
 
 
 	<!-- 내 글 목록 -->
 	<select id="selectMyList" resultType="com.nbti.dto.BoardDTO">
 		SELECT a.*
-			FROM (
-				SELECT
-					board.*,
-					members.name AS name,
-					COALESCE(reply_count.reply_count, 0) AS reply_count, -- 댓글 수를 가져옵니다
-					ROW_NUMBER() OVER (ORDER BY board.seq DESC) AS rown
-				FROM
-					board
-				JOIN
-					members ON board.member_id = members.id
-				LEFT JOIN ( -- reply 테이블과 조인하여 댓글 수를 계산합니다
-					SELECT
-						board_seq,
-						COUNT(*) AS reply_count
-					FROM
-						reply
-					GROUP BY
-						board_seq
-			) reply_count ON board.seq = reply_count.board_seq
+		FROM (
+		SELECT
+		board.*,
+		members.name AS name,
+		COALESCE(reply_count.reply_count, 0) AS reply_count, -- 댓글 수를 가져옵니다
+		ROW_NUMBER() OVER (ORDER BY board.seq DESC) AS rown
+		FROM
+		board
+		JOIN
+		members ON board.member_id = members.id
+		LEFT JOIN ( -- reply 테이블과 조인하여 댓글 수를 계산합니다
+		SELECT
+		board_seq,
+		COUNT(*) AS reply_count
+		FROM
+		reply
+		GROUP BY
+		board_seq
+		) reply_count ON board.seq = reply_count.board_seq
 		<trim prefix="WHERE" prefixOverrides="AND|OR">
 			board.board_code = #{board_code}
 			AND board.member_id = #{member_id}
@@ -141,12 +142,14 @@
 				AND board.title LIKE '%' || #{keyword} || '%'
 			</if>
 			<if test="target == 'contents'">
-				AND REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' ||
+				AND REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '')
+				LIKE '%' ||
 				#{keyword} || '%'
 			</if>
 			<if test="target == ''">
 				AND (board.title LIKE '%' || #{keyword} || '%'
-				OR REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' ||
+				OR
+				REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' ||
 				#{keyword} || '%'
 				OR members.name = #{keyword})
 			</if>
@@ -157,44 +160,46 @@
 
 	<!-- 내 글 총 개수 -->
 	<select id="getMyListCount" resultType="int">
-	    SELECT COUNT(*)
-	    FROM board
-	    JOIN members m ON board.member_id = m.id
-	
-	    <trim prefix="WHERE" prefixOverrides="AND|OR">
-	        <!-- 기본 조건: 게시판 코드와 작성자 ID -->
-	        board.board_code = #{board_code}
-	        AND board.member_id = #{member_id}
-	
-	        <!-- 상태 필터 조건 추가 -->
-	        <if test="status == 'ing'">
-	            AND COALESCE((SELECT COUNT(*)
-	                          FROM reply r
-	                          WHERE r.board_seq = board.seq), 0) = 0  <!-- 진행중인 경우 -->
-	        </if>
-	        <if test="status == 'ok'">
-	            AND COALESCE((SELECT COUNT(*)
-	                          FROM reply r
-	                          WHERE r.board_seq = board.seq), 0) > 0  <!-- 답변 완료인 경우 -->
-	        </if>
-	
-	        <!-- 검색 조건: target이 특정 값일 때 -->
-	        <if test="target == 'title'">
-	            AND board.title LIKE '%' || #{keyword} || '%'
-	        </if>
-	        <if test="target == 'contents'">
-	            AND REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
-	        </if>
-	        <if test="target == 'name'">
-	            AND m.name = #{keyword} <!-- 작성자 이름으로 검색 -->
-	        </if>
-	        <!-- 검색 조건: target이 빈 문자열일 때 -->
-	        <if test="target == ''">
-	            AND (board.title LIKE '%' || #{keyword} || '%'
-	            OR REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' || #{keyword} || '%'
-	            OR m.name LIKE '%' || #{keyword} || '%') <!-- member_id 대신 name 사용 -->
-	        </if>
-	    </trim>
+		SELECT COUNT(*)
+		FROM board
+		JOIN members m ON board.member_id = m.id
+
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<!-- 기본 조건: 게시판 코드와 작성자 ID -->
+			board.board_code = #{board_code}
+			AND board.member_id = #{member_id}
+
+			<!-- 상태 필터 조건 추가 -->
+			<if test="status == 'ing'">
+				AND COALESCE((SELECT COUNT(*)
+				FROM reply r
+				WHERE r.board_seq = board.seq), 0) = 0  <!-- 진행중인 경우 -->
+			</if>
+			<if test="status == 'ok'">
+				AND COALESCE((SELECT COUNT(*)
+				FROM reply r
+				WHERE r.board_seq = board.seq), 0) > 0  <!-- 답변 완료인 경우 -->
+			</if>
+
+			<!-- 검색 조건: target이 특정 값일 때 -->
+			<if test="target == 'title'">
+				AND board.title LIKE '%' || #{keyword} || '%'
+			</if>
+			<if test="target == 'contents'">
+				AND REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' ||
+				#{keyword} || '%'
+			</if>
+			<if test="target == 'name'">
+				AND m.name = #{keyword} <!-- 작성자 이름으로 검색 -->
+			</if>
+			<!-- 검색 조건: target이 빈 문자열일 때 -->
+			<if test="target == ''">
+				AND (board.title LIKE '%' || #{keyword} || '%'
+				OR REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', '') LIKE '%' ||
+				#{keyword} || '%'
+				OR m.name LIKE '%' || #{keyword} || '%') <!-- member_id 대신 name 사용 -->
+			</if>
+		</trim>
 	</select>
 
 
@@ -218,7 +223,11 @@
 	<!-- 게시글 입력 -->
 	<insert id="insert">
 		insert into board values(board_seq.nextval, #{title},
-		#{contents}, #{member_id}, sysdate, 0, ${board_code})
+		#{contents},
+		#{member_id}, sysdate, 0, ${board_code})
+		<selectKey resultType="int" order="AFTER" keyProperty="seq">
+			select board_seq.currval from dual
+		</selectKey>
 	</insert>
 
 	<!-- 게시글 삭제 -->
@@ -234,7 +243,8 @@
 
 	<!-- 조회수 증가 -->
 	<update id="updateViewCount">
-		update board set view_count = view_count +1 where seq = ${seq} and
+		update board set view_count = view_count +1 where seq
+		= ${seq} and
 		board_code = ${board_code}
 	</update>
 
@@ -244,15 +254,18 @@
 		SELECT
 		b.*,
 		m.name AS name,
-		ROW_NUMBER() OVER (ORDER BY b.seq DESC) AS rown
+		ROW_NUMBER() OVER (ORDER BY
+		b.seq DESC) AS rown
 		FROM
 		board b
 		JOIN
-		board_bookmark bm ON b.seq = bm.board_seq
+		board_bookmark bm ON b.seq =
+		bm.board_seq
 		JOIN
 		members m ON b.member_id = m.id
 		WHERE
-		bm.member_id = #{member_id}
+		bm.member_id =
+		#{member_id}
 		AND b.board_code = #{board_code}
 		<trim prefix="AND" prefixOverrides="AND|OR">
 			<!-- 검색 조건: target이 특정 값일 때 -->
@@ -260,7 +273,8 @@
 				AND b.title LIKE '%' || #{keyword} || '%'
 			</if>
 			<if test="target == 'contents'">
-				AND REGEXP_REPLACE(b.contents, '&lt;[^>]+&gt;', '') LIKE '%' ||
+				AND REGEXP_REPLACE(b.contents, '&lt;[^>]+&gt;', '') LIKE
+				'%' ||
 				#{keyword} || '%'
 			</if>
 			<if test="target == 'member_id'">
@@ -273,10 +287,12 @@
 			<!-- 검색 조건: target이 빈 문자열일 때 -->
 			<if test="target == ''">
 				AND (b.title LIKE '%' || #{keyword} || '%'
-				OR REGEXP_REPLACE(b.contents, '&lt;[^>]+&gt;', '') LIKE '%' ||
+				OR
+				REGEXP_REPLACE(b.contents, '&lt;[^>]+&gt;', '') LIKE '%' ||
 				#{keyword} || '%'
 				OR m.name LIKE '%' || #{keyword} || '%'
-				OR b.member_id = #{keyword})
+				OR
+				b.member_id = #{keyword})
 			</if>
 		</trim>
 		) subquery

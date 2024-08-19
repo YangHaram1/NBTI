@@ -1,7 +1,7 @@
 import styles from "./Insert.module.css";
 import axios from "axios";
 import BoardEditor from "../../../../BoardEditor/BoardEditor";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { host } from "../../../../../../config/config";
 import { useNavigate } from "react-router-dom";
 import { useBoardStore } from "../../../../../../store/store";
@@ -15,6 +15,7 @@ export const Insert = () => {
   const [isAdmin, setIsAdmin] = useState(false); // 권한 여부 상태
   const [isNotice, setIsNotice] = useState(false); // 체크박스 상태 관리
   const { boardType, setBoardSeq } = useBoardStore();
+  const inputRef = useRef(null);
 
   const [board, setBoard] = useState({
     title: "",
@@ -52,8 +53,17 @@ export const Insert = () => {
       return; // 유효성 검사 통과하지 못하면 함수 종료
     }
 
+    const files = inputRef.current.files;
+    const formData = new FormData();
+    for (let index = 0; index < files.length; index++) {
+      formData.append("files", files[index]);
+    }
+
+    formData.append("board", JSON.stringify(board));
+    console.log(formData)
+
     // 글 작성 완료
-    axios.post(`${host}/board`, board).then((resp) => {
+    axios.post(`${host}/board`, formData).then((resp) => {
       Swal.fire({
         icon: "success",
         text: "글이 작성되었습니다.",
@@ -189,6 +199,7 @@ export const Insert = () => {
     setIsPopupOpen(false);
   };
 
+
   return (
     <div className={styles.container}>
       <div className={styles.box}>
@@ -199,7 +210,7 @@ export const Insert = () => {
               <input
                 type="checkbox"
                 checked={isNotice}
-                onClick={handleCheckbox}
+                onChange={handleCheckbox}
               />
               <p>공지 게시판</p>
             </label>
@@ -233,7 +244,7 @@ export const Insert = () => {
       </div>
       <div className={styles.files}>
         <div>
-          <input type="file" />
+          <input type="file" multiple ref={inputRef} name='files' />
         </div>
       </div>
       <div className={styles.contents}>
@@ -260,8 +271,8 @@ export const Insert = () => {
                   item.board_code === 1
                     ? "자유"
                     : item.board_code === 2
-                    ? "공지"
-                    : "알 수 없음";
+                      ? "공지"
+                      : "알 수 없음";
 
                 return (
                   <div key={i}>
