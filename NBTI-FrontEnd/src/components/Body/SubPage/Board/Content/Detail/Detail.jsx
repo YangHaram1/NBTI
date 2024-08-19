@@ -33,6 +33,9 @@ export const Detail = () => {
 
   const [isLiked, setIsLiked] = useState({}); // 좋아요 상태를 객체로 저장
 
+  const [fileDelArr, setFileDelArr] = useState([]); // 삭제할 파일 담아놓는 배열
+  const [updatedFiles, setUpdatedFiles] = useState([]);
+
   // 게시판 코드
   let code = 1;
   if (boardType === "자유") code = 1;
@@ -79,6 +82,7 @@ export const Detail = () => {
     // 파일 목록 출력
     axios.get(`${host}/files/board?seq=${boardSeq}`).then((resp) => {
       setFileList(resp.data);
+      setUpdatedFiles(resp.data); // 파일 복사본
     });
 
     // 외부 스타일시트를 동적으로 추가
@@ -116,6 +120,12 @@ export const Detail = () => {
       setDetail(board);
       setIsEditing(false);
     });
+
+    // 저장 시, 삭제할 파일 삭제 가능
+    axios.delete(`${host}/files/deleteBoard/${fileDelArr}`).then((resp) => {
+      console.log("삭제:", resp.data);
+      setFileList(updatedFiles); // 삭제된 파일을 담고있는 복사본을 원본에 삽입 
+    })
   };
 
   // 취소 click
@@ -124,7 +134,21 @@ export const Detail = () => {
     setBoard((prev) => {
       return { ...prev, title: detail.title, contents: detail.contents };
     });
+    setFileDelArr([]); // 삭제시키려고 했던 seq 담던 애 초기화
+    setUpdatedFiles(fileList); // 복사본에 원본데이터 넣어주기
   };
+
+
+
+  // 파일 삭제
+  const handleFileDelete = (seq) => {
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      setFileDelArr((prev) => [...prev, seq]);
+      setUpdatedFiles((prev) => prev.filter((file) => file.seq !== seq));
+    }
+  };
+
+
 
   // 북마크 추가
   const handleBookmarkAdd = (seq) => {
@@ -252,6 +276,9 @@ export const Detail = () => {
     });
   };
 
+
+
+
   //======================================================================================
 
   return (
@@ -274,6 +301,7 @@ export const Detail = () => {
           ></i>
         </div>
         <div className={styles.right}>
+          {/* <i className="fa-regular fa-folder-open fa-lg"></i> */}
           {currentUser &&
             !isEditing &&
             (detail.member_id === currentUser.id || isAdmin) ? (
@@ -339,11 +367,14 @@ export const Detail = () => {
         )}
       </div>
       {
-        fileList.map((item, index) => {
+        updatedFiles.map((file, index) => {
+          console.log("시퀀스 : ", file.seq)
           return (
             <div key={index}>
               <div>
-                <a href={`${host}/files/downloadBoard?oriname=${item.oriname}&sysname=${item.sysname}`}>{item.oriname}</a>
+                <a href={`${host}/files/downloadBoard?oriname=${file.oriname}&sysname=${file.sysname}`}>{file.oriname}
+                </a>
+                {isEditing && <button className={styles.fileDelBtn} onClick={() => handleFileDelete(file.seq)}>X</button>}
               </div>
 
             </div>

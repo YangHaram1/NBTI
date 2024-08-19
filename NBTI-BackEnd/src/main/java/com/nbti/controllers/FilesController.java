@@ -7,17 +7,17 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -36,7 +36,6 @@ import com.nbti.services.MembersService;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/files")
@@ -93,6 +92,13 @@ public class FilesController {
 		}
 	}
 	
+	// 유나 게시판 파일 삭제
+	@DeleteMapping("/deleteBoard/{seq}")
+	public ResponseEntity<Void> delete(@PathVariable int[] seq) throws Exception{
+		
+		serv.deleteBoardFile(seq);
+		return ResponseEntity.ok().build();
+	}
 	
 	
 	@PutMapping("mypageUpdate")

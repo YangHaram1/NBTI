@@ -32,4 +32,10 @@ public class FilesDAO {
 		return mybatis.selectList("Files.select", map);
 	}
 
+	// 유나 게시판 파일 삭제
+	public int deleteBoardFile(Map<String, Integer> map) {
+		return mybatis.delete("Files.deleteBoardFile", map);
+	}
+	
+	
 }

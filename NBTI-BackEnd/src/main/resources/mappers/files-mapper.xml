@@ -17,5 +17,12 @@
  	<select id="select" resultType="com.nbti.dto.FilesDTO">
  		select * from files where parent_seq = ${seq} and code=${code}
  	</select>
+ 	
+ 	<!-- 유나 게시판 파일 삭제 -->
+ 	<delete id= "deleteBoardFile">
+ 		delete from files where seq = ${seq} and code=${code}
+ 	</delete>
+ 
+ 
  
  </mapper>

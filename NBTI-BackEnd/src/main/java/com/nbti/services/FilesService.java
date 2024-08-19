@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.nbti.commons.FileConfig;
 import com.nbti.commons.ImageConfig;
 import com.nbti.commons.RealpathConfig;
 import com.nbti.dao.ApprovalDAO;
@@ -261,9 +262,25 @@ public class FilesService {
     
     // 유나
     // 게시판 파일 목록 출력
-    public List<FilesDTO> selectList(int seq,int code){
+    public List<FilesDTO> selectList(int seq, int code){
 		return fdao.selectList(seq, code);
 	}
+    
+    // 게시판 파일 삭제
+    public void deleteBoardFile(int[] seq) {
+    	
+    	for(int s : seq) {
+			Map<String, Integer> map = new HashMap<>();
+			map.put("seq", s);
+			map.put("code", FileConfig.borad);
+
+			fdao.deleteBoardFile(map);
+		}
+    	
+    	
+    }
+    
+    
 
 	
 }
