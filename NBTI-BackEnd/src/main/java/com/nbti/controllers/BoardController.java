@@ -138,8 +138,6 @@ public class BoardController {
 		String member_id = (String) session.getAttribute("loginID");
 		String realpath=RealpathConfig.realpath+"board";
 		
-		System.out.println("board : " + board);
-	
 		Gson gson =new Gson();
 		BoardDTO dto= gson.fromJson(board, BoardDTO.class);
 		dto.setMember_id(member_id);

@@ -73,7 +73,6 @@ export const QnADetail = () => {
 
     // 파일 목록 출력
     axios.get(`${host}/files/board?seq=${boardSeq}`).then((resp) => {
-      console.log("파일 : ", resp.data);
       setFileList(resp.data);
     });
 

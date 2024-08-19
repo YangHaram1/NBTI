@@ -61,13 +61,13 @@ export const QnA = () => {
     console.log("formData : ", formData);
 
     // 글 작성 완료
-    // axios.post(`${host}/board`, formData).then((resp) => {
-    //   Swal.fire({
-    //     icon: "success",
-    //     text: "글이 작성되었습니다.",
-    //   });
-    //   navi("/mypage/qnaList");
-    // });
+    axios.post(`${host}/board`, formData).then((resp) => {
+      Swal.fire({
+        icon: "success",
+        text: "글이 작성되었습니다.",
+      });
+      navi("/mypage/qnaList");
+    });
   };
 
   //---------------------------------------------------------------임시저장
@@ -77,7 +77,6 @@ export const QnA = () => {
   const saveTempBoard = () => {
     let code = 3;
     axios.get(`${host}/tempBoard/tempList/${code}`).then((resp) => {
-      console.log("뭐야? : ", resp.data);
       setTempBoardList(resp.data);
     });
   };
