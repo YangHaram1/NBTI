@@ -12,5 +12,10 @@
  	<select id="selectList" resultType="com.nbti.dto.FilesDTO">
  		select * from files where parent_seq = ${seq}
  	</select>
+ 	
+ 	<!-- 유나 게시판 파일 출력 -->
+ 	<select id="select" resultType="com.nbti.dto.FilesDTO">
+ 		select * from files where parent_seq = ${seq} and code=${code}
+ 	</select>
  
  </mapper>

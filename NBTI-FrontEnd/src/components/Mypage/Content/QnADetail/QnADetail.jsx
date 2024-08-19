@@ -12,6 +12,7 @@ import SweetAlert from "../../../../function/SweetAlert";
 
 export const QnADetail = () => {
   const navi = useNavigate();
+  const [fileList, setFileList] = useState([]);
 
   const { boardSeq, boardType } = useBoardStore();
   const [detail, setDetail] = useState({}); // 게시글의 detail 정보
@@ -53,15 +54,12 @@ export const QnADetail = () => {
       });
     }
 
-    // 로그인 한 사용자 정보
-    axios.get(`${host}/members`).then((resp) => {
-      setCurrentUser(resp.data);
-    });
-
     // 로그인 한 사용자 정보 및 권한 확인
     axios.get(`${host}/members`).then((resp) => {
+      setCurrentUser(resp.data);
+
+      // 권한 확인
       if (resp.data.member_level === "2") {
-        // 권한 확인
         axios.get(`${host}/members/selectLevel`).then((resp1) => {
           const totalStatus =
             resp1.data[parseInt(resp.data.member_level) - 1].total; // 배열의 n번째 요소에서 seq 확인
@@ -71,6 +69,12 @@ export const QnADetail = () => {
           }
         });
       }
+    });
+
+    // 파일 목록 출력
+    axios.get(`${host}/files/board?seq=${boardSeq}`).then((resp) => {
+      console.log("파일 : ", resp.data);
+      setFileList(resp.data);
     });
 
     // 외부 스타일시트를 동적으로 추가
@@ -272,6 +276,20 @@ export const QnADetail = () => {
           <div dangerouslySetInnerHTML={{ __html: detail.contents }}></div>
         )}
       </div>
+
+      {fileList.map((item, index) => {
+        return (
+          <div key={index}>
+            <div>
+              <a
+                href={`${host}/files/downloadBoard?oriname=${item.oriname}&sysname=${item.sysname}`}
+              >
+                {item.oriname}
+              </a>
+            </div>
+          </div>
+        );
+      })}
 
       {/* --------------[ 댓글 작성 ]------------ */}
       <div className={styles.reply}>

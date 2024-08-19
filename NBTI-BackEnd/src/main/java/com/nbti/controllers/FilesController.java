@@ -26,9 +26,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.nbti.commons.FileConfig;
 import com.nbti.commons.RealpathConfig;
 import com.nbti.dto.FilesDTO;
 import com.nbti.dto.MembersDTO;
+import com.nbti.services.BoardService;
 import com.nbti.services.FilesService;
 import com.nbti.services.MembersService;
 
@@ -44,6 +46,8 @@ public class FilesController {
 	private HttpSession session;
 	@Autowired
 	private FilesService serv;
+	@Autowired
+	private BoardService bserv;
 	
 	@Autowired
 	private MembersService mserv;
@@ -65,6 +69,31 @@ public class FilesController {
 			dos.flush();	
 		}
 	}
+	
+	// 유나 게시판 파일 출력
+	@GetMapping("/board")
+	public ResponseEntity<List<FilesDTO>> select(int seq){
+		return ResponseEntity.ok(serv.selectList(seq, FileConfig.borad));
+	}
+	
+	// 유나 게시판 파일 다운
+	@GetMapping("/downloadBoard")
+	public void downloadBoard(@RequestParam String oriname,@RequestParam String sysname, HttpServletResponse response) throws Exception{
+		String realpath= RealpathConfig.realpath +"board";
+		File target =new File(realpath+"/"+sysname);
+		
+		oriname =new String(oriname.getBytes(),"ISO-8859-1");
+		response.setHeader("content-disposition", "attachment;filename=\""+oriname+"\"");
+		try(DataInputStream dis = new DataInputStream(new FileInputStream(target));
+			DataOutputStream dos = new DataOutputStream(response.getOutputStream());){
+			byte[] fileContents =new byte[(int)target.length()];
+			dis.readFully(fileContents);
+			dos.write(fileContents);
+			dos.flush();	
+		}
+	}
+	
+	
 	
 	@PutMapping("mypageUpdate")
 	public ResponseEntity<Void> update(@RequestPart("updatedData")  String updatedData, @RequestPart(value="file", required = false) MultipartFile file) throws Exception {

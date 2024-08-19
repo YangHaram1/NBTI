@@ -10,15 +10,10 @@ import BoardEditor from "../../../../BoardEditor/BoardEditor";
 import Swal from "sweetalert2";
 import SweetAlert from "../../../../../../function/SweetAlert";
 
-// HTML 태그 제거 함수
-const stripHtmlTags = (html) => {
-  const tmp = document.createElement("div");
-  tmp.innerHTML = html;
-  return tmp.textContent || tmp.innerText || "";
-};
 
 export const Detail = () => {
   const navi = useNavigate();
+  const [fileList, setFileList] = useState([]);
 
   const { boardSeq, boardType } = useBoardStore();
   const [detail, setDetail] = useState({}); // 게시글의 detail 정보
@@ -79,6 +74,11 @@ export const Detail = () => {
           }
         });
       }
+    });
+
+    // 파일 목록 출력
+    axios.get(`${host}/files/board?seq=${boardSeq}`).then((resp) => {
+      setFileList(resp.data);
     });
 
     // 외부 스타일시트를 동적으로 추가
@@ -275,8 +275,8 @@ export const Detail = () => {
         </div>
         <div className={styles.right}>
           {currentUser &&
-          !isEditing &&
-          (detail.member_id === currentUser.id || isAdmin) ? (
+            !isEditing &&
+            (detail.member_id === currentUser.id || isAdmin) ? (
             <>
               <p onClick={handleEditBtn}>수정</p>
               <p
@@ -338,6 +338,18 @@ export const Detail = () => {
           <div dangerouslySetInnerHTML={{ __html: detail.contents }}></div>
         )}
       </div>
+      {
+        fileList.map((item, index) => {
+          return (
+            <div key={index}>
+              <div>
+                <a href={`${host}/files/downloadBoard?oriname=${item.oriname}&sysname=${item.sysname}`}>{item.oriname}</a>
+              </div>
+
+            </div>
+          )
+        })
+      }
 
       {/* --------------[ 댓글 작성 ]------------ */}
       <div className={styles.reply}>

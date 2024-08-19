@@ -1,5 +1,6 @@
 package com.nbti.controllers;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.Gson;
+import com.nbti.commons.RealpathConfig;
 import com.nbti.dto.BoardDTO;
 import com.nbti.services.BoardService;
 import com.nbti.services.ReplyService;
@@ -101,14 +105,6 @@ public class BoardController {
 	        map.put("status", "ok");
 	    }
 	    
-	    
-	    
-	    System.out.println("Request Parameters:");
-	    System.out.println("board_code: " + code);
-	    System.out.println("target: " + target);
-	    System.out.println("keyword: " + keyword);
-	    System.out.println("member_id: " + member_id);
-	    
 	    List<BoardDTO> list = bserv.selectMyList(map);
 	    
 	    for(BoardDTO dto : list) {
@@ -116,14 +112,11 @@ public class BoardController {
 	    	dto.setReply_count(replyCount);
 	    }
 	    
-
 	    // 클라이언트에게 보낼 값 ( 페이지네이션 : 게시글 총 개수, 게시글 목록 )
 	    Map<String, Object> result = new HashMap<>();
 	    result.put("count", bserv.getMyListCount(map) ); // 전체 게시글 수 계산
 	    result.put("list", list );
 	   
-	    System.out.println("Count of my posts: " + bserv.getMyListCount(map));
-	    
 		return ResponseEntity.ok(result);
 	}
 	
@@ -135,12 +128,24 @@ public class BoardController {
 		return ResponseEntity.ok(dto);
 	}
 	
+	
 	// 게시글 작성
 	@PostMapping
-	public ResponseEntity<Void> insert(@RequestBody BoardDTO dto) {
-	String member_id = (String) session.getAttribute("loginID");
-	dto.setMember_id(member_id);
-	bserv.insert(dto);
+	public ResponseEntity<Void> insert( 
+			@RequestParam(value = "files", required = false) MultipartFile[] files, 
+			@RequestParam String board) throws IllegalStateException, IOException {
+		
+		String member_id = (String) session.getAttribute("loginID");
+		String realpath=RealpathConfig.realpath+"board";
+		
+		System.out.println("board : " + board);
+	
+		Gson gson =new Gson();
+		BoardDTO dto= gson.fromJson(board, BoardDTO.class);
+		dto.setMember_id(member_id);
+		
+		bserv.insert(realpath,files,dto);
+	
 		return ResponseEntity.ok().build();
 	}
 	

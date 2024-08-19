@@ -1,17 +1,25 @@
 package com.nbti.services;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.nbti.commons.FileConfig;
 import com.nbti.dao.BoardDAO;
+import com.nbti.dao.FilesDAO;
 import com.nbti.dao.LikesDAO;
 import com.nbti.dao.ReplyDAO;
 import com.nbti.dto.BoardDTO;
+import com.nbti.dto.FilesDTO;
 import com.nbti.dto.ReplyDTO;
 
 @Service
@@ -23,6 +31,9 @@ public class BoardService {
 	private ReplyDAO rdao;
 	@Autowired
 	private LikesDAO ldao;
+	
+	@Autowired
+	private FilesDAO fdao;
 	
 	// 목록 출력
 	public List<BoardDTO> selectAll(Map<String, Object> map){
@@ -50,8 +61,26 @@ public class BoardService {
 	}
 	
 	// 게시글 작성
-	public void insert(BoardDTO dto) {
-		bdao.insert(dto);
+	@Transactional
+	public void insert(String realpath,MultipartFile[] files,BoardDTO dto) throws IllegalStateException, IOException {
+		
+		File realPathFile =new File(realpath);
+		if(!realPathFile.exists()) {realPathFile.mkdir();}
+		dto=bdao.insert(dto);
+		
+		if(files!=null) {
+			for(MultipartFile file:files) {
+				if(file.getSize()==0) {
+					continue;
+				}
+				String oriName =file.getOriginalFilename();
+				String sysName= UUID.randomUUID() +"_"+ oriName;
+				file.transferTo(new File(realpath+"/"+sysName));
+				FilesDTO fdto= new FilesDTO(0,oriName,sysName,dto.getSeq(),FileConfig.borad);
+				fdao.insertApprovalFile(fdto);
+			}
+		}		
+		
 	}
 
 

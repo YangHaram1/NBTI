@@ -257,7 +257,13 @@ public class FilesService {
     public List<FilesDTO> getList(int seq){
     	return fdao.getList(seq);
     }
-
+    
+    
+    // 유나
+    // 게시판 파일 목록 출력
+    public List<FilesDTO> selectList(int seq,int code){
+		return fdao.selectList(seq, code);
+	}
 
 	
 }
