@@ -9,8 +9,11 @@ public class CORSConfig implements WebMvcConfigurer{
 	//.allowedOrigins("http://192.168.1.179:3000")
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**").allowedOriginPatterns("*").allowedMethods("*").allowedHeaders("*")
-		.allowCredentials(true);
+		registry.addMapping("/**")    
+		.allowedOrigins("http://3.39.251.78", "https://nbti-e947e.web.app","https://nbti-e947e.firebaseapp.com/") // ws://은 일반적으로 CORS와 관련이 없습니다
+        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        .allowedHeaders("*")
+        .allowCredentials(true);
 		
 	}
 }

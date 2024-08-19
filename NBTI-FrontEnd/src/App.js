@@ -11,7 +11,7 @@ import { host } from './config/config';
 import { Slide, ToastContainer } from 'react-toastify';
 import styles from './App.module.css';
 import Draggable from 'react-draggable';
-import { host2 } from './config/config';
+import { hostWeb } from './config/config';
 
 axios.defaults.withCredentials = true;
 
@@ -27,6 +27,7 @@ function App() {
  
   useEffect(() => {
     setLoginID(sessionStorage.getItem("loginID"));
+    console.log(setLoginID);
   }, []); // 의존성 배열에 setMembers 추가
 
   useEffect(() => {
@@ -43,12 +44,12 @@ function App() {
   //웹소켓 전체 관리
   useEffect(() => {
     if (loginID !== null && loginID !== 'error') {
-      const url = host.replace(/^https?:/, '')
-      websocketRef.current = new WebSocket(`ws:${url}/chatWebsocket`);
-    }
+     // const url = hostWeb.replace(/^https?:/, '')
+      websocketRef.current = new WebSocket(`ws:${hostWeb}/chatWebsocket`);
+    } 
     if (websocketRef.current != null) {
       websocketRef.current.onopen = () => {
-        console.log('Connected to WebSocket');
+        console.log('Connected to WebSocket'); 
       }
     }
 

@@ -4,9 +4,9 @@ import { useEffect, useState, useRef } from "react";
 import { host } from "../../../../../config/config";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useBoardStore } from "../../../../../store/store";
+import { useAuthStore, useBoardStore } from "../../../../../store/store";
 import { format } from "date-fns";
-
+axios.defaults.withCredentials = true;
 export const FreeBoard = () => {
   const navi = useNavigate();
   const { boardSeq, setBoardSeq, boardType, setBoardType } = useBoardStore();
@@ -19,7 +19,7 @@ export const FreeBoard = () => {
   const [transform, setTransform] = useState(false);
 
   const [isLiked, setIsLiked] = useState({}); // 좋아요 상태를 객체로 저장
-
+  const {loginID} =useAuthStore();
   useEffect(() => {
     // 자유 게시판 글 & 댓글 출력
     axios.get(`${host}/board/freeBoard`).then((resp) => {
@@ -40,6 +40,7 @@ export const FreeBoard = () => {
     });
 
     // 로그인 한 사용자 정보
+    if(loginID!=null)
     axios.get(`${host}/members`).then((resp) => {
       setCurrentUser(resp.data);
     });

@@ -21,6 +21,7 @@ public class WebHandshakeInterceptor implements HandshakeInterceptor {
 
 			if (session != null) {
 				attributes.put("HTTPSESSIONID", session);
+				System.out.println("웹소켓 세션 아이디"+(String)session.getAttribute("loginID"));
 			} else {
 				System.out.println("세션이 null입니다.");
 			}
