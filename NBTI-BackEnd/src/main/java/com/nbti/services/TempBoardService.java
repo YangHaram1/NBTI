@@ -26,10 +26,7 @@ public class TempBoardService {
 	public List<TempBoardDTO> selectAll(Map<String, Object> map){
 		return tdao.selectAll(map);
 	}
-//	public List<TempBoardDTO> selectAll(Map<String, Object> map){
-//		return tdao.selectAll(map);
-//	}
-	
+
 	// 임시저장 삭제
 	public int delete(int seq) {
 		return tdao.delete(seq);

@@ -13,7 +13,7 @@ export const Wait = () => {
         const fetchReservations = () => {
             axios.get(`${host}/reserve/waitList`)
                 .then((resp) => {
-                    console.log("목록출력 : "+JSON.stringify(resp))
+                    // console.log("목록출력 : "+JSON.stringify(resp))
                     setWait(resp.data); // 예약 목록 상태 업데이트
                 })
                 .catch((error) => {
@@ -59,11 +59,6 @@ export const Wait = () => {
                 console.error('Error', error);
             });
     }
-
-    
-    
-    
-    
     
 
     return(
@@ -101,6 +96,7 @@ export const Wait = () => {
                         )}
                     </tbody>
             </table>
+
             <p className={styles.num}>총 {wait.length}개</p>
         </div>
     )

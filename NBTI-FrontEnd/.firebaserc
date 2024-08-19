@@ -1,5 +1,9 @@
 {
   "projects": {
+<<<<<<< HEAD
     "default": "nbti-e947e"
+=======
+    "default": "nbti-study"
+>>>>>>> a93ea1bb8777e376fc34118ee59a0e1de87e1e0e
   }
 }

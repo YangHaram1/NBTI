@@ -60,13 +60,13 @@ public class ReserveDAO {
     }
     
     //승인 관리 - 승인 목록 출력
-    public List<ReserveDTO> approveList () throws Exception {
-    	return mybatis.selectList("Reserve.approveList");
+    public List<ReserveDTO> approveList (Map<String, Object> params) throws Exception {
+    	return mybatis.selectList("Reserve.approveList",params);
     }
     
     //승인 관리 - 반려 목록 출력
-    public List<ReserveDTO> rejectList () throws Exception {
-    	return mybatis.selectList("Reserve.rejectList");
+    public List<ReserveDTO> rejectList (Map<String, Object> params) throws Exception {
+    	return mybatis.selectList("Reserve.rejectList",params);
     }
     
     // 캘린더 차량 
@@ -82,6 +82,13 @@ public class ReserveDAO {
     // 캘린더 회의실
     public List<ReserveDTO> meetingRoomList () throws Exception {
     	return mybatis.selectList("Reserve.meetingRoomList");
+    }
+    
+    public int count () throws Exception{
+    	return mybatis.selectOne("Reserve.count");
+    }
+    public int countR () throws Exception{
+    	return mybatis.selectOne("Reserve.countR");
     }
    
 
