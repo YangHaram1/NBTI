@@ -103,6 +103,13 @@
   line-height: 1.8;
 }
 
+.fileDelBtn {
+  border: none;
+  background-color: transparent;
+  color: #6b9080;
+  margin-left: 5px;
+}
+
 /* =================[ 댓 글 ]================ */
 .container .reply {
   /* height: 120px; */
