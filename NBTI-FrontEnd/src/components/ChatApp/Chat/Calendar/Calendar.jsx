@@ -6,9 +6,14 @@ import interactionPlugin from '@fullcalendar/interaction'; // 클릭 이벤트�
 import { default as koLocale } from '@fullcalendar/core/locales/ko'; // 한국어 로케일
 import { useState } from 'react';
 
-const Calendar = () => {
+const Calendar = ({setSelectedDate}) => {
     const [ events, setEvents ] = useState([]); // 이벤트 상태
-
+ 
+    const handleDateClick = (info) => {
+        const newEvent = { title: '선택', start: info.dateStr, backgroundColor: '#ffeb3b' };
+        setEvents([newEvent]);
+        setSelectedDate(info.dateStr); // 클릭된 날짜를 state로 설정
+    };
     return(
         <div className={styles.container}>
             <FullCalendar
@@ -25,7 +30,8 @@ const Calendar = () => {
                     }}
                     //일정 추가 이벤트
                     events={events}
-                    // dateClick={여기 클릭 이벤트 주삼}
+                    dateClick={handleDateClick}
+                   
                 />
         </div>
     )

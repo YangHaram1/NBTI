@@ -121,12 +121,14 @@
 
 
 .dateSeparator {
-    background-color: #ff000057;
+    background-color: #0059ff2c;
     margin: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: 900;
+    font-family: 'Freesentation-9Black';
+    border-radius: 20px;
 }
 
 .content {
