@@ -216,7 +216,7 @@ export const Write = (props)=>{
         const selectedFiles = Array.from(e.target.files);
         const currentFileNames = files.map(fileObj => fileObj.file.name);
         // const count = 0;
-        console.log("파일 목록 보기", selectedFiles);
+        // console.log("파일 목록 보기", selectedFiles);
         const date = Date.now();
 
         // 중복 파일 체크 및 필터링
@@ -255,7 +255,7 @@ export const Write = (props)=>{
 
     const handleFileDelete = (fileId) => {
         // Remove file from files array
-        console.log(fileId);
+        // console.log(fileId);
         const updatedFiles = files.filter((file) => file.id !== fileId);
         setFiles(updatedFiles);
 
@@ -282,7 +282,7 @@ export const Write = (props)=>{
         .then((resp)=>{
             // console.log("데이터 확인",resp.data);
             setRefer(resp.data);
-            console.log(refer);
+            // console.log(refer);
         })
         .catch((err)=>{
             console.log(err);
