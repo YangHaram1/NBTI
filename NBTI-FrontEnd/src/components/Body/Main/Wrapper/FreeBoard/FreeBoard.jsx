@@ -28,15 +28,15 @@ export const FreeBoard = () => {
       setBoardType("자유");
 
       // 좋아요 상태 가져오기
-      resp.data.rlist.forEach((reply) => {
-        reply.forEach((innerReply) => {
-          axios.get(`${host}/likes/status/${innerReply.seq}`).then((resp) => {
-            // boolean 반환
-            // 좋아요 상태의 prev에 새롭게 true / false를 업데이트
-            setIsLiked((prev) => ({ ...prev, [innerReply.seq]: resp.data }));
-          });
-        });
-      });
+      // resp.data.rlist.forEach((reply) => {
+      //   reply.forEach((innerReply) => {
+      //     axios.get(`${host}/likes/status/${innerReply.seq}`).then((resp) => {
+      //       // boolean 반환
+      //       // 좋아요 상태의 prev에 새롭게 true / false를 업데이트
+      //       setIsLiked((prev) => ({ ...prev, [innerReply.seq]: resp.data }));
+      //     });
+      //   });
+      // });
     });
 
     // 로그인 한 사용자 정보
