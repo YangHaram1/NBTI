@@ -23,7 +23,6 @@ export const Detail=()=>{
     // console.log("setlist:", setlist);
     // console.log("list:", list);
 
-
     const [approvalData, setApprovalData] = useState([]);
     const [referData, setReferData] = useState([]); 
     const [docCommonData, setDocCommonData] = useState({}); 
