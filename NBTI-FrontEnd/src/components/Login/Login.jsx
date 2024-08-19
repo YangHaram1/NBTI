@@ -6,6 +6,7 @@ import { host } from "../../config/config";
 import FindId from "./FindId/FindId";
 import FindPw from "./FindPw/FindPw";
 import ChangePw from "./FindPw/ChangePw/ChangePw";
+import { Await } from "react-router-dom";
 
 axios.defaults.withCredentials = true;
 
@@ -46,7 +47,7 @@ const Login = () => {
         }
     };
 
-    const handleLogin = () => {
+    const  handleLogin = () => {
         axios
             .post(`${host}/auth`, auth)
             .then(resp => {

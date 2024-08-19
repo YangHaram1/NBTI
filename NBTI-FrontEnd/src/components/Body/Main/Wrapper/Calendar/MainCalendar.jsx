@@ -7,17 +7,19 @@ import { default as koLocale } from '@fullcalendar/core/locales/ko'; // 한국�
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useCalendarList } from '../../../../../store/store';
+import { useAuthStore, useCalendarList } from '../../../../../store/store';
 import { host } from '../../../../../config/config';
 
-
+axios.defaults.withCredentials = true;
 export const MainCalendar = () => {
 
     const { setCalendarList } = useCalendarList();
     const [ events, setEvents ] = useState([]); // 이벤트 상태
+    const {loginID} =useAuthStore();
 
         // 캘린더 목록 출력
         useEffect(() => {
+            if(loginID!=null)
             axios.get(`${host}/calendar`)
                 .then((resp) => {
                     const eventList = resp.data.map(event => {
@@ -45,7 +47,7 @@ export const MainCalendar = () => {
                 .catch((error) => {
                     console.error('calendar Error :', error);
                 });
-        }, []); 
+        }, [loginID]); 
 
         // 이벤트 내용 커스터마이징
         const renderEventContent = (eventInfo) => {
