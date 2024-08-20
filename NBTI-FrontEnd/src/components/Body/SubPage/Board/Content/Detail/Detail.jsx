@@ -10,7 +10,6 @@ import BoardEditor from "../../../../BoardEditor/BoardEditor";
 import Swal from "sweetalert2";
 import SweetAlert from "../../../../../../function/SweetAlert";
 
-
 export const Detail = () => {
   const navi = useNavigate();
 
@@ -36,7 +35,6 @@ export const Detail = () => {
   const [updatedFiles, setUpdatedFiles] = useState([]); // 파일 전체 목록 복사본
   const [fileDelArr, setFileDelArr] = useState([]); // 삭제할 파일 담아놓는 배열
   const [isFileListOpen, setIsFileListOpen] = useState(false);
-
 
   // 게시판 코드
   let code = 1;
@@ -127,11 +125,14 @@ export const Detail = () => {
     // 저장 시, 삭제할 파일 삭제 가능
     // 삭제할 파일이 있을 경우에만 삭제 요청 보내기
     if (fileDelArr.length > 0) {
-      axios.delete(`${host}/files/deleteBoard/${fileDelArr}`).then((resp) => {
-        setFileList(updatedFiles); // 삭제된 파일을 담고있는 복사본을 원본에 삽입 
-      }).catch(error => {
-        console.error("파일 삭제 실패:", error);
-      });
+      axios
+        .delete(`${host}/files/deleteBoard/${fileDelArr}`)
+        .then((resp) => {
+          setFileList(updatedFiles); // 삭제된 파일을 담고있는 복사본을 원본에 삽입
+        })
+        .catch((error) => {
+          console.error("파일 삭제 실패:", error);
+        });
     } else {
       // 삭제할 파일이 없는 경우에도 원본 파일 목록을 업데이트
       setFileList(updatedFiles);
@@ -284,6 +285,11 @@ export const Detail = () => {
     });
   };
 
+  // 게시글 신고
+  // const handleReport = () => {
+
+  // }
+
   //======================================================================================
 
   return (
@@ -304,6 +310,10 @@ export const Detail = () => {
             }}
             style={{ display: isBookmarked ? "inline" : "none" }}
           ></i>
+          {/* <i
+            className={`fa-solid fa-circle-exclamation ${styles.report}`}
+            onClick={handleReport}
+          ></i> */}
         </div>
         <div className={styles.right}>
           {currentUser && !isEditing && detail.member_id === currentUser.id && (
@@ -384,7 +394,12 @@ export const Detail = () => {
           <div className={styles.fileListContent}>
             {updatedFiles.map((file, index) => (
               <div key={index}>
-                <a href={`${host}/files/downloadBoard?oriname=${file.oriname}&sysname=${file.sysname}`} className={styles.fileLink}>{file.oriname}</a>
+                <a
+                  href={`${host}/files/downloadBoard?oriname=${file.oriname}&sysname=${file.sysname}`}
+                  className={styles.fileLink}
+                >
+                  {file.oriname}
+                </a>
                 {isEditing && (
                   <button
                     className={styles.fileDelBtn}
