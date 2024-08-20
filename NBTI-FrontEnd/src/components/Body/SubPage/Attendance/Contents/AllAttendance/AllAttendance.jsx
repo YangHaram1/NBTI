@@ -1,6 +1,7 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
 import koLocale from '@fullcalendar/core/locales/ko';
 import useAllWeeklyStats from './useAllAttendance';
 import styles from './AllAttendance.module.css';
@@ -41,14 +42,13 @@ const calculateWorkingHours = (startDate, endDate) => {
     const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
 
     return `${diffHours}시간 ${diffMinutes}분`;
-
 };
 
 // 기본 이벤트 생성 함수
 const createDefaultEvent = (date, memberName, teamName) => {
     return {
-        title:' 출근: N/A\n퇴근: N/A\n근무 시간: N/A\n',
-        date,
+        title: ' 출근: N/A\n퇴근: N/A\n근무 시간: N/A\n',
+        start: date,
         extendedProps: {
             backgroundColor: 'gray',
             textColor: 'white',
@@ -63,11 +63,15 @@ export const AllAttendance = () => {
     const { stats, loading } = useAllWeeklyStats();
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredMembers, setFilteredMembers] = useState([]);
-    const [list, setList] = useState();
+    const [list, setList] = useState([]);
+    const [currentWeekStart, setCurrentWeekStart] = useState(getStartOfWeek(new Date()));
+    const calendarRef = useRef(null);
 
     const handleList = useCallback(() => {
-        const today = new Date();
-        const startOfWeek = getStartOfWeek(today);
+        const startOfWeek = getStartOfWeek(currentWeekStart);
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6); // 주의 끝 날짜
+
         const membersToDisplay = filteredMembers.length > 0 ? filteredMembers : Object.keys(stats).map(memberId => {
             const memberStats = stats[memberId] || {};
             const hasAttendance = Object.keys(memberStats).length > 0;
@@ -92,14 +96,9 @@ export const AllAttendance = () => {
 
                 const title = `출근: ${startTime}\n퇴근: ${endTime}\n근무 시간: ${workingHours}\n`;
 
-
-                const dayOfWeek = getDayOfWeek(date);
-
-                // 기본 배경색은 흰색, 텍스트 색상은 검정으로 설정
                 let backgroundColor = 'white';
                 let textColor = 'black';
 
-                // 출근 기록이 없을 경우 회색 배경으로 설정
                 if (!startDate && !endDate) {
                     backgroundColor = 'gray';
                     textColor = 'white';
@@ -107,11 +106,11 @@ export const AllAttendance = () => {
 
                 return {
                     title,
-                    date: formattedDate,
+                    start: formattedDate,
                     extendedProps: {
                         backgroundColor,
                         textColor,
-                        dayOfWeek,
+                        dayOfWeek: getDayOfWeek(date),
                         memberName: name,
                         teamName
                     }
@@ -119,7 +118,7 @@ export const AllAttendance = () => {
             });
         });
         setList(events);
-    }, [filteredMembers, stats]);
+    }, [filteredMembers, stats, currentWeekStart]);
 
     useEffect(() => {
         handleList();
@@ -155,6 +154,34 @@ export const AllAttendance = () => {
         handleSearch();
     }, [searchTerm, stats, handleSearch]);
 
+    const handleDatesSet = (info) => {
+        const startOfWeek = getStartOfWeek(info.view.currentStart);
+        if (startOfWeek.getTime() !== currentWeekStart.getTime()) {
+            setCurrentWeekStart(startOfWeek);
+        }
+    };
+
+    const handlePrevWeek = () => {
+        setCurrentWeekStart(prev => {
+            const startOfWeek = new Date(prev);
+            startOfWeek.setDate(startOfWeek.getDate() - 7);
+            return getStartOfWeek(startOfWeek);
+        });
+    };
+
+    const handleNextWeek = () => {
+        setCurrentWeekStart(prev => {
+            const startOfWeek = new Date(prev);
+            startOfWeek.setDate(startOfWeek.getDate() + 7);
+            return getStartOfWeek(startOfWeek);
+        });
+    };
+
+    const handleTodayClick = () => {
+        const today = new Date();
+        setCurrentWeekStart(getStartOfWeek(today));
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -167,15 +194,21 @@ export const AllAttendance = () => {
                 onSearch={handleSearch}
             />
             <FullCalendar
-                plugins={[dayGridPlugin]}
+                ref={calendarRef}
+                plugins={[dayGridPlugin, interactionPlugin]}
                 initialView="dayGridWeek"
-                headerToolbar={false}
                 locales={[koLocale]}
                 locale="ko"
                 selectable={true}
                 height="auto"
                 events={list}
-                firstDay={1}
+                firstDay={1} // 월요일을 주의 시작일로 설정
+                headerToolbar={{
+                    left: 'prev,next today', // 왼쪽 버튼
+                    center: 'title',         // 가운데 제목
+                    right: ''                // 오른쪽 버튼을 빈 문자열로 설정하여 기본 툴바 버튼 제거
+                }}
+                datesSet={handleDatesSet}
                 eventContent={({ event }) => {
                     const lines = event.title.split('\n');
 
@@ -197,6 +230,11 @@ export const AllAttendance = () => {
                     );
                 }}
             />
+            <div className={styles.buttonContainer}>
+                <button onClick={handlePrevWeek} className={styles.navButton}>이전 주</button>
+                <button onClick={handleTodayClick} className={styles.navButton}>오늘</button>
+                <button onClick={handleNextWeek} className={styles.navButton}>다음 주</button>
+            </div>
         </div>
     );
 };
