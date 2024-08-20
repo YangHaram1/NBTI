@@ -55,7 +55,7 @@ export const AdminQnADetail = () => {
     }
 
     // 로그인 한 사용자 정보 및 권한 확인
-    axios.get(`${host}/members`).then((resp) => {
+    axios.get(`${host}/members/memberInfo`).then((resp) => {
       setCurrentUser(resp.data);
 
       if (resp.data.member_level === "2") {

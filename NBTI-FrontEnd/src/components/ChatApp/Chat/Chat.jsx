@@ -264,12 +264,10 @@ const Chat = () => {
       Array.from(elements).forEach(e => { // 요소 확인
         // 여기서 원하는 작업을 수행할 수 있습니다.
         if (e.innerHTML === selectedDate) {
-           e.scrollIntoView({ behavior: 'smooth', inline: 'nearest' });
-          // 컨테이너 내부에서의 스크롤 위치 계산
-          // const elementTop = e.getBoundingClientRect().top;
-          // const offset = elementTop - containerTop;
+           e.scrollIntoView({ behavior: 'smooth',  block: 'center', inline: 'nearest'});
+          // const elementTop = e.getBoundingClientRect().Top;
           // divRef.current.scrollTo({
-          //   top: divRef.current.scrollTop+offset,
+          //   top: elementTop,
           //   behavior: 'smooth'
           // });
         }

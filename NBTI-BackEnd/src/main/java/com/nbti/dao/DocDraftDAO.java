@@ -20,5 +20,9 @@ public class DocDraftDAO {
 	public DocDraftDTO selectContent(int seq) {
 		return mybatis.selectOne("DocDraft.selectContent",seq);
 	}
+	
+	public void delete(int seq) {
+		mybatis.delete("DocDraft.delete",seq);
+	}
 
 }

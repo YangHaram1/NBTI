@@ -20,5 +20,9 @@ public class DocVacationDAO {
 	public DocVacationDTO selectContent(int seq) {
 		return mybatis.selectOne("DocVacation.selectContent",seq);
 	}
+	
+	public void delete(int seq) {
+		mybatis.delete("DocVacation.delete",seq);
+	}
 
 }

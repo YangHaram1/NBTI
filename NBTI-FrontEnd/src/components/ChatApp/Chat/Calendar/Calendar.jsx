@@ -19,7 +19,6 @@ const Calendar = ({ setSelectedDate }) => {
     function handleEventMount(arg) {
         const dateStr = arg.date.toLocaleDateString('en-CA'); // 'YYYY-MM-DD' 형식으로 날짜 추출
         // 특정 클래스명을 가진 요소들 모두 가져오기
-        console.log(arg)
         const elements = document.getElementsByClassName(ChatStyles.dateSeparator);
         Array.from(elements).forEach(e => { // 요소 확인
             // 여기서 원하는 작업을 수행할 수 있습니다.

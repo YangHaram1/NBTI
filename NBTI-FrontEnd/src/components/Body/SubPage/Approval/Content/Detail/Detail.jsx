@@ -276,6 +276,17 @@ export const Detail=()=>{
        
     };
 
+    const handleDelete = () => {
+        axios.delete(`${host}/approval/deleteTemp?seq=${seq}&setlist=${setlist}`)
+        .then(()=>{
+            console.log("문서삭제완료");
+            navi("/approval/listDocTemp")
+        })
+        .catch((err)=>{
+            console.log(err);
+        })
+    }
+
     return(
         <div className={styles.container} >
             <div className={styles.title}>
@@ -308,7 +319,7 @@ export const Detail=()=>{
                             <div className={`${styles.approval_submit_btn} ${styles.btn}`} onClick={handleRewrite}><i class="fa-solid fa-pen-to-square"></i>재기안</div>
                             {/* <div className={`${styles.approval_download_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div> */}
                             <div className={`${styles.approval_copy_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
-                            <div className={`${styles.approval_copy_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>삭제하기</div>
+                            <div className={`${styles.approval_copy_btn} ${styles.btn}`} onClick={handleDelete}><i class="fa-solid fa-users"></i>삭제하기</div>
                         </div>
                         </>
                     }

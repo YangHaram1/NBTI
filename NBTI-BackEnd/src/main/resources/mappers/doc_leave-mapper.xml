@@ -15,4 +15,9 @@
  	<select id="selectContent" resultType="com.nbti.dto.DocLeaveDTO">
  		select * from doc_leave where leave_seq = #{seq}
  	</select>
+ 	
+ 	<delete id="delete">
+    	delete from doc_leave where leave_seq = ${seq}
+    </delete>
+ 	
  </mapper>
