@@ -7,18 +7,18 @@
     height: 100%;
     display: flex;
     gap: 10px;
-    font-size: 11.5px;
+    font-size: 12px;
+   
    
 }
 .item div{ 
     flex: 1;
     display: flex;
-    justify-content: center;
-    align-items: center;
 }
 .delete{
     color: red;
     cursor: pointer;
+    justify-content: center;
 }
 .delete:hover{
     background-color: black;
@@ -27,8 +27,30 @@
 
 .name{
     color: gray;
+    font-family: 'ONE-Mobile-POP';
 }
 .oriname{
     color: blue;
     cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: start;
+    font-family: 'Freesentation-9Black';
+}
+.none{
+    
+}
+
+@font-face {
+    font-family: 'ONE-Mobile-POP';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-POP.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Freesentation-9Black';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
 }
