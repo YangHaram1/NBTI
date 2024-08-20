@@ -11,8 +11,10 @@
 		</selectKey>
 	</insert>
 	
-	<select id="listByGroup_seq" resultType="com.nbti.dto.Chat_uploadDTO">
-		select *from chat_upload where group_seq = ${group_seq}
+	<select id="listByGroup_seq" resultType="com.nbti.dto.Chat_uploadNameDTO">
+		select c.*,m.name as member_name from chat_upload c
+		join members m on c.member_id= m.id
+		where group_seq = ${group_seq}
 	</select>
 	
 	<delete id="deleteBySeq">

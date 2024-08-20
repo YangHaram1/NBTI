@@ -68,7 +68,6 @@
   display: flex;
   flex-direction: column;
   padding-left: 20px;
-  /* justify-content: center; */
 }
 .container .title .titleWriter .innerTitle {
   flex: 1;

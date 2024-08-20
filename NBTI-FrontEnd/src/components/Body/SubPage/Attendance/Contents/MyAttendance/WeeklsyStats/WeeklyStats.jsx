@@ -14,17 +14,18 @@ const formatDate = (date) => new Date(date).toISOString().split('T')[0];
 
 const getStartOfWeek = (date) => {
     const day = date.getDay();
-    const sunday = new Date(date);
-    sunday.setDate(date.getDate() - day);
-    return sunday;
+    // 월요일을 기준으로 주의 첫날을 계산합니다
+    const monday = new Date(date);
+    monday.setDate(date.getDate() - (day === 0 ? 6 : day -2));
+    return monday;
 };
 
 const getWeekData = (date, dailyStats) => {
-    const sunday = getStartOfWeek(date);
+    const monday = getStartOfWeek(date);
     
     return Array.from({ length: 7 }).map((_, index) => {
-        const currentDate = new Date(sunday);
-        currentDate.setDate(sunday.getDate() + index);
+        const currentDate = new Date(monday);
+        currentDate.setDate(monday.getDate() + index);
         const formattedDate = formatDate(currentDate);
 
         const { late = false, absent = false, earlyLeave = false, startDate, endDate } = dailyStats[formattedDate] || {};
@@ -40,9 +41,9 @@ const getWeekData = (date, dailyStats) => {
         let textColor = 'black';
 
         // Change color based on the day of the week
-        if (dayOfWeek === 0) { // Sunday
+        if (dayOfWeek === 1) { // Sunday
             textColor = 'red';
-        } else if (dayOfWeek === 6) { // Saturday
+        } else if (dayOfWeek === 0) { // Saturday
             textColor = 'blue';
         }
 
@@ -82,6 +83,7 @@ const WeeklyStats = ({ memberId }) => {
 
     useEffect(() => {
         getWeekDataFromStats();
+        console.log("Events array:", events); // 콘솔에 events 배열을 출력하여 디버깅
     }, [getWeekDataFromStats]);
 
     const getWeekRange = (date) => {
@@ -114,7 +116,7 @@ const WeeklyStats = ({ memberId }) => {
                 selectable={true}
                 height="auto"
                 events={events}
-                firstDay={0} // Sunday as the first day of the week
+                firstDay={1} // 월요일을 주의 시작일로 설정
                 eventContent={({ event }) => {
                     const lines = event.title.split('\n');
                     return (

@@ -68,7 +68,6 @@ export const Detail = () => {
     // 로그인 한 사용자 정보 및 HR 권한 확인
     axios.get(`${host}/members/memberInfo`).then((resp) => {
       setCurrentUser(resp.data);
-      console.log("사용자 누구냐 : ", resp.data); // 홍길동
 
       // HR 권한 확인
       if (resp.data.member_level === "2" || resp.data.member_level === "3") {
@@ -128,13 +127,12 @@ export const Detail = () => {
     // 삭제할 파일이 있을 경우에만 삭제 요청 보내기
     if (fileDelArr.length > 0) {
       axios.delete(`${host}/files/deleteBoard/${fileDelArr}`).then((resp) => {
-        console.log("삭제:", resp.data);
         setFileList(updatedFiles); // 삭제된 파일을 담고있는 복사본을 원본에 삽입 
       }).catch(error => {
         console.error("파일 삭제 실패:", error);
       });
     } else {
-      // 삭제할 파일이 없는 경우에도 원본 파일 목록을 업데이트해줍니다.
+      // 삭제할 파일이 없는 경우에도 원본 파일 목록을 업데이트
       setFileList(updatedFiles);
     }
   };
@@ -151,10 +149,8 @@ export const Detail = () => {
 
   // 파일 삭제
   const handleFileDelete = (seq) => {
-    // if (window.confirm("정말 삭제하시겠습니까?")) {
     setFileDelArr((prev) => [...prev, seq]);
     setUpdatedFiles((prev) => prev.filter((file) => file.seq !== seq));
-    // }
   };
 
   // 북마크 추가
@@ -175,7 +171,6 @@ export const Detail = () => {
   const handleBookmarkRemove = (seq) => {
     setIsBookmarked(!isBookmarked);
     axios.delete(`${host}/bookmark/delete/${seq}`).then((resp) => {
-      console.log("삭제", resp.data);
       if (resp.data > 0) {
         Swal.fire({
           icon: "error",
@@ -184,6 +179,11 @@ export const Detail = () => {
         });
       }
     });
+  };
+
+  // 파일 토글 창
+  const toggleFileList = () => {
+    setIsFileListOpen((prev) => !prev);
   };
 
   // ==========[댓 글]==========
@@ -283,20 +283,6 @@ export const Detail = () => {
     });
   };
 
-
-  // 파일 토글 창
-  const toggleFileList = () => {
-    setIsFileListOpen((prev) => !prev);
-  };
-
-
-  console.log("currentUser: ", currentUser);
-  console.log("detail.member_id: ", detail.member_id);
-  console.log("currentUser.id: ", currentUser?.id);
-  console.log("isAdmin: ", isAdmin);
-  console.log("isEditing: ", isEditing);
-
-
   //======================================================================================
 
   return (
@@ -319,27 +305,26 @@ export const Detail = () => {
           ></i>
         </div>
         <div className={styles.right}>
+          {currentUser && !isEditing && detail.member_id === currentUser.id && (
+            <p onClick={handleEditBtn}>수정</p>
+          )}
 
-          {currentUser &&
-            !isEditing &&
-            (detail.member_id === currentUser.id || isAdmin) ? (
-            <>
-              <p onClick={handleEditBtn}>수정</p>
-              <p
-                onClick={() =>
-                  SweetAlert(
-                    "warning",
-                    "게시판",
-                    "정말 삭제하시겠습니까?",
-                    handleDelBtn
-                  )
-                }
-              >
-                삭제
-              </p>
-            </>
-          ) : null}
+          {currentUser && !isEditing && isAdmin && (
+            <p
+              onClick={() =>
+                SweetAlert(
+                  "warning",
+                  "게시판",
+                  "정말 삭제하시겠습니까?",
+                  handleDelBtn
+                )
+              }
+            >
+              삭제
+            </p>
+          )}
         </div>
+
         {isEditing && (
           <div className={styles.editButtons}>
             <p onClick={handleSaveBtn}>저장</p>

@@ -107,7 +107,7 @@ const ClockButton = ({ type }) => {
                             <p>출근 시간 : </p>
                             <p> {currentClockIn || '출근 기록 없음'}</p>
                             {isLate && <span className={styles.comment}>지각</span>}
-                            {!currentClockIn && <p className={styles.additionalText}>출근 기록이 없습니다.</p>}
+                            {/* {!currentClockIn && <p className={styles.additionalText}>출근 기록이 없습니다.</p>} */}
                         </>
                     )}
                     {type === 'clock-out' && (

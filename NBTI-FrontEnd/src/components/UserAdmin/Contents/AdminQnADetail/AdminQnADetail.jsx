@@ -8,10 +8,11 @@ import image from "../../../../images/user.jpg";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import BoardEditor from "../../../Body/BoardEditor/BoardEditor";
+import Swal from "sweetalert2";
+import SweetAlert from "../../../../function/SweetAlert";
 
 export const AdminQnADetail = () => {
   const navi = useNavigate();
-  const [fileList, setFileList] = useState([]);
 
   const { boardSeq, boardType } = useBoardStore();
   const [detail, setDetail] = useState({}); // 게시글의 detail 정보
@@ -28,6 +29,11 @@ export const AdminQnADetail = () => {
   const [currentUser, setCurrentUser] = useState(null); // 로그인된 사용자 정보 상태
   const [isAdmin, setIsAdmin] = useState(false); // 권한 여부 상태
   const [isBookmarked, setIsBookmarked] = useState(false);
+
+  const [fileList, setFileList] = useState([]); // 파일 전체 목록
+  const [updatedFiles, setUpdatedFiles] = useState([]); // 파일 전체 목록 복사본
+  const [fileDelArr, setFileDelArr] = useState([]); // 삭제할 파일 담아놓는 배열
+  const [isFileListOpen, setIsFileListOpen] = useState(false);
 
   // 게시판 코드
   let code = 3;
@@ -49,7 +55,6 @@ export const AdminQnADetail = () => {
 
       // 북마크 상태 확인
       axios.get(`${host}/bookmark/${boardSeq}`).then((resp) => {
-        console.log("북마크 ", resp.data);
         setIsBookmarked(resp.data);
       });
     }
@@ -58,14 +63,11 @@ export const AdminQnADetail = () => {
     axios.get(`${host}/members/memberInfo`).then((resp) => {
       setCurrentUser(resp.data);
 
+      // 권한 확인
       if (resp.data.member_level === "2") {
-        // 권한 확인
         axios.get(`${host}/members/selectLevel`).then((resp1) => {
           const totalStatus =
             resp1.data[parseInt(resp.data.member_level) - 1].total; // 배열의 n번째 요소에서 seq 확인
-
-          console.log("권한 : ", resp1.data);
-          console.log("댓글권한 : ", totalStatus);
 
           if (totalStatus === "Y") {
             setIsAdmin(true); // 2일 때 true
@@ -76,8 +78,8 @@ export const AdminQnADetail = () => {
 
     // 파일 목록 출력
     axios.get(`${host}/files/board?seq=${boardSeq}`).then((resp) => {
-      console.log("집갈래... : ", resp.data);
       setFileList(resp.data);
+      setUpdatedFiles(resp.data); // 파일 복사본
     });
 
     // 외부 스타일시트를 동적으로 추가
@@ -94,12 +96,10 @@ export const AdminQnADetail = () => {
 
   /** ================[ 삭 제 ]============= */
   const handleDelBtn = () => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
-      if (boardSeq !== -1) {
-        axios.delete(`${host}/board/${detail.seq}`).then((resp) => {
-          navi("/board/free");
-        });
-      }
+    if (boardSeq !== -1) {
+      axios.delete(`${host}/board/${detail.seq}`).then((resp) => {
+        navi("/board/free");
+      });
     }
   };
 
@@ -117,6 +117,22 @@ export const AdminQnADetail = () => {
       setDetail(board);
       setIsEditing(false);
     });
+
+    // 저장 시, 삭제할 파일 삭제 가능
+    // 삭제할 파일이 있을 경우에만 삭제 요청 보내기
+    if (fileDelArr.length > 0) {
+      axios
+        .delete(`${host}/files/deleteBoard/${fileDelArr}`)
+        .then((resp) => {
+          setFileList(updatedFiles); // 삭제된 파일을 담고있는 복사본을 원본에 삽입
+        })
+        .catch((error) => {
+          console.error("파일 삭제 실패:", error);
+        });
+    } else {
+      // 삭제할 파일이 없는 경우에도 원본 파일 목록을 업데이트
+      setFileList(updatedFiles);
+    }
   };
 
   // 취소 click
@@ -125,13 +141,27 @@ export const AdminQnADetail = () => {
     setBoard((prev) => {
       return { ...prev, title: detail.title, contents: detail.contents };
     });
+    setFileDelArr([]); // 삭제시키려고 했던 seq 담던 애 초기화
+    setUpdatedFiles(fileList); // 복사본에 원본데이터 넣어주기
+  };
+
+  // 파일 삭제
+  const handleFileDelete = (seq) => {
+    setFileDelArr((prev) => [...prev, seq]);
+    setUpdatedFiles((prev) => prev.filter((file) => file.seq !== seq));
   };
 
   // 북마크 추가
   const handleBookmarkAdd = (seq) => {
     setIsBookmarked(!isBookmarked);
     axios.post(`${host}/bookmark/insert`, { board_seq: seq }).then((resp) => {
-      if (resp.data === 1) alert("중요 게시글에 추가되었습니다.");
+      if (resp.data === 1) {
+        Swal.fire({
+          icon: "success",
+          title: "북마크",
+          text: "중요 게시글에 추가되었습니다.",
+        });
+      }
     });
   };
 
@@ -139,9 +169,19 @@ export const AdminQnADetail = () => {
   const handleBookmarkRemove = (seq) => {
     setIsBookmarked(!isBookmarked);
     axios.delete(`${host}/bookmark/delete/${seq}`).then((resp) => {
-      console.log("삭제", resp.data);
-      if (resp.data > 0) alert("중요 게시글에서 삭제되었습니다.");
+      if (resp.data > 0) {
+        Swal.fire({
+          icon: "error",
+          title: "북마크",
+          text: "중요 게시글에 삭제되었습니다.",
+        });
+      }
     });
+  };
+
+  // 파일 토글 창
+  const toggleFileList = () => {
+    setIsFileListOpen((prev) => !prev);
   };
 
   // ==========[댓 글]==========
@@ -187,6 +227,8 @@ export const AdminQnADetail = () => {
     });
   };
 
+  //======================================================================================
+
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -210,7 +252,18 @@ export const AdminQnADetail = () => {
           {currentUser && detail.member_id === currentUser.id && !isEditing ? (
             <>
               <p onClick={handleEditBtn}>수정</p>
-              <p onClick={handleDelBtn}>삭제</p>
+              <p
+                onClick={() =>
+                  SweetAlert(
+                    "warning",
+                    "게시판",
+                    "정말 삭제하시겠습니까?",
+                    handleDelBtn
+                  )
+                }
+              >
+                삭제
+              </p>
             </>
           ) : null}
         </div>
@@ -249,6 +302,12 @@ export const AdminQnADetail = () => {
         </div>
         <div className={styles.writeDate}>
           <span>{currentDate}</span>
+          {updatedFiles.length > 0 && (
+            <i
+              className="fa-regular fa-folder-open fa-lg"
+              onClick={toggleFileList}
+            ></i>
+          )}
         </div>
       </div>
       <div className={styles.content}>
@@ -258,19 +317,32 @@ export const AdminQnADetail = () => {
           <div dangerouslySetInnerHTML={{ __html: detail.contents }}></div>
         )}
       </div>
-      {fileList.map((item, index) => {
-        return (
-          <div key={index}>
-            <div>
-              <a
-                href={`${host}/files/downloadBoard?oriname=${item.oriname}&sysname=${item.sysname}`}
-              >
-                {item.oriname}
-              </a>
-            </div>
+
+      {/* 파일 리스트 */}
+      {isFileListOpen && (
+        <div className={styles.fileListModal}>
+          <div className={styles.fileListContent}>
+            {updatedFiles.map((file, index) => (
+              <div key={index}>
+                <a
+                  href={`${host}/files/downloadBoard?oriname=${file.oriname}&sysname=${file.sysname}`}
+                  className={styles.fileLink}
+                >
+                  {file.oriname}
+                </a>
+                {isEditing && (
+                  <button
+                    className={styles.fileDelBtn}
+                    onClick={() => handleFileDelete(file.seq)}
+                  >
+                    X
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
-        );
-      })}
+        </div>
+      )}
 
       {/* --------------[ 댓글 작성 ]------------ */}
       <div className={styles.reply}>

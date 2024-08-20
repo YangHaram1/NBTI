@@ -27,8 +27,11 @@ const ChatsModal = ({ modalRef, index, item, setGroup_chats, setCountBookmark, s
                 )
 
             });
+            setCountBookmark((prevBookmark) => {
+              return prevBookmark-1;
+            })
             ws.current.send("chatController");
-            //setChatController();
+            setChatController();
             setCountTotal((prev1) => {
                 return prev1 - item.unread;
             })
