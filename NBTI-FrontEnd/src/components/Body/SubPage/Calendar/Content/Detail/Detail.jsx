@@ -52,10 +52,11 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
     };
     const closeModal = () => { //닫기
         setModalOpen(false); // 일정 추가 모달 닫기
-        setSelectedDate(null);
+        setSelectedDate(null); // 선택된 날짜 초기화
         setAddOpen(false); // 일정 추가 모달 닫기 
         setSelectedEvent(null); // 선택된 이벤트 초기화
         setCalendarModalOpen(false); // 공유 일정 모달 닫기
+        setMembersList([]); // 선택된 멤버 리스트 초기화
     };
 
     // 입력된 값을 insert 상태에 업데이트
@@ -150,7 +151,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                 setEvents(prev => [
                     ...prev,
                     {
-                        color : calendar_name === 1 ? "#33A150" : "#E04038" ,
+                        color : calendar_name === 1 ? "#BDE6F3" : "#F88F5A" ,
                         // seq: seq,
                         title: title, //제목
                         start: startDate, //사작
@@ -279,10 +280,13 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
 
                 const eventList = resp.data.map(event => {
                     let color = '';
+                    let textColor = '';
                     if(event.calendar_id === 1 ){
-                        color='#33A150';
+                        color='#BDE6F3';
+                        textColor = "#2e2e2e";
                     }else{
-                        color='#E04038';
+                        color='#F88F5A';
+                        textColor = "#2e2e2e";
                     }
 
                     return {
@@ -295,7 +299,8 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                             contents: event.contents,
                             calendar_name :event.calendar_name
                         },
-                        color : color,
+                        color,
+                        textColor
                     }
                 });
 

@@ -14,8 +14,7 @@ axios.defaults.withCredentials = true;
 const Home = () => {
 
     const [color, setColor] = useState({ member: false, chat: true, file: false });
-    const [name, setName] = useState();
-    const { loginID, setLoginID } = useAuthStore();
+    const { loginID } = useAuthStore();
     const { members } = useMemberStore();
     const { setChatNavi, chatNaviBody, setChatNaviBody, chatNavi } = useContext(ChatsContext);
     const [settiing, setSetting] = useState(false);
@@ -100,7 +99,7 @@ const Home = () => {
                 </div>
             </div>
             <div className={styles.div3}>
-                {chatNaviBody === 'members' && <Members setName={setName} />}
+                {chatNaviBody === 'members' && <Members setColor={setColor} />}
                 {chatNaviBody === 'chats' && <Chats />}
                 {chatNaviBody === 'files' && <Files />}
             </div>

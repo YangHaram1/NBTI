@@ -1,6 +1,6 @@
 :root {
-    --fc-today-bg-color: #fef1a08c  !important;
-    --fc-border-color: #A4C3B2;
+    --fc-today-bg-color: #5db46121  !important;
+    --fc-border-color: #6b908065;
 }
 
 .calender {
@@ -17,6 +17,7 @@
     margin-right: 20px;
     margin-bottom: 8px;
 }
+
 .calenderColor > .my::before, .calenderColor > .full::before {
     content: '';
     position: absolute;
@@ -28,10 +29,10 @@
     border-radius: 50%; 
 }
 .calenderColor > .my::before {
-    background-color: #33A150; 
+    background-color: #61a5c2; 
 }
 .calenderColor > .full::before {
-    background-color: #E04038; 
+    background-color: #fb8500; 
 }
 
 /* 툴바 배경색 설정 */
