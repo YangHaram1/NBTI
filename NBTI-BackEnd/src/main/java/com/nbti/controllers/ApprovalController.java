@@ -490,7 +490,7 @@ public class ApprovalController {
 	public Map<String, Object> getWriterIsMe(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword) {
 		String id = (String)session.getAttribute("loginID");
 		
-		System.out.println("기안" + start + ":"+ end + ":"+ target+ ":"+keyword);
+//		System.out.println("기안" + start + ":"+ end + ":"+ target+ ":"+keyword);
 		
 		Map<String, Object> map= new HashMap<>();
 		map.put("start", start);
@@ -518,7 +518,7 @@ public class ApprovalController {
 	public Map<String, Object> getReferIsMe(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword){	
 		String id = (String)session.getAttribute("loginID");
 		
-		System.out.println("참조" + start + ":"+ end + ":"+ target+ ":"+keyword);
+//		System.out.println("참조" + start + ":"+ end + ":"+ target+ ":"+keyword);
 		Map<String, Object> map= new HashMap<>();
 		map.put("start", start);
 		map.put("end", end);
@@ -544,7 +544,7 @@ public class ApprovalController {
 	public  Map<String, Object> getApprovalIsMe(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword){
 		String id = (String)session.getAttribute("loginID");
 		
-		System.out.println("결재" + start + ":"+ end + ":"+ target+ ":"+keyword);
+//		System.out.println("결재" + start + ":"+ end + ":"+ target+ ":"+keyword);
 		Map<String, Object> map= new HashMap<>();
 		map.put("start", start);
 		map.put("end", end);
@@ -570,7 +570,7 @@ public class ApprovalController {
 	public  Map<String, Object> getReturn(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword){
 		String id = (String)session.getAttribute("loginID");
 		
-		System.out.println("반려" + start + ":"+ end + ":"+ target+ ":"+keyword);
+//		System.out.println("반려" + start + ":"+ end + ":"+ target+ ":"+keyword);
 		Map<String, Object> map= new HashMap<>();
 		map.put("start", start);
 		map.put("end", end);
@@ -595,7 +595,7 @@ public class ApprovalController {
 	@GetMapping("/getCancle")
 	public  Map<String, Object> getCancle(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword) {
 		String id = (String)session.getAttribute("loginID");
-		System.out.println("상신취소" + start + ":"+ end + ":"+ target+ ":"+keyword);
+//		System.out.println("상신취소" + start + ":"+ end + ":"+ target+ ":"+keyword);
 		Map<String, Object> map= new HashMap<>();
 		map.put("start", start);
 		map.put("end", end);
@@ -622,7 +622,7 @@ public class ApprovalController {
 	public Map<String, Object> getApprovalWait(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword){
 		String id = (String)session.getAttribute("loginID");
 		
-		System.out.println("결재대기" + start + ":"+ end + ":"+ target+ ":"+keyword);
+//		System.out.println("결재대기" + start + ":"+ end + ":"+ target+ ":"+keyword);
 		Map<String, Object> map= new HashMap<>();
 		map.put("start", start);
 		map.put("end", end);
@@ -648,7 +648,7 @@ public class ApprovalController {
 	public Map<String, Object> getApprovalBook(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword){
 		String id = (String)session.getAttribute("loginID");
 		
-		System.out.println("결재예정" + start + ":"+ end + "target:"+ target+ ":"+keyword);
+//		System.out.println("결재예정" + start + ":"+ end + "target:"+ target+ ":"+keyword);
 		Map<String, Object> map= new HashMap<>();
 		map.put("start", start);
 		map.put("end", end);
@@ -674,7 +674,7 @@ public class ApprovalController {
 	public Map<String, Object> getReferIsMeWait(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword){
 		String id = (String)session.getAttribute("loginID");
 		
-		System.out.println("참조열람대기" + start + ":"+ end + ":"+ target+ ":"+keyword);
+//		System.out.println("참조열람대기" + start + ":"+ end + ":"+ target+ ":"+keyword);
 		Map<String, Object> map= new HashMap<>();
 		map.put("start", start);
 		map.put("end", end);
@@ -699,7 +699,7 @@ public class ApprovalController {
 	@GetMapping("/getTemp")
 	public Map<String, Object> getTemp(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword){
 		String id = (String)session.getAttribute("loginID");
-		System.out.println("임시저장" + start + ":"+ end + ":"+ target+ ":"+keyword);
+//		System.out.println("임시저장" + start + ":"+ end + ":"+ target+ ":"+keyword);
 		Map<String, Object> map= new HashMap<>();
 		map.put("start", start);
 		map.put("end", end);
@@ -731,13 +731,13 @@ public class ApprovalController {
 	@PutMapping("/cancleByMe/{seq}")
 	public ResponseEntity<Void> cancleByMe(@PathVariable int seq) {
 		aServ.cancleByMe(seq);
-		System.out.println("문서 상신 취소");
+//		System.out.println("문서 상신 취소");
 		return ResponseEntity.ok().build();
 	}
 	
 	@DeleteMapping("/deleteTemp")
 	public ResponseEntity<Void> deleteTemp(@RequestParam int seq, @RequestParam String setlist){
-		System.out.println("임시저장 seq:"+seq+"setlist:"+setlist);
+//		System.out.println("임시저장 seq:"+seq+"setlist:"+setlist);
 		aServ.deleteTemp(seq, setlist);
 		return ResponseEntity.ok().build();
 	}
