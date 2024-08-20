@@ -5,7 +5,7 @@ import React from 'react';
 import { useState, useContext } from 'react';
 import { ChatsContext } from '../../../../../Context/ChatsContext';
 import { useAuthStore } from './../../../../../store/store';
-const Modal = ({ modalRef, index, item, profileRef ,setProfileDisplay,setColor}) => {
+const Modal = ({ modalRef, index, item, profileRef ,setProfileDisplay}) => {
    // const [modalDisplay, setModalDisplay] = useState(null);
     const { setChatNaviBody, dragRef } = useContext(ChatsContext);
     const { loginID } = useAuthStore();
@@ -13,9 +13,6 @@ const Modal = ({ modalRef, index, item, profileRef ,setProfileDisplay,setColor})
     const handleChatRoom = () => {
         //console.log(item)
         axios.post(`${host}/group_chat?member_id=${item.id}&&name=${item.name}`).then((resp) => {
-            setColor((prev) => {
-                return { member: false, chat: true, file: false };
-            });
             setChatNaviBody("chats");
         })
     }
