@@ -130,19 +130,38 @@ export const Detail=()=>{
     if (error) return <p>Error occurred: {error.message}</p>;
 
     // 문서 다운로드 
-    const handleDownload = () => {
-        // const element = document.getElementById('content-to-print');
-        console.log("다운로드 클릭");
-        // const opt = {
-        //     margin:       1,
-        //     filename:     'document.pdf',
-        //     image:        { type: 'jpeg', quality: 0.98 },
-        //     html2canvas:  { scale: 2 },
-        //     jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-        // };
+    // function FnLoading(isShow) {
+    //     var loading = document.getElementById('Loading');
+    //     isShow ? loading.style.display = "block" : loading.style.display = "none";
+    //   }
 
-        // html2pdf().set(opt).from(element).save();
-    };
+    // const handleDownload = () => {
+    //     // FnLoading(true);//함수 실행 시 로딩이미지 보이도록
+    //     const element = document.getElementById('content-to-print');
+    //     console.log("다운로드 클릭");
+    //     const opt = {
+    //         margin: [5, 0, 5, 0], // top, right, bottom, left 마진 여백
+    //         filename: 'document', // Pdf 파일 명
+    //         pagebreak: { mode: 'avoid-all' }, // pagebreak 옵션
+    //         image: { type: 'jpeg', quality: 1 }, // 이미지 퀄리티 (pdf 들어갈 영역을 사진을 찍어 변환 하기 때문에 이미지 퀄리티 = pdf 퀄리티
+    //         html2canvas: { // html2canvas 옵션
+    //           useCORS: true, // 영역 안에 로컬 이미지를 삽입 할 때 옵션 필요
+    //           scrollY: 0, // 스크롤 이슈 때문에 필수 
+    //           scale: 2, // browsers device pixel ratio
+    //           dpi: 300,
+    //           letterRendering: true, // 문자랜더링
+    //           allowTaint: false, //useCORS를 true로 설정 시 반드시 allowTaint를 false처리 해주어야함
+    //         },
+    //         jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' },
+    //     };
+
+    //     html2pdf().from(element).set(opt).save().then(() => {
+    //         // FnLoading(false); // 다운로드 완료 후 로딩 이미지 숨기기
+    //     }).catch(error => {
+    //         console.error("PDF 다운로드 오류:", error);
+    //         // FnLoading(false); // 오류 발생 시 로딩 이미지 숨기기
+    //     });
+    // };
 
 
     const HandleSubmit = (e) =>{
@@ -187,8 +206,8 @@ export const Detail=()=>{
         if(result){
         axios.put(`${host}/approval/cancleByMe/${seq}`)
         .then((resp)=>{
-            console.log(resp);
-            console.log("취소 성공~!")
+            // console.log(resp);
+            // console.log("취소 성공~!")
         })
         .catch((err)=>{
             console.log(err);
@@ -217,18 +236,58 @@ export const Detail=()=>{
         navi("/approval/write", { state: { setlist: setlist } });
     }
 
+
+    const handlePrint = () => {
+        const printContent = document.getElementById('content-to-print').innerHTML;
+        const originalContent = document.body.innerHTML;
+    
+        // Apply print styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @media print {
+                @page {
+                    margin: 15mm;
+                }
+                #content-to-print {
+                    margin: 0;
+                    padding: 0;
+                }
+                .no-print {
+                    display: none;
+                }
+                .no-break {
+                    page-break-inside: avoid; /* 페이지 내부에서 나누기 방지 */
+                }
+                body {
+                    font-size: 15pt; /* 글자 크기 조정 */
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    
+        // Update content for print
+        document.body.innerHTML = printContent;
+    
+        // Trigger print dialog
+        window.print();
+    
+        // Restore original content after printing
+        window.location.reload(); // Refresh page to restore state
+       
+    };
+
     return(
-        <div className={styles.container}>
+        <div className={styles.container} >
             <div className={styles.title}>
                 {setlist}
             </div>
-            <div className={styles.content_box} id='content-to-print'>
+            <div className={styles.content_box}>
                 <div className={styles.content_left}>
                     {
                         list == '기안 문서함' || list == '결재 문서함' ||list == '참조/열람 문서함'||list == '반려 문서함' ||list == '상신취소 문서함'?
                         <>
                         <div className={styles.btns}>
-                            <div className={`${styles.approval_temp_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div>
+                            {/* <div className={`${styles.approval_temp_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div> */}
                             {/* <div className={`${styles.approval_prev_btn} ${styles.btn}`}>미리보기</div> */}
                             <div className={`${styles.approval_change_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
                             {checkFA == true && list == '기안 문서함'? <div className={`${styles.approval_cancle_btn} ${styles.btn}`} onClick={handleApprovalCancle}> <i class="fa-regular fa-circle-xmark"></i>상신취소</div> : <></>}
@@ -239,21 +298,21 @@ export const Detail=()=>{
                         <div className={styles.btns}>
                             <div className={`${styles.approval_submit_btn} ${styles.btn}`} onClick={HandleSubmit}><i class="fa-solid fa-pen-to-square"></i>결재승인</div>
                             <div className={`${styles.approval_back_btn} ${styles.btn}`} onClick={HandleSubmit}><i class="fa-regular fa-folder-open"></i>결재반려</div>
-                            <div className={`${styles.approval_download_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div>
-                            <div className={`${styles.approval_copy_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
+                            {/* <div className={`${styles.approval_download_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div> */}
+                            <div className={`${styles.approval_copy_btn} ${styles.btn}`} onClick={handlePrint}><i class="fa-solid fa-users"></i>복사하기</div>
                         </div>
                         </>
                         :
                         <>
                         <div className={styles.btns}>
                             <div className={`${styles.approval_submit_btn} ${styles.btn}`} onClick={handleRewrite}><i class="fa-solid fa-pen-to-square"></i>재기안</div>
-                            <div className={`${styles.approval_download_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div>
+                            {/* <div className={`${styles.approval_download_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div> */}
                             <div className={`${styles.approval_copy_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
                             <div className={`${styles.approval_copy_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>삭제하기</div>
                         </div>
                         </>
                     }
-                    <div className={styles.write_box}>
+                    <div className={styles.write_box} id='content-to-print'>
                         <div className={styles.write_title}>{setlist}</div>
                         <div className={styles.write_header}>
                             <Header docCommonData={docCommonData} userdata={userdata} approvalData={approvalData}/>
@@ -301,6 +360,8 @@ export const Detail=()=>{
                     </div>
                 </div>
             </div>
+            {/* <div id="Loading" style={{ display: 'none' }}>Loading...</div> */}
+
             {showModal && <ApprovalModal approvalYN={approvalYN} onClose={handleCloseModal} seq={seq} setlist={setlist} />}
         </div>
     );
