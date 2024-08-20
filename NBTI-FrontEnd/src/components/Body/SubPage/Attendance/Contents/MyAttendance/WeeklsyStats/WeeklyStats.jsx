@@ -16,13 +16,13 @@ const getStartOfWeek = (date) => {
     const day = date.getDay();
     // 월요일을 기준으로 주의 첫날을 계산합니다
     const monday = new Date(date);
-    monday.setDate(date.getDate() - (day === 0 ? 6 : day -2));
+    monday.setDate(date.getDate() - (day === 0 ? 6 : day - 2));
     return monday;
 };
 
 const getWeekData = (date, dailyStats) => {
     const monday = getStartOfWeek(date);
-    
+
     return Array.from({ length: 7 }).map((_, index) => {
         const currentDate = new Date(monday);
         currentDate.setDate(monday.getDate() + index);
@@ -57,16 +57,16 @@ const getWeekData = (date, dailyStats) => {
 
 const calculateWorkingHours = (startDate, endDate) => {
     if (!startDate || !endDate) return 'N/A';
-    
+
     const start = new Date(startDate);
     const end = new Date(endDate);
-    
+
     const diffMs = end - start;
     if (diffMs < 0) return 'N/A'; // Invalid time
 
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     return `${diffHours}시간 ${diffMinutes}분`;
 };
 
@@ -103,7 +103,7 @@ const WeeklyStats = ({ memberId }) => {
     return (
         <div>
             <h2>주간 통계</h2>
-            <div>
+            <div style={{ marginBottom: '15px' }}>
                 <p>지각 횟수: {stats.lateCount}</p>
                 <p>결근 횟수: {stats.absentCount}</p>
                 <p>조기 퇴근 횟수: {stats.earlyLeaveCount}</p>
