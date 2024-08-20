@@ -60,7 +60,7 @@ export const MonthlyStats = () => {
             start: formatDate(date),
             extendedProps: {
                 backgroundColor: 'white',
-                textColor: date.endsWith('6') ? 'red' : date.endsWith('5') ? 'blue' : 'black'
+                textColor: 'black'
             }
         };
     });
@@ -98,7 +98,7 @@ export const MonthlyStats = () => {
                 <div className={styles.buttonGroup}>
                     <button
                         type="button"
-                        title="이전 달"
+                        title="이전 주"
                         onClick={handlePrevMonthClick}
                         className={styles.navButton}
                     >
@@ -114,7 +114,7 @@ export const MonthlyStats = () => {
                     </button>
                     <button
                         type="button"
-                        title="다음 달"
+                        title="다음 주"
                         onClick={handleNextMonthClick}
                         className={styles.navButton}
                     >
