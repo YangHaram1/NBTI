@@ -42,6 +42,16 @@
     align-items: center;
 }
 
+.address_value{
+    flex:7;
+    display: flex;
+    align-items: center;
+}
+
+.change_address_btn{
+    flex:2;
+}
+
 
 .photo_box{
     flex: 2;
@@ -129,4 +139,19 @@
     cursor: pointer;
     background-color: #dbe3df;
     color:#86a99a;
+}
+
+.address_value button{
+    background-color: #c0dcd6;
+    max-width: 80px;
+    border: 0px;
+    margin-left: 70px;
+    height: 40px;
+    border-radius: 5px;
+}
+
+.address_value button:hover{
+    cursor: pointer;
+    background-color: #86a99a;
+    color:white;
 }

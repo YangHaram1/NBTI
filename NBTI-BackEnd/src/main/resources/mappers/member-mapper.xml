@@ -108,8 +108,12 @@
 	</select>
 
 	<update id="changePw">
-		update members set pw = #{pw} where id = #{id}
+		update members set pw = #{pw}, pw_change_date = sysdate where id = #{id}
 	</update>
+	
+	<select id="selectChangeDate" resultType="java.sql.Timestamp">
+		select pw_change_date from members where id = #{id}
+	</select>
 
 	<select id="searchMembers" resultType="map">
 		select

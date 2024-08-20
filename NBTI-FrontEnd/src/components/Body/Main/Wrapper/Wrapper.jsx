@@ -1,4 +1,5 @@
 import { MainCalendar } from './Calendar/MainCalendar';
+import ClockButton from './ClockButton/ClockButton';
 import { FreeBoard } from "./FreeBoard/FreeBoard";
 import { MainApproval } from './MainApproval/MainApproval';
 import { NoticeBoard } from "./NoticeBoard/NoticeBoard";
@@ -23,7 +24,10 @@ export const Wrapper = () => {
   return (
     <div className={styles.container}>
       <div className={styles.side}>
-        <div className={styles.work_time}>근무체크</div>
+      <div className={styles.work_time}>
+          <ClockButton type="clock-in" />
+          <ClockButton type="clock-out" />
+        </div>
         <div className={styles.approval}><MainApproval/></div>
         <div className={styles.calendar}><MainCalendar/></div>
       </div>

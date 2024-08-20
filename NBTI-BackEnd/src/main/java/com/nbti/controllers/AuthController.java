@@ -72,8 +72,10 @@ public class AuthController {
 	    response.addCookie(cookie); // 응답에 쿠키를 추가
 	    
 	    HttpSession session = request.getSession(); // HttpSession 객체 생성
-	    session.setAttribute("loginID", dto.getId()); // 로그인한 아이디의 세션을 담아둔다
 	    
+	    session.setAttribute("loginID", dto.getId()); // 로그인한 아이디의 세션을 담아둔다
+	    String id = (String)session.getAttribute("loginID");
+	    System.out.println("loginID : " + id);
 	    return ResponseEntity.ok(dto.getId()); // 로그인에 성공한 아이디를 돌려보낸다
 	}
 	

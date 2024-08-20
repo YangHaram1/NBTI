@@ -24,44 +24,55 @@ public class ApprovalDAO {
 		return temp_seq;
 	}
 	
-	public List<ListDocDTO> selectWriterIsMe(String id) {
-		return mybatis.selectList("Approval.selectWriterIsMe",id);
+	public List<ListDocDTO> selectWriterIsMe(Map<String, Object> map) {
+		return mybatis.selectList("Approval.selectWriterIsMe",map);
 	}
 	
-	public List<ListDocDTO> selectReferIsMe(String id) {
-		return mybatis.selectList("Approval.selectReferIsMe",id);
+	public List<ListDocDTO> selectReferIsMe(Map<String, Object> map) {
+		return mybatis.selectList("Approval.selectReferIsMe",map);
 	}
 	
-	public List<ListDocDTO> selectApprovalIsMe(String id){
-		return mybatis.selectList("Approval.selectApprovalIsMe", id);
+	public List<ListDocDTO> selectApprovalIsMe(Map<String, Object> map){
+		return mybatis.selectList("Approval.selectApprovalIsMe", map);
 	}
 	
-	public List<ListDocDTO> selectApprovalWait(String id){
-		return mybatis.selectList("Approval.selectApprovalWait",id);
+	public List<ListDocDTO> selectApprovalWait(Map<String, Object> map){
+		return mybatis.selectList("Approval.selectApprovalWait",map);
+		//
 	}
 	
-	public List<ListDocDTO> selectApprovalBook(String id){
-		return mybatis.selectList("Approval.selectApprovalBook",id);
+	public List<ListDocDTO> selectApprovalBook(Map<String, Object> map){
+		return mybatis.selectList("Approval.selectApprovalBook",map);
+		//
 	}
 	
-	public List<ListDocDTO> selectReturn(String id){
-		return mybatis.selectList("Approval.selectReturn",id);
+	public List<ListDocDTO> selectReturn(Map<String, Object> map){
+		return mybatis.selectList("Approval.selectReturn",map);
 	}
 	
-	public List<ListDocDTO> selectCancle(String id){
-		return mybatis.selectList("Approval.selectCancle",id);
+	public List<ListDocDTO> selectCancle(Map<String, Object> map){
+		return mybatis.selectList("Approval.selectCancle",map);
 	}
 	
 	public ApprovalDTO selectApproval(int seq){
 		return mybatis.selectOne("Approval.selectApproval",seq);
 	}
 	
-	public List<ListDocDTO> selectTemp(String id){
-		return mybatis.selectList("Approval.selectTemp",id);
+	public List<ListDocDTO> selectTemp(Map<String, Object> map){
+		return mybatis.selectList("Approval.selectTemp",map);
 	}
 	
-	public List<ListDocDTO> selectReferIsMeWait(String id){
-		return mybatis.selectList("Approval.selectReferIsMeWait",id);
+	public List<ListDocDTO> selectReferIsMeWait(Map<String, Object> map){
+		return mybatis.selectList("Approval.selectReferIsMeWait",map);
+		//
+	}
+	
+	public int selectCount(Map<String, String> map) {
+		return mybatis.selectOne("Approval.selectCount", map);
+	}
+	
+	public void delete(int seq) {
+		mybatis.delete("Approval.delete",seq);
 	}
 	
 	// 문서 정보 최신화
