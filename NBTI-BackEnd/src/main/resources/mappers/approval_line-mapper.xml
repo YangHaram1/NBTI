@@ -20,7 +20,8 @@
 		    m.name, 
 		    j.JOB_NAME,
 		    t.team_name,
-		    d.dept_name
+		    d.dept_name,
+		    a.comments
 		from approval_line a
 		left outer join members m on a.approval_id = m.id 
 		left outer join JOB j on m.JOB_CODE = j.JOB_CODE

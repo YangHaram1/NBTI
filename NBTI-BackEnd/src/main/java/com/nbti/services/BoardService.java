@@ -55,9 +55,8 @@ public class BoardService {
 
 	
 	// 게시글 출력
-	public BoardDTO selectBoard(int seq, int code) {
-		
-		return bdao.selectBoard(new BoardDTO(seq, code));
+	public BoardDTO selectBoard(Map<String, Integer> map) {
+		return bdao.selectBoard(map);
 	}
 	
 	// 게시글 작성
