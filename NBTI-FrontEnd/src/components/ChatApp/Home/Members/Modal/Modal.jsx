@@ -18,8 +18,8 @@ const Modal = ({ modalRef, index, item, profileRef ,setProfileDisplay}) => {
     }
     const handleMemberIfo = (index) => (e) => {
         const rect = dragRef.current.getBoundingClientRect(); //부모요소~ 드래그 되는애
-        const x = e.clientX - rect.left+40;
-        const y = e.clientY - rect.top -100;
+        const x = e.clientX - rect.left+200;
+        const y = e.clientY - rect.top -220;
         e.preventDefault();
         setProfileDisplay((prev) => {
             if (prev != null) {
