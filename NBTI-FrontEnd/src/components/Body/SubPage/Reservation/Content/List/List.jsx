@@ -97,7 +97,7 @@ export const List = ()=>{
     return(
         <div className={styles.container}>
             <div className={styles.title}>
-                <h3><i class="fa-solid fa-square-check"></i>   내 예약 목록</h3>   
+                <h3><i className="fa-solid fa-square-check"></i>   내 예약 목록</h3>   
             </div>
             <div className={styles.content}>
                 <div className={styles.ReservationList}>

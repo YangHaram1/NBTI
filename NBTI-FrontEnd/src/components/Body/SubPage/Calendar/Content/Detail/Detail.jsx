@@ -16,7 +16,7 @@ import SweetAlert from '../../../../../../function/SweetAlert';
 
 export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModalOpen}) => {
     const loginID = localStorage.getItem('loginID') || sessionStorage.getItem('loginID'); //세션에 저장된 내 ID 
-    const { setCalendarList , calendarSelectList, setSharedCalendarName,membersList,setMembersList , publicList } = useCalendarList(); //주스탠드
+    const { calendarList ,setCalendarList , calendarSelectList, setSharedCalendarName,membersList,setMembersList , publicList } = useCalendarList(); //주스탠드
 
     // ===== 상태 =====
     const [modalOpen, setModalOpen] = useState(false); // 모달창 열기/닫기
@@ -252,19 +252,21 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
 
         setCalendarModalOpen(false); // 공유 일정 모달 닫기
     };
-
     // 내 일정 수정
     const updateBtn = () => {
+        // console.log("1"+JSON.stringify(selectedEvent));
         setIsEditing(true); // 편집 모드로 전환
-        setEditedTitle(selectedEvent.calendarTitle); // 선택된 이벤트의 제목을 편집 제목 상태로 설정
-        setEditedContents(selectedEvent.extendedProps.contents || ''); // 선택된 이벤트의 내용을 편집 내용 상태로 설정
+        setEditedTitle(selectedEvent.title); // 선택된 이벤트의 제목을 편집 제목 상태로 설정
+        setEditedContents(selectedEvent.extendedProps.contents); // 선택된 이벤트의 내용을 편집 내용 상태로 설정
     };
 
     const handleSaveClick = () => {
         // console.log("handleSaveClick start");
         // console.log("handleSaveClick 1" + JSON.stringify(selectedEvent));
         // console.log("handleSaveClick 2"+selectedEvent.extendedProps.seq + ":" + editedTitle + ":" +editedContents);
-        if(editedTitle === '' || editedContents === ''){
+
+        // 빈 값일 때 
+        if(editedTitle.trim() === '' || editedContents.trim() === ''){
             // alert("제목과 내용을 모두 입력해주세요.")
             Swal.fire({
                 icon: "error",
@@ -273,6 +275,17 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
               }); 
             return;
         }
+
+        // 수정 전과 내용이 같을 때
+        if (selectedEvent.title === editedTitle && selectedEvent.extendedProps.contents === editedContents) {
+            Swal.fire({
+                icon: "info",
+                title: "수정",
+                text: "변경된 내용이 없습니다.",
+            });
+            return;
+        }
+        
         const updateData = {
             seq: selectedEvent.extendedProps.seq,
             title: editedTitle,
@@ -284,7 +297,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                 selectedEvent.setProp('title', editedTitle);
                 selectedEvent.setExtendedProp('contents', editedContents);
                 
-                // console.log(selectedEvent);
+                // console.log("~~~~~"+selectedEvent);
 
                 setSelectedEventSave({
                     title: editedTitle,
@@ -293,22 +306,25 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                     calendar_id : selectedEventSave.calendar_id,
                     extendedProps: {
                         contents : editedContents,
-                        calendar_name : selectedEventSave.extendedProps.calendar_name
+                        calendar_name : selectedEventSave.extendedProps.calendar_name,
+                        member_id : selectedEventSave.extendedProps.member_id,
                     },
                 });
 
                 setIsEditing(false); // 편집 모드 종료
+                closeModal()
             })
             .catch((error) => {
                 console.error('일정 수정 Error:', error);
             });
+
     };
 
     // 목록 출력
     useEffect(() => {
         axios.get(`${host}/calendar`)
             .then((resp) => {
-
+                // console.log("ddddd"+JSON.stringify(resp))
                 const eventList = resp.data.map(event => {
                     let color = '';
                     let textColor = '';
@@ -320,6 +336,8 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                         textColor = "#2e2e2e";
                     }
 
+
+
                     return {
                         seq: event.seq,
                         title: event.title,
@@ -328,7 +346,8 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                         calendar_id : event.calendar_id,
                         extendedProps: {
                             contents: event.contents,
-                            calendar_name :event.calendar_name
+                            calendar_name :event.calendar_name,
+                            member_id : event.member_id,
                         },
                         color,
                         textColor
@@ -347,6 +366,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
     const handleEventClick = (info) => {
         // console.log("info:" + JSON.stringify(info.event));
         // console.log(info.event.title);
+        // console.log("test"+selectedEventSave);
 
         setSelectedEventSave({
             title: info.event.title,
@@ -354,9 +374,11 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
             end: info.event.end,
             extendedProps: {
                 contents : info.event.extendedProps.contents,
-                calendar_name : info.event.extendedProps.calendar_name
+                calendar_name : info.event.extendedProps.calendar_name,
+                member_id: info.event.extendedProps.member_id
             },
         });
+
         
         setSelectedEvent(info.event); // 선택한 이벤트 저장
         setModalOpen(true); // 상세보기 모달 열기
@@ -393,6 +415,8 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
             });
     }
 
+
+    // console.log("2"+calendarList[4].member_id);
     return (
         <div className={styles.calender}>
             <div className={styles.calenderColor}>
@@ -448,7 +472,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                     {selectedEvent ? ( // 이벤트가 선택된 경우
                         <>
                             <h2>일정 상세보기</h2>
-                            {isEditing ? ( //수정 누르면 수정
+                            {isEditing ? ( //수정하기
                                 <div className={styles.modalInner}>
                                     <div className={styles.detail}>
                                         <p>{selectedEventSave.extendedProps.calendar_name == 1 ? '내 캘린더' : selectedEventSave.extendedProps.calendar_name}</p>
@@ -467,20 +491,29 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                                         </div>
                                     </div>
                                 </div>
-                            ) : ( // 수정 누르기 전 
+                            ) : ( // 수정 전
                                 <div className={styles.modalInner}>
                                 <div className={styles.detail}>
                                     <p>{selectedEventSave && selectedEventSave.extendedProps && selectedEventSave.extendedProps.calendar_name == 1
                                         ? '내 캘린더' : (selectedEventSave ? selectedEventSave.extendedProps.calendar_name : "")}</p>
                                     <hr/>
+                                    <p>작성자 : {selectedEventSave ? selectedEventSave.extendedProps.member_id : ""}</p>
                                     <p>제목 : {selectedEventSave ? selectedEventSave.title : ""}</p>
                                     <p>시작 : {selectedEventSave ? selectedEventSave.start.toLocaleString() : ""}</p>
                                     <p>종료 : {selectedEventSave ? selectedEventSave.end.toLocaleString() : ""}</p>
                                     <p>내용 : {selectedEventSave ? selectedEventSave.extendedProps.contents : ""}</p>
                                     <div className={styles.detailBtn}>
                                         <button onClick={closeModal}>닫기</button>
-                                        <button onClick={()=>{SweetAlert("warning","일정","정말 삭제 하시겠습니까?",delModal)}}>삭제</button>
-                                        <button onClick={updateBtn}>수정</button>
+                                        {
+                                            selectedEventSave.extendedProps.member_id == loginID && (
+                                                <>
+                                                <button onClick={()=>{SweetAlert("warning","일정","정말 삭제 하시겠습니까?",delModal)}}>삭제</button>
+                                                <button onClick={updateBtn}>수정</button>
+                                                </>
+
+                                            )
+
+                                        }
                                     </div>
                                 </div>
                             </div>
