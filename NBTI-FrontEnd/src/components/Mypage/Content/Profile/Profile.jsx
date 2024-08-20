@@ -29,8 +29,12 @@ export const Profile = () => {
     const [address, setAddress] = useState('');
     const [file, setFile] = useState(null);
     const [update, setUpdate] = useState(false);
+    const [deptName,setDeptName] = useState('');
+    const [jobName,setJobName] = useState('');
+    // const [birth, setBirth] = useState('');
+
     const handleEmail = (e) => {
-        console.log(e.target.innerText);
+        // console.log(e.target.innerText);
         setEmail(e.target.innerText);
     };
 
@@ -38,17 +42,44 @@ export const Profile = () => {
         setPhone(e.target.innerText);
     };
 
-    const handleAddress = (e) => {
-        setAddress(e.target.innerText);
+    // 주소 검색
+    const handleAddressApi = () => {
+        new window.daum.Postcode({
+            oncomplete: function(data) {
+                // console.log(data);
+                // console.log("주소 받아오기",data.address);
+                setAddress(data.address);
+            }
+        }).open();
     };
 
-    const handleUpdate = () => {
+    const handleUpdate = (e) => {
+        
+        e.preventDefault();
+        // 유효성 검사 (빈값일 경우 경고창 반환)
+        if (!email || !phone || !address) {
+            alert('모든 필수 필드를 입력해주세요.');
+            return;
+        }
+
+        const phoneRegex = /^010-\d{4}-\d{4}$/;
+        if (!phoneRegex.test(phone)) {
+            alert('유효한 전화번호를 입력해주세요. (예: 010-1234-5678)');
+            return;
+        }
+
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/i;
+        if (!emailRegex.test(email)) {
+            alert('유효한 이메일 주소를 입력해주세요.');
+            return;
+        }
 
         const updatedData = {
             email: email,
             member_call: phone,
             address: address
         };
+
         const formData = new FormData();
         if (file) {
             formData.append('file', file);
@@ -72,16 +103,19 @@ export const Profile = () => {
         axios.get(`${host}/members`)
             .then((resp) => {
                 console.log(resp);
-                SetMyData(resp.data);
-                setAddress(resp.data.address);
-                setEmail(resp.data.email);
-                setPhone(resp.data.member_call);
+                SetMyData(resp.data.dto);
+                setAddress(resp.data.dto.address);
+                setEmail(resp.data.dto.email);
+                setPhone(resp.data.dto.member_call);
+                setDeptName(resp.data.DEPT_NAME);
+                setJobName(resp.data.JOB_NAME);
+                // setBirth(resp.data.dto.birth);
                 setPreviewImage(() => {
-                    if (resp.data.member_img === null) {
+                    if (resp.data.dto.member_img === null) {
                         return avatar;
                     }
                     else {
-                        return `${host}/images/avatar/${resp.data.id}/${resp.data.member_img}`;
+                        return `${host}/images/avatar/${resp.data.dto.id}/${resp.data.dto.member_img}`;
                     }
                 })
             })
@@ -107,6 +141,17 @@ export const Profile = () => {
             }
         }
     };
+
+    const formatBirthDate = (birth) => {
+        // birth가 6자리 문자열이라고 가정
+        const year = birth.slice(0, 2);  // 앞 두자리, '98'
+        const month = birth.slice(2, 4); // 중간 두자리, '11'
+        const day = birth.slice(4, 6);   // 마지막 두자리, '07'
+        
+        // 원하는 포맷으로 변환
+        return `${year}.${month}.${day}`;
+    };
+
 
     useEffect(() => {
         return () => {
@@ -149,15 +194,15 @@ export const Profile = () => {
                 </div>
                 <div className={`${styles.dept_box} ${styles.box}`}>
                     <div className={styles.name}>부서</div>
-                    <div className={styles.value}>{myData.team_code}</div>
+                    <div className={styles.value}>{deptName}</div>
                 </div>
                 <div className={`${styles.job_code_box} ${styles.box}`}>
                     <div className={styles.name}>직위</div>
-                    <div className={styles.value}>{myData.job_code}</div>
+                    <div className={styles.value}>{jobName}</div>
                 </div>
                 <div className={`${styles.birth_box} ${styles.box}`}>
                     <div className={styles.name}>생일</div>
-                    <div className={styles.value}>{myData.birth}</div>
+                    <div className={styles.value}>{myData.birth && formatBirthDate(myData.birth)}</div>
                 </div>
                 <div className={`${styles.email} ${styles.box}`}>
                     <div className={styles.name} >이메일</div>
@@ -165,7 +210,11 @@ export const Profile = () => {
                 </div>
                 <div className={`${styles.address_box} ${styles.box}`}>
                     <div className={styles.name}>주소</div>
-                    <div className={styles.value} contentEditable={update?true:false} onInput={handleAddress} suppressContentEditableWarning='true'>{myData.address}</div>
+                    <div className={styles.address_value}>{address}
+                    {update && (
+                        <button onClick={handleAddressApi} className={styles.change_address_btn}>주소 검색</button>
+                    )}
+                    </div>
                 </div>
                 <div className={`${styles.call_box} ${styles.box}`}>
                     <div className={styles.name}>핸드폰 번호</div>

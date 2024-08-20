@@ -51,5 +51,10 @@
  	<update id="updateNextApproval">
  		update approval_line set member_state_code = 'w' where temp_seq = #{temp_seq} and approval_order=#{updateOrder}
  	</update>
+ 	
+ 	<delete id="delete">
+    	delete from approval_line where temp_seq = ${seq}
+    </delete>
+  
   
  </mapper>

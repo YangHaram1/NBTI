@@ -19,5 +19,9 @@ public class DocLeaveDAO {
 	public DocLeaveDTO getContent(int seq) {
 		return mybatis.selectOne("DocLeave.selectContent",seq);
 	}
+	
+	public void delete(int seq) {
+		mybatis.delete("DocLeave.delete",seq);
+	}
 
 }

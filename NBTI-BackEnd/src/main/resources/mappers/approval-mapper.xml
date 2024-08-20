@@ -13,27 +13,40 @@
  	</insert>
  	
  	<select id="selectWriterIsMe" resultType="com.nbti.dto.ListDocDTO">
- 		select 
-	 		a.temp_seq, 
-	 		a.member_id, 
-	 		a.approval_date, 
-	 		a.EMERGENCY, 
-	 		ds.DOC_SUB_NAME, 
-	 		a.APPROVAL_SEQ ,
-	 		a.DOC_STATE,
-	 		dd.TITLE,
-	 		m.name 
- 		from approval a 
- 			left outer join members m on a.member_id = m.id
-	 		left outer join doc_sub ds on a.DOC_SUB_SEQ = ds.DOC_FORM_SEQ
-	 		left outer join doc_draft dd on a.TEMP_SEQ = dd.DRAFT_SEQ
-	        left outer join DOC_LEAVE dl on a.temp_seq = dl.LEAVE_SEQ
-	        left outer join DOC_VACATION dv on a.temp_seq = dv.vacation_seq
- 		where member_id = #{id} and a.doc_state not in 't'
- 		order by a.temp_seq desc
+ 		select * from(
+			select 
+			    a.temp_seq, 
+			    a.member_id, 
+			    a.approval_date, 
+			    a.EMERGENCY, 
+			    ds.DOC_SUB_NAME, 
+			    a.APPROVAL_SEQ ,
+			    a.DOC_STATE,
+			    dd.TITLE,
+			    m.name ,
+			    ROW_NUMBER() OVER (ORDER BY a.temp_seq DESC) as rown
+			from approval a 
+			    left outer join members m on a.member_id = m.id
+			    left outer join doc_sub ds on a.DOC_SUB_SEQ = ds.DOC_FORM_SEQ
+			    left outer join doc_draft dd on a.TEMP_SEQ = dd.DRAFT_SEQ
+			    left outer join DOC_LEAVE dl on a.temp_seq = dl.LEAVE_SEQ
+			    left outer join DOC_VACATION dv on a.temp_seq = dv.vacation_seq
+			where member_id = #{id} and a.doc_state not in 't'
+			<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
+			)
+		where rown between #{start} and #{end}
  	</select>
  	
  	<select id="selectReferIsMe" resultType="com.nbti.dto.ListDocDTO">
+ 		select * from(
  		select 
 	        a.temp_seq, 
 	 		a.member_id, 
@@ -43,7 +56,8 @@
 	 		a.APPROVAL_SEQ ,
 	 		a.DOC_STATE,
 	        dd.TITLE,
-	 		m.name 
+	 		m.name,
+	 		ROW_NUMBER() OVER (ORDER BY a.temp_seq DESC) as rown 
  		from approval a 
  			left outer join members m on a.member_id = m.id
 	        left outer join REFER_LINE rl on a.temp_seq = rl.TEMP_SEQ
@@ -52,10 +66,21 @@
 	        left outer join DOC_LEAVE dl on a.temp_seq = dl.LEAVE_SEQ
 	        left outer join DOC_VACATION dv on a.temp_seq = dv.vacation_seq
  		where referer = #{id} and read='Y' and a.doc_state not in ('c','r')
- 		order by a.temp_seq desc
+ 			<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
+			)
+		where rown between #{start} and #{end}
  	</select>
  	
  	<select id="selectReferIsMeWait" resultType="com.nbti.dto.ListDocDTO">
+ 		select * from(
  		select 
 	        a.temp_seq, 
 	 		a.member_id, 
@@ -65,7 +90,8 @@
 	 		a.APPROVAL_SEQ ,
 	 		a.DOC_STATE,
 	        dd.TITLE,
-	 		m.name 
+	 		m.name,
+	 		ROW_NUMBER() OVER (ORDER BY a.temp_seq DESC) as rown   
  		from approval a 
  			left outer join members m on a.member_id = m.id
 	        left outer join REFER_LINE rl on a.temp_seq = rl.TEMP_SEQ
@@ -74,10 +100,21 @@
 	        left outer join DOC_LEAVE dl on a.temp_seq = dl.LEAVE_SEQ
 	        left outer join DOC_VACATION dv on a.temp_seq = dv.vacation_seq
  		where referer = #{id} and read = 'N' and a.doc_state not in ('c','r')
- 		order by a.temp_seq desc
+ 		<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
+			)
+		where rown between #{start} and #{end}
  	</select>
  	
  	<select id="selectApprovalIsMe" resultType="com.nbti.dto.ListDocDTO">
+	 	select * from(
 	 	select 
 	        a.temp_seq, 
 	 		a.member_id, 
@@ -87,7 +124,8 @@
 	 		a.APPROVAL_SEQ ,
 	 		a.DOC_STATE,
 	        dd.TITLE,
-	 		m.name 
+	 		m.name,
+	 		ROW_NUMBER() OVER (ORDER BY a.temp_seq DESC) as rown  
  		from approval a 
  			left outer join members m on a.member_id = m.id
 	        left outer join approval_LINE al on a.temp_seq = al.TEMP_SEQ
@@ -96,10 +134,21 @@
 	        left outer join DOC_LEAVE dl on a.temp_seq = dl.LEAVE_SEQ
 	        left outer join DOC_VACATION dv on a.temp_seq = dv.vacation_seq
 	 	where approval_id = #{id} and a.doc_state not in ('c','t')
-	 	order by a.temp_seq desc
+	 	<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
+			)
+		where rown between #{start} and #{end}
  	</select>
  	
  	<select id="selectApprovalWait" resultType="com.nbti.dto.ListDocDTO">
+	 	select * from(
 	 	select 
 	        a.temp_seq, 
 	 		a.member_id, 
@@ -109,7 +158,12 @@
 	 		a.APPROVAL_SEQ ,
 	 		a.DOC_STATE,
 	        dd.TITLE,
-	 		m.name 
+	 		m.name,
+	 		ROW_NUMBER() OVER (
+	 		order by 
+	 		case when a.emergency = 'Y' then 0 else 1 end asc,
+	 		case when a.emergency = 'Y' then a.approval_date else null end asc,
+	 		case when a.emergency = 'N' then a.approval_date else null end desc) as rown   
  		from approval a 
  			left outer join members m on a.member_id = m.id
 	        left outer join approval_LINE al on a.temp_seq = al.TEMP_SEQ
@@ -118,13 +172,22 @@
 	        left outer join DOC_LEAVE dl on a.temp_seq = dl.LEAVE_SEQ
 	        left outer join DOC_VACATION dv on a.temp_seq = dv.vacation_seq
 	 	where al.approval_id = #{id} and al.member_state_code='w' and a.doc_state ='i'
-	 	order by 
-	 		case when a.emergency = 'Y' then 0 else 1 end asc,
-	 		case when a.emergency = 'Y' then approval_date else null end asc,
-	 		case when a.emergency = 'N' then approval_date else null end desc
+			<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			
+			</if>
+			)
+		where rown between #{start} and #{end}
  	</select>
  	
  	<select id="selectApprovalBook" resultType="com.nbti.dto.ListDocDTO">
+	 	select * from(
 	 	select 
 	        a.temp_seq, 
 	 		a.member_id, 
@@ -134,7 +197,8 @@
 	 		a.APPROVAL_SEQ ,
 	 		a.DOC_STATE,
 	        dd.TITLE,
-	 		m.name 
+	 		m.name,
+	 		ROW_NUMBER() OVER (ORDER BY a.temp_seq DESC) as rown   
  		from approval a 
  			left outer join members m on a.member_id = m.id 
 	        left outer join approval_LINE al on a.temp_seq = al.TEMP_SEQ
@@ -143,10 +207,21 @@
 	        left outer join DOC_LEAVE dl on a.temp_seq = dl.LEAVE_SEQ
 	        left outer join DOC_VACATION dv on a.temp_seq = dv.vacation_seq
 	 		where al.approval_id = #{id} and al.member_state_code='b' and a.doc_state ='i'
-	 		order by a.temp_seq desc
+	 		<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
+			)
+		where rown between #{start} and #{end}
  	</select>
  	
  	<select id="selectReturn" resultType="com.nbti.dto.ListDocDTO">
+	 	select * from(
 	 	select 
 		    a.temp_seq, 
 		    a.member_id, 
@@ -156,7 +231,8 @@
 		    a.approval_seq,
 		    a.doc_state,
 		    dd.title,
-	 		m.name 
+	 		m.name,
+	 		ROW_NUMBER() OVER (ORDER BY a.temp_seq DESC) as rown  
  		from approval a 
  			left outer join members m on a.member_id = m.id
 			left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
@@ -164,10 +240,21 @@
 			left outer join doc_leave dl on a.temp_seq = dl.leave_seq
 			left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
 			where a.member_id = #{id} and a.doc_state = 'r'
-			order by a.temp_seq desc
+			<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
+			)
+		where rown between #{start} and #{end}
  	</select>
  	
  	<select id="selectCancle" resultType="com.nbti.dto.ListDocDTO">
+ 		select * from(
  		select 
 		    a.temp_seq, 
 		    a.member_id, 
@@ -177,7 +264,8 @@
 		    a.approval_seq,
 		    a.doc_state,
 		    dd.title,
-	 		m.name 
+	 		m.name,
+	 		ROW_NUMBER() OVER (ORDER BY a.temp_seq DESC) as rown  
  		from approval a 
  			left outer join members m on a.member_id = m.id
 			left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
@@ -185,10 +273,21 @@
 			left outer join doc_leave dl on a.temp_seq = dl.leave_seq
 			left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
 			where a.member_id = #{id} and a.doc_state = 'c'
-			order by a.temp_seq desc
+		<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
+			)
+		where rown between #{start} and #{end}
  	</select>
  	
  	<select id="selectTemp" resultType="com.nbti.dto.ListDocDTO">
+ 		select * from(
  		select 
 		    a.temp_seq, 
 		    a.member_id, 
@@ -198,7 +297,8 @@
 		    a.approval_seq,
 		    a.doc_state,
 		    dd.title,
-	 		m.name 
+	 		m.name,
+	 		ROW_NUMBER() OVER (ORDER BY a.temp_seq DESC) as rown  
  		from approval a 
  			left outer join members m on a.member_id = m.id
 			left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
@@ -206,11 +306,62 @@
 			left outer join doc_leave dl on a.temp_seq = dl.leave_seq
 			left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
 			where a.member_id = #{id} and a.doc_state = 't'
-			order by a.temp_seq desc
+		<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
+			)
+		where rown between #{start} and #{end}
  	</select>
  	
  	<select id="selectApproval" resultType="com.nbti.dto.ApprovalDTO">
  		select * from approval where temp_seq=#{seq}
+ 	</select>
+ 	
+ 	<select id="selectCount" resultType="int">
+ 		select count(*) from approval
+ 		<if test="category == 'writerIsMe'">
+ 			where member_id = #{id} and doc_state not in 't'
+ 		</if>
+ 		<if test="category == 'referIsMe'">
+			a 
+	        left outer join REFER_LINE rl on a.temp_seq = rl.TEMP_SEQ
+ 			where referer = #{id} and read='Y' and a.doc_state not in ('c','r')
+ 		</if>
+ 		<if test="category == 'approvalIsMe'">
+	 		a 
+		    left outer join approval_LINE al on a.temp_seq = al.TEMP_SEQ
+		 	where approval_id = #{id} and a.doc_state not in ('c','t')
+ 		</if>
+ 		<if test="category == 'return'">
+ 			where member_id = #{id} and doc_state = 'r'
+ 		</if>
+ 		<if test="category == 'cancle'">
+ 			where member_id = #{id} and doc_state = 'c'
+ 		</if>
+ 		<if test="category == 'temp'">
+ 			where member_id = #{id} and doc_state = 't'
+ 		</if>
+ 		<if test="category == 'wait'">
+ 			a 
+	        left outer join approval_LINE al on a.temp_seq = al.TEMP_SEQ
+	 		where al.approval_id = #{id} and al.member_state_code='w' and a.doc_state ='i'
+ 		</if>
+ 		<if test="category == 'book'">
+ 			a 
+	        left outer join approval_LINE al on a.temp_seq = al.TEMP_SEQ
+	 		where al.approval_id = #{id} and al.member_state_code='b' and a.doc_state ='i'
+ 		</if>
+ 		<if test="category == 'referwait'">
+ 			a 
+	        left outer join REFER_LINE rl on a.temp_seq = rl.TEMP_SEQ
+ 			where referer = #{id} and read = 'N' and a.doc_state not in ('c','r')
+ 		</if>
  	</select>
  	
  	<!-- 문서 정보 최신화 -->
@@ -250,6 +401,10 @@
     <update id="updateDocStateCancle">
     	update approval set doc_state = 'c' where temp_seq = ${seq}
     </update>
+    
+    <delete id="delete">
+    	delete from approval where temp_seq = ${seq}
+    </delete>
   
   	
   

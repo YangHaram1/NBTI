@@ -193,7 +193,7 @@ const Members = ({ setName }) => {
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <Profile profileRef={profileRef} index={index} item={member}></Profile>
+                                                                                        <Profile profileRef={profileRef} index={index} item={member} team={team.name} deft={dItem.dept}></Profile>
                                                                                         <Modal modalRef={modalRef} index={index} item={member} profileRef={profileRef} setProfileDisplay={setProfileDisplay}></Modal>
                                                                                     </React.Fragment>
                                                                                 )

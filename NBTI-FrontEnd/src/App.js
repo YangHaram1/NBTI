@@ -19,7 +19,7 @@ function App() {
   const { setMembers } = useMemberStore();
   const websocketRef = useRef(null);
   const { maxCount, count } = useNotification();
-  const { webSocketCheck, onMessage, chatController } = useCheckList();
+  const { webSocketCheck, onMessage, chatController } = useCheckList.getState();
   const [unread, setUnread] = useState();
   const draggableRef = useRef(null);
 

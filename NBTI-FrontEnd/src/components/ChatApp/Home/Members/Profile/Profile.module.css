@@ -1,27 +1,57 @@
 .container{
     position: absolute;
-    width: 250px; /* 사이드바의 너비 */
-    height: 200px;
+    width: 270px; /* 사이드바의 너비 */
+    height: 400px;
     background-color: #333;
     color: white;
     padding: 10px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
     gap: 5px;
     display: none;
+    flex-direction: column;
 }
 
 .img{
     flex: 1;
 }
 .img img{
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
 }
+.header{
+    display: flex;
+}
+.title{
+    display: flex;
+    flex: 7;
+    justify-content: center;
+    align-items: center;
+}
+.cancel{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 1;
+}
+.cancel button{
+    background-color:#333;
+    border: 0px;
+    cursor: pointer;
+}
+.cancel button:hover{
+    background-color: white;
+}
+
+
 .contents{
     display: flex;
     flex-direction: column;
     flex: 1;
     
+}
+
+.body{
+    display: flex;
 }
 .content{
     font-size: 12px;
