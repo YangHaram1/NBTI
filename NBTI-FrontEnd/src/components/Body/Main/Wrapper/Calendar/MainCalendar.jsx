@@ -25,11 +25,14 @@ export const MainCalendar = () => {
                     const eventList = resp.data.map(event => {
 
                         let color = '';
+                        let textColor = '';
                         // calendar_title_code에 따른 색상 설정
                         if(event.calendar_name == 1 ){
-                            color='#33A150';
+                            color='#61a5c2';
+                            textColor = "#2e2e2e";
                         }else{
-                            color='#E04038';
+                            color='#fb8500';
+                            textColor = "#2e2e2e";
                         }
     
                         return {
@@ -38,6 +41,7 @@ export const MainCalendar = () => {
                             start: event.start_date,
                             end: event.end_date,
                             color : color,
+                            textColor :textColor,
                         }
                     });
                     

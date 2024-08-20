@@ -96,7 +96,7 @@ export const List = ()=>{
     return(
         <div className={styles.container}>
             <div className={styles.title}>
-                <h3>내 예약 목록</h3>   
+                <h3><i class="fa-solid fa-square-check"></i>   내 예약 목록</h3>   
             </div>
             <div className={styles.content}>
                 <div className={styles.ReservationList}>
@@ -112,19 +112,19 @@ export const List = ()=>{
                                 </tr>
                             </thead>
                             <tbody>
-                            {approve.length > 0 ? (
+                            {approve.length > 0 && approve.filter((item)=> new Date(item.end_time) > new Date()).length > 0 ? (
                                 approve
                                 .filter((item) => new Date(item.end_time) > new Date()) // 현재 날짜보다 종료 시간이 큰 예약만 필터링
                                 .map((approve) => (
                                     <tr key={approve.seq}>
                                         <td>{approve.reserve_title_code}</td>
                                         <td>{approve.reserve_title_code}</td>
-                                        <td>{`${new Date(approve.start_time).toLocaleString()} ~ ${new Date(approve.end_time).toLocaleString()}`}</td>
+                                        <td>{`${new Date(approve.start_time).toLocaleString()}  ~  ${new Date(approve.end_time).toLocaleString()}`}</td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={5}>리스트가 존재하지 않음</td>
+                                    <td colSpan={3}>리스트가 존재하지 않음</td>
                                 </tr>
                             )}
                             </tbody>
@@ -150,7 +150,7 @@ export const List = ()=>{
                                     <tr key={wait.seq}>
                                         <td>{wait.reserve_title_code}</td>
                                         <td>{wait.reserve_title_code}</td>
-                                        <td>{`${new Date(wait.start_time).toLocaleString()} ~ ${new Date(wait.end_time).toLocaleString()}`}</td>
+                                        <td>{`${new Date(wait.start_time).toLocaleString()}  ~  ${new Date(wait.end_time).toLocaleString()}`}</td>
                                         <td className={styles.state}><span>{wait.state === 'N' ? '승인 대기 중' : wait.state}</span><button onClick={()=>cancelReservation(wait.seq)}>예약 취소하기</button></td>
                                     </tr>
                                 ))

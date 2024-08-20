@@ -21,7 +21,7 @@ export const Car = () => {
                         title: e.member_id,
                         start: e.start_time, // ISO 형식
                         end: e.end_time, // ISO 형식
-                        color: '#A4C3B2', 
+                        color: '#61a5c2', 
                     }
                 });
                 setEvents(list); // 이벤트 상태 업데이트
