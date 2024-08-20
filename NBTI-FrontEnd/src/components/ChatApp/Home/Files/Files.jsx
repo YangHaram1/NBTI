@@ -53,8 +53,8 @@ const Files = () => {
                         return (
                             <React.Fragment key={lIndex}>
                                 <div className={styles.name} onClick={()=>handleList(lIndex)}>
-                                    {!listDisplay[lIndex]&&(<i className="fa-solid fa-chevron-down fa-sm"></i>)}
-                                    {listDisplay[lIndex]&&(<i className="fa-solid fa-chevron-up"></i>)}
+                                    {!listDisplay[lIndex]&&('➕')}
+                                    {listDisplay[lIndex]&&('➖')}
                                     {lIndex+1}. {item.name}
                                 </div> 
                                 {

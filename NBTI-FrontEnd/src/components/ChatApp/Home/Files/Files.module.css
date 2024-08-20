@@ -3,11 +3,19 @@
     height: 100%;
 }
 .name{
-    font-size: 13px;
+    font-size: 17px;
     font-weight: 700;
+    font-family: 'Freesentation-9Black';
 }
 .ul{
     padding: 0px;
     padding-left: 10px;
+}
+
+@font-face {
+    font-family: 'Freesentation-9Black';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
 }
  
