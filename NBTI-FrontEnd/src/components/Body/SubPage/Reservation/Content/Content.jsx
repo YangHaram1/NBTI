@@ -9,6 +9,8 @@ import { useReservationList } from "../../../../../store/store";
 import { useState } from "react";
 import axios from "axios";
 import { host } from "../../../../../config/config";
+import Swal from "sweetalert2";
+import SweetAlert from "../../../../../function/SweetAlert";
 
 
 export const Content = () => {
@@ -51,7 +53,12 @@ export const Content = () => {
 
         // 데이터 검증
         if (!reserve_title_code || !fullStartTime || !fullEndTime || !purpose || !start_time || !end_time) {
-            alert('모든 필드를 입력하세요.');
+            // alert('모든 필드를 입력하세요.');
+            Swal.fire({
+                icon: "error",
+                title: "예약",
+                text: "모든 필드를 입력하세요.",
+              }); 
             return;
         }
 
@@ -61,13 +68,23 @@ export const Content = () => {
 
         // 현재 시간 체크
         if (startTimeObj < now) {
-            alert('시작 시간은 현재 시간 이후여야 합니다.');
+            // alert('시작 시간은 현재 시간 이후여야 합니다.');
+            Swal.fire({
+                icon: "error",
+                title: "예약",
+                text: "시작 시간은 현재 시간 이후여야 합니다.",
+              }); 
             return;
         }
 
         // 종료 시간 체크
         if (endTimeObj <= startTimeObj) {
-            alert('종료 시간은 시작 시간 이후여야 합니다.');
+            // alert('종료 시간은 시작 시간 이후여야 합니다.');
+            Swal.fire({
+                icon: "error",
+                title: "예약",
+                text: "종료 시간은 시작 시간 이후여야 합니다.",
+              }); 
             return;
         }
 
@@ -86,7 +103,12 @@ export const Content = () => {
         })
         .catch((error) => {
             console.error('예약 실패:', error);
-            alert('예약에 실패했습니다.');
+            // alert('예약에 실패했습니다.');
+            Swal.fire({
+                icon: "error",
+                title: "예약",
+                text: "예약에 실패했습니다.",
+              }); 
         });
     };
 
