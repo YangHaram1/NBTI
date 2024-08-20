@@ -38,7 +38,7 @@
 	</update>
 
 	<select id="selectAll" resultType="com.nbti.dto.MembersDTO">
-		select m.id,m.name,m.gender,m.birth,t.team_name as team_code,
+		select m.id,m.name,m.gender,m.birth,t.team_name as team_code,m.member_img,
 		j.job_name as job_code
 		from members m
 		LEFT JOIN job j ON m.job_code = j.job_code

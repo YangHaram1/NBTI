@@ -1,28 +1,97 @@
 .container{
     position: absolute;
-    width: 250px; /* 사이드바의 너비 */
-    height: 200px;
-    background-color: #333;
-    color: white;
+    width: 270px; /* 사이드바의 너비 */
+    height: 400px;
+    background: #edf2fb;
     padding: 10px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
     gap: 5px;
     display: none;
+    left: 350px;
+    top:100px;
+    flex-direction: column;
+    border-radius: 20px;
 }
 
 .img{
     flex: 1;
-}
-.img img{
-    width: 100px;
-    height: 100px;
-}
-.contents{
     display: flex;
-    flex-direction: column;
-    flex: 1;
+    justify-content: center;
+    align-items: center;
     
 }
+.img img{
+    width: 80px;
+    height: 80px;
+}
+.header{
+    display: flex;
+}
+.title{
+    display: flex;
+    flex: 9;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Freesentation-9Black';
+    font-size: 20px;
+}
+.cancel{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 1;
+}
+.cancel button{
+    background-color:#edf2fb;
+    border: 0px;
+    cursor: pointer;
+}
+.cancel button:hover{
+    background-color: #A4C3B2;
+}
+
+
+.contents{
+    display: flex;
+    flex: 1;
+    font-family: 'ONE-Mobile-POP'; 
+    font-size: 12px;
+    color: gray;
+}
+.contents div{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.body{
+    display: flex;
+}
+.name{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Freesentation-9Black';
+}
+.job{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Freesentation-9Black';
+}
+.dept{
+    
+  
+    
+}
+.team{
+   
+}
+
+
 .content{
     font-size: 12px;
     cursor: pointer;
@@ -34,4 +103,19 @@
 .content:hover{
     background-color: wheat;
     color: red;
+}
+
+
+@font-face {
+    font-family: 'ONE-Mobile-POP';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-POP.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Freesentation-9Black';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
 }

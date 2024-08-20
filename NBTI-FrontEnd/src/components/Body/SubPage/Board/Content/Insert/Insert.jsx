@@ -60,7 +60,6 @@ export const Insert = () => {
     }
 
     formData.append("board", JSON.stringify(board));
-    console.log(formData)
 
     // 글 작성 완료
     axios.post(`${host}/board`, formData).then((resp) => {
@@ -74,18 +73,27 @@ export const Insert = () => {
 
   // 로그인 한 사용자 정보 및 HR 권한 확인
   useEffect(() => {
-    axios.get(`${host}/members`).then((resp) => {
+    axios.get(`${host}/members/memberInfo`).then((resp) => {
       if (resp.data.member_level === "2" || resp.data.member_level === "3") {
         // HR 권한 확인
         axios.get(`${host}/members/selectLevel`).then((resp1) => {
+
+          console.log("뭔데 : ", resp1.data);
+
           const hrStatus = resp1.data[parseInt(resp.data.member_level) - 1]?.hr; // 배열의 n번째 요소에서 hr 확인
 
           if (hrStatus === "Y") {
             setIsAdmin(true); // Y일 때 true
           }
-        });
+        })
+          .catch((error) => {
+            console.error("HR 권한 확인 중 오류 발생:", error);
+          });
       }
-    });
+    })
+      .catch((error) => {
+        console.error("사용자 정보 요청 중 오류 발생:", error);
+      });
   }, []);
 
   // 체크박스 변경 (공지 게시판)

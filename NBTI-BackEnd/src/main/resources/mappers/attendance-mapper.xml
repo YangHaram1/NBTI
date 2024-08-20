@@ -39,7 +39,7 @@
         SELECT * 
         FROM attendance
         WHERE member_id = #{memberId}
-        AND trunc(start_date) >= trunc(sysdate) - 7
+        AND trunc(start_date) >= trunc(sysdate) - 365
         ORDER BY start_date DESC
     </select>
 

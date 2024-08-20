@@ -112,7 +112,11 @@ const Side = ({ list, setList, listDisplay, setListDisplay, teamDisplay, setTeam
             <div className={styles.container}>
                 <div className={styles.nbti} >
                     <div onClick={handleMainDisplay} className={styles.button}>
-                        {mainDisplay ? '➖' : '➕'}
+                        {mainDisplay ? 
+                            <i class="fa-solid fa-angle-down"></i>
+                            : 
+                            <i className="fa-solid fa-angle-up"></i>
+                        }
                     </div>
                     <div className={styles.nbtiname} onClick={handleAll}>
                         NBTI ({members.length})
@@ -127,7 +131,11 @@ const Side = ({ list, setList, listDisplay, setListDisplay, teamDisplay, setTeam
                                 <div className={styles.menu} key={dindex} >
                                     <div className={styles.dept}>
                                         <div onClick={() => handlelistDisplay(dindex)} className={styles.button}>
-                                            {listDisplay[dindex] ? '➖' : '➕'}
+                                            {listDisplay[dindex] ? 
+                                                <i class="fa-solid fa-angle-down"></i>
+                                                : 
+                                                <i className="fa-solid fa-angle-up"></i>
+                                            }
                                         </div>
                                         <div className={styles.deptname} onClick={() => handleDept(dindex)}>
                                             {dItem.dept}  ({totalMembersTeam})
