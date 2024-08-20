@@ -8,6 +8,13 @@
   padding: 10px;
 }
 
+/* .container:nth-child(2) .timeDisplay > p:nth-child(1) {
+  margin-bottom: 10px;
+} */
+/* .container:nth-child(2) .timeDisplay > p:nth-child(2) {
+  margin-bottom: 10px;
+} */
+
 .clockSection {
   display: flex;
   flex-direction: column;
@@ -28,7 +35,13 @@
 }
 
 .timeDisplay > p {
-  font-size: 13px;
+  font-size: 12.5px;
+}
+.timeDisplay > p:nth-child(1) {
+  font-size: 14px;
+  color: #6b9080;
+  font-weight: 600;
+  margin-bottom: 2px;
 }
 
 .comment {
@@ -46,7 +59,7 @@
 }
 
 .button {
-  background-color: #6b9080;
+  background-color: #a4c3b2;
   color: white;
   border: none;
   border-radius: 5px;
@@ -54,20 +67,25 @@
 
   cursor: pointer;
   font-size: 14px; /* 글씨 크기 줄이기 */
+  font-weight: 600;
   transition: background-color 0.3s, transform 0.2s;
-  width: 100%; /* 버튼이 컨테이너의 가로 크기에 맞게 설정 */
+  width: 97%; /* 버튼이 컨테이너의 가로 크기에 맞게 설정 */
+  height: 32px;
   box-sizing: border-box; /* 패딩과 보더를 포함하여 너비 계산 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .button:hover {
-  background-color: #0056b3;
-  transform: scale(1.05);
+  background-color: #6b9080;
+  transform: scale(1.02);
 }
 
-.button:active {
+/* .button:active {
   background-color: #004080;
   transform: scale(0.95);
-}
+} */
 
 .disabled {
   background-color: #c0c0c0;

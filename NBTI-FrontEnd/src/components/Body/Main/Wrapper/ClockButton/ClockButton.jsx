@@ -118,12 +118,12 @@ const ClockButton = ({ type }) => {
         <div className={styles.timeDisplay}>
           {type === "clock-in" && (
             <>
-              <p>출근 시간 : </p>
+              <p>출근 시간</p>
               <p> {currentClockIn || "출근 기록 없음"}</p>
               {isLate && <span className={styles.comment}>지각</span>}
-              {!currentClockIn && (
+              {/* {!currentClockIn && (
                 <p className={styles.additionalText}>출근 기록이 없습니다.</p>
-              )}
+              )} */}
             </>
           )}
           {type === "clock-out" && (
