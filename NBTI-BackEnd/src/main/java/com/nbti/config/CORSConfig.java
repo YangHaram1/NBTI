@@ -12,7 +12,11 @@ public class CORSConfig implements WebMvcConfigurer{
 		registry.addMapping("/**")    
 
 		.allowedOriginPatterns("*")
+<<<<<<< HEAD
+//		.allowedOrigins("http://3.39.251.78", "https://nbti-e947e.web.app","https://nbti-e947e.firebaseapp.com/") // ws://은 일반적으로 CORS와 관련이 없습니다
+=======
 		//.allowedOrigins("http://3.39.251.78", "https://nbti-e947e.web.app","https://nbti-e947e.firebaseapp.com/") // ws://은 일반적으로 CORS와 관련이 없습니다
+>>>>>>> fa43758824ba10b38e6b957a9ad810bcc7c8c065
         .allowedMethods("*")
 
         .allowedHeaders("*")
