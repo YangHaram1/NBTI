@@ -295,11 +295,10 @@ export const Detail=()=>{
             <div className={styles.content_box}>
                 <div className={styles.content_left}>
                     {
-                        list == '기안 문서함' || list == '결재 문서함' ||list == '참조/열람 문서함'||list == '반려 문서함' ||list == '상신취소 문서함'?
+                        list == '기안 문서함' || list == '결재 문서함' ||list == '참조/열람 문서함'||list == '반려 문서함' ||list == '상신취소 문서함'||list == '결재 예정'||list == '참조/열람 대기'?
                         <>
                         <div className={styles.btns}>
-                            {/* <div className={`${styles.approval_temp_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div> */}
-                            {/* <div className={`${styles.approval_prev_btn} ${styles.btn}`}>미리보기</div> */}
+                            <div className={`${styles.approval_prev_btn} ${styles.btn}`}><i class="fa-solid fa-user-pen"></i>결재정보</div>
                             <div className={`${styles.approval_change_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
                             {checkFA == true && list == '기안 문서함'? <div className={`${styles.approval_cancle_btn} ${styles.btn}`} onClick={handleApprovalCancle}> <i class="fa-regular fa-circle-xmark"></i>상신취소</div> : <></>}
                         </div>
@@ -309,7 +308,7 @@ export const Detail=()=>{
                         <div className={styles.btns}>
                             <div className={`${styles.approval_submit_btn} ${styles.btn}`} onClick={HandleSubmit}><i class="fa-solid fa-pen-to-square"></i>결재승인</div>
                             <div className={`${styles.approval_back_btn} ${styles.btn}`} onClick={HandleSubmit}><i class="fa-regular fa-folder-open"></i>결재반려</div>
-                            {/* <div className={`${styles.approval_download_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div> */}
+                            <div className={`${styles.approval_prev_btn} ${styles.btn}`}><i class="fa-solid fa-user-pen"></i>결재정보</div>
                             <div className={`${styles.approval_copy_btn} ${styles.btn}`} onClick={handlePrint}><i class="fa-solid fa-users"></i>복사하기</div>
                         </div>
                         </>
@@ -317,16 +316,16 @@ export const Detail=()=>{
                         <>
                         <div className={styles.btns}>
                             <div className={`${styles.approval_submit_btn} ${styles.btn}`} onClick={handleRewrite}><i class="fa-solid fa-pen-to-square"></i>재기안</div>
-                            {/* <div className={`${styles.approval_download_btn} ${styles.btn}`} onClick={handleDownload}><i class="fa-regular fa-folder-open"></i>다운로드</div> */}
+                            <div className={`${styles.approval_prev_btn} ${styles.btn}`}><i class="fa-solid fa-user-pen"></i>결재정보</div>
                             <div className={`${styles.approval_copy_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
-                            <div className={`${styles.approval_copy_btn} ${styles.btn}`} onClick={handleDelete}><i class="fa-solid fa-users"></i>삭제하기</div>
+                            <div className={`${styles.approval_copy_btn} ${styles.btn}`} onClick={handleDelete}><i class="fa-solid fa-trash-can"></i>삭제하기</div>
                         </div>
                         </>
                     }
                     <div className={styles.write_box} id='content-to-print'>
                         <div className={styles.write_title}>{setlist}</div>
                         <div className={styles.write_header}>
-                            <Header docCommonData={docCommonData} userdata={userdata} approvalData={approvalData}/>
+                            <Header docCommonData={docCommonData} userdata={userdata} approvalData={approvalData} seq={seq}/>
                         </div>
                         <div className={styles.write_container}>
                         {   
