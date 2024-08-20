@@ -13,7 +13,6 @@ import SweetAlert from "../../../../../../function/SweetAlert";
 
 export const Detail = () => {
   const navi = useNavigate();
-  const [fileList, setFileList] = useState([]);
 
   const { boardSeq, boardType } = useBoardStore();
   const [detail, setDetail] = useState({}); // 게시글의 detail 정보
@@ -33,8 +32,11 @@ export const Detail = () => {
 
   const [isLiked, setIsLiked] = useState({}); // 좋아요 상태를 객체로 저장
 
+  const [fileList, setFileList] = useState([]); // 파일 전체 목록
+  const [updatedFiles, setUpdatedFiles] = useState([]); // 파일 전체 목록 복사본
   const [fileDelArr, setFileDelArr] = useState([]); // 삭제할 파일 담아놓는 배열
-  const [updatedFiles, setUpdatedFiles] = useState([]);
+  const [isFileListOpen, setIsFileListOpen] = useState(false);
+
 
   // 게시판 코드
   let code = 1;
@@ -122,10 +124,18 @@ export const Detail = () => {
     });
 
     // 저장 시, 삭제할 파일 삭제 가능
-    axios.delete(`${host}/files/deleteBoard/${fileDelArr}`).then((resp) => {
-      console.log("삭제:", resp.data);
-      setFileList(updatedFiles); // 삭제된 파일을 담고있는 복사본을 원본에 삽입 
-    })
+    // 삭제할 파일이 있을 경우에만 삭제 요청 보내기
+    if (fileDelArr.length > 0) {
+      axios.delete(`${host}/files/deleteBoard/${fileDelArr}`).then((resp) => {
+        console.log("삭제:", resp.data);
+        setFileList(updatedFiles); // 삭제된 파일을 담고있는 복사본을 원본에 삽입 
+      }).catch(error => {
+        console.error("파일 삭제 실패:", error);
+      });
+    } else {
+      // 삭제할 파일이 없는 경우에도 원본 파일 목록을 업데이트해줍니다.
+      setFileList(updatedFiles);
+    }
   };
 
   // 취소 click
@@ -142,10 +152,10 @@ export const Detail = () => {
 
   // 파일 삭제
   const handleFileDelete = (seq) => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
-      setFileDelArr((prev) => [...prev, seq]);
-      setUpdatedFiles((prev) => prev.filter((file) => file.seq !== seq));
-    }
+    // if (window.confirm("정말 삭제하시겠습니까?")) {
+    setFileDelArr((prev) => [...prev, seq]);
+    setUpdatedFiles((prev) => prev.filter((file) => file.seq !== seq));
+    // }
   };
 
 
@@ -277,6 +287,11 @@ export const Detail = () => {
   };
 
 
+  // 파일 토글 창
+  const toggleFileList = () => {
+    setIsFileListOpen((prev) => !prev);
+  };
+
 
 
   //======================================================================================
@@ -301,7 +316,7 @@ export const Detail = () => {
           ></i>
         </div>
         <div className={styles.right}>
-          {/* <i className="fa-regular fa-folder-open fa-lg"></i> */}
+
           {currentUser &&
             !isEditing &&
             (detail.member_id === currentUser.id || isAdmin) ? (
@@ -357,6 +372,12 @@ export const Detail = () => {
         </div>
         <div className={styles.writeDate}>
           <span>{currentDate}</span>
+          {updatedFiles.length > 0 && (
+            <i
+              className="fa-regular fa-folder-open fa-lg"
+              onClick={toggleFileList}
+            ></i>
+          )}
         </div>
       </div>
       <div className={styles.content}>
@@ -366,21 +387,27 @@ export const Detail = () => {
           <div dangerouslySetInnerHTML={{ __html: detail.contents }}></div>
         )}
       </div>
-      {
-        updatedFiles.map((file, index) => {
-          console.log("시퀀스 : ", file.seq)
-          return (
-            <div key={index}>
-              <div>
-                <a href={`${host}/files/downloadBoard?oriname=${file.oriname}&sysname=${file.sysname}`}>{file.oriname}
-                </a>
-                {isEditing && <button className={styles.fileDelBtn} onClick={() => handleFileDelete(file.seq)}>X</button>}
-              </div>
 
-            </div>
-          )
-        })
-      }
+      {/* 파일 리스트 */}
+      {isFileListOpen && (
+        <div className={styles.fileListModal}>
+          <div className={styles.fileListContent}>
+            {updatedFiles.map((file, index) => (
+              <div key={index}>
+                <a href={`${host}/files/downloadBoard?oriname=${file.oriname}&sysname=${file.sysname}`} className={styles.fileLink}>{file.oriname}</a>
+                {isEditing && (
+                  <button
+                    className={styles.fileDelBtn}
+                    onClick={() => handleFileDelete(file.seq)}
+                  >
+                    X
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* --------------[ 댓글 작성 ]------------ */}
       <div className={styles.reply}>

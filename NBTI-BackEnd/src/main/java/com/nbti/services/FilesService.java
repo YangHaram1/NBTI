@@ -276,8 +276,6 @@ public class FilesService {
 
 			fdao.deleteBoardFile(map);
 		}
-    	
-    	
     }
     
     
