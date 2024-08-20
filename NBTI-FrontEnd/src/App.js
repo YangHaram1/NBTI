@@ -19,14 +19,14 @@ function App() {
   const { setMembers } = useMemberStore();
   const websocketRef = useRef(null);
   const { maxCount, count } = useNotification();
-  const { webSocketCheck, onMessage, chatController } = useCheckList.getState();
+  const { webSocketCheck, onMessage, chatController } = useCheckList();
   const [unread, setUnread] = useState();
   const draggableRef = useRef(null);
 
  
   useEffect(() => {
     setLoginID(sessionStorage.getItem("loginID"));
-    console.log(setLoginID);
+    //console.log(setLoginID);
   }, []); // 의존성 배열에 setMembers 추가
 
   useEffect(() => {
@@ -35,7 +35,7 @@ function App() {
         .then((resp) => {
           const filteredMembers = resp.data.map(({ pw, ...rest }) => rest);
           setMembers(filteredMembers);
-          console.log('Fetched Members:', filteredMembers);
+        //  console.log('Fetched Members:', filteredMembers);
         })
     }
   }, [loginID])

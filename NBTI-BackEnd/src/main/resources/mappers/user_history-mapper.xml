@@ -28,7 +28,7 @@
       		where ip like '%'||#{keyword}||'%'
    		</if>
    		<if test="target=='id'">
-      		where member_id='%'||#{keyword}||'%'
+      		where member_id like '%'||#{keyword}||'%'
    		</if>
 	</select>
 	

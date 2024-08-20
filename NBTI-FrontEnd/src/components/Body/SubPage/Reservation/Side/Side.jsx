@@ -132,7 +132,7 @@ export const Side = () => {
 
   // ========== 로그인 한 사용자 정보 및 reservation 권한 확인 ==========
   useEffect(() => {
-    axios.get(`${host}/members`).then((resp) => {
+    axios.get(`${host}/members/memberInfo`).then((resp) => {
       if (resp.data.member_level === "2" || resp.data.member_level === "4") {
         // reservation 권한 확인
         axios.get(`${host}/members/selectLevel`).then((resp1) => {
