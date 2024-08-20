@@ -26,8 +26,8 @@ const Modal = ({ modalRef, index, item, profileRef ,setProfileDisplay}) => {
                 prev.style.display = 'none'
             }
             profileRef.current[index].style.display = 'flex';
-            profileRef.current[index].style.top = y + 'px';
-            profileRef.current[index].style.left = x +'px';
+            // profileRef.current[index].style.top = y + 'px';
+            // profileRef.current[index].style.left = x +'px';
             return profileRef.current[index];
         });
     }

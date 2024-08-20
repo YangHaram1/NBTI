@@ -5,10 +5,13 @@
     background-color: #333;
     color: white;
     padding: 10px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
     gap: 5px;
     display: none;
+    left: 350px;
+    top:100px;
     flex-direction: column;
+    font-family: 'Freesentation-9Black';
 }
 
 .img{
@@ -64,4 +67,19 @@
 .content:hover{
     background-color: wheat;
     color: red;
+}
+
+
+@font-face {
+    font-family: 'ONE-Mobile-POP';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-POP.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Freesentation-9Black';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
 }

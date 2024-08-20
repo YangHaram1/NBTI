@@ -2,7 +2,7 @@ import styles from './Profile.module.css';
 import { host } from '../../../../../config/config';
 import avatar from '../../../../../images/user.jpg'
 import { useEffect } from 'react';
-const Profile = ({ profileRef, index, item, team, deft }) => {
+const Profile = ({ profileRef, index, item, team, dept }) => {
 
     useEffect(() => {
         console.log(item)
@@ -25,14 +25,14 @@ const Profile = ({ profileRef, index, item, team, deft }) => {
                     <img src={(item.member_img === null) ? `${avatar}` : `${host}/images/avatar/${item.id}/${item.member_img}`} alt="" />
                 </div>
                 <div style={{ display: "flex" ,flexDirection:"column",flex:3}}>
-                    <div className={styles.content} >
+                    <div className={styles.name}>
                         {item.name}
                     </div>
                     <div style={{display:"flex"}}>
-                        <div className={styles.content} >
-                            {deft}
+                        <div className={styles.dept}>
+                            {dept}
                         </div>
-                        <div className={styles.content} >
+                        <div>
                             {team}
                         </div>
                     </div>
