@@ -43,12 +43,16 @@ export const Side = () => {
   const {resetReferLine} = useReferLine();
   const {resetApprovalLine} = useApprovalLine();
 
-  const handleModal = () => {
+  const handleModal = (data) => {
     // 만약 기존 내용이 있다면 초기화
     resetReferLine();
     resetApprovalLine();
     // 휴가신청서 정보 입력
-    setDocForm({name:"휴가신청서", id:"2", period:"1년"});
+    if(data === 'vacation'){
+      setDocForm({name:"휴가신청서", id:"2", period:"1년"});
+    }else if(data === 'leave'){
+      setDocForm({name:"휴직신청서", id:"3", period:"10년"});
+    }
     // 모달 열기
     setIsSecondModalOpen(true);
   }
@@ -61,11 +65,17 @@ export const Side = () => {
     <div className={styles.container}>
           
       <div className={styles.mainBtn}>
-        <button onClick={handleModal}>
+        <button onClick={()=>{handleModal('vacation')}}>
           <i className="fa-solid fa-plus"></i>
           <p>휴가 신청</p>
         </button>
       </div>
+      <div className={styles.mainBtn}>
+      <button onClick={()=>{handleModal('leave')}}>
+          <i className="fa-solid fa-plus"></i>
+          <p>휴직 신청</p>
+        </button>
+      </div>  
       <div className={styles.menus}>
         
         <ul>
