@@ -1,6 +1,8 @@
 package com.nbti.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +23,19 @@ public class FilesDAO {
 	public List<FilesDTO> getList(int seq){
 		return mybatis.selectList("Files.selectList", seq);
 	}
+	
+	// 유나 게시판 파일 목록 출력
+	public List<FilesDTO> selectList(int seq,int code){
+		Map<String, Integer> map =new HashMap<>();
+		map.put("seq", seq);
+		map.put("code", code);
+		return mybatis.selectList("Files.select", map);
+	}
 
+	// 유나 게시판 파일 삭제
+	public int deleteBoardFile(Map<String, Integer> map) {
+		return mybatis.delete("Files.deleteBoardFile", map);
+	}
+	
+	
 }

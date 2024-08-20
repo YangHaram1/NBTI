@@ -4,6 +4,7 @@ import axios from 'axios';
 import { host } from '../../../../../../config/config';
 import { format } from 'date-fns';
 import { Await, useNavigate } from 'react-router-dom';
+import ReactPaginate from 'react-paginate';
 
 
 export const ListDoc = ({setlist}) => {
@@ -12,14 +13,30 @@ export const ListDoc = ({setlist}) => {
     const [lists, setLists] = useState([]);
     const navi = useNavigate();
     const [fileExistenceMap, setFileExistenceMap] = useState({});
+    // 페이지네이션 상태변수
+    const [cpage, setCpage] = useState(1);
+    const [page_total_count, setPage_total_count] = useState();
+    const [target, setTarget] = useState('');
+    const [keyword, setKeyword] = useState('');
+    const [search,setSearch] =useState(false);
+
+    const record_count_per_page = 15;
+    const navi_count_per_page = 5;
 
     useEffect(()=>{
+        console.log("setlist 변경", cpage);
+        setCpage(1);
+    },[setlist])
+
+    useEffect(()=>{
+
         let url = '';
-        console.log(setlist);
+
+        const start = cpage * record_count_per_page - (record_count_per_page - 1);
+        const end = cpage * record_count_per_page;
+
+        // console.log(setlist);
         switch (setlist) {
-            // case '전체 문서함':
-            //     // url = `http://${host}/approval/getAllDoc`;
-            //     break;
             case '기안 문서함':
                 console.log("기안문서");
                 url = `${host}/approval/getWriterIsMe`;
@@ -48,12 +65,24 @@ export const ListDoc = ({setlist}) => {
             default:
                 return;
         }
-        axios.get(url)
+        axios.get(url+`?start=${start}&end=${end}&target=${target}&keyword=${keyword}`)
         .then(async (resp) => {
             console.log(resp.data);
-            setLists(resp.data);
 
-            const filePromises = resp.data.map(async (list) => {
+            // 검색 및 페이지 네이션 목록 출력
+            setLists(() => {
+                const record_total_count = resp.data.count;//106 10 // 10
+                if (record_total_count % record_count_per_page === 0) {
+                    setPage_total_count(Math.floor(record_total_count / record_count_per_page));
+                }
+                else {
+                    setPage_total_count(Math.floor(record_total_count / record_count_per_page) + 1);
+                }
+                return resp.data.list;//10
+            });
+
+            // 파일 첨부 유무 확인 
+            const filePromises = resp.data.list.map(async (list) => {
                 try {
                     let seq = list.temp_seq;
                     const fileResp = await axios.get(`${host}/files/getFiles/${seq}`);
@@ -70,11 +99,18 @@ export const ListDoc = ({setlist}) => {
             }), {});
             
             setFileExistenceMap(fileMap);
+
         })
         .catch((error) => {
             console.error(error);
         });
-    },[setlist])
+    },[cpage,search,setlist])
+
+    useEffect(()=>{
+        setKeyword('');
+        setTarget('');
+        // setCpage(1);
+    },[lists])
 
 
     const renderDocStateBadge = (docState) => {
@@ -96,12 +132,40 @@ export const ListDoc = ({setlist}) => {
         navi("/approval/detail", {state:{seq:tempSeq, setlist:docSubName, list:setlist}});
     };
 
+    const handleSearch = () =>{
+        setSearch((prev)=>{
+            setCpage(1);
+            return !prev;
+        })
+    }
+
+    const handleTarget = (e)=>{
+        setTarget(e.target.value);
+        console.log("검색 종류",e.target.value);
+    }
+
+    const handleKeyword = (e)=>{
+        setKeyword(e.target.value);
+        console.log("키워드",e.target.value);
+    }
+
+    const handlePage = (selectedPage) => {
+        setCpage(selectedPage.selected + 1);
+    }
+
+
     return(
         <div className={styles.container}>
             <div className={styles.title}>{setlist}</div>
             <div className={styles.search_box}>
-                <input type='text' placeholder='Seach'></input>
-                <button>검색</button>
+                <select onChange={handleTarget}>
+                    <option value="select">선택</option>
+                    <option value="writer">기안자</option>
+                    <option value="doc_seq">문서번호</option>
+                    <option value="title">제목</option>
+                </select>
+                <input type='text' placeholder='Seach' onChange={handleKeyword}></input>
+                <button onClick={handleSearch}>검색</button>
             </div>
             <div className={styles.content}>
                 <div className={styles.head}> 
@@ -142,7 +206,7 @@ export const ListDoc = ({setlist}) => {
                                     <input type='hidden' value={list.doc_sub_name}></input>
                                 </div>
                                 <div className={styles.file}>
-                                    {console.log("콘솔로 찍어보깅",fileExistenceMap[list.temp_seq])}
+                                    {/* {console.log("콘솔로 찍어보깅",fileExistenceMap[list.temp_seq])} */}
                                     {
                                     fileExistenceMap[list.temp_seq] != undefined
                                     ? Array.from(fileExistenceMap[list.temp_seq]).length > 0 ? <i class="fa-solid fa-paperclip"></i> : ''
@@ -163,6 +227,24 @@ export const ListDoc = ({setlist}) => {
                     }) 
                 } 
                 </div>
+
+            </div>
+            <div className={styles.footer}>
+            <ReactPaginate
+                pageCount={page_total_count} // 페이지 총 개수
+                pageRangeDisplayed={navi_count_per_page} // 현재 페이지를 기준으로 표시할 페이지 범위 수
+                marginPagesDisplayed={1} // 양쪽 끝에 표시할 페이지 수
+                onPageChange={handlePage} // 페이지 변경 핸들러
+                containerClassName={styles.pagination} // 스타일 클래스
+                activeClassName={styles.active} // 활성 페이지 클래스
+                initialPage={0} //초기 page 값
+                previousLabel={'<'} // 이전 페이지 버튼 레이블
+                previousClassName={styles.previous} // 이전 버튼의 클래스명
+                nextLabel={'>'} // 다음 페이지 버튼 레이블
+                nextClassName={styles.next} // 다음 버튼의 클래스명
+                breakLabel={'...'} // 생략 표시 제거
+                breakClassName={null} // 생략 표시의 클래스명 제거
+            />
             </div>
         </div>
     );

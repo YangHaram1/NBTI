@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -484,75 +485,237 @@ public class ApprovalController {
 	
 	// 기안 문서함 목록 출력
 	@GetMapping("/getWriterIsMe")
-	public List<ListDocDTO> getWriterIsMe() {
+	public Map<String, Object> getWriterIsMe(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword) {
 		String id = (String)session.getAttribute("loginID");
-		List<ListDocDTO> list = aServ.getWriterIsMe(id);		
-		return list;
+		
+		System.out.println("기안" + start + ":"+ end + ":"+ target+ ":"+keyword);
+		
+		Map<String, Object> map= new HashMap<>();
+		map.put("start", start);
+		map.put("end", end);
+		map.put("target", target);
+		map.put("keyword", keyword);
+		map.put("id", id);
+		
+		List<ListDocDTO> list = aServ.getWriterIsMe(map);
+		
+		Map<String,String> countData = new HashMap<>();
+		countData.put("id", id);
+		countData.put("category", "writerIsMe");
+		int count = aServ.getCount(countData);
+		
+		Map<String, Object> result =new HashMap<>();
+		result.put("list",list);
+		result.put("count", count);
+				
+		return result;
 	}
 	
 	// 참조/열람 문서함 목록 출력
 	@GetMapping("/getReferIsMe")
-	public List<ListDocDTO> getReferIsMe(){	
+	public Map<String, Object> getReferIsMe(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword){	
 		String id = (String)session.getAttribute("loginID");
-		List<ListDocDTO> list = aServ.getReferIsMe(id);
-		return list;
+		
+		System.out.println("참조" + start + ":"+ end + ":"+ target+ ":"+keyword);
+		Map<String, Object> map= new HashMap<>();
+		map.put("start", start);
+		map.put("end", end);
+		map.put("target", target);
+		map.put("keyword", keyword);
+		map.put("id", id);
+		List<ListDocDTO> list = aServ.getReferIsMe(map);
+		
+		Map<String,String> countData = new HashMap<>();
+		countData.put("id", id);
+		countData.put("category", "referIsMe");
+		int count = aServ.getCount(countData);
+		
+		Map<String, Object> result =new HashMap<>();
+		result.put("list",list);
+		result.put("count", count);
+				
+		return result;
 	}
 	
 	// 결재 문서함 목록 출력
 	@GetMapping("/getApprovalIsMe")
-	public List<ListDocDTO> getApprovalIsMe(){
+	public  Map<String, Object> getApprovalIsMe(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword){
 		String id = (String)session.getAttribute("loginID");
-		List<ListDocDTO> list = aServ.getApprovalIsMe(id);
-		return list;
+		
+		System.out.println("결재" + start + ":"+ end + ":"+ target+ ":"+keyword);
+		Map<String, Object> map= new HashMap<>();
+		map.put("start", start);
+		map.put("end", end);
+		map.put("target", target);
+		map.put("keyword", keyword);
+		map.put("id", id);
+		List<ListDocDTO> list = aServ.getApprovalIsMe(map);
+		
+		Map<String,String> countData = new HashMap<>();
+		countData.put("id", id);
+		countData.put("category", "approvalIsMe");
+		int count = aServ.getCount(countData);
+		
+		Map<String, Object> result =new HashMap<>();
+		result.put("list",list);
+		result.put("count", count);
+				
+		return result;
 	}
 	
 	// 반려 문서함 목록 출력
 	@GetMapping("/getReturn")
-	public List<ListDocDTO> getReturn(){
+	public  Map<String, Object> getReturn(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword){
 		String id = (String)session.getAttribute("loginID");
-		List<ListDocDTO> list = aServ.getReturn(id);
-		return list;
+		
+		System.out.println("반려" + start + ":"+ end + ":"+ target+ ":"+keyword);
+		Map<String, Object> map= new HashMap<>();
+		map.put("start", start);
+		map.put("end", end);
+		map.put("target", target);
+		map.put("keyword", keyword);
+		map.put("id", id);
+		List<ListDocDTO> list = aServ.getReturn(map);
+		
+		Map<String,String> countData = new HashMap<>();
+		countData.put("id", id);
+		countData.put("category", "return");
+		int count = aServ.getCount(countData);
+		
+		Map<String, Object> result =new HashMap<>();
+		result.put("list",list);
+		result.put("count", count);
+				
+		return result;
 	}
 	
 	// 상신 취소 문서함 목록 출력
 	@GetMapping("/getCancle")
-	public List<ListDocDTO> getCancle() {
+	public  Map<String, Object> getCancle(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword) {
 		String id = (String)session.getAttribute("loginID");
-		List<ListDocDTO> list = aServ.getCancle(id);
-		return list;
+		System.out.println("상신취소" + start + ":"+ end + ":"+ target+ ":"+keyword);
+		Map<String, Object> map= new HashMap<>();
+		map.put("start", start);
+		map.put("end", end);
+		map.put("target", target);
+		map.put("keyword", keyword);
+		map.put("id", id);
+		List<ListDocDTO> list = aServ.getCancle(map);
+		
+		Map<String,String> countData = new HashMap<>();
+		countData.put("id", id);
+		countData.put("category", "cancle");
+		int count = aServ.getCount(countData);
+		
+		Map<String, Object> result =new HashMap<>();
+		result.put("list",list);
+		result.put("count", count);
+				
+		return result;
 	}
 	
 	
-	// 결재 대기 목록 출력
+	// 결재 대기 목록 출력 (결재하기)
 	@GetMapping("/getApprovalWait")
-	public List<ListDocDTO> getApprovalWait(){
+	public Map<String, Object> getApprovalWait(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword){
 		String id = (String)session.getAttribute("loginID");
-		List<ListDocDTO> list = aServ.getApprovalWait(id);
-		return list;
+		
+		System.out.println("결재대기" + start + ":"+ end + ":"+ target+ ":"+keyword);
+		Map<String, Object> map= new HashMap<>();
+		map.put("start", start);
+		map.put("end", end);
+		map.put("target", target);
+		map.put("keyword", keyword);
+		map.put("id", id);
+		List<ListDocDTO> list = aServ.getApprovalWait(map);
+		
+		Map<String,String> countData = new HashMap<>();
+		countData.put("id", id);
+		countData.put("category", "wait");
+		int count = aServ.getCount(countData);
+		
+		Map<String, Object> result =new HashMap<>();
+		result.put("list",list);
+		result.put("count", count);
+				
+		return result;
 	}
 	
-	// 결재 예정 목록 출력
+	// 결재 예정 목록 출력 (결재하기)
 	@GetMapping("/getApprovalBook")
-	public List<ListDocDTO> getApprovalBook(){
+	public Map<String, Object> getApprovalBook(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword){
 		String id = (String)session.getAttribute("loginID");
-		List<ListDocDTO> list = aServ.getApprovalBook(id);
-		return list;
+		
+		System.out.println("결재예정" + start + ":"+ end + "target:"+ target+ ":"+keyword);
+		Map<String, Object> map= new HashMap<>();
+		map.put("start", start);
+		map.put("end", end);
+		map.put("target", target);
+		map.put("keyword", keyword);
+		map.put("id", id);
+		List<ListDocDTO> list = aServ.getApprovalBook(map);
+		
+		Map<String,String> countData = new HashMap<>();
+		countData.put("id", id);
+		countData.put("category", "book");
+		int count = aServ.getCount(countData);
+		
+		Map<String, Object> result =new HashMap<>();
+		result.put("list",list);
+		result.put("count", count);
+				
+		return result;
 	}
 	
 	// 참조/열람 목록 출력 (결재하기)
 	@GetMapping("/getReferIsMeWait")
-	public List<ListDocDTO> getReferIsMeWait(){
+	public Map<String, Object> getReferIsMeWait(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword){
 		String id = (String)session.getAttribute("loginID");
-		List<ListDocDTO> list = aServ.getReferIsMeWait(id);
-		return list;
+		
+		System.out.println("참조열람대기" + start + ":"+ end + ":"+ target+ ":"+keyword);
+		Map<String, Object> map= new HashMap<>();
+		map.put("start", start);
+		map.put("end", end);
+		map.put("target", target);
+		map.put("keyword", keyword);
+		map.put("id", id);
+		List<ListDocDTO> list = aServ.getReferIsMeWait(map);
+		
+		Map<String,String> countData = new HashMap<>();
+		countData.put("id", id);
+		countData.put("category", "referwait");
+		int count = aServ.getCount(countData);
+		
+		Map<String, Object> result =new HashMap<>();
+		result.put("list",list);
+		result.put("count", count);
+				
+		return result;
 	}
 	
 	// 임시저장 목록 출력
 	@GetMapping("/getTemp")
-	public List<ListDocDTO> getTemp(){
+	public Map<String, Object> getTemp(@RequestParam int start,@RequestParam int end,@RequestParam String target,@RequestParam String keyword){
 		String id = (String)session.getAttribute("loginID");
-		List<ListDocDTO> list = aServ.getTemp(id);
-		return list;
+		System.out.println("임시저장" + start + ":"+ end + ":"+ target+ ":"+keyword);
+		Map<String, Object> map= new HashMap<>();
+		map.put("start", start);
+		map.put("end", end);
+		map.put("target", target);
+		map.put("keyword", keyword);
+		map.put("id", id);
+		List<ListDocDTO> list = aServ.getTemp(map);
+		
+		Map<String,String> countData = new HashMap<>();
+		countData.put("id", id);
+		countData.put("category", "temp");
+		int count = aServ.getCount(countData);
+		
+		Map<String, Object> result =new HashMap<>();
+		result.put("list",list);
+		result.put("count", count);
+				
+		return result;
 	}
 	
 	// 디테일 공통 데이터 출력

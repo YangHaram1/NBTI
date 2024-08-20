@@ -20,8 +20,8 @@ const Security = () => {
     useEffect(() => {
         const start = cpage * record_count_per_page - (record_count_per_page - 1); //1
         const end = cpage * record_count_per_page; //10
-        
-        axios.get(`${host}/user_history?start=${start}&&end=${end}&&target=${target}&&keyword=${keyword}`).then((resp) => {
+
+        axios.get(`${host}/user_history?start=${start}&end=${end}&target=${target}&keyword=${keyword}`).then((resp) => {
            // console.log(resp.data)
             setHistory((prev) => {
                 const record_total_count = resp.data.count;//106 10 // 10
@@ -31,7 +31,7 @@ const Security = () => {
                 else {
                     setPage_total_count(Math.floor(record_total_count / record_count_per_page) + 1);
                 }
-                return resp.data.list;
+                return resp.data.list;//10
             });
         })
     }, [cpage,search])

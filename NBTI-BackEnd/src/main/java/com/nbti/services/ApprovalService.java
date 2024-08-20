@@ -3,6 +3,7 @@ package com.nbti.services;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,48 +49,53 @@ public class ApprovalService {
 	private ReferLineDAO rldao;
 	
 	// 기안문서(문서함)
-	public List<ListDocDTO> getWriterIsMe(String id) {
-		return adao.selectWriterIsMe(id);
+	public List<ListDocDTO> getWriterIsMe(Map<String, Object> map) {
+		return adao.selectWriterIsMe(map);
 	}
 	
 	// 참조문서(문서함)
-	public List<ListDocDTO> getReferIsMe(String id){
-		return adao.selectReferIsMe(id);
+	public List<ListDocDTO> getReferIsMe(Map<String, Object> map){
+		return adao.selectReferIsMe(map);
 	}
 	
 	// 결재문서(문서함)
-	public List<ListDocDTO> getApprovalIsMe(String id){
-		return adao.selectApprovalIsMe(id);
+	public List<ListDocDTO> getApprovalIsMe(Map<String, Object> map){
+		return adao.selectApprovalIsMe(map);
 	}
 	
 	// 반려문서(문서함)
-	public List<ListDocDTO> getReturn(String id){
-		return adao.selectReturn(id);
+	public List<ListDocDTO> getReturn(Map<String, Object> map){
+		return adao.selectReturn(map);
 	}
 	
 	// 취소문서(문서함)
-	public List<ListDocDTO> getCancle(String id){
-		return adao.selectCancle(id);
+	public List<ListDocDTO> getCancle(Map<String, Object> map){
+		return adao.selectCancle(map);
 	}
 	
 	// 결재 대기 문서(결재하기)
-	public List<ListDocDTO> getApprovalWait(String id){
-		return adao.selectApprovalWait(id);
+	public List<ListDocDTO> getApprovalWait(Map<String, Object> map){
+		return adao.selectApprovalWait(map);
 	}
 	
 	// 결재 예정 문서(결재하기)
-	public List<ListDocDTO> getApprovalBook(String id){
-		return adao.selectApprovalBook(id);
+	public List<ListDocDTO> getApprovalBook(Map<String, Object> map){
+		return adao.selectApprovalBook(map);
 	}
 	
 	// 참조/열람 문서(결재하기)
-	public List<ListDocDTO> getReferIsMeWait(String id){
-		return adao.selectReferIsMeWait(id);
+	public List<ListDocDTO> getReferIsMeWait(Map<String, Object> map){
+		return adao.selectReferIsMeWait(map);
 	}
 	
 	// 임시 저장 문서
-	public List<ListDocDTO> getTemp(String id){
-		return adao.selectTemp(id);
+	public List<ListDocDTO> getTemp(Map<String, Object> map){
+		return adao.selectTemp(map);
+	}
+	
+	// 게시물 총 개수
+	public int getCount(Map<String, String> map) {
+		return adao.selectCount(map);
 	}
 		
 	

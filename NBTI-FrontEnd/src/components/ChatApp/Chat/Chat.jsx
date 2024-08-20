@@ -228,6 +228,7 @@ const Chat = () => {
 
   const handleCalendar = () => {
     setCalendar((prev) => { return !prev });
+    setSelectedDate(null);
   }
 
 
@@ -254,17 +255,23 @@ const Chat = () => {
 
   useEffect(() => {
     if (selectedDate != null) {
-      console.log(selectedDate)
       // 특정 클래스명을 가진 요소들 모두 가져오기
       const elements = document.getElementsByClassName(styles.dateSeparator);
+      const containerTop = dragRef.current.getBoundingClientRect().top;
+
+
       // 요소들에 대해 작업 수행
-      Array.from(elements).forEach(e => {
-       
-        console.log(e.innerHTML); // 요소 확인
+      Array.from(elements).forEach(e => { // 요소 확인
         // 여기서 원하는 작업을 수행할 수 있습니다.
-        if(e.innerHTML===selectedDate){
-          e.scrollIntoView({ behavior: 'smooth', block: 'center' });
-         
+        if (e.innerHTML === selectedDate) {
+           e.scrollIntoView({ behavior: 'smooth', inline: 'nearest' });
+          // 컨테이너 내부에서의 스크롤 위치 계산
+          // const elementTop = e.getBoundingClientRect().top;
+          // const offset = elementTop - containerTop;
+          // divRef.current.scrollTo({
+          //   top: divRef.current.scrollTop+offset,
+          //   behavior: 'smooth'
+          // });
         }
       });
     }
@@ -420,7 +427,7 @@ const Chat = () => {
       divRef.current.scrollTop = divRef.current.scrollHeight;
     }
 
-  }, [list]);
+  }, [list, calendar]);
 
   useEffect(() => { //스크롤 
     scrollBottom();

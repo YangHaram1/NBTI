@@ -11,6 +11,7 @@ import BoardEditor from "../../../Body/BoardEditor/BoardEditor";
 
 export const AdminQnADetail = () => {
   const navi = useNavigate();
+  const [fileList, setFileList] = useState([]);
 
   const { boardSeq, boardType } = useBoardStore();
   const [detail, setDetail] = useState({}); // 게시글의 detail 정보
@@ -53,13 +54,10 @@ export const AdminQnADetail = () => {
       });
     }
 
-    // 로그인 한 사용자 정보
-    axios.get(`${host}/members`).then((resp) => {
-      setCurrentUser(resp.data);
-    });
-
     // 로그인 한 사용자 정보 및 권한 확인
     axios.get(`${host}/members`).then((resp) => {
+      setCurrentUser(resp.data);
+
       if (resp.data.member_level === "2") {
         // 권한 확인
         axios.get(`${host}/members/selectLevel`).then((resp1) => {
@@ -74,6 +72,12 @@ export const AdminQnADetail = () => {
           }
         });
       }
+    });
+
+    // 파일 목록 출력
+    axios.get(`${host}/files/board?seq=${boardSeq}`).then((resp) => {
+      console.log("집갈래... : ", resp.data);
+      setFileList(resp.data);
     });
 
     // 외부 스타일시트를 동적으로 추가
@@ -254,6 +258,19 @@ export const AdminQnADetail = () => {
           <div dangerouslySetInnerHTML={{ __html: detail.contents }}></div>
         )}
       </div>
+      {fileList.map((item, index) => {
+        return (
+          <div key={index}>
+            <div>
+              <a
+                href={`${host}/files/downloadBoard?oriname=${item.oriname}&sysname=${item.sysname}`}
+              >
+                {item.oriname}
+              </a>
+            </div>
+          </div>
+        );
+      })}
 
       {/* --------------[ 댓글 작성 ]------------ */}
       <div className={styles.reply}>
