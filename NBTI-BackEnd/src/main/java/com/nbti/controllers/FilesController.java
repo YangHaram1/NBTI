@@ -111,7 +111,7 @@ public class FilesController {
 		dto.setAddress(map.get("address"));
 		dto.setEmail(map.get("email"));
 		dto.setMember_call(map.get("member_call"));
-		//System.out.println(dto.getAddress() +":"+ dto.getEmail() +":"+ dto.getMember_call());
+		System.out.println(dto.getAddress() +":"+ dto.getEmail() +":"+ dto.getMember_call() +":"+ file.getOriginalFilename());
 		serv.mypageUpdate(dto, file);
 		return ResponseEntity.ok().build();
 	}
