@@ -109,6 +109,34 @@ public class ApprovalService {
 		adao.updateDocStateCancle(seq);
 	}
 	
+	// 임시 저장글 삭제
+	@Transactional(rollbackFor = IOException.class)
+	public void deleteTemp(int seq, String setlist) {
+		
+		// 공통 내역 삭제
+		adao.delete(seq);
+		
+		// 문서 내용 삭제
+		if(setlist.equals("업무기안서")) {
+			dddao.delete(seq);
+			System.out.println("업무기안서 삭제 완료");
+			
+		}else if(setlist.equals("휴직신청서")) {
+			dldao.delete(seq);
+			System.out.println("휴직신청서 삭제 완료");
+			
+		}else if(setlist.equals("휴가신청서")) {
+			dvdao.delete(seq);
+			System.out.println("휴가신청서 삭제 완료");
+		}
+		
+		// 결재 라인 삭제
+		aldao.delete(seq);
+		// 참조 라인 삭제
+		rldao.delete(seq);
+		
+	}
+	
 	@Transactional(rollbackFor = IOException.class)
 	public void write(int type, ApprovalDTO adto, List<ApprovalLineDTO> alist, List<ReferLineDTO> rlist, DocDraftDTO ddto, DocVacationDTO dvdto, DocLeaveDTO dldto) {
     	
