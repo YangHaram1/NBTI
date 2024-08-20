@@ -42,7 +42,7 @@ const Files = () => {
     }
     return (
         <div className={styles.container}>
-            <ul>
+            <ul className={styles.ul}>
                 {
                     filesList.filter((temp) => {
                         if (temp.list.length === 0)
