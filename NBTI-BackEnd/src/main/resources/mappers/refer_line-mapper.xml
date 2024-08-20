@@ -16,5 +16,9 @@
  	<update id="updateRead">
  		update refer_line set read='Y' where temp_seq = #{seq} and referer=#{id}
  	</update>
+ 	
+ 	<delete id="delete">
+    	delete from refer_line where temp_seq = ${seq}
+    </delete>
   
  </mapper>

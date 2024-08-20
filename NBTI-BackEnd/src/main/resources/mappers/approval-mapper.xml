@@ -401,6 +401,10 @@
     <update id="updateDocStateCancle">
     	update approval set doc_state = 'c' where temp_seq = ${seq}
     </update>
+    
+    <delete id="delete">
+    	delete from approval where temp_seq = ${seq}
+    </delete>
   
   	
   

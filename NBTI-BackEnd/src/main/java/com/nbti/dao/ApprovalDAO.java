@@ -71,6 +71,10 @@ public class ApprovalDAO {
 		return mybatis.selectOne("Approval.selectCount", map);
 	}
 	
+	public void delete(int seq) {
+		mybatis.delete("Approval.delete",seq);
+	}
+	
 	// 문서 정보 최신화
 	public void updateDocState(int temp_seq, String state) {
 		Map<String, Object> map = new HashMap<>();

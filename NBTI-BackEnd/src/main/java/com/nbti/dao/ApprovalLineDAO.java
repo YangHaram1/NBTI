@@ -46,5 +46,9 @@ public class ApprovalLineDAO {
 	public void updateNextApproval(Map<String, Object> map) {
 		mybatis.update("ApprovalLine.updateNextApproval", map);
 	}
+	
+	public void delete(int seq) {
+		mybatis.delete("ApprovalLine.delete",seq);
+	}
 
 }
