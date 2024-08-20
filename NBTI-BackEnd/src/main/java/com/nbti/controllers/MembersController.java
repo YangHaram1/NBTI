@@ -69,6 +69,13 @@ public class MembersController {
 	            return ResponseEntity.notFound().build();
 	        }
 	    }
+	 
+	@GetMapping("/memberInfo")
+	public MembersDTO memberInfo() {
+		String id = (String)session.getAttribute("loginID");
+		return mServ.selectMyData(id);
+	}
+	
 	@PutMapping
 	public ResponseEntity<Void> update(@RequestBody MembersDTO dto) {
 		String id = (String)session.getAttribute("loginID");

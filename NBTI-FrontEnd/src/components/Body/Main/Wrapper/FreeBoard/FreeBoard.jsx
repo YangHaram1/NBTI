@@ -19,7 +19,7 @@ export const FreeBoard = () => {
   const [transform, setTransform] = useState(false);
 
   const [isLiked, setIsLiked] = useState({}); // 좋아요 상태를 객체로 저장
-  const {loginID} =useAuthStore();
+  const { loginID } = useAuthStore();
   useEffect(() => {
     // 자유 게시판 글 & 댓글 출력
     axios.get(`${host}/board/freeBoard`).then((resp) => {
@@ -40,10 +40,10 @@ export const FreeBoard = () => {
     });
 
     // 로그인 한 사용자 정보
-    if(loginID!=null)
-    axios.get(`${host}/members`).then((resp) => {
-      setCurrentUser(resp.data);
-    });
+    if (loginID != null)
+      axios.get(`${host}/members/memberInfo`).then((resp) => {
+        setCurrentUser(resp.data);
+      });
   }, [transform]);
 
   // 댓글 입력 감지
