@@ -193,27 +193,27 @@ export const Profile = () => {
                         </div>
                     </div>
                 </div>
-                <div className={`${styles.name_box} ${styles.box}`}>
+                <div className={styles.box}>
                     <div className={styles.name}>이름</div>
                     <div className={styles.value}>{myData.name}</div>
                 </div>
-                <div className={`${styles.dept_box} ${styles.box}`}>
+                <div className={styles.box}>
                     <div className={styles.name}>부서</div>
                     <div className={styles.value}>{deptName}</div>
                 </div>
-                <div className={`${styles.job_code_box} ${styles.box}`}>
+                <div className={styles.box}>
                     <div className={styles.name}>직위</div>
                     <div className={styles.value}>{jobName}</div>
                 </div>
-                <div className={`${styles.birth_box} ${styles.box}`}>
+                <div className={styles.box}>
                     <div className={styles.name}>생일</div>
                     <div className={styles.value}>{myData.birth && formatBirthDate(myData.birth)}</div>
                 </div>
-                <div className={`${styles.email} ${styles.box}`}>
+                <div className={styles.box}>
                     <div className={styles.name} >이메일</div>
                     <div className={styles.value} contentEditable={update?true:false} onInput={handleEmail} suppressContentEditableWarning='true'>{myData.email}</div>
                 </div>
-                <div className={`${styles.address_box} ${styles.box}`}>
+                <div className={styles.box}>
                     <div className={styles.name}>주소</div>
                     <div className={styles.address_value}>{address}
                     {update && (
@@ -221,11 +221,11 @@ export const Profile = () => {
                     )}
                     </div>
                 </div>
-                <div className={`${styles.call_box} ${styles.box}`}>
+                <div className={styles.box}>
                     <div className={styles.name}>핸드폰 번호</div>
                     <div className={styles.value} contentEditable={update?true:false} onInput={handlePhone} suppressContentEditableWarning='true'>{myData.member_call}</div>
                 </div>
-                <div className={`${styles.ent_date} ${styles.box}`}>
+                <div className={styles.box}>
                     <div className={styles.name}>입사일</div>
                     <div className={styles.value}>
                         {
