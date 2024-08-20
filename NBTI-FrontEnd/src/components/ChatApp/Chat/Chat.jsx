@@ -173,7 +173,7 @@ const Chat = () => {
   const notify = useCallback((item) => {
     const { maxCount, count, increment, decrement } = useNotification.getState();
     const { chatSeq } = useCheckList.getState();
-    console.log(`chatSeq= ${chatSeq} item.group_seq=${item.group_seq}`);
+   // console.log(`chatSeq= ${chatSeq} item.group_seq=${item.group_seq}`);
     if (chatSeq !== 0) {
       return false;
     }
