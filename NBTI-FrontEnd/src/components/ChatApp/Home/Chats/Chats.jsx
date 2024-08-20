@@ -45,7 +45,6 @@ const Chats = () => {
         const rect = dragRef.current.getBoundingClientRect(); //부모요소~ 드래그 되는애
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        console.log(`${x}:${y}`);
         e.preventDefault();
         setModalDisplay((prev) => {
             if (prev != null) {
