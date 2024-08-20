@@ -309,27 +309,26 @@ export const Detail = () => {
           ></i>
         </div>
         <div className={styles.right}>
+          {currentUser && !isEditing && detail.member_id === currentUser.id && (
+            <p onClick={handleEditBtn}>수정</p>
+          )}
 
-          {currentUser &&
-            !isEditing &&
-            (detail.member_id === currentUser.id || isAdmin) ? (
-            <>
-              <p onClick={handleEditBtn}>수정</p>
-              <p
-                onClick={() =>
-                  SweetAlert(
-                    "warning",
-                    "게시판",
-                    "정말 삭제하시겠습니까?",
-                    handleDelBtn
-                  )
-                }
-              >
-                삭제
-              </p>
-            </>
-          ) : null}
+          {currentUser && !isEditing && isAdmin && (
+            <p
+              onClick={() =>
+                SweetAlert(
+                  "warning",
+                  "게시판",
+                  "정말 삭제하시겠습니까?",
+                  handleDelBtn
+                )
+              }
+            >
+              삭제
+            </p>
+          )}
         </div>
+
         {isEditing && (
           <div className={styles.editButtons}>
             <p onClick={handleSaveBtn}>저장</p>
