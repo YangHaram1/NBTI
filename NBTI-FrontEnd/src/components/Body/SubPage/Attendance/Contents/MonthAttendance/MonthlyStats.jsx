@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction'; // 상호작용 플러그인 추가
 import koLocale from '@fullcalendar/core/locales/ko';
 import useMonthlyStats from './useMonthlyStats';
 import styles from './MonthlyStats.module.css'; // CSS 모듈 import
@@ -13,16 +12,16 @@ const formatTime = (date) => {
 
 const calculateWorkingHours = (startDate, endDate) => {
     if (!startDate || !endDate) return 'N/A';
-
+    
     const start = new Date(startDate);
     const end = new Date(endDate);
-
+    
     const diffMs = end - start;
     if (diffMs < 0) return 'N/A'; 
 
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-
+    
     return `${diffHours}시간 ${diffMinutes}분`;
 };
 
@@ -47,25 +46,8 @@ export const MonthlyStats = () => {
 
     const { stats, dailyStats } = useMonthlyStats(memberId, year, month);
 
-    // 주 단위로 데이터를 변환합니다.
-    const getWeekStartDate = (date) => {
-        const day = date.getDay();
-        const distanceToMonday = (day + 6) % 7; // 월요일로부터의 거리
-        const monday = new Date(date);
-        monday.setDate(date.getDate() - distanceToMonday);
-        return monday;
-    };
-
-    const getWeekDates = (startOfWeek) => {
-        return Array.from({ length: 7 }).map((_, index) => {
-            const date = new Date(startOfWeek);
-            date.setDate(date.getDate() + index);
-            return formatDate(date);
-        });
-    };
-
-    const events = Object.keys(dailyStats).flatMap(date => {
-        const { startDate, endDate } = dailyStats[date] || {};
+    const events = Object.keys(dailyStats).map(date => {
+        const { late = false, absent = false, earlyLeave = false, startDate, endDate } = dailyStats[date] || {};
 
         const startTime = startDate ? formatTime(startDate) : 'N/A';
         const endTime = endDate ? formatTime(endDate) : 'N/A';
@@ -73,17 +55,14 @@ export const MonthlyStats = () => {
 
         const title = `출근: ${startTime}\n퇴근: ${endTime}\n근무 시간: ${workingHours}`;
 
-        const startOfWeek = getWeekStartDate(new Date(date));
-        const weekDates = getWeekDates(startOfWeek);
-
-        return weekDates.map(weekDate => ({
+        return {
             title,
-            start: weekDate,
+            start: formatDate(date),
             extendedProps: {
                 backgroundColor: 'white',
                 textColor: 'black'
             }
-        }));
+        };
     });
 
     const handleTodayClick = () => {
@@ -94,25 +73,19 @@ export const MonthlyStats = () => {
         }
     };
 
-    const handlePrevWeekClick = () => {
+    const handlePrevMonthClick = () => {
         if (calendarRef.current) {
             const calendarApi = calendarRef.current.getApi();
-            const currentStart = calendarApi.view.currentStart;
-            const prevWeekStart = new Date(currentStart);
-            prevWeekStart.setDate(prevWeekStart.getDate() - 7);
-            calendarApi.gotoDate(prevWeekStart);
-            setCurrentDate(prevWeekStart);
+            calendarApi.prev();
+            setCurrentDate(new Date(calendarApi.getDate().getFullYear(), calendarApi.getDate().getMonth(), 1));
         }
     };
 
-    const handleNextWeekClick = () => {
+    const handleNextMonthClick = () => {
         if (calendarRef.current) {
             const calendarApi = calendarRef.current.getApi();
-            const currentStart = calendarApi.view.currentStart;
-            const nextWeekStart = new Date(currentStart);
-            nextWeekStart.setDate(nextWeekStart.getDate() + 7);
-            calendarApi.gotoDate(nextWeekStart);
-            setCurrentDate(nextWeekStart);
+            calendarApi.next();
+            setCurrentDate(new Date(calendarApi.getDate().getFullYear(), calendarApi.getDate().getMonth(), 1));
         }
     };
 
@@ -122,7 +95,32 @@ export const MonthlyStats = () => {
                 <div className={styles.dateTitle}>
                     <h2>{`${year}년 ${month}월`}</h2>
                 </div>
-
+                <div className={styles.buttonGroup}>
+                    <button
+                        type="button"
+                        title="이전 주"
+                        onClick={handlePrevMonthClick}
+                        className={styles.navButton}
+                    >
+                        <span className={styles.icon}>&#10094;</span>
+                    </button>
+                    <button
+                        type="button"
+                        title="오늘"
+                        onClick={handleTodayClick}
+                        className={styles.navButton}
+                    >
+                        오늘
+                    </button>
+                    <button
+                        type="button"
+                        title="다음 주"
+                        onClick={handleNextMonthClick}
+                        className={styles.navButton}
+                    >
+                        <span className={styles.icon}>&#10095;</span>
+                    </button>
+                </div>
             </div>
             <div className={styles.stats}>
                 <p>지각 횟수: {stats.lateCount}</p>
@@ -132,13 +130,13 @@ export const MonthlyStats = () => {
             <div className={styles.minical}>
                 <FullCalendar
                     ref={calendarRef}
-                    plugins={[dayGridPlugin, interactionPlugin]}
-                    initialView="dayGridWeek"
+                    plugins={[dayGridPlugin]}
+                    initialView="dayGridMonth"
+                    headerToolbar={false}
                     locales={[koLocale]}
                     locale="ko"
                     height="auto"
                     events={events}
-                    headerToolbar={false} // 기본 헤더 툴바를 사용하지 않음
                     eventContent={({ event }) => {
                         const lines = event.title.split('\n');
                         return (

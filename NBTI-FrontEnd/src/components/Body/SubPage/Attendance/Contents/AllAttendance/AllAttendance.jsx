@@ -22,9 +22,9 @@ const getDayOfWeek = (date) => (date.getDay() + 6) % 7; // 0 (월요일)부터 6
 // 주의 시작일 계산 함수 (월요일)
 const getStartOfWeek = (date) => {
     const day = date.getDay();
-    const distanceToMonday = (day + 6) % 7;
+    // 월요일을 기준으로 주의 첫날을 계산합니다
     const monday = new Date(date);
-    monday.setDate(date.getDate() - distanceToMonday);
+    monday.setDate(date.getDate() - (day === 0 ? 6 : day -2));
     return monday;
 };
 
@@ -69,6 +69,7 @@ export const AllAttendance = () => {
 
     const handleList = useCallback(() => {
         const startOfWeek = getStartOfWeek(currentWeekStart);
+
         const endOfWeek = new Date(startOfWeek);
         endOfWeek.setDate(startOfWeek.getDate() + 6); // 주의 끝 날짜
 
@@ -122,7 +123,7 @@ export const AllAttendance = () => {
 
     useEffect(() => {
         handleList();
-    }, [handleList]);
+    }, [handleList]); // 종속성 배열에서 handleList를 추가
 
     const handleSearch = useCallback(() => {
         if (searchTerm.trim() === '') {
@@ -230,11 +231,6 @@ export const AllAttendance = () => {
                     );
                 }}
             />
-            <div className={styles.buttonContainer}>
-                <button onClick={handlePrevWeek} className={styles.navButton}>이전 주</button>
-                <button onClick={handleTodayClick} className={styles.navButton}>오늘</button>
-                <button onClick={handleNextWeek} className={styles.navButton}>다음 주</button>
-            </div>
         </div>
     );
 };
