@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { host } from "../../../../../config/config";
 import axios from "axios";
 import { useReservationList } from "../../../../../store/store";
+import Swal from "sweetalert2";
 
 export const Side = () => {
   const navi = useNavigate();
@@ -60,13 +61,23 @@ export const Side = () => {
 
     // 현재 시간 체크
     if (startTimeObj < now) {
-        alert('시작 시간은 현재 시간 이후여야 합니다.');
+        // alert('시작 시간은 현재 시간 이후여야 합니다.');
+        Swal.fire({
+          icon: "error",
+          title: "예약",
+          text: "시작 시간은 현재 시간 이후여야 합니다.",
+        }); 
         return;
     }
 
     // 종료 시간 체크
     if (endTimeObj <= startTimeObj) {
-        alert('종료 시간은 시작 시간 이후여야 합니다.');
+        // alert('종료 시간은 시작 시간 이후여야 합니다.');
+        Swal.fire({
+          icon: "error",
+          title: "예약",
+          text: "종료 시간은 시작 시간 이후여야 합니다.",
+        }); 
         return;
     }
 
@@ -85,7 +96,13 @@ export const Side = () => {
     })
     .catch((error) => {
         console.error('예약 실패:', error);
-        alert('예약에 실패했습니다.');
+        // alert('예약에 실패했습니다.');
+        Swal.fire({
+          icon: "error",
+          title: "예약",
+          text: "예약에 실패했습니다.",
+        }); 
+        
     });
   };
 
