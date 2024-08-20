@@ -8,7 +8,7 @@ const Security = () => {
     const [history, setHistory] = useState([]);
 
     const [cpage, setCpage] = useState(1);
-    const [page_total_count, setPage_total_count] = useState();
+    const [page_total_count, setPage_total_count] = useState(1);
     const [target, setTarget] = useState('');
     const [keyword, setKeyword] = useState('');
     const [search,setSearch] =useState(false);
