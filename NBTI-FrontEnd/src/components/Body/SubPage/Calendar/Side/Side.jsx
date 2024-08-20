@@ -187,14 +187,14 @@ const handleDeleteSharedCalendar = (calendar_id) => {
       <div className={styles.menus}>
         <ul>
           <li onClick={toggleFreeBoard}>
-            <i className="fa-solid fa-user-large"></i>일정
+            <i className="fa-solid fa-calendar"></i>일정
             <ul className={`${styles.submenu} ${FreeBoard ? styles.open : ""}`} onClick={preventPropagation}>
               <li onClick={fullCalendar}>
                 <span><i className="fa-solid fa-circle"></i></span>
                 <span>전체 일정</span>
               </li>
               <li onClick={myCalender}>
-                <span><i className="fa-solid fa-circle" style={{ color: '#33A150' }}></i></span>
+                <span><i className="fa-solid fa-circle" style={{ color: '#61a5c2' }}></i></span>
                 <span>내 일정</span>
               </li>
             </ul>
@@ -202,12 +202,12 @@ const handleDeleteSharedCalendar = (calendar_id) => {
         </ul>
         <ul>
           <li onClick={toggleNoticeBoard}>
-            <i className="fa-solid fa-people-group"></i>공유 일정<i className="fa-solid fa-plus" id={styles.plus} onClick={handleCalendarAddClick}/>
+            <i className="fa-solid fa-calendar"></i>공유 일정<i className="fa-solid fa-plus" id={styles.plus} onClick={handleCalendarAddClick}/>
             <ul className={`${styles.submenu} ${NoticeBoard ? styles.open : ""}`} onClick={preventPropagation}>
               {publicList.map((calendar, index) => ( 
                   <li key={index} onClick={()=>sharedCalendar(calendar.calendar_id)}> 
                       <span>
-                          <i className="fa-solid fa-circle" style={{ color: '#E04038' }}></i>
+                          <i className="fa-solid fa-circle" style={{ color: '#fb8500' }}></i>
                       </span>
                       <span>{calendar.calendar_name}</span> 
 

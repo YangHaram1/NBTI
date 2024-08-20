@@ -2,6 +2,7 @@
     height: 100%;
     overflow-y: hidden;
     padding-top: 3%;
+    min-width: 900px;
 }
 
 .list thead th, 
@@ -30,8 +31,9 @@ tr,td {
 .num{
     padding-top: 2%;
 }
-.btn{
-    display: flex;flex-direction: row;
-}
-.btn > button {border: none; flex: 1; transition: all 0.2s ease;}
+/* .btn{
+    display: flex;flex-direction: row; 
+} */
+.btn > button {border: none; border-radius: 5px; height: 100;width: 45%; transition: all 0.2s ease; cursor: pointer;}
+.btn > button:first-child {margin-right: 10%;}
 .btn > button:hover {border: none;}
