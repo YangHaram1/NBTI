@@ -15,6 +15,7 @@ import com.nbti.dto.ChatDTO;
 import com.nbti.dto.Group_chatDTO;
 import com.nbti.dto.Group_chatSizeDTO;
 import com.nbti.dto.Group_memberDTO;
+import com.nbti.dto.MembersDTO;
 
 @Service
 public class Group_chatService {
@@ -37,30 +38,30 @@ public class Group_chatService {
 		list.add(member_id);
 		list.add(loginID);
 		boolean check = mdao.check(list);
-		list = msdao.chatMembersName(list);
+		List<MembersDTO> listName = new ArrayList<>();
+		listName = msdao.chatMembersName(list);
 
 		if (!check) {
 			
 			List<Group_memberDTO> member_list = new ArrayList<>();
 			String name1 = "";
 			String name2 = "";
-			System.out.println(member_id);
 			if (loginID.equals(member_id)) {
 				int group_seq = dao.insert("N");
 				Group_memberDTO dto = new Group_memberDTO(group_seq, member_id, 0, "Y", "N", "나와의 채팅");
 				member_list.add(dto);
 			} else {
-				if (list.get(0).equals(member_id)) {
-					name2 = list.get(0);
-					name1 = list.get(1);
+				if (listName.get(0).getId().equals(member_id)) {
+					name1 = listName.get(0).getName();
+					name2 = listName.get(1).getName();
 				} else {
-					name2 = list.get(1);
-					name1 = list.get(0);
+					name1= listName.get(1).getName();
+					name2 = listName.get(0).getName();
 				}
 				int group_seq = dao.insert("Y");
-				Group_memberDTO dto = new Group_memberDTO(group_seq, member_id, 0, "Y", "N", name1);
+				Group_memberDTO dto = new Group_memberDTO(group_seq, member_id, 0, "Y", "N", name2);
 				member_list.add(dto);
-				dto = new Group_memberDTO(group_seq, loginID, 0, "Y", "N", name2);
+				dto = new Group_memberDTO(group_seq, loginID, 0, "Y", "N", name1);
 				member_list.add(dto);
 				ChatDTO cdto = new ChatDTO(0, "system", name1 + "님과 " + name2 + "님이 입장하셨습니다!", null, group_seq, 0);
 				cdao.insert(cdto);
