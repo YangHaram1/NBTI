@@ -36,7 +36,7 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
-  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage, setWebSocketCheck, chatController, setChatController } = useCheckList();
+  const { webSocketCheck,searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage, setWebSocketCheck, chatController, setChatController } = useCheckList();
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
   const [updateMember, setUpdateMember] = useState(false);
@@ -44,7 +44,7 @@ const Chat = () => {
   const [RoomName, setRoomName] = useState('');
   const [calendar, setCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null); //이거 날짜
-
+  const [maxRetries,setMaxRetries] =useState(0);
 
   useEffect(() => { //group_chat 속성 가저오기 나와의채팅인지 아닌지 
     const { chatSeq } = useCheckList.getState();
@@ -66,20 +66,32 @@ const Chat = () => {
     }
 
   }, [chatSeq])
-
+  // 연결 카운트
   // WebSocket 연결을 설정하는 useEffect
   useEffect(() => {
     //const url = host.replace(/^https?:/, '')
     if (loginID != null && loginID !== 'error') {
       ws.current.onclose = () => {
         console.log('Disconnected from WebSocket');
-        setWebSocketCheck();
+        if(maxRetries<10){
+          setWebSocketCheck();
+          console.log("websocket 재연결 시도")
+        }
+        setMaxRetries((prev)=>{
+          return prev+1;
+        })
       };
 
       ws.current.onerror = (error) => {
         console.log('WebSocket error observed:', error);
-        setWebSocketCheck();
-        // 오류 처리 로직을 추가할 수 있습니다.
+        if(maxRetries<10){
+          setWebSocketCheck();
+          console.log("websocket 재연결 시도")
+        }
+        setMaxRetries((prev)=>{
+          return prev+1;
+        })
+      
       };
 
       ws.current.onmessage = (e) => {
@@ -142,7 +154,7 @@ const Chat = () => {
     return () => {
     };
 
-  }, [chatNavi]);
+  }, [chatNavi,webSocketCheck]);
 
   useEffect(() => {
     if (loginID != null && loginID !== 'error') {
@@ -164,7 +176,7 @@ const Chat = () => {
   const notify = useCallback((item) => {
     const { maxCount, count, increment, decrement } = useNotification.getState();
     const { chatSeq } = useCheckList.getState();
-    console.log(`chatSeq= ${chatSeq} item.group_seq=${item.group_seq}`);
+   // console.log(`chatSeq= ${chatSeq} item.group_seq=${item.group_seq}`);
     if (chatSeq !== 0) {
       return false;
     }

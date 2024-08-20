@@ -13,6 +13,7 @@ import com.nbti.dao.Group_memberDAO;
 import com.nbti.dao.MembersDAO;
 import com.nbti.dto.ChatDTO;
 import com.nbti.dto.Group_memberDTO;
+import com.nbti.dto.MembersDTO;
 
 @Service
 public class Group_memberService {
@@ -36,16 +37,17 @@ public class Group_memberService {
 			dao.insert(dto);
 		}
 		List<String> memberList = new ArrayList<>(Arrays.asList(members)); //네임받아올 리스트
-		memberList=msdao.chatMembersName(memberList);
+		List<MembersDTO> nameList =new ArrayList<>();
+		nameList=msdao.chatMembersName(memberList);
 		String name=msdao.getMemberName(loginID);
 		String result=name+"님이 ";
 		int index=0;
-		for (String str : memberList) {
+		for (MembersDTO dto : nameList) {
 			if(index==members.length-1) {
-				result+=str+"님을 초대했습니다.";
+				result+=dto.getName()+"님을 초대했습니다.";
 			}
 			else {
-				result+=str+"님, ";
+				result+=dto.getName()+"님, ";
 			}
 			index++;
 		}

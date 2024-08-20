@@ -168,9 +168,9 @@ SELECT
     a.start_date,
     a.end_date
 FROM members m
-LEFT JOIN attendance a ON a.member_id = m.id AND a.start_date BETWEEN #{startOfWeek} AND #{endOfWeek}
+LEFT JOIN attendance a ON a.member_id = m.id AND trunc(a.start_date) >= trunc(sysdate) - 365
 LEFT JOIN teams t ON m.team_code = t.team_code
-order by m.name
+ORDER BY m.name
 
 </select>
 </mapper>

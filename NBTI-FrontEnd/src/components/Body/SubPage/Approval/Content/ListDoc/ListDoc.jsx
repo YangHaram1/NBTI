@@ -173,7 +173,11 @@ export const ListDoc = ({setlist}) => {
                     <div className={styles.form}> 결재양식</div>
                     <div className={styles.emergency}> 긴급</div>
                     <div className={styles.content_title}> 제목</div>
+                    {setlist !== '임시 저장 문서함'? (
+                        <>
                     <div className={styles.file}> 첨부</div>
+                    </>
+                    ):null}
                     {setlist !== '반려 문서함' && setlist !== '상신취소 문서함' && setlist !== '임시 저장 문서함'? (
                         <>
                         <div className={styles.writer}> 기안자</div>
@@ -205,6 +209,8 @@ export const ListDoc = ({setlist}) => {
                                     <input type='hidden' value={list.temp_seq}></input>
                                     <input type='hidden' value={list.doc_sub_name}></input>
                                 </div>
+                                {setlist !== '임시 저장 문서함' ? (
+                                <>
                                 <div className={styles.file}>
                                     {/* {console.log("콘솔로 찍어보깅",fileExistenceMap[list.temp_seq])} */}
                                     {
@@ -212,6 +218,8 @@ export const ListDoc = ({setlist}) => {
                                     ? Array.from(fileExistenceMap[list.temp_seq]).length > 0 ? <i class="fa-solid fa-paperclip"></i> : ''
                                     : '...'} {/* 로딩 중일 때는 '...' 표시 */}
                                 </div>
+                                </>
+                                ) : null}
                                 {setlist !== '반려 문서함' && setlist !== '상신취소 문서함' && setlist !== '임시 저장 문서함' ? (
                                 <>
                                 <div className={styles.writer}> {list.name}</div>

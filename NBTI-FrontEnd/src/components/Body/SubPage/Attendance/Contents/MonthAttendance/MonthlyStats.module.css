@@ -1,29 +1,62 @@
-/* MonthlyStats.module.css */
+/* 전체 컨테이너 스타일 */
 .container {
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 16px;
 }
 
-.stats {
-  padding: 0 0 10px 10px;
+/* 툴바 스타일 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #6b9080;; /* 툴바 배경색 */
+  padding: 10px; /* 툴바 패딩 */
+  border-radius: 10px 10px 0 0; /* 툴바 모서리 둥글게 */
+  margin-bottom: 16px; /* 툴바와 다른 요소 사이의 여백 */
 }
 
-.stats p {
-  margin: 0;
-  font-size: 14px;
+/* 날짜 타이틀 스타일 */
+.title {
+  font-size: 1.5em; /* 타이틀 폰트 크기 */
+  font-weight: bold; /* 타이틀 폰트 두께 */
+  margin: 0; /* 기본 마진 없애기 */
+  color: #333; /* 타이틀 색상 */
 }
 
-.minical {
-  /* 미니 월간 캘린더의 스타일 조정 */
-  padding: 10px;
+/* 버튼 그룹 스타일 (툴바에 필요한 경우) */
+.buttonGroup {
+  display: flex;
+  gap: 8px;
 }
 
-/* 이벤트 스타일 */
-.eventContent {
-  white-space: normal; /* 줄바꿈 허용 */
-  overflow-wrap: break-word; /* 긴 단어 줄바꿈 */
-  font-size: 12px; /* 폰트 사이즈 조정 */
-  padding: 10px;
-  min-height: 120px; /* 최소 높이 설정 */
-  border-radius: 4px; /* 둥근 모서리 추가 */
-  text-align: center; /* 텍스트 정렬 */
+/* 버튼 스타일 */
+.navButton {
+  background-color: var(--fc-button-bg-color); /* 기본 버튼 배경색 */
+  color: var(--fc-button-text-color); /* 버튼 텍스트 색상 */
+  border: 1px solid var(--fc-button-border-color); /* 버튼 테두리 색상 */
+  padding: 0.4em 0.65em; /* 패딩을 적절히 조정 */
+  border-radius: 0.25em; /* 둥근 모서리 */
+  cursor: pointer;
+  font-family: inherit; /* 폰트 계승 */
+  font-size: 1em;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  display: inline-block;
+  text-decoration: none;
+  user-select: none;
+  transition: all ease 0.1s;
+}
+
+.navButton:hover {
+  background-color: var(--fc-button-hover-bg-color); /* 버튼 호버 시 배경색 */
+  border-color: var(--fc-button-hover-border-color); /* 버튼 호버 시 테두리 색상 */
+}
+
+.icon {
+  font-size: 1.2em;
+  display: inline-block;
+  line-height: 1;
 }

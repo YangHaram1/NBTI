@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import koLocale from '@fullcalendar/core/locales/ko';
-import useMonthlyStats from './useMonthlyStats'; // 훅을 가져옵니다
-import styles from './MonthlyStats.module.css'; // 스타일을 가져옵니다
+import useMonthlyStats from './useMonthlyStats';
+import styles from './MonthlyStats.module.css'; // CSS 모듈 import
 
 const formatTime = (date) => {
     const options = { hour: '2-digit', minute: '2-digit' };
@@ -27,12 +27,10 @@ const calculateWorkingHours = (startDate, endDate) => {
 
 const formatDate = (date) => new Date(date).toISOString().split('T')[0];
 
-const getDayOfWeek = (date) => (date.getDay() + 6) % 7; // 0 (월요일)부터 6 (일요일)
-
 export const MonthlyStats = () => {
     const [memberId, setMemberId] = useState(null);
-    const [year, setYear] = useState(new Date().getFullYear());
-    const [month, setMonth] = useState(new Date().getMonth() + 1); // 월은 0부터 시작하므로 +1 필요
+    const [currentDate, setCurrentDate] = useState(new Date());
+    const calendarRef = useRef(null);
 
     useEffect(() => {
         const storedMemberId = sessionStorage.getItem('loginID');
@@ -42,6 +40,9 @@ export const MonthlyStats = () => {
             console.error('SessionStorage에서 memberId를 찾을 수 없습니다.');
         }
     }, []);
+
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1;
 
     const { stats, dailyStats } = useMonthlyStats(memberId, year, month);
 
@@ -54,39 +55,73 @@ export const MonthlyStats = () => {
 
         const title = `출근: ${startTime}\n퇴근: ${endTime}\n근무 시간: ${workingHours}`;
 
-        const dayOfWeek = getDayOfWeek(new Date(date));
-        let backgroundColor = 'white';
-        let textColor = 'black';
-
-        // if (late) {
-            
-        //     textColor = 'white';
-        // } else if (absent) {
-            
-        //     textColor = 'white';
-        // } else if (earlyLeave) {
-            
-        //     textColor = 'white';
-        // }
-
-        if (dayOfWeek === 5) {
-            textColor = 'blue';
-            
-        } else if (dayOfWeek === 6) {
-            textColor = 'red';
-            
-        }
-
         return {
             title,
             start: formatDate(date),
-            extendedProps: { backgroundColor, textColor }
+            extendedProps: {
+                backgroundColor: 'white',
+                textColor: 'black'
+            }
         };
     });
 
+    const handleTodayClick = () => {
+        if (calendarRef.current) {
+            const calendarApi = calendarRef.current.getApi();
+            calendarApi.today();
+            setCurrentDate(new Date());
+        }
+    };
+
+    const handlePrevMonthClick = () => {
+        if (calendarRef.current) {
+            const calendarApi = calendarRef.current.getApi();
+            calendarApi.prev();
+            setCurrentDate(new Date(calendarApi.getDate().getFullYear(), calendarApi.getDate().getMonth(), 1));
+        }
+    };
+
+    const handleNextMonthClick = () => {
+        if (calendarRef.current) {
+            const calendarApi = calendarRef.current.getApi();
+            calendarApi.next();
+            setCurrentDate(new Date(calendarApi.getDate().getFullYear(), calendarApi.getDate().getMonth(), 1));
+        }
+    };
+
     return (
         <div className={styles.container}>
-            <h2>월간 통계</h2>
+            <div className={styles.header}>
+                <div className={styles.dateTitle}>
+                    <h2>{`${year}년 ${month}월`}</h2>
+                </div>
+                <div className={styles.buttonGroup}>
+                    <button
+                        type="button"
+                        title="이전 주"
+                        onClick={handlePrevMonthClick}
+                        className={styles.navButton}
+                    >
+                        <span className={styles.icon}>&#10094;</span>
+                    </button>
+                    <button
+                        type="button"
+                        title="오늘"
+                        onClick={handleTodayClick}
+                        className={styles.navButton}
+                    >
+                        오늘
+                    </button>
+                    <button
+                        type="button"
+                        title="다음 주"
+                        onClick={handleNextMonthClick}
+                        className={styles.navButton}
+                    >
+                        <span className={styles.icon}>&#10095;</span>
+                    </button>
+                </div>
+            </div>
             <div className={styles.stats}>
                 <p>지각 횟수: {stats.lateCount}</p>
                 <p>결근 횟수: {stats.absentCount}</p>
@@ -94,6 +129,7 @@ export const MonthlyStats = () => {
             </div>
             <div className={styles.minical}>
                 <FullCalendar
+                    ref={calendarRef}
                     plugins={[dayGridPlugin]}
                     initialView="dayGridMonth"
                     headerToolbar={false}
@@ -105,7 +141,6 @@ export const MonthlyStats = () => {
                         const lines = event.title.split('\n');
                         return (
                             <div
-                                className={styles.eventContent}
                                 style={{ backgroundColor: event.extendedProps.backgroundColor, color: event.extendedProps.textColor }}
                             >
                                 {lines.map((line, index) => (

@@ -395,6 +395,9 @@
             UPDATE approval
             SET approval_seq = v_form_code || '-' || v_current_year || '-' || TO_CHAR(v_sequence_number, 'FM000')
             WHERE temp_seq = #{temp_seq};
+            
+            DBMS_OUTPUT.PUT_LINE('v_sequence_number: ' || v_sequence_number);
+            
         END;
     </update>
     
@@ -405,7 +408,9 @@
     <delete id="delete">
     	delete from approval where temp_seq = ${seq}
     </delete>
-  
-  	
+    
+    <select id="selectApprovalerId" resultType="String">
+    	select member_id from approval where temp_seq = #{seq} 
+    </select>
   
  </mapper>

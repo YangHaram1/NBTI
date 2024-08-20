@@ -94,5 +94,9 @@ public class ApprovalDAO {
 	public void updateDocStateCancle(int seq) {
 		mybatis.update("Approval.updateDocStateCancle", seq);
 	}
+	
+	public String getApprovaler(int seq) {
+		return mybatis.selectOne("Approval.selectApprovalerId", seq);
+	}
 
 }

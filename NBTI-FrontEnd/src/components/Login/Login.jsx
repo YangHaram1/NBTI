@@ -47,7 +47,7 @@ const Login = () => {
         }
     };
 
-    const  handleLogin = () => {
+    const handleLogin = () => {
         axios
             .post(`${host}/auth`, auth)
             .then(resp => {
@@ -101,7 +101,7 @@ const Login = () => {
                     onChange={handleChange}
                     className={styles.input}
                 />
-                <div>
+                <div className={styles.rememberId}>
                     <input
                         type="checkbox"
                         id="rememberid"

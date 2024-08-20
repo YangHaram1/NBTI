@@ -20,6 +20,7 @@ export const FreeBoard = () => {
 
   const [isLiked, setIsLiked] = useState({}); // 좋아요 상태를 객체로 저장
   const { loginID } = useAuthStore();
+
   useEffect(() => {
     // 자유 게시판 글 & 댓글 출력
     axios.get(`${host}/board/freeBoard`).then((resp) => {
@@ -28,15 +29,15 @@ export const FreeBoard = () => {
       setBoardType("자유");
 
       // 좋아요 상태 가져오기
-      // resp.data.rlist.forEach((reply) => {
-      //   reply.forEach((innerReply) => {
-      //     axios.get(`${host}/likes/status/${innerReply.seq}`).then((resp) => {
-      //       // boolean 반환
-      //       // 좋아요 상태의 prev에 새롭게 true / false를 업데이트
-      //       setIsLiked((prev) => ({ ...prev, [innerReply.seq]: resp.data }));
-      //     });
-      //   });
-      // });
+      resp.data.rlist.forEach((reply) => {
+        reply.forEach((innerReply) => {
+          axios.get(`${host}/likes/status/${innerReply.seq}`).then((resp) => {
+            // boolean 반환
+            // 좋아요 상태의 prev에 새롭게 true / false를 업데이트
+            setIsLiked((prev) => ({ ...prev, [innerReply.seq]: resp.data }));
+          });
+        });
+      });
     });
 
     // 로그인 한 사용자 정보
@@ -209,10 +210,6 @@ export const FreeBoard = () => {
                             <span>{ritem.name}</span>
                             <span>{reply_currentDate}</span>
                           </div>
-                          {/* <div
-                            className={styles.replyContent}
-                            dangerouslySetInnerHTML={{ __html: ritem.contents }}
-                          /> */}
                           <div
                             className={styles.replyContent}
                             dangerouslySetInnerHTML={{
@@ -253,12 +250,6 @@ export const FreeBoard = () => {
                       </div>
                     );
                   })}
-
-                  {
-                    // reply[i].length >= 6 && (
-                    // <div className={styles.moreReplies}>...</div>
-                    // )
-                  }
                 </div>
               </div>
             </div>

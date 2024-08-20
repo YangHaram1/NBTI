@@ -17,7 +17,7 @@ const useAllAttendance = () => {
 
             // 응답 데이터의 구조를 확인합니다
             console.log("Members 데이터:", response.data.members);
-
+            
             if (response.data && response.data.members) {
                 // members 데이터를 직접 사용
                 setStats(response.data.members);

@@ -66,6 +66,11 @@
   border: 1px solid #6b908061;
   border-radius: 50%;
 }
+.container .title .image > img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
 .container .title .titleWriter {
   flex: 1;
   min-width: 600px;
@@ -83,18 +88,56 @@
   flex: 1;
   font-size: 0.85rem;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   margin-left: 5px;
+  margin-bottom: 10px;
   padding-bottom: 25px;
+}
+.container .title .titleWriter .innerWriter > p:nth-child(2) {
+  margin-left: 8px;
+  font-size: 12px;
+  color: #6b9080;
 }
 
 .container .title .writeDate {
+  position: relative;
   flex: 1;
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
   padding: 5px 15px 0 0;
   font-size: 0.85rem;
   color: #959595;
+}
+.container .title .writeDate > i {
+  margin: 25px 5px 0 0;
+  font-size: 20px;
+  color: #6b9080;
+  cursor: pointer;
+}
+
+/* 파일 리스트 모달 창 스타일 */
+.fileListModal {
+  position: absolute; /* 부모 컨테이너를 기준으로 위치 */
+  top: 220px; /* 아이콘 바로 아래에 위치 */
+  right: 30px; /* 오른쪽 정렬 */
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px 5px 10px 15px;
+  z-index: 1000;
+  width: 200px; /* 모달 창 너비 */
+}
+
+.fileListContent {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.fileLink {
+  font-size: 14px;
 }
 
 .container .content {

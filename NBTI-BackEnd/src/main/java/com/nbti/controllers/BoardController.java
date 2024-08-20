@@ -55,6 +55,10 @@ public class BoardController {
 	    map.put("start", start);
 	    map.put("end", end);
 	    
+	    System.out.println("target : " + target );
+	    System.out.println("keyword : " + keyword );
+	    
+	    
 	    // 상태 필터 추가
 	    if ("ing".equals(status)) {
 	        map.put("status", "ing");
@@ -124,7 +128,13 @@ public class BoardController {
 	// 게시글 출력
 	@GetMapping("/{boardSeq}/{code}")
 	public ResponseEntity<BoardDTO> selectBoard(@PathVariable int boardSeq, @PathVariable int code){
-		BoardDTO dto = bserv.selectBoard(boardSeq, code);		
+		
+		Map<String, Integer> map = new HashMap<>();
+		map.put("seq", boardSeq);
+		map.put("code", code);
+		
+		BoardDTO dto = bserv.selectBoard(map);		
+		
 		return ResponseEntity.ok(dto);
 	}
 	

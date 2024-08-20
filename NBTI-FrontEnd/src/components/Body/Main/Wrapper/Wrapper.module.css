@@ -13,8 +13,9 @@
 
 .container .side .work_time {
   height: 120px;
-  border: 1px solid black;
-  border-radius: 8px;
+  border: 1px solid #6b908089;
+  background-color: white;
+  border-radius: 5px;
   margin: 10px;
   display: flex;
   justify-content: center;

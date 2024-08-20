@@ -96,7 +96,7 @@ public boolean login(MembersDTO dto) {
 	
 	
 	//채팅관련 멤버아디로 네임 뽑기
-	public List<String> chatMembersName(List<String> list){
+	public List<MembersDTO> chatMembersName(List<String> list){
 		return mybatis.selectList("Member.chatMembersName",list);
 	}
 	
@@ -129,4 +129,11 @@ public boolean login(MembersDTO dto) {
           Integer result = mybatis.selectOne("Member.verifyUser", params);
           return result != null && result > 0; // 사용자가 존재하면 true 반환
       }
+      
+	  // 문서 결재가 결재완료이고, 문서 종류가 휴직신청서 일때 휴직 인원 업데이트
+	  public void updateLeave(String id) {
+	  	  mybatis.update("Member.updateLeave",id);
+	  }
+      
+      
 }

@@ -168,8 +168,8 @@
 	</select>
 
 	<!-- 여기부터 채팅관련 멤버 이름 리스트 -->
-	<select id="chatMembersName" parameterType="java.util.List" resultType="java.lang.String">
-		select name from members where id in
+	<select id="chatMembersName" parameterType="java.util.List" resultType="com.nbti.dto.MembersDTO">
+		select name,id from members where id in
 		<foreach item="item" index="index" collection="list" open="("
 			close=")" separator=",">
 			#{item}
@@ -199,5 +199,10 @@
           AND name = #{name}
           AND birth = #{birth}
     </select>
+    
+    <update id="updateLeave">
+    	update members set ent_yn = 'Y' ,end_date = TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') where id = #{id}
+    </update>
+    
 </mapper>
 
