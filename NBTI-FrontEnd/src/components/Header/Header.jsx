@@ -103,13 +103,14 @@ export const Header = () => {
 
     const navi = useNavigate();
 
-    const { setChatNavi ,chatAppRef,dragRef} = useContext(ChatsContext);
+    const { setChatNavi ,chatAppRef,dragRef,setChatNaviBody} = useContext(ChatsContext);
     const handleChat = () => {
         setChatNavi((prev)=>{
             chatAppRef.current.style.display="flex";
             dragRef.current.style.display="flex";
             return 'home'
         });
+        setChatNaviBody("chats");
         
     }
    
