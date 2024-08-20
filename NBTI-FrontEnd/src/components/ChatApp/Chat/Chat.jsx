@@ -36,7 +36,7 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
-  const { searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage, setWebSocketCheck, chatController, setChatController } = useCheckList();
+  const { webSocketCheck,searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage, setWebSocketCheck, chatController, setChatController } = useCheckList();
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
   const [updateMember, setUpdateMember] = useState(false);
@@ -66,20 +66,29 @@ const Chat = () => {
     }
 
   }, [chatSeq])
-
+  // 연결 카운트
+  let maxRetries=0;
   // WebSocket 연결을 설정하는 useEffect
   useEffect(() => {
     //const url = host.replace(/^https?:/, '')
     if (loginID != null && loginID !== 'error') {
       ws.current.onclose = () => {
         console.log('Disconnected from WebSocket');
-        setWebSocketCheck();
+        if(maxRetries<10){
+          setWebSocketCheck();
+          console.log("websocket 재연결 시도")
+        }
+          maxRetries++;
       };
 
       ws.current.onerror = (error) => {
         console.log('WebSocket error observed:', error);
-        setWebSocketCheck();
-        // 오류 처리 로직을 추가할 수 있습니다.
+        if(maxRetries<10){
+          setWebSocketCheck();
+          console.log("websocket 재연결 시도")
+        }
+          maxRetries++;
+      
       };
 
       ws.current.onmessage = (e) => {
@@ -142,7 +151,7 @@ const Chat = () => {
     return () => {
     };
 
-  }, [chatNavi]);
+  }, [chatNavi,webSocketCheck]);
 
   useEffect(() => {
     if (loginID != null && loginID !== 'error') {
