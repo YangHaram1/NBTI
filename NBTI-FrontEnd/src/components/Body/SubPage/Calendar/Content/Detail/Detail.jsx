@@ -10,7 +10,8 @@ import timeGridPlugin from '@fullcalendar/timegrid'; // 주 및 일 보기 플�
 import interactionPlugin from '@fullcalendar/interaction'; // 클릭 이벤트를 위한 플러그인
 import { default as koLocale } from '@fullcalendar/core/locales/ko'; // 한국어 로케일
 import Members from './Members/Members';
-
+import Swal from "sweetalert2";
+import SweetAlert from '../../../../../../function/SweetAlert';
 
 
 export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModalOpen}) => {
@@ -102,7 +103,12 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
         
         // 모두 입력되었는지 확인
         if (!start_date || !start_time || !end_date || !end_time || !calendar_name || !title ) {
-            alert('모든 필드를 입력!');
+            // alert('모든 필드를 입력!');
+            Swal.fire({
+                icon: "error",
+                title: "일정",
+                text: "모든 필드를 입력해주세요!",
+              });
             return;
         }
     
@@ -120,12 +126,22 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
 
         // 과거 날짜 체크
         if (startDate < now) {
-            alert('시작 날짜와 시간은 현재 시간 이후여야 합니다.');
+            // alert('시작 날짜와 시간은 현재 시간 이후여야 합니다.');
+            Swal.fire({
+                icon: "error",
+                title: "일정 추가",
+                text: "시작 날짜와 시간은 현재 시간 이후여야 합니다.",
+              }); 
             return;
         }
         // 종료 시간 체크
         if (endDate <= startDate) {
-            alert('종료 시간은 시작 시간 이후여야 합니다.');
+            // alert('종료 시간은 시작 시간 이후여야 합니다.');
+            Swal.fire({
+                icon: "error",
+                title: "일정 추가",
+                text: "종료 시간은 시작 시간 이후여야 합니다.",
+              }); 
             return;
         }
         // Date 객체를 ISO 형식의 문자열로 변환하고, 이를 Timestamp로 변환
@@ -186,12 +202,22 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
     // 공유 캘린더 추가 핸들러
     const handleAddSharedCalendar = () => {
         if (inputCalendarName.trim() === '') {
-            alert('공유 캘린더 이름을 입력하세요.');
+            // alert('공유 캘린더 이름을 입력하세요.');
+            Swal.fire({
+                icon: "error",
+                title: "공유",
+                text: "공유 캘린더 이름을 입력하세요.",
+              });
             return;
         }
 
         if (inputCalendarName.length > 6) {
-            alert('공유 캘린더 이름은 6글자 이내로 입력하세요.');
+            // alert('공유 캘린더 이름은 6글자 이내로 입력하세요.');
+            Swal.fire({
+                icon: "error",
+                title: "공유",
+                text: "공유 캘린더 이름은 6글자 이내로 입력하세요.",
+              });
             return;
         }
 
@@ -239,7 +265,12 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
         // console.log("handleSaveClick 1" + JSON.stringify(selectedEvent));
         // console.log("handleSaveClick 2"+selectedEvent.extendedProps.seq + ":" + editedTitle + ":" +editedContents);
         if(editedTitle === '' || editedContents === ''){
-            alert("제목과 내용을 모두 입력해주세요.")
+            // alert("제목과 내용을 모두 입력해주세요.")
+            Swal.fire({
+                icon: "error",
+                title: "수정",
+                text: "제목과 내용을 모두 입력해주세요.",
+              }); 
             return;
         }
         const updateData = {
@@ -448,7 +479,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                                     <p>내용 : {selectedEventSave ? selectedEventSave.extendedProps.contents : ""}</p>
                                     <div className={styles.detailBtn}>
                                         <button onClick={closeModal}>닫기</button>
-                                        <button onClick={delModal}>삭제</button>
+                                        <button onClick={()=>{SweetAlert("warning","일정","정말 삭제 하시겠습니까?",delModal)}}>삭제</button>
                                         <button onClick={updateBtn}>수정</button>
                                     </div>
                                 </div>

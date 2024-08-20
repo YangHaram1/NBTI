@@ -119,15 +119,15 @@ public class ApprovalService {
 		// 문서 내용 삭제
 		if(setlist.equals("업무기안서")) {
 			dddao.delete(seq);
-			System.out.println("업무기안서 삭제 완료");
+//			System.out.println("업무기안서 삭제 완료");
 			
 		}else if(setlist.equals("휴직신청서")) {
 			dldao.delete(seq);
-			System.out.println("휴직신청서 삭제 완료");
+//			System.out.println("휴직신청서 삭제 완료");
 			
 		}else if(setlist.equals("휴가신청서")) {
 			dvdao.delete(seq);
-			System.out.println("휴가신청서 삭제 완료");
+//			System.out.println("휴가신청서 삭제 완료");
 		}
 		
 		// 결재 라인 삭제

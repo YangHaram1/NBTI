@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { host } from '../../../../../../config/config';
 import axios from 'axios';
 import { useReservationList } from '../../../../../../store/store';
+import SweetAlert from '../../../../../../function/SweetAlert';
 
 export const List = ()=>{
 
@@ -151,7 +152,7 @@ export const List = ()=>{
                                         <td>{wait.reserve_title_code}</td>
                                         <td>{wait.reserve_title_code}</td>
                                         <td>{`${new Date(wait.start_time).toLocaleString()}  ~  ${new Date(wait.end_time).toLocaleString()}`}</td>
-                                        <td className={styles.state}><span>{wait.state === 'N' ? '승인 대기 중' : wait.state}</span><button onClick={()=>cancelReservation(wait.seq)}>예약 취소하기</button></td>
+                                        <td className={styles.state}><span>{wait.state === 'N' ? '승인 대기 중' : wait.state}</span><button onClick={()=>{SweetAlert("warning","예약","정말 취소하시겠습니까?",()=> cancelReservation(wait.seq))}}>예약 취소하기</button></td>
                                     </tr>
                                 ))
                             ) : (
