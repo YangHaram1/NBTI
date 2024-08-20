@@ -2,8 +2,7 @@
     position: absolute;
     width: 270px; /* 사이드바의 너비 */
     height: 400px;
-    background-color: #333;
-    color: white;
+    background: #edf2fb;
     padding: 10px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
     gap: 5px;
@@ -11,11 +10,15 @@
     left: 350px;
     top:100px;
     flex-direction: column;
-    font-family: 'Freesentation-9Black';
+    border-radius: 20px;
 }
 
 .img{
     flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
 }
 .img img{
     width: 80px;
@@ -26,9 +29,11 @@
 }
 .title{
     display: flex;
-    flex: 7;
+    flex: 9;
     justify-content: center;
     align-items: center;
+    font-family: 'Freesentation-9Black';
+    font-size: 20px;
 }
 .cancel{
     display: flex;
@@ -37,25 +42,56 @@
     flex: 1;
 }
 .cancel button{
-    background-color:#333;
+    background-color:#edf2fb;
     border: 0px;
     cursor: pointer;
 }
 .cancel button:hover{
-    background-color: white;
+    background-color: #A4C3B2;
 }
 
 
 .contents{
     display: flex;
-    flex-direction: column;
     flex: 1;
-    
+    font-family: 'ONE-Mobile-POP'; 
+    font-size: 12px;
+    color: gray;
+}
+.contents div{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .body{
     display: flex;
 }
+.name{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Freesentation-9Black';
+}
+.job{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Freesentation-9Black';
+}
+.dept{
+    
+  
+    
+}
+.team{
+   
+}
+
+
 .content{
     font-size: 12px;
     cursor: pointer;

@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { PopUp } from "./PopUp/PopUp";
 import { ChatsContext } from './../../Context/ChatsContext';
 import { LogoutPopUp } from './LogoutPopUp/LogoutPopUp';
+import { useAuthStore, useMemberStore } from './../../store/store';
+import { host } from '../../config/config';
 
 export const Header = () => {
 
@@ -12,6 +14,25 @@ export const Header = () => {
     const [showPopUp, setShowPopUp] = useState(false);
     const menuRef = useRef(null);
     const popupRef = useRef(null);
+    const [user,setUser] =useState([{member_img:''}]);
+    const {loginID} =useAuthStore();
+    const {members}=useMemberStore();
+    useEffect(()=>{
+        if(loginID!=null && loginID !=='error'){
+            if(members.length>0)
+            setUser(()=>{
+                return (
+                    members.filter((item,index)=>{
+                        if(item.id===loginID){
+                            return true;
+                        }
+                        return false;
+                    })
+                );  
+            })
+        }
+
+    },[loginID,members])
 
     const togglePopUp = () => {
         setShowPopUp(prevState => !prevState); // 상태를 토글
@@ -91,7 +112,7 @@ export const Header = () => {
         });
         
     }
-
+   
     return (
         <div className={styles.container}>
             <div className={`${styles.left} ${showPopUp ? styles.dropdownActive : ''}`}>
@@ -114,7 +135,7 @@ export const Header = () => {
                 </div>
                 <div className={`${styles.user_info} ${showNewPopup ? styles.dropdownActive : ''}`}>
                     <div className={styles.user_profile_img} onClick={toggleNewPopup} ref={newMenuRef}>
-                        <img src={image} alt="" />
+                        <img src={ (user[0].member_img === null) ? `${image}` : `${host}/images/avatar/${user[0].id}/${user[0].member_img}`} alt="" />
                     </div>
                 </div>
             </div>
