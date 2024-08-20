@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import styles from './WeeklyStats.module.css';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
 import koLocale from '@fullcalendar/core/locales/ko';
 
 // 시간 포맷 함수
@@ -41,12 +42,9 @@ const calculateWorkingHours = (startDate, endDate) => {
     return `${diffHours}시간 ${diffMinutes}분`;
 };
 
-const WeeklyStats = ({ stats, dailyStats }) => {
-    const { lateCount, absentCount, earlyLeaveCount } = stats;
-
-    // FullCalendar 이벤트 데이터 생성
-    const events = Array.from({ length: 7 }).map((_, index) => {
-        const date = new Date();
+// 주간 데이터 가져오기
+const getWeekData = (date, dailyStats) => {
+    return Array.from({ length: 7 }).map((_, index) => {
         const monday = getStartOfWeek(date);
         monday.setDate(monday.getDate() + index);
         const formattedDate = formatDate(monday);
@@ -78,6 +76,63 @@ const WeeklyStats = ({ stats, dailyStats }) => {
             extendedProps: { backgroundColor, textColor }
         };
     });
+};
+
+const WeeklyStats = ({ stats, dailyStats }) => {
+    const { lateCount, absentCount, earlyLeaveCount } = stats;
+    const [currentDate, setCurrentDate] = useState(new Date());
+    const [calendarApi, setCalendarApi] = useState(null);
+
+    // 주간 범위를 설정하는 함수
+    const getWeekRange = (date) => {
+        const startOfWeek = getStartOfWeek(date);
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+        return { startOfWeek, endOfWeek };
+    };
+
+    // 전체 이벤트 가져오기
+    const getAllEvents = (date) => {
+        const { startOfWeek, endOfWeek } = getWeekRange(date);
+        const previousWeek = new Date(startOfWeek);
+        previousWeek.setDate(startOfWeek.getDate() - 7);
+        const nextWeek = new Date(endOfWeek);
+        nextWeek.setDate(endOfWeek.getDate() + 7);
+
+        return [
+            ...getWeekData(previousWeek, dailyStats),
+            ...getWeekData(startOfWeek, dailyStats),
+            ...getWeekData(nextWeek, dailyStats)
+        ];
+    };
+
+    // 주간 뷰의 날짜를 설정하는 함수
+    const setDates = useCallback((date) => {
+        setCurrentDate(date);
+    }, []);
+
+    // "지난주" 버튼 클릭 핸들러
+    const handlePreviousWeek = () => {
+        const { startOfWeek } = getWeekRange(currentDate);
+        const previousWeek = new Date(startOfWeek);
+        previousWeek.setDate(startOfWeek.getDate() - 7);
+        setDates(previousWeek);
+    };
+
+    // "다음주" 버튼 클릭 핸들러
+    const handleNextWeek = () => {
+        const { endOfWeek } = getWeekRange(currentDate);
+        const nextWeek = new Date(endOfWeek);
+        nextWeek.setDate(endOfWeek.getDate() + 7);
+        setDates(nextWeek);
+    };
+
+    useEffect(() => {
+        // 현재 날짜가 변경되면 FullCalendar의 날짜를 업데이트
+        if (calendarApi) {
+            calendarApi.gotoDate(currentDate);
+        }
+    }, [currentDate, calendarApi]);
 
     return (
         <div className={styles.container}>
@@ -87,16 +142,20 @@ const WeeklyStats = ({ stats, dailyStats }) => {
                 <p>결근 횟수: {absentCount}</p>
                 <p>조기 퇴근 횟수: {earlyLeaveCount}</p>
             </div>
+            <div className={styles.toolbar}>
+                <button onClick={handlePreviousWeek}>지난주</button>
+                <button onClick={handleNextWeek}>다음주</button>
+            </div>
             <div className='minical'>
                 <FullCalendar
-                    plugins={[dayGridPlugin]}
+                    plugins={[dayGridPlugin, interactionPlugin]}
                     initialView="dayGridWeek"
                     headerToolbar={false}
                     locales={[koLocale]}
                     locale="ko"
                     selectable={true}
                     height="auto"
-                    events={events}
+                    events={getAllEvents(currentDate)}
                     firstDay={1}
                     eventContent={({ event }) => {
                         const lines = event.title.split('\n');
@@ -110,6 +169,12 @@ const WeeklyStats = ({ stats, dailyStats }) => {
                                 ))}
                             </div>
                         );
+                    }}
+                    // FullCalendar API를 설정
+                    datesSet={(info) => {
+                        if (info.view) {
+                            setCalendarApi(info.view.calendar);
+                        }
                     }}
                 />
             </div>

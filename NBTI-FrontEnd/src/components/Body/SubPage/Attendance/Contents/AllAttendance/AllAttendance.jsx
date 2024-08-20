@@ -1,4 +1,3 @@
-// AllAttendance.js
 import React, { useState, useCallback, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -42,12 +41,13 @@ const calculateWorkingHours = (startDate, endDate) => {
     const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
 
     return `${diffHours}시간 ${diffMinutes}분`;
+
 };
 
 // 기본 이벤트 생성 함수
 const createDefaultEvent = (date, memberName, teamName) => {
     return {
-        title: `출근: N/A\n퇴근: N/A\n근무 시간: N/A\n`,
+        title:' 출근: N/A\n퇴근: N/A\n근무 시간: N/A\n',
         date,
         extendedProps: {
             backgroundColor: 'gray',
@@ -91,6 +91,7 @@ export const AllAttendance = () => {
                 const workingHours = calculateWorkingHours(startDate, endDate);
 
                 const title = `출근: ${startTime}\n퇴근: ${endTime}\n근무 시간: ${workingHours}\n`;
+
 
                 const dayOfWeek = getDayOfWeek(date);
 
