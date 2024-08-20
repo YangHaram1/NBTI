@@ -5,8 +5,11 @@ import styles from './Header.module.css';
 import axios from 'axios';
 import { host } from '../../../../../../../config/config';
 import { format } from 'date-fns';
+import image_approval from '../../../../../../../images/approval.png';
 
-export const Header = ({docCommonData, userdata, approvalData}) => {
+import image_return from '../../../../../../../images/return.png';
+
+export const Header = ({docCommonData, approvalData}) => {
 
     const TimeData = new Date();
     const year = TimeData.getFullYear();
@@ -15,24 +18,14 @@ export const Header = ({docCommonData, userdata, approvalData}) => {
     const Today = `${year}-${month}-${day}`;
     const [writer, setWriter] = useState({}); 
 
-    // console.log("header 결재라인 넘어오는지",approvalData);
-    // console.log("공통정보", docCommonData);
-
     useEffect(()=>{
         let id = docCommonData.member_id;
         axios.get(`${host}/members/approvaler/${id}`)
         .then((resp)=>{
-            // console.log("기안자",resp.data);
             setWriter(resp.data);
         })
     },[])
 
-
-    // const extractDate = (dateTimeString) => {
-    //     // 문자열에서 날짜 부분만 추출 (첫 10자)
-    //     return dateTimeString.substring(0, 10);
-    // };
-    
     const formatDate = (dateTimeString) => {
         const date = new Date(dateTimeString);
         const year = date.getFullYear();
@@ -71,7 +64,7 @@ export const Header = ({docCommonData, userdata, approvalData}) => {
                     approvalData.map((approvaler) => {
 
                         return (
-                            <div className={styles.approval_box}>
+                            <div className={styles.approval_box} key={approvaler.APPROVAL_ORDER}>
                                 <div className={styles.approval_box_side}>
                                     {
                                         approvaler.APPROVAL_ORDER === 1 ? "최초" : approvaler.APPROVAL_ORDER === 2 ? "중간" : "최종"
@@ -79,10 +72,20 @@ export const Header = ({docCommonData, userdata, approvalData}) => {
                                 </div>
                                 <div className={styles.approval_box_main}>
                                     <div className={styles.approval_job}>{approvaler.JOB_NAME}</div>
-                                    <div className={styles.approval_member}>{approvaler.NAME}</div>
+                                    <div className={styles.approval_member}>
+                                        <div className={styles.stamp}>
+                                            {
+                                                approvaler.MEMBER_STATE_CODE === 'p' ? <img src={image_approval} alt="approval" /> :  
+                                                approvaler.MEMBER_STATE_CODE === 'r' ? <img src={image_return} alt="return" /> :
+                                                approvaler.MEMBER_STATE_CODE === 'b' ? '' :
+                                                ''
+                                            }
+                                        </div>
+                                        <div className={styles.memberName}>{approvaler.NAME}</div>
+                                    </div>
                                     <div className={styles.approval_date}>
                                         { 
-                                            approvaler.APPROVAL_DATE ?  formatDate(approvaler.APPROVAL_DATE) : ''
+                                            approvaler.APPROVAL_DATE !== null ?  formatDate(approvaler.APPROVAL_DATE) : ''
                                         }
                                     </div>
                                 </div>

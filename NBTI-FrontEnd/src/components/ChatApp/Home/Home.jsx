@@ -5,7 +5,7 @@ import Chats from './Chats/Chats';
 import Files from './Files/Files';
 import avatar from '../../../images/user.jpg';
 import axios from 'axios';
-import { useAuthStore,useMemberStore } from '../../../store/store';
+import { useAuthStore, useMemberStore } from '../../../store/store';
 import { ChatsContext } from './../../../Context/ChatsContext';
 import Setting from './Setting/Setting';
 import { host } from '../../../config/config';
@@ -18,24 +18,41 @@ const Home = () => {
     const { members } = useMemberStore();
     const { setChatNavi, chatNaviBody, setChatNaviBody, chatNavi } = useContext(ChatsContext);
     const [settiing, setSetting] = useState(false);
-    const [user,setUser] =useState([{}]);
+    const [user, setUser] = useState([{}]);
 
-    useEffect(()=>{
-        if(loginID!=null && loginID !=='error'){
-            setUser(()=>{
+    useEffect(() => {
+        if (loginID != null && loginID !== 'error') {
+            setUser(() => {
                 return (
-                    members.filter((item,index)=>{
-                        if(item.id===loginID){
+                    members.filter((item, index) => {
+                        if (item.id === loginID) {
                             return true;
                         }
                         return false;
                     })
-                );  
+                );
             })
         }
 
-    },[loginID])
-  
+    }, [loginID])
+    useEffect(() => {
+        if (chatNaviBody === 'chats') {
+            setColor((prev) => {
+                return { member: false, chat: true, file: false };
+            });
+        }
+        else if (chatNaviBody === 'members') {
+            setColor((prev) => {
+                return { member: true, chat: false, file: false };
+            });
+        }
+        else {
+            setColor((prev) => {
+                return { member: false, chat: false, file: true };
+            });
+        }
+    }, [chatNaviBody])
+
     const handleMemberList = (e) => {
         setColor((prev) => {
             return { member: true, chat: false, file: false };
@@ -99,7 +116,7 @@ const Home = () => {
                 </div>
             </div>
             <div className={styles.div3}>
-                {chatNaviBody === 'members' && <Members setColor={setColor} />}
+                {chatNaviBody === 'members' && <Members/>}
                 {chatNaviBody === 'chats' && <Chats />}
                 {chatNaviBody === 'files' && <Files />}
             </div>

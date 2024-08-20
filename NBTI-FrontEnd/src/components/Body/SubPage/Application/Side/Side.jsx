@@ -39,7 +39,15 @@ export const Side = () => {
 
   return (
     <div className={styles.container}>
+          
+      <div className={styles.mainBtn}>
+        <button>
+          <i className="fa-solid fa-plus"></i>
+          <p>휴가 신청</p>
+        </button>
+      </div>
       <div className={styles.menus}>
+        
         <ul>
             <li onClick={() => { navi("/application/myvacation") }}>
                 휴가 현황

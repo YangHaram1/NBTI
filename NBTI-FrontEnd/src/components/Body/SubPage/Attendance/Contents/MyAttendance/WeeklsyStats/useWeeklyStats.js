@@ -16,20 +16,19 @@ const useWeeklyStats = (memberId) => {
             console.log("Response status:", response.status);
             console.log("Response data:", response.data);
             
-            // 상태 업데이트
             if (response.data) {
                 setStats({
                     lateCount: response.data.lateCount || 0,
                     absentCount: response.data.absentCount || 0,
                     earlyLeaveCount: response.data.earlyLeaveCount || 0
                 });
+                
                 setDailyStats(response.data.dailyStats || {});
             }
         } catch (err) {
-            console.error('주간 통계를 가져오는데 실패했습니다.', err.response ? err.response.data : err);
+            console.error('Failed to fetch weekly stats.', err.response ? err.response.data : err);
         }
     };
-
     useEffect(() => {
         fetchWeeklyStats();
     }, [memberId]);
