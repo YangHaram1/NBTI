@@ -127,13 +127,12 @@ export const Detail = () => {
     // 삭제할 파일이 있을 경우에만 삭제 요청 보내기
     if (fileDelArr.length > 0) {
       axios.delete(`${host}/files/deleteBoard/${fileDelArr}`).then((resp) => {
-        console.log("삭제:", resp.data);
         setFileList(updatedFiles); // 삭제된 파일을 담고있는 복사본을 원본에 삽입 
       }).catch(error => {
         console.error("파일 삭제 실패:", error);
       });
     } else {
-      // 삭제할 파일이 없는 경우에도 원본 파일 목록을 업데이트해줍니다.
+      // 삭제할 파일이 없는 경우에도 원본 파일 목록을 업데이트
       setFileList(updatedFiles);
     }
   };
@@ -172,7 +171,6 @@ export const Detail = () => {
   const handleBookmarkRemove = (seq) => {
     setIsBookmarked(!isBookmarked);
     axios.delete(`${host}/bookmark/delete/${seq}`).then((resp) => {
-      console.log("삭제", resp.data);
       if (resp.data > 0) {
         Swal.fire({
           icon: "error",
@@ -181,6 +179,11 @@ export const Detail = () => {
         });
       }
     });
+  };
+
+  // 파일 토글 창
+  const toggleFileList = () => {
+    setIsFileListOpen((prev) => !prev);
   };
 
   // ==========[댓 글]==========
@@ -279,13 +282,6 @@ export const Detail = () => {
       });
     });
   };
-
-
-  // 파일 토글 창
-  const toggleFileList = () => {
-    setIsFileListOpen((prev) => !prev);
-  };
-
 
   //======================================================================================
 
