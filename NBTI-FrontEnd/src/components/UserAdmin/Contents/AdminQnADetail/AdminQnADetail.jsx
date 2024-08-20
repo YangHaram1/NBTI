@@ -298,6 +298,7 @@ export const AdminQnADetail = () => {
           </div>
           <div className={styles.innerWriter}>
             <p>{detail.name}</p>
+            <p>{detail.job_name}</p>
           </div>
         </div>
         <div className={styles.writeDate}>

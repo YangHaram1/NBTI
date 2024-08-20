@@ -124,7 +124,13 @@ public class BoardController {
 	// 게시글 출력
 	@GetMapping("/{boardSeq}/{code}")
 	public ResponseEntity<BoardDTO> selectBoard(@PathVariable int boardSeq, @PathVariable int code){
-		BoardDTO dto = bserv.selectBoard(boardSeq, code);		
+		
+		Map<String, Integer> map = new HashMap<>();
+		map.put("seq", boardSeq);
+		map.put("code", code);
+		
+		BoardDTO dto = bserv.selectBoard(map);		
+		
 		return ResponseEntity.ok(dto);
 	}
 	
