@@ -9,7 +9,7 @@ import { ChatsContext } from '../../../../Context/ChatsContext';
 import { host } from '../../../../config/config';
 import avatar from '../../../../images/user.jpg'
 
-const Members = ({ setName }) => {
+const Members = ({ setColor }) => {
     const [list, setList] = useState([]);
     const [modalDisplay, setModalDisplay] = useState(null);
     const [profileDisplay,setProfileDisplay]=useState(null);
@@ -194,7 +194,7 @@ const Members = ({ setName }) => {
                                                                                             </div>
                                                                                         </div>
                                                                                         <Profile profileRef={profileRef} index={index} item={member} team={team.name} dept={dItem.dept}></Profile>
-                                                                                        <Modal modalRef={modalRef} index={index} item={member} profileRef={profileRef} setProfileDisplay={setProfileDisplay}></Modal>
+                                                                                        <Modal modalRef={modalRef} index={index} item={member} profileRef={profileRef} setProfileDisplay={setProfileDisplay} setColor={setColor}></Modal>
                                                                                     </React.Fragment>
                                                                                 )
                                                                             );

@@ -5,7 +5,7 @@ import React from 'react';
 import { useState, useContext } from 'react';
 import { ChatsContext } from '../../../../../Context/ChatsContext';
 import { useAuthStore } from './../../../../../store/store';
-const Modal = ({ modalRef, index, item, profileRef ,setProfileDisplay}) => {
+const Modal = ({ modalRef, index, item, profileRef ,setProfileDisplay,setColor}) => {
    // const [modalDisplay, setModalDisplay] = useState(null);
     const { setChatNaviBody, dragRef } = useContext(ChatsContext);
     const { loginID } = useAuthStore();
@@ -13,13 +13,16 @@ const Modal = ({ modalRef, index, item, profileRef ,setProfileDisplay}) => {
     const handleChatRoom = () => {
         //console.log(item)
         axios.post(`${host}/group_chat?member_id=${item.id}&&name=${item.name}`).then((resp) => {
+            setColor((prev) => {
+                return { member: false, chat: true, file: false };
+            });
             setChatNaviBody("chats");
         })
     }
     const handleMemberIfo = (index) => (e) => {
-        const rect = dragRef.current.getBoundingClientRect(); //부모요소~ 드래그 되는애
-        const x = e.clientX - rect.left+200;
-        const y = e.clientY - rect.top -220;
+        // const rect = dragRef.current.getBoundingClientRect(); //부모요소~ 드래그 되는애
+        // const x = e.clientX - rect.left+200;
+        // const y = e.clientY - rect.top -220;
         e.preventDefault();
         setProfileDisplay((prev) => {
             if (prev != null) {
