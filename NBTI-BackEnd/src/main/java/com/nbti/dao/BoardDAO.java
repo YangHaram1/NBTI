@@ -41,8 +41,9 @@ public class BoardDAO {
 	}
 	
 	// 게시글 작성
-	public void insert(BoardDTO dto) {
+	public BoardDTO insert(BoardDTO dto) {
 		mybatis.insert("Board.insert",dto);
+		return dto;
 	}
 	
 	// 게시글 삭제

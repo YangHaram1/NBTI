@@ -1,5 +1,6 @@
 package com.nbti.dao;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,10 @@ public boolean login(MembersDTO dto) {
 		if(result > 0) {
 			return true;
 		}else {return false;}
+	}
+	
+	public Timestamp selectChangeDate(String id) {
+		return mybatis.selectOne("Member.selectChangeDate",id);
 	}
 	
 	// 팀 코드에 의한 사용자 검색
