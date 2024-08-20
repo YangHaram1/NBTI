@@ -12,10 +12,11 @@ public class BoardDTO {
 	private int board_code;
 	private int reply_count; // 댓글의 개수
 	private String name; // 이름 추가
+	private String job_name; // 직급 추가
 	
 	public BoardDTO() {
 	}
-	
+
 	public BoardDTO(String title, String contents) {
 		this.title=title;
 		this.contents= contents;
@@ -51,9 +52,15 @@ public class BoardDTO {
 		this.board_code = board_code;
 		this.reply_count = reply_count;
 	}
+
 	
-	
-	
+	public String getJob_name() {
+		return job_name;
+	}
+
+	public void setJob_name(String job_name) {
+		this.job_name = job_name;
+	}
 
 	public String getName() {
 		return name;

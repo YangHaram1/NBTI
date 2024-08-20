@@ -36,8 +36,8 @@ public class BoardDAO {
 	
 
 	// 게시글 출력
-	public BoardDTO selectBoard(BoardDTO dto) {
-		return mybatis.selectOne("Board.selectBoard", dto);
+	public BoardDTO selectBoard(Map<String, Integer> map) {
+		return mybatis.selectOne("Board.selectBoard", map);
 	}
 	
 	// 게시글 작성

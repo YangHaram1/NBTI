@@ -55,6 +55,7 @@ export const Detail = () => {
     if (boardSeq === -1) navi("/board"); // detail 화면에서 f5 -> 목록으로 이동
     if (boardSeq !== -1) {
       axios.get(`${host}/board/${boardSeq}/${code}`).then((resp) => {
+        console.log("직급 : ", resp.data);
         setDetail(resp.data); // 취소 시 원본 데이터
         setBoard(resp.data);
       });
@@ -356,6 +357,7 @@ export const Detail = () => {
           </div>
           <div className={styles.innerWriter}>
             <p>{detail.name}</p>
+            <p>{detail.job_name}</p>
           </div>
         </div>
         <div className={styles.writeDate}>
