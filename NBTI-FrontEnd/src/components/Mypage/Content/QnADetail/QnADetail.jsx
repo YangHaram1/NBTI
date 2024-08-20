@@ -12,7 +12,6 @@ import SweetAlert from "../../../../function/SweetAlert";
 
 export const QnADetail = () => {
   const navi = useNavigate();
-  const [fileList, setFileList] = useState([]);
 
   const { boardSeq, boardType } = useBoardStore();
   const [detail, setDetail] = useState({}); // 게시글의 detail 정보
@@ -29,6 +28,11 @@ export const QnADetail = () => {
   const [currentUser, setCurrentUser] = useState(null); // 로그인된 사용자 정보 상태
   const [isAdmin, setIsAdmin] = useState(false); // 권한 여부 상태
   const [isBookmarked, setIsBookmarked] = useState(false);
+
+  const [fileList, setFileList] = useState([]); // 파일 전체 목록
+  const [updatedFiles, setUpdatedFiles] = useState([]); // 파일 전체 목록 복사본
+  const [fileDelArr, setFileDelArr] = useState([]); // 삭제할 파일 담아놓는 배열
+  const [isFileListOpen, setIsFileListOpen] = useState(false);
 
   // 게시판 코드
   let code = 3;
@@ -74,6 +78,7 @@ export const QnADetail = () => {
     // 파일 목록 출력
     axios.get(`${host}/files/board?seq=${boardSeq}`).then((resp) => {
       setFileList(resp.data);
+      setUpdatedFiles(resp.data); // 파일 복사본
     });
 
     // 외부 스타일시트를 동적으로 추가
@@ -111,6 +116,23 @@ export const QnADetail = () => {
       setDetail(board);
       setIsEditing(false);
     });
+
+    // 저장 시, 삭제할 파일 삭제 가능
+    // 삭제할 파일이 있을 경우에만 삭제 요청 보내기
+    if (fileDelArr.length > 0) {
+      axios
+        .delete(`${host}/files/deleteBoard/${fileDelArr}`)
+        .then((resp) => {
+          console.log("삭제:", resp.data);
+          setFileList(updatedFiles); // 삭제된 파일을 담고있는 복사본을 원본에 삽입
+        })
+        .catch((error) => {
+          console.error("파일 삭제 실패:", error);
+        });
+    } else {
+      // 삭제할 파일이 없는 경우에도 원본 파일 목록을 업데이트해줍니다.
+      setFileList(updatedFiles);
+    }
   };
 
   // 취소 click
@@ -119,6 +141,14 @@ export const QnADetail = () => {
     setBoard((prev) => {
       return { ...prev, title: detail.title, contents: detail.contents };
     });
+    setFileDelArr([]); // 삭제시키려고 했던 seq 담던 애 초기화
+    setUpdatedFiles(fileList); // 복사본에 원본데이터 넣어주기
+  };
+
+  // 파일 삭제
+  const handleFileDelete = (seq) => {
+    setFileDelArr((prev) => [...prev, seq]);
+    setUpdatedFiles((prev) => prev.filter((file) => file.seq !== seq));
   };
 
   // 북마크 추가
@@ -193,6 +223,13 @@ export const QnADetail = () => {
     });
   };
 
+  // 파일 토글 창
+  const toggleFileList = () => {
+    setIsFileListOpen((prev) => !prev);
+  };
+
+  //======================================================================================
+
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -266,6 +303,12 @@ export const QnADetail = () => {
         </div>
         <div className={styles.writeDate}>
           <span>{currentDate}</span>
+          {updatedFiles.length > 0 && (
+            <i
+              className="fa-regular fa-folder-open fa-lg"
+              onClick={toggleFileList}
+            ></i>
+          )}
         </div>
       </div>
       <div className={styles.content}>
@@ -276,19 +319,31 @@ export const QnADetail = () => {
         )}
       </div>
 
-      {fileList.map((item, index) => {
-        return (
-          <div key={index}>
-            <div>
-              <a
-                href={`${host}/files/downloadBoard?oriname=${item.oriname}&sysname=${item.sysname}`}
-              >
-                {item.oriname}
-              </a>
-            </div>
+      {/* 파일 리스트 */}
+      {isFileListOpen && (
+        <div className={styles.fileListModal}>
+          <div className={styles.fileListContent}>
+            {updatedFiles.map((file, index) => (
+              <div key={index}>
+                <a
+                  href={`${host}/files/downloadBoard?oriname=${file.oriname}&sysname=${file.sysname}`}
+                  className={styles.fileLink}
+                >
+                  {file.oriname}
+                </a>
+                {isEditing && (
+                  <button
+                    className={styles.fileDelBtn}
+                    onClick={() => handleFileDelete(file.seq)}
+                  >
+                    X
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
-        );
-      })}
+        </div>
+      )}
 
       {/* --------------[ 댓글 작성 ]------------ */}
       <div className={styles.reply}>

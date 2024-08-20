@@ -68,7 +68,6 @@ export const Detail = () => {
     // 로그인 한 사용자 정보 및 HR 권한 확인
     axios.get(`${host}/members/memberInfo`).then((resp) => {
       setCurrentUser(resp.data);
-      console.log("사용자 누구냐 : ", resp.data); // 홍길동
 
       // HR 권한 확인
       if (resp.data.member_level === "2" || resp.data.member_level === "3") {
@@ -151,10 +150,8 @@ export const Detail = () => {
 
   // 파일 삭제
   const handleFileDelete = (seq) => {
-    // if (window.confirm("정말 삭제하시겠습니까?")) {
     setFileDelArr((prev) => [...prev, seq]);
     setUpdatedFiles((prev) => prev.filter((file) => file.seq !== seq));
-    // }
   };
 
   // 북마크 추가
@@ -288,13 +285,6 @@ export const Detail = () => {
   const toggleFileList = () => {
     setIsFileListOpen((prev) => !prev);
   };
-
-
-  console.log("currentUser: ", currentUser);
-  console.log("detail.member_id: ", detail.member_id);
-  console.log("currentUser.id: ", currentUser?.id);
-  console.log("isAdmin: ", isAdmin);
-  console.log("isEditing: ", isEditing);
 
 
   //======================================================================================
