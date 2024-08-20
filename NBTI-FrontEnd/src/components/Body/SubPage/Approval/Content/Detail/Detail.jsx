@@ -10,6 +10,7 @@ import { Header } from './Header/Header';
 import { DocDraft } from './DocDraft/DocDraft';
 import { DocVacation } from './DocVacation/DocVacation';
 import { ApprovalModal } from '../ApprovalModal/ApprovalModal';
+import { ApprovalCommentModal } from '../ApprovalCommentModal/ApprovalCommentModal';
 
 export const Detail=()=>{
 
@@ -35,6 +36,7 @@ export const Detail=()=>{
 
     // 모달 표시 여부
     const [showModal, setShowModal] = useState(false);
+    const [showApprovalComment, setShowApprovalComment] = useState(false);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -88,7 +90,7 @@ export const Detail=()=>{
                 if(approvalLineResponse.data[0].APPROVAL_DATE == null){
                     setCheckFA(true);
                 }
-                // console.log("결재라인 체크",approvalLineResponse.data);
+                console.log("결재라인 체크",approvalLineResponse.data);
 
                 // 참조라인 정보 받아오기
                 const referLineResponse = await axios.get(`${host}/referLine/${seq}`);
@@ -114,7 +116,7 @@ export const Detail=()=>{
     }, [seq]);
 
     useEffect(()=>{
-        console.log("참조라인 데이터 확인",referData);
+        // console.log("참조라인 데이터 확인",referData);
         axios.post(`${host}/members/approvalSearch`,referData)
         .then((resp)=>{
             // console.log("데이터 확인",resp.data);
@@ -139,6 +141,11 @@ export const Detail=()=>{
         setShowModal(false); // 모달 닫기
         navi("/approval")
     };
+
+    const handleCloseCommentModal = () => {
+        setShowApprovalComment(false); // 모달 닫기
+    };
+    
 
     // 제목 클릭시 sysname, oriname 받아오기
     const handleFileDownload = (sysname, oriname) =>{
@@ -263,7 +270,7 @@ export const Detail=()=>{
                         list == '기안 문서함' || list == '결재 문서함' ||list == '참조/열람 문서함'||list == '반려 문서함' ||list == '상신취소 문서함'||list == '결재 예정'||list == '참조/열람 대기'?
                         <>
                         <div className={styles.btns}>
-                            <div className={`${styles.approval_prev_btn} ${styles.btn}`}><i class="fa-solid fa-user-pen"></i>결재정보</div>
+                            <div className={`${styles.approval_prev_btn} ${styles.btn}`} onClick={()=>{setShowApprovalComment(true)}}><i class="fa-solid fa-user-pen"></i>결재정보</div>
                             <div className={`${styles.approval_change_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
                             {checkFA == true && list == '기안 문서함'? <div className={`${styles.approval_cancle_btn} ${styles.btn}`} onClick={handleApprovalCancle}> <i class="fa-regular fa-circle-xmark"></i>상신취소</div> : <></>}
                         </div>
@@ -273,7 +280,7 @@ export const Detail=()=>{
                         <div className={styles.btns}>
                             <div className={`${styles.approval_submit_btn} ${styles.btn}`} onClick={HandleSubmit}><i class="fa-solid fa-pen-to-square"></i>결재승인</div>
                             <div className={`${styles.approval_back_btn} ${styles.btn}`} onClick={HandleSubmit}><i class="fa-regular fa-folder-open"></i>결재반려</div>
-                            <div className={`${styles.approval_prev_btn} ${styles.btn}`}><i class="fa-solid fa-user-pen"></i>결재정보</div>
+                            <div className={`${styles.approval_prev_btn} ${styles.btn}`} onClick={()=>{setShowApprovalComment(true)}}><i class="fa-solid fa-user-pen"></i>결재정보</div>
                             <div className={`${styles.approval_copy_btn} ${styles.btn}`} onClick={handlePrint}><i class="fa-solid fa-users"></i>복사하기</div>
                         </div>
                         </>
@@ -281,7 +288,7 @@ export const Detail=()=>{
                         <>
                         <div className={styles.btns}>
                             <div className={`${styles.approval_submit_btn} ${styles.btn}`} onClick={handleRewrite}><i class="fa-solid fa-pen-to-square"></i>재기안</div>
-                            <div className={`${styles.approval_prev_btn} ${styles.btn}`}><i class="fa-solid fa-user-pen"></i>결재정보</div>
+                            <div className={`${styles.approval_prev_btn} ${styles.btn}`} onClick={()=>{setShowApprovalComment(true)}}><i class="fa-solid fa-user-pen"></i>결재정보</div>
                             <div className={`${styles.approval_copy_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
                             <div className={`${styles.approval_copy_btn} ${styles.btn}`} onClick={handleDelete}><i class="fa-solid fa-trash-can"></i>삭제하기</div>
                         </div>
@@ -336,7 +343,7 @@ export const Detail=()=>{
                 </div>
             </div>
             {/* <div id="Loading" style={{ display: 'none' }}>Loading...</div> */}
-
+            {showApprovalComment && <ApprovalCommentModal approvalData={approvalData} onClose={handleCloseCommentModal}/>}
             {showModal && <ApprovalModal approvalYN={approvalYN} onClose={handleCloseModal} seq={seq} setlist={setlist} />}
         </div>
     );
