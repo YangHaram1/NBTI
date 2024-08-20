@@ -6,6 +6,8 @@ import dayGridPlugin from '@fullcalendar/daygrid'; // 월 보기 플러그인
 import { default as koLocale } from '@fullcalendar/core/locales/ko'; // 한국어 로케일
 import axios from "axios";
 import { host } from "../../../../../config/config";
+import Swal from "sweetalert2";
+import SweetAlert from '../../../../../function/SweetAlert';
 
 
 export const Side = ({ setAddOpen , setCalendarModalOpen, calendarModalOpen}) => {
@@ -91,7 +93,12 @@ export const Side = ({ setAddOpen , setCalendarModalOpen, calendarModalOpen}) =>
   // 공유 [+] 버튼
     const handleCalendarAddClick = () => {
       if (sharedCalendarCount.current >= 7) { // 공유 캘린더 개수 체크
-        alert("공유 캘린더는 최대 7개까지 추가될 수 있습니다."); 
+        // alert("공유 캘린더는 최대 7개까지 추가될 수 있습니다.");
+        Swal.fire({
+          icon: "error",
+          title: "공유",
+          text: "공유 캘린더는 최대 7개까지 추가될 수 있습니다.",
+        }); 
         return;
       }
       setCalendarModalOpen(true); // 모달 열기
@@ -138,8 +145,8 @@ export const Side = ({ setAddOpen , setCalendarModalOpen, calendarModalOpen}) =>
 
 // 삭제 핸들러
 const handleDeleteSharedCalendar = (calendar_id) => {
-  const confirmDelete = window.confirm(`캘린더를 정말 삭제하시겠습니까?`);
-  if (!confirmDelete) return;
+  // const confirmDelete = window.confirm(`캘린더를 정말 삭제하시겠습니까?`);
+  // if (!confirmDelete) return;
 
   axios.delete(`${host}/calendarList/${calendar_id}`) // 삭제 요청
   .then(() => {
@@ -154,11 +161,16 @@ const handleDeleteSharedCalendar = (calendar_id) => {
     // 공유 캘린더 개수 업데이트
     sharedCalendarCount.current = updatedPublicList.length;
 
-    alert(`캘린더가 삭제되었습니다.`);
+    // alert(`캘린더가 삭제되었습니다.`);
   })
   .catch((error) => {
     console.error("캘린더 삭제 실패:", error);
-    alert("캘린더 삭제에 실패했습니다.");
+    // alert("캘린더 삭제에 실패했습니다.");
+    Swal.fire({
+      icon: "error",
+      title: "일정 삭제",
+      text: "일정 삭제 실패!",
+    }); 
   });
 };
   
@@ -212,7 +224,10 @@ const handleDeleteSharedCalendar = (calendar_id) => {
                       <span>{calendar.calendar_name}</span> 
 
                       {calendar.member_id === loginID && ( // 공유캘린더 생성자만 삭제 버튼
-                        <button onClick={() => handleDeleteSharedCalendar(calendar.calendar_id)}><i className="fa-solid fa-trash"></i></button>
+                        // <button onClick={() => handleDeleteSharedCalendar(calendar.calendar_id)}><i className="fa-solid fa-trash"></i></button>
+                        <button onClick={() => {
+                          SweetAlert("warning","일정","정말 삭제 하시겠습니까?", ()=> handleDeleteSharedCalendar(calendar.calendar_id))
+                        }}><i className="fa-solid fa-trash"></i></button>
                       )}
 
                   </li>

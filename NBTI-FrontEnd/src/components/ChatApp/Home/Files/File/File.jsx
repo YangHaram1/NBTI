@@ -30,9 +30,9 @@ const File = ({ file, setDeleteCheck }) => {
                    {file.oriname}
                 </div>
                 <div className={styles.name}>
-                    {file.member_id}
+                    {file.member_name}
                 </div>
-                <div className={styles.delete} onClick={(loginID === file.member_id)?() => SweetAlert('warning', '파일', '삭제 하시겠습니까?', ()=>handleDelete(file.seq)):undefined}>
+                <div className={(loginID === file.member_id)?styles.delete:styles.none} onClick={(loginID === file.member_id)?() => SweetAlert('warning', '파일', '삭제 하시겠습니까?', ()=>handleDelete(file.seq)):undefined}>
                     {(loginID === file.member_id) && (<i className="fa-solid fa-trash"></i>)}
                 </div>
             </div>
