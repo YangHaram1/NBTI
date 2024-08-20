@@ -129,41 +129,6 @@ export const Detail=()=>{
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error occurred: {error.message}</p>;
 
-    // 문서 다운로드 
-    // function FnLoading(isShow) {
-    //     var loading = document.getElementById('Loading');
-    //     isShow ? loading.style.display = "block" : loading.style.display = "none";
-    //   }
-
-    // const handleDownload = () => {
-    //     // FnLoading(true);//함수 실행 시 로딩이미지 보이도록
-    //     const element = document.getElementById('content-to-print');
-    //     console.log("다운로드 클릭");
-    //     const opt = {
-    //         margin: [5, 0, 5, 0], // top, right, bottom, left 마진 여백
-    //         filename: 'document', // Pdf 파일 명
-    //         pagebreak: { mode: 'avoid-all' }, // pagebreak 옵션
-    //         image: { type: 'jpeg', quality: 1 }, // 이미지 퀄리티 (pdf 들어갈 영역을 사진을 찍어 변환 하기 때문에 이미지 퀄리티 = pdf 퀄리티
-    //         html2canvas: { // html2canvas 옵션
-    //           useCORS: true, // 영역 안에 로컬 이미지를 삽입 할 때 옵션 필요
-    //           scrollY: 0, // 스크롤 이슈 때문에 필수 
-    //           scale: 2, // browsers device pixel ratio
-    //           dpi: 300,
-    //           letterRendering: true, // 문자랜더링
-    //           allowTaint: false, //useCORS를 true로 설정 시 반드시 allowTaint를 false처리 해주어야함
-    //         },
-    //         jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' },
-    //     };
-
-    //     html2pdf().from(element).set(opt).save().then(() => {
-    //         // FnLoading(false); // 다운로드 완료 후 로딩 이미지 숨기기
-    //     }).catch(error => {
-    //         console.error("PDF 다운로드 오류:", error);
-    //         // FnLoading(false); // 오류 발생 시 로딩 이미지 숨기기
-    //     });
-    // };
-
-
     const HandleSubmit = (e) =>{
         console.log("이름값 확인",e.target.innerText);
         setApprovalYN(e.target.innerText);
@@ -325,7 +290,7 @@ export const Detail=()=>{
                     <div className={styles.write_box} id='content-to-print'>
                         <div className={styles.write_title}>{setlist}</div>
                         <div className={styles.write_header}>
-                            <Header docCommonData={docCommonData} userdata={userdata} approvalData={approvalData} seq={seq}/>
+                            <Header docCommonData={docCommonData} approvalData={approvalData}/>
                         </div>
                         <div className={styles.write_container}>
                         {   

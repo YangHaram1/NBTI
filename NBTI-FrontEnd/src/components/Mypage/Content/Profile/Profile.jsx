@@ -58,7 +58,12 @@ export const Profile = () => {
         e.preventDefault();
         // 유효성 검사 (빈값일 경우 경고창 반환)
         if (!email || !phone || !address) {
-            alert('모든 필수 필드를 입력해주세요.');
+            let missingFields = [];
+            if (!email) missingFields.push('이메일');
+            if (!phone) missingFields.push('전화번호');
+            if (!address) missingFields.push('주소');
+
+            alert(`${missingFields.join(', ')}를(을) 입력해주세요.`);
             return;
         }
 
@@ -224,7 +229,7 @@ export const Profile = () => {
                     <div className={styles.name}>입사일</div>
                     <div className={styles.value}>
                         {
-                            format(new Date(myData.enter_date), 'yyyy-MM-dd')
+                            myData.enter_date !== null ? format(new Date(myData.enter_date), 'yyyy-MM-dd') : ''
                         }
                     </div>
                 </div>
