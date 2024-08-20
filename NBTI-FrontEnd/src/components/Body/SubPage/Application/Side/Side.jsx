@@ -1,6 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Side.module.css";
 import { useNavigate } from "react-router-dom";
+import { useApprovalLine, useDocFormStore, useReferLine } from "../../../../../store/store";
+import SecondModal from "../../Approval/Content/SecondModal/SecondModal";
 
 
 export const Side = () => {
@@ -36,12 +38,30 @@ export const Side = () => {
 //   };
 
   const navi = useNavigate();
+  const [isSecondModalOpen, setIsSecondModalOpen] = useState(false); // 모달 상태
+  const {setDocForm} = useDocFormStore();
+  const {resetReferLine} = useReferLine();
+  const {resetApprovalLine} = useApprovalLine();
+
+  const handleModal = () => {
+    // 만약 기존 내용이 있다면 초기화
+    resetReferLine();
+    resetApprovalLine();
+    // 휴가신청서 정보 입력
+    setDocForm({name:"휴가신청서", id:"2", period:"1년"});
+    // 모달 열기
+    setIsSecondModalOpen(true);
+  }
+
+  const closeSecondModal = () => {
+    setIsSecondModalOpen(false); // 모달 닫기
+  };
 
   return (
     <div className={styles.container}>
           
       <div className={styles.mainBtn}>
-        <button>
+        <button onClick={handleModal}>
           <i className="fa-solid fa-plus"></i>
           <p>휴가 신청</p>
         </button>
@@ -64,6 +84,11 @@ export const Side = () => {
             </li>
         </ul>
       </div>
+      {/* 결재선 모달 */}
+      <SecondModal
+        isOpen={isSecondModalOpen}
+        onClose={closeSecondModal}
+      />
     </div>
   );
 };
