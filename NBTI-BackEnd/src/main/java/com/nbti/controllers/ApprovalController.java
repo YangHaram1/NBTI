@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -730,6 +732,13 @@ public class ApprovalController {
 	public ResponseEntity<Void> cancleByMe(@PathVariable int seq) {
 		aServ.cancleByMe(seq);
 		System.out.println("문서 상신 취소");
+		return ResponseEntity.ok().build();
+	}
+	
+	@DeleteMapping("/deleteTemp")
+	public ResponseEntity<Void> deleteTemp(@RequestParam int seq, @RequestParam String setlist){
+		System.out.println("임시저장 seq:"+seq+"setlist:"+setlist);
+		aServ.deleteTemp(seq, setlist);
 		return ResponseEntity.ok().build();
 	}
 

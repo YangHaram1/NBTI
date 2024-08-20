@@ -14,4 +14,8 @@
  	<select id="selectContent" resultType="com.nbti.dto.DocDraftDTO">
  		select * from doc_draft where draft_seq = #{seq}
  	</select>
+ 	
+ 	<delete id="delete">
+    	delete from doc_draft where draft_seq = ${seq}
+    </delete>
  </mapper>

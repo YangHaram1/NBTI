@@ -32,4 +32,8 @@ public class ReferLineDAO {
 		mybatis.update("ReferLine.updateRead", map);
 	}
 	
+	public void delete(int seq) {
+		mybatis.delete("ReferLine.delete",seq);
+	}
+	
 }

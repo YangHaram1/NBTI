@@ -16,4 +16,8 @@
  	<select id="selectContent" resultType='com.nbti.dto.DocVacationDTO'>
  		select * from doc_vacation where vacation_seq = #{seq}
  	</select>
+ 	
+	<delete id="delete">
+    	delete from doc_vacation where vacation_seq = ${seq}
+    </delete>
  </mapper>
