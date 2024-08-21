@@ -78,7 +78,7 @@
   transition-duration: 0.4s;
   color: #6b9080;
 }
-.container .right .alarm {
+/* .container .right .alarm {
   width: 40px;
   height: 40px;
   display: flex;
@@ -88,7 +88,7 @@
   margin-left: 15px;
   transition-duration: 0.4s;
   color: #6b9080;
-}
+} */
 .container .right .alarm:hover {
   color: #a1d3bc;
 }
