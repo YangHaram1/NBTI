@@ -16,12 +16,12 @@ public class ReserveDAO {
 	private SqlSession mybatis;
 	
 	public void insert (ReserveDTO dto) throws Exception{
-		System.out.println(dto.getMember_id());
-		System.out.println(dto.getSeq());
-		System.out.println(dto.getReserve_title_code());
-		System.out.println(dto.getState());
-		System.out.println(dto.getStart_time());
-		System.out.println(dto.getEnd_time());
+//		System.out.println(dto.getMember_id());
+//		System.out.println(dto.getSeq());
+//		System.out.println(dto.getReserve_title_code());
+//		System.out.println(dto.getState());
+//		System.out.println(dto.getStart_time());
+//		System.out.println(dto.getEnd_time());
 		mybatis.insert("Reserve.insert",dto);
 	}
 	

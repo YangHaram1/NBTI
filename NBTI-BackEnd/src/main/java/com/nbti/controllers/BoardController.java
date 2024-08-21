@@ -55,6 +55,10 @@ public class BoardController {
 	    map.put("start", start);
 	    map.put("end", end);
 	    
+	    System.out.println("target : " + target );
+	    System.out.println("keyword : " + keyword );
+	    
+	    
 	    // 상태 필터 추가
 	    if ("ing".equals(status)) {
 	        map.put("status", "ing");
