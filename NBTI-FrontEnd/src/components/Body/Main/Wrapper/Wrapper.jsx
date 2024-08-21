@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { MainCalendar } from './Calendar/MainCalendar';
 import ClockButton from './ClockButton/ClockButton';
 import { FreeBoard } from "./FreeBoard/FreeBoard";
@@ -7,6 +8,7 @@ import styles from "./Wrapper.module.css";
 // import React, { useEffect } from "react";
 
 export const Wrapper = () => {
+    const [check,setCheck]= useState({in:false,out:false});
   // useEffect(() => {
   //   // 외부 스타일시트를 동적으로 추가
   //   const link = document.createElement("link");
@@ -25,8 +27,8 @@ export const Wrapper = () => {
     <div className={styles.container}>
       <div className={styles.side}>
       <div className={styles.work_time}>
-          <ClockButton type="clock-in" />
-          <ClockButton type="clock-out" />
+          <ClockButton type="clock-in"  check={check} setCheck={setCheck} />
+          <ClockButton type="clock-out"  check={check} setCheck={setCheck}/>
         </div>
         <div className={styles.approval}><MainApproval/></div>
         <div className={styles.calendar}><MainCalendar/></div>
