@@ -134,6 +134,15 @@ public boolean login(MembersDTO dto) {
 	  public void updateLeave(String id) {
 	  	  mybatis.update("Member.updateLeave",id);
 	  }
+	  
+	  
+	  ///
+	  public void updateVacation(String id,int vacation) {
+		  Map<String , Object> map=new HashMap<>();
+		  map.put("id", id);
+		  map.put("vacation", vacation);
+		  mybatis.update("Member.updateVacation",map);
+	  }
       
       
 }

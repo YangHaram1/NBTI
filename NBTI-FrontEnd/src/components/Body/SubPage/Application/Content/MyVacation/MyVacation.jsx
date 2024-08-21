@@ -15,17 +15,18 @@ const convertArrayKeysToLowerCase = (arr) => {
 
 const calculateVacationStats = (history) => {
     const totalDays = 15; // 기본 총 휴가 일수
-    const usedDays = history
-        .filter(item => item.status === '완료')
-        .reduce((acc, curr) => acc + curr.days, 0);  // 서버에서 계산된 days 필드 사용
-    const remainingDays = totalDays - usedDays;
+    // const usedDays = history
+    //     .filter(item => item.status === '완료')
+    //     .reduce((acc, curr) => acc + curr.days, 0);  // 서버에서 계산된 days 필드 사용
+    const remainingDays = 7;
 
     return {
         total: totalDays,
-        used: usedDays,
+        used: totalDays-remainingDays,
         remaining: remainingDays,
     };
 };
+
 
 const MyVacation = () => {
     const [vacationInfo, setVacationInfo] = useState({ total: '', used: '', remaining: '' });
@@ -38,6 +39,8 @@ const MyVacation = () => {
         if (memberId) {
             axios.get(`${host}/members/apply`, { params: { memberId } })
                 .then(response => {
+                    console.log(response.data)
+                    response.data.used=15-response.data.remaining;
                     setVacationInfo(response.data);
                 })
                 .catch(error => {
