@@ -49,9 +49,9 @@ export const Side = () => {
     resetApprovalLine();
     // 휴가신청서 정보 입력
     if(data === 'vacation'){
-      setDocForm({name:"휴가신청서", id:"2", period:"1년"});
+      setDocForm({name:"휴가신청서", id:"3", period:"1년"});
     }else if(data === 'leave'){
-      setDocForm({name:"휴직신청서", id:"3", period:"10년"});
+      setDocForm({name:"휴직신청서", id:"2", period:"10년"});
     }
     // 모달 열기
     setIsSecondModalOpen(true);
