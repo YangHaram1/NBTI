@@ -73,6 +73,11 @@ public class ApprovalLineService {
 					String id = adao.getApprovaler(seq);
 					System.out.println("아이디 값 확인 : "+ id);
 					mdao.updateLeave(id);
+				}else if (setlist.equals("휴가신청서")) {
+					System.out.println("휴가 신청서 최신화" + seq);
+					String id =adao.getApprovaler(seq);
+					System.out.println("아이디값 확인 : " + id);
+					
 				}
 				
 			// 현재 내 순서가 최종 순서가 아니라면 다음 결재자 상태 업데이트	
