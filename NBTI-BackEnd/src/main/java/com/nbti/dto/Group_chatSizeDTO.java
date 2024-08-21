@@ -7,6 +7,7 @@ public class Group_chatSizeDTO {
 	private String bookmark;
 	private int size;
 	private int unread;
+	private String member_img;
 	private ChatDTO dto;
 	public int getSeq() {
 		return seq;
@@ -44,13 +45,20 @@ public class Group_chatSizeDTO {
 	public void setUnread(int unread) {
 		this.unread = unread;
 	}
+	public String getMember_img() {
+		return member_img;
+	}
+	public void setMember_img(String member_img) {
+		this.member_img = member_img;
+	}
 	public ChatDTO getDto() {
 		return dto;
 	}
 	public void setDto(ChatDTO dto) {
 		this.dto = dto;
 	}
-	public Group_chatSizeDTO(int seq, String name, String alarm, String bookmark, int size, int unread, ChatDTO dto) {
+	public Group_chatSizeDTO(int seq, String name, String alarm, String bookmark, int size, int unread,
+			String member_img, ChatDTO dto) {
 		super();
 		this.seq = seq;
 		this.name = name;
@@ -58,14 +66,12 @@ public class Group_chatSizeDTO {
 		this.bookmark = bookmark;
 		this.size = size;
 		this.unread = unread;
+		this.member_img = member_img;
 		this.dto = dto;
 	}
 	public Group_chatSizeDTO() {
 		super();
 	}
-	
-	
-	
 	
 	
 	

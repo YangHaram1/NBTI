@@ -73,24 +73,28 @@ export const Insert = () => {
 
   // 로그인 한 사용자 정보 및 HR 권한 확인
   useEffect(() => {
-    axios.get(`${host}/members/memberInfo`).then((resp) => {
-      if (resp.data.member_level === "2" || resp.data.member_level === "3") {
-        // HR 권한 확인
-        axios.get(`${host}/members/selectLevel`).then((resp1) => {
+    axios
+      .get(`${host}/members/memberInfo`)
+      .then((resp) => {
+        if (resp.data.member_level === "2" || resp.data.member_level === "3") {
+          // HR 권한 확인
+          axios
+            .get(`${host}/members/selectLevel`)
+            .then((resp1) => {
+              console.log("뭔데 : ", resp1.data);
 
-          console.log("뭔데 : ", resp1.data);
+              const hrStatus =
+                resp1.data[parseInt(resp.data.member_level) - 1]?.hr; // 배열의 n번째 요소에서 hr 확인
 
-          const hrStatus = resp1.data[parseInt(resp.data.member_level) - 1]?.hr; // 배열의 n번째 요소에서 hr 확인
-
-          if (hrStatus === "Y") {
-            setIsAdmin(true); // Y일 때 true
-          }
-        })
-          .catch((error) => {
-            console.error("HR 권한 확인 중 오류 발생:", error);
-          });
-      }
-    })
+              if (hrStatus === "Y") {
+                setIsAdmin(true); // Y일 때 true
+              }
+            })
+            .catch((error) => {
+              console.error("HR 권한 확인 중 오류 발생:", error);
+            });
+        }
+      })
       .catch((error) => {
         console.error("사용자 정보 요청 중 오류 발생:", error);
       });
@@ -207,7 +211,6 @@ export const Insert = () => {
     setIsPopupOpen(false);
   };
 
-
   return (
     <div className={styles.container}>
       <div className={styles.box}>
@@ -252,7 +255,7 @@ export const Insert = () => {
       </div>
       <div className={styles.files}>
         <div>
-          <input type="file" multiple ref={inputRef} name='files' />
+          <input type="file" multiple ref={inputRef} name="files" />
         </div>
       </div>
       <div className={styles.contents}>
@@ -279,8 +282,8 @@ export const Insert = () => {
                   item.board_code === 1
                     ? "자유"
                     : item.board_code === 2
-                      ? "공지"
-                      : "알 수 없음";
+                    ? "공지"
+                    : "알 수 없음";
 
                 return (
                   <div key={i}>
@@ -312,7 +315,7 @@ export const Insert = () => {
             <span>
               저장된 글은 최대 10개까지 저장 가능합니다.
               <br />
-              첨부한 이미지나 파일은 저장되지 않습니다.
+              첨부한 파일은 저장되지 않습니다.
             </span>
             <button onClick={closePopup}>닫기</button>
           </div>

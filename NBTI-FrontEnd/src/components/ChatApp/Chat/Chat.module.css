@@ -192,6 +192,8 @@
   .shake {
     animation: shake 0.5s ease-in-out;
     animation-iteration-count: infinite;
+    width: 100%;
+    height: 100%;
   }
   .system{
     background-color: rgba(181, 172, 172, 0.242);

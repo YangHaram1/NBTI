@@ -26,7 +26,7 @@ const Side = ({ list, setList, listDisplay, setListDisplay, teamDisplay, setTeam
 
     useEffect(() => {
         axios.get(`${host}/group`).then((resp) => {
-            console.log(resp.data);
+        //    console.log(resp.data);
             setList(resp.data);
             setListDisplay(() => {
                 return (
@@ -44,9 +44,7 @@ const Side = ({ list, setList, listDisplay, setListDisplay, teamDisplay, setTeam
         })
     }, [])
 
-    useEffect(() => {
-        console.log(teamDisplay);
-    }, [teamDisplay])
+  
 
     const handlelistDisplay = (dindex) => { //부서 + -
         setListDisplay((prev) => {
@@ -113,7 +111,7 @@ const Side = ({ list, setList, listDisplay, setListDisplay, teamDisplay, setTeam
                 <div className={styles.nbti} >
                     <div onClick={handleMainDisplay} className={styles.button}>
                         {mainDisplay ? 
-                            <i class="fa-solid fa-angle-down"></i>
+                            <i className="fa-solid fa-angle-down"></i>
                             : 
                             <i className="fa-solid fa-angle-up"></i>
                         }
@@ -132,7 +130,7 @@ const Side = ({ list, setList, listDisplay, setListDisplay, teamDisplay, setTeam
                                     <div className={styles.dept}>
                                         <div onClick={() => handlelistDisplay(dindex)} className={styles.button}>
                                             {listDisplay[dindex] ? 
-                                                <i class="fa-solid fa-angle-down"></i>
+                                                <i className="fa-solid fa-angle-down"></i>
                                                 : 
                                                 <i className="fa-solid fa-angle-up"></i>
                                             }

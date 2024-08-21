@@ -116,7 +116,7 @@ public class Group_chatService {
 						unread = cdao.unread(dto.getSeq(), last_chat_seq, cdto.getSeq()) - 1;
 					}
 					result.add(new Group_chatSizeDTO(dto.getSeq(), MemberDTO.getName(), MemberDTO.getAlarm(),
-							MemberDTO.getBookmark(), size, unread, cdto));
+							MemberDTO.getBookmark(), size, unread, null,cdto));
 					break;
 				}
 			}

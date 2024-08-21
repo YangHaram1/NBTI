@@ -57,11 +57,11 @@ export const PopUp = forwardRef(({ onClose }, ref) => {
                     </li>
                     <li onClick={handleItemClick}>
                         <span><i className="fa-solid fa-map-location-dot fa-sm" /></span>
-                        <span onClick={() => { handleNavi("application") }}>휴가/외출신청</span>
+                        <span onClick={() => { handleNavi("application") }}>휴가신청</span>
                     </li>
                     <li onClick={handleItemClick}>
                         <span><i className="fa-solid fa-briefcase fa-sm" /></span>
-                        <span onClick={() => { handleNavi("workProcessing") }}>근무현황</span>
+                        <span onClick={() => { handleNavi("attendance") }}>근무현황</span>
                     </li>
                 </ul>
             </div>

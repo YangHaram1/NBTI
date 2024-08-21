@@ -12,6 +12,7 @@ public class ReplyDTO {
 	private int board_code;
 	private int count; // 좋아요 개수
 	private String name; // 이름 추가
+	private String member_img; // 프로필 사진
 	
 	public ReplyDTO() {
 	}
@@ -40,6 +41,15 @@ public class ReplyDTO {
 		this.name = name;
 	}
 	
+
+	
+	public String getMember_img() {
+		return member_img;
+	}
+
+	public void setMember_img(String member_img) {
+		this.member_img = member_img;
+	}
 
 	public String getName() {
 		return name;

@@ -24,6 +24,10 @@ export const FreeBoard = () => {
   useEffect(() => {
     // 자유 게시판 글 & 댓글 출력
     axios.get(`${host}/board/freeBoard`).then((resp) => {
+
+
+      console.log("프로필 : ", resp.data);
+
       setBoard(resp.data.list);
       setReply(resp.data.rlist);
       setBoardType("자유");
@@ -146,7 +150,15 @@ export const FreeBoard = () => {
           <div className={styles.boardList} key={i}>
             <div className={styles.header}>
               <div className={styles.profile}>
-                <img src={image} alt="" />
+                {/* <img src={image} alt="" /> */}
+                <img
+                  src={
+                    item.member_img === null
+                      ? `${image}`
+                      : `${host}/images/avatar/${item.id}/${item.member_img}`
+                  }
+                  alt=""
+                />
               </div>
               <div className={styles.writer}>
                 <p>{item.name}</p>
@@ -169,10 +181,30 @@ export const FreeBoard = () => {
                 <div className={styles.boardContents}>
                   <p
                     dangerouslySetInnerHTML={{
-                      __html:
-                        item.contents.length > 200
-                          ? item.contents.slice(0, 200) + " ..."
-                          : item.contents,
+                      __html: (() => {
+                        // 이미지 태그를 감지
+                        const imgTagPattern =
+                          /<img\s[^>]*src=["']?([^>"']+)["']?[^>]*>/i;
+                        const hasImgTag = imgTagPattern.test(item.contents);
+
+                        if (hasImgTag) {
+                          // 이미지가 포함된 경우, 이미지 태그를 제거하고 글만 보이게
+                          const textOnly = item.contents
+                            .replace(imgTagPattern, "")
+                            .trim();
+                          // 이미지 태그 제거 후 텍스트가 없으면 아무것도 출력하지 않음
+                          return textOnly.length > 0
+                            ? textOnly.length > 200
+                              ? textOnly.slice(0, 200) + " ..."
+                              : textOnly
+                            : ""; // 텍스트가 없으면 빈 문자열 반환
+                        } else {
+                          // 이미지가 없는 경우, 기존 로직을 그대로 사용
+                          return item.contents.length > 200
+                            ? item.contents.slice(0, 200) + " ..."
+                            : item.contents;
+                        }
+                      })(),
                     }}
                   ></p>
                 </div>
@@ -204,7 +236,15 @@ export const FreeBoard = () => {
 
                     return (
                       <div className={styles.replyOutput} key={index}>
-                        <img src={image} alt="" />
+                        {/* <img src={image} alt="" /> */}
+                        <img
+                          src={
+                            ritem.member_img === null
+                              ? `${image}`
+                              : `${host}/images/avatar/${ritem.id}/${ritem.member_img}`
+                          }
+                          alt=""
+                        />
                         <div>
                           <div className={styles.writer_writeDate}>
                             <span>{ritem.name}</span>

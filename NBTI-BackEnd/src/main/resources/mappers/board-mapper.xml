@@ -7,65 +7,67 @@
 
 	<!-- 목록 출력 -->
 	<select id="selectAll" resultType="com.nbti.dto.BoardDTO">
-		SELECT * FROM (
-		SELECT
-		board.*,
-		m.name,
-		COALESCE(reply_count.reply_count, 0) AS reply_count, -- 댓글 수를 가져옴
-		ROW_NUMBER() OVER (ORDER BY board.seq DESC) AS rown
-		FROM
-		board
-		JOIN
-		members m ON board.member_id = m.id
-		LEFT JOIN (
-		-- reply 테이블과 조인하여 댓글 수 계산
-		SELECT
-		board_seq,
-		COUNT(*) AS reply_count
-		FROM
-		reply
-		GROUP BY
-		board_seq
-		) reply_count ON board.seq = reply_count.board_seq
-		<trim prefix="WHERE" prefixOverrides="AND|OR">
-			<!-- 기본 조건: 게시판 코드 -->
-			board.board_code = ${board_code}
-
-			<!-- 상태 필터 조건 추가 -->
-			<if test="status == 'ing'">
-				AND COALESCE(reply_count.reply_count, 0) = 0  <!-- 진행중인 경우 -->
-			</if>
-			<if test="status == 'ok'">
-				AND COALESCE(reply_count.reply_count, 0) > 0  <!-- 답변 완료인 경우 -->
-			</if>
-
-			<!-- 검색 조건: target이 특정 값일 때 -->
-			<if test="target == 'title'">
-				AND board.title LIKE '%' || #{keyword} || '%'
-			</if>
-			<if test="target == 'contents'">
-				AND REGEXP_REPLACE(
-				REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', ''),
-				'&amp;nbsp;', ''
-				) LIKE '%' || #{keyword} || '%'
-			</if>
-			<if test="target == 'name'">
-				AND m.name = #{keyword}
-			</if>
-
-			<!-- 검색 조건: target이 빈 문자열일 때 -->
-			<if test="target == ''">
+	    SELECT * FROM (
+	        SELECT
+	            board.*,
+	            m.name,
+	            m.member_img,  <!-- members 테이블에서 member_img 필드 추가 -->
+	            COALESCE(reply_count.reply_count, 0) AS reply_count, -- 댓글 수를 가져옴
+	            ROW_NUMBER() OVER (ORDER BY board.seq DESC) AS rown
+	        FROM
+	            board
+	        JOIN
+	            members m ON board.member_id = m.id
+	        LEFT JOIN (
+	            -- reply 테이블과 조인하여 댓글 수 계산
+	            SELECT
+	                board_seq,
+	                COUNT(*) AS reply_count
+	            FROM
+	                reply
+	            GROUP BY
+	                board_seq
+	        ) reply_count ON board.seq = reply_count.board_seq
+	        <trim prefix="WHERE" prefixOverrides="AND|OR">
+	            <!-- 기본 조건: 게시판 코드 -->
+	            board.board_code = ${board_code}
+	
+	            <!-- 상태 필터 조건 추가 -->
+	            <if test="status == 'ing'">
+	                AND COALESCE(reply_count.reply_count, 0) = 0  <!-- 진행중인 경우 -->
+	            </if>
+	            <if test="status == 'ok'">
+	                AND COALESCE(reply_count.reply_count, 0) > 0  <!-- 답변 완료인 경우 -->
+	            </if>
+	
+	            <!-- 검색 조건: target이 특정 값일 때 -->
+	            <if test="target == 'title'">
+	                AND board.title LIKE '%' || #{keyword} || '%'
+	            </if>
+	            <if test="target == 'contents'">
+	                AND REGEXP_REPLACE(
+	                    REGEXP_REPLACE(board.contents, '&lt;[^>]+&gt;', ''),
+	                    '&amp;nbsp;', ''
+	                ) LIKE '%' || #{keyword} || '%'
+	            </if>
+	            <if test="target == 'name'">
+	                AND m.name = #{keyword}
+	            </if>
+	
+	            <!-- 검색 조건: target이 빈 문자열일 때 -->
+	            <if test="target == ''">
 	                <![CDATA[
 	                AND (board.title LIKE '%' || #{keyword} || '%'
 	                    OR REGEXP_REPLACE(board.contents, '<[^>]+>', '') LIKE '%' || #{keyword} || '%'
 	                    OR m.name LIKE '%' || #{keyword} || '%'
 	                    OR board.member_id = #{keyword})
 	                ]]>
-			</if>
-		</trim>
-		) a
-		WHERE a.rown BETWEEN ${start} AND ${end}
+	            </if>
+	        </trim>
+	    ) a
+	    WHERE a.rown BETWEEN ${start} AND ${end}
 	</select>
+
 
 
 	<!-- 게시글 총 개수 -->
@@ -207,7 +209,8 @@
 	    SELECT
 	        b.*,
 	        m.name AS name, 
-	        j.job_name AS job_name 
+	        j.job_name AS job_name ,
+	        m.member_img
 	    FROM
 	        board b
 	    JOIN
@@ -327,6 +330,7 @@
 	            SELECT 
 	                b.*, 
 	                m.name AS name, 
+	                m.member_img,
 	                ROW_NUMBER() OVER (ORDER BY b.write_date DESC) AS rn
 	            FROM 
 	                board b

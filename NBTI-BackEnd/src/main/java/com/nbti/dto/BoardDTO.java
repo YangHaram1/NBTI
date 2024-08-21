@@ -13,6 +13,7 @@ public class BoardDTO {
 	private int reply_count; // 댓글의 개수
 	private String name; // 이름 추가
 	private String job_name; // 직급 추가
+	private String member_img; // 프로필 사진 
 	
 	public BoardDTO() {
 	}
@@ -54,6 +55,14 @@ public class BoardDTO {
 	}
 
 	
+	public String getMember_img() {
+		return member_img;
+	}
+
+	public void setMember_img(String member_img) {
+		this.member_img = member_img;
+	}
+
 	public String getJob_name() {
 		return job_name;
 	}

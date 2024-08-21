@@ -1,35 +1,65 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { host } from "../../../../../../config/config";
-import styles from './MyVacation.module.css'
-
-export const MyVacation = () => {
+import styles from './MyVacation.module.css';
+ const MyVacation = () => {
     const [vacationInfo, setVacationInfo] = useState({ total: '', used: '', remaining: '' });
     const [vacationHistory, setVacationHistory] = useState([]);
 
     useEffect(() => {
-        const memberId = sessionStorage.getItem('loginID'); // 세션 스토리지에서 loginID 가져오기
-    
+        const memberId = sessionStorage.getItem('loginID');
+
         if (memberId) {
-            axios.get(`${host}/members/apply`, { params: { memberId, days: 0 } }) // 초기 로딩 시 남은 휴가일수만 로드
+            console.log("Member ID from sessionStorage:", memberId);
+
+            // 휴가 정보 가져오기
+            axios.get(`${host}/members/apply`, { params: { memberId, days: 0 } })
                 .then(response => {
+                    console.log("Vacation info response:", response.data);
                     setVacationInfo(response.data);
                 })
                 .catch(error => {
-                    console.error("There was an error fetching the vacation info!", error);
+                    console.error("Error fetching vacation info:", error);
                 });
 
-            axios.get(`${host}/members/vacationHistory`, { params: { memberId } }) // 휴가 신청 내역 가져오기
-                .then(response => {
-                    setVacationHistory(response.data);
-                })
-                .catch(error => {
-                    console.error("There was an error fetching the vacation history!", error);
-                });
+            // 휴가 신청 내역 가져오기
+         // 휴가 신청 내역 가져오기
+         axios.get(`${host}/approval/history`, { params: { memberId },withCredentials: true  })
+         .then(response => {
+             console.log("Vacation history response:", response.data);
+             const historyData = response.data.map(history => ({
+                 ...history,
+                 vacationType: mapVacationType(history.vacationType),
+                 days: calculateVacationDays(history.vacation_start, history.vacation_end),
+             }));
+             setVacationHistory(historyData);
+         })
+         .catch(error => {
+             console.error("Error fetching vacation history:", error);
+             
+         });
         } else {
             console.error("No memberId found in sessionStorage.");
         }
     }, []);
+
+    const mapVacationType = (type) => {
+        switch (type) {
+            case 1: return "연차";
+            case 2: return "경조";
+            case 3: return "공가";
+            case 4: return "질병휴가";
+            default: return "기타";
+        }
+    };
+
+    const calculateVacationDays = (start, end) => {
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        const diffTime = Math.abs(endDate - startDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays + 1;
+    };
 
     return (
         <div className={styles.container}>
@@ -70,8 +100,8 @@ export const MyVacation = () => {
                             <td>{index + 1}</td>
                             <td>{history.applicant}</td>
                             <td>{history.vacationType}</td>
-                            <td>{history.days}</td>
-                            <td>{history.period}</td>
+                            <td>{history.days} 일</td>
+                            <td>{history.vacation_start} - {history.vacation_end}</td>
                             <td>{history.status}</td>
                             <td><button>상세보기</button></td>
                         </tr>
@@ -81,3 +111,4 @@ export const MyVacation = () => {
         </div>
     );
 };
+export default MyVacation;

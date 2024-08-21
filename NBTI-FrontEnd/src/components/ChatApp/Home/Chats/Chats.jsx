@@ -20,7 +20,7 @@ const Chats = () => {
     const [countTotal,setCountTotal]= useState(0); //unread total
     useEffect(() => {
         axios.get(`${host}/group_chat`).then((resp) => {
-          //  console.log(resp);
+            console.log(resp);
             if (resp != null) {
                 if (resp.data !== '') {
                  //   console.log(resp.data);

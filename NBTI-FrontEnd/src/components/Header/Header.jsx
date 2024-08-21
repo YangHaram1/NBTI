@@ -7,6 +7,8 @@ import { ChatsContext } from './../../Context/ChatsContext';
 import { LogoutPopUp } from './LogoutPopUp/LogoutPopUp';
 import { useAuthStore, useMemberStore } from './../../store/store';
 import { host } from '../../config/config';
+import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 export const Header = () => {
 
@@ -14,25 +16,28 @@ export const Header = () => {
     const [showPopUp, setShowPopUp] = useState(false);
     const menuRef = useRef(null);
     const popupRef = useRef(null);
-    const [user,setUser] =useState([{member_img:''}]);
-    const {loginID} =useAuthStore();
-    const {members}=useMemberStore();
-    useEffect(()=>{
-        if(loginID!=null && loginID !=='error'){
-            if(members.length>0)
-            setUser(()=>{
-                return (
-                    members.filter((item,index)=>{
-                        if(item.id===loginID){
-                            return true;
-                        }
-                        return false;
-                    })
-                );  
-            })
+    const [user, setUser] = useState([{ member_img: '' }]);
+    const [userAdmin,setUserAdmin]=useState(null);
+    const { loginID } = useAuthStore();
+    const { members } = useMemberStore();
+    const location = useLocation(); // 현재 경로를 가져오는 useLocation 훅
+
+    useEffect(() => {
+        if (loginID != null && loginID !== 'error') {
+            if (members.length > 0)
+                setUser(() => {
+                    return (
+                        members.filter((item, index) => {
+                            if (item.id === loginID) {
+                                return true;
+                            }
+                            return false;
+                        })
+                    );
+                })
         }
 
-    },[loginID,members])
+    }, [loginID, members])
 
     const togglePopUp = () => {
         setShowPopUp(prevState => !prevState); // 상태를 토글
@@ -71,6 +76,38 @@ export const Header = () => {
             setShowNewPopup(false);
         }
     };
+    const [memberLevel, setMemberLevel] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    // Fetch user and member level
+    useEffect(() => {
+        if (loginID != null && loginID !== 'error') {
+            if (members.length > 0) {
+                const currentUser = members.find(item => item.id === loginID);
+                if (currentUser) {
+                    setUserAdmin([currentUser]);
+
+                    // Fetch user level
+                    axios.get(`${host}/members/memberInfo`)
+                        .then((resp) => {
+                            setMemberLevel(resp.data.member_level);
+                            if (resp.data.member_level === "2" || resp.data.member_level === "3") {
+                                axios.get(`${host}/members/selectLevel`)
+                                    .then((resp1) => {
+                                        const hrstatus = resp1.data[parseInt(resp.data.member_level) - 1]?.hr;
+                                        if (hrstatus === "y") {
+                                            setIsAdmin(true); // Adjust if necessary
+                                        }
+                                    });
+                            }
+                        })
+                        .catch(error => {
+                            console.error("There was an error fetching the member info!", error);
+                        });
+                }
+            }
+        }
+    }, [loginID, members]);
 
     useEffect(() => {
         document.addEventListener("mousedown", handleClickOutside);
@@ -103,45 +140,74 @@ export const Header = () => {
 
     const navi = useNavigate();
 
-    const { setChatNavi ,chatAppRef,dragRef,setChatNaviBody} = useContext(ChatsContext);
+    const { setChatNavi, chatAppRef, dragRef, setChatNaviBody } = useContext(ChatsContext);
     const handleChat = () => {
-        setChatNavi((prev)=>{
-            chatAppRef.current.style.display="flex";
-            dragRef.current.style.display="flex";
+        setChatNavi((prev) => {
+            chatAppRef.current.style.display = "flex";
+            dragRef.current.style.display = "flex";
             return 'home'
         });
         setChatNaviBody("chats");
-        
+
     }
-   
+
+    // 현재 경로에 따라 헤더 텍스트 변경
+    const getHeaderTitle = () => {
+        switch (location.pathname) {
+            case "/board":
+                return "게시판";
+            case "/calendar":
+                return "일정";
+            case "/reservation":
+                return "예약";
+            case "/group":
+                return "조직도";
+            case "/approval":
+                return "전자결재";
+            case "/application":
+                return "휴가신청";
+            case "/attendance":
+                return "근무현황";
+            default:
+                return "오피스 홈"; // 기본 텍스트
+        }
+    };
+
+
+
+
+
     return (
         <div className={styles.container}>
             <div className={`${styles.left} ${showPopUp ? styles.dropdownActive : ''}`}>
                 <div className={styles.logo} onClick={() => { navi("/") }}>NBTI</div>
                 <div className={styles.menu_dropdown} onClick={togglePopUp} ref={menuRef}>
-                    <p>오피스 홈</p>
+                    {/* <p>오피스 홈</p> */}
+                    <p>{getHeaderTitle()}</p>
                     <i className="fa-solid fa-caret-down"></i>
                 </div>
             </div>
             <div className={styles.right}>
-                <div className={styles.user_admin}>
-
-                    <i className="fa-solid fa-user-cog fa-xl" onClick={() => { navi("/useradmin") }}></i>
-                </div>
+                {memberLevel === "2" || memberLevel === "3" ? (
+                    <div className={styles.user_admin}>
+                        <i className="fa-solid fa-user-cog fa-xl" onClick={() => { navi("/useradmin") }}></i>
+                    </div>
+                ) : null}
                 <div className={styles.chat}>
                     <i className="fa-regular fa-comments fa-xl" onClick={handleChat}></i>
                 </div>
-                <div className={styles.alarm}>
+                {/* <div className={styles.alarm}>
                     <i className="fa-regular fa-bell fa-xl"></i>
-                </div>
+                </div> */}
                 <div className={`${styles.user_info} ${showNewPopup ? styles.dropdownActive : ''}`}>
                     <div className={styles.user_profile_img} onClick={toggleNewPopup} ref={newMenuRef}>
-                        <img src={ (user[0].member_img === null) ? `${image}` : `${host}/images/avatar/${user[0].id}/${user[0].member_img}`} alt="" />
+                        <img src={(user[0].member_img === null) ? `${image}` : `${host}/images/avatar/${user[0].id}/${user[0].member_img}`} alt="" />
                     </div>
                 </div>
             </div>
             {showPopUp && <PopUp ref={popupRef} onClose={() => setShowPopUp(false)} />} {/* 조건부 렌더링 */}
             {showNewPopup && <LogoutPopUp ref={newPopupRef} onClose={() => setShowNewPopup(false)} />} {/* 조건부 렌더링 */}
+
         </div>
     );
 };

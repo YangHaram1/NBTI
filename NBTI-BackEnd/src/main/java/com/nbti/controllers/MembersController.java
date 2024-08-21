@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -133,11 +132,15 @@ public class MembersController {
 		return ResponseEntity.ok().build();
 	}
 	// 관리자 사용자 수정
-	@PutMapping("/updateUser")
-	public ResponseEntity<Void> updateUser(@RequestBody MembersDTO dto){
-		mServ.updateUser(dto);
-		return ResponseEntity.ok().build();
-	}
+	 @PutMapping("/updateUser")
+	    public ResponseEntity<Void> updateUser(@RequestBody MembersDTO dto) {
+	        try {
+	            mServ.updateUser(dto);
+	            return ResponseEntity.ok().build();  // 성공적으로 처리된 경우 200 OK 응답 반환
+	        } catch (Exception e) {
+	            return ResponseEntity.notFound().build();  // 데이터가 존재하지 않는 경우 404 Not Found 응답 반환
+	        }
+	    }
 	// 관리자 회원 탈퇴
 	@DeleteMapping("/deleteUser/{id}")
 	public ResponseEntity<Void> deleteUser(@PathVariable("id") String id){
