@@ -57,6 +57,7 @@
 	            SELECT 
 	                r.*, 
 	                m.name AS name, 
+	                m.member_img,
 	                ROW_NUMBER() OVER (ORDER BY r.seq DESC) AS rn
 	            FROM 
 	                reply r
