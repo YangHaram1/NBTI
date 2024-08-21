@@ -330,6 +330,7 @@
 	            SELECT 
 	                b.*, 
 	                m.name AS name, 
+	                m.member_img,
 	                ROW_NUMBER() OVER (ORDER BY b.write_date DESC) AS rn
 	            FROM 
 	                board b
