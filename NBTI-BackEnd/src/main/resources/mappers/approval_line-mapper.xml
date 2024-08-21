@@ -6,7 +6,7 @@
  <mapper namespace="ApprovalLine">
  
  	<insert id="insert">
- 		insert into approval_line values(approval_line_seq.nextval, ${temp_seq}, #{approval_id}, '',#{member_state_code},${approval_order},null)
+ 		insert into approval_line values(approval_line_seq.nextval, ${temp_seq}, #{approval_id},'',#{member_state_code},${approval_order},null)
  	</insert>
  	
  	<select id="selectLine" resultType="map">

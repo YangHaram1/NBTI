@@ -14,9 +14,9 @@ export const Header = ({userdata}) => {
     const day = (`0${TimeData.getDate()}`).slice(-2);
     const Today = `${year}-${month}-${day}`;
     const [approval, setApproval] = useState([]);
-
+    
     useEffect(()=>{
-        // console.log("작성시 전결라인",approvalLine);
+        console.log("작성시 전결라인",approvalLine);
         axios.post(`${host}/members/approvalSearch`,approvalLine)
         .then((resp)=>{
             // console.log("데이터 확인",resp.data);
@@ -27,7 +27,7 @@ export const Header = ({userdata}) => {
         })
     },[approvalLine])
 
-
+    
     return (
         <>
             <div className={styles.left}>
@@ -62,7 +62,7 @@ export const Header = ({userdata}) => {
                                 </div>
                                 <div className={styles.approval_box_main}>
                                     <div className={styles.approval_job}>{approvaler.JOB_NAME}</div>
-                                    <div className={styles.approval_member}>{approvaler.name}</div>
+                                    <div className={styles.approval_member}>{approvaler.NAME}</div>
                                     <div className={styles.approval_date}></div>
                                 </div>
                             </div>
