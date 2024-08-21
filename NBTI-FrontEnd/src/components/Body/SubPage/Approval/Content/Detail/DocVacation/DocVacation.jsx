@@ -9,8 +9,8 @@ export const DocVacation = ({setDocVacation, docVacation})=>{
     const category = docVacation.vacation_category;
     const [categoryName, setCategoryName] = useState(''); 
     const [vPeriod, setVPeriod] = useState('');
-    const [vacationStart, setVacationStart] = useState();
-    const [vacationEnd, setVacationEnd] = useState(); 
+    const [vacationStart, setVacationStart] = useState('');
+    const [vacationEnd, setVacationEnd] = useState(''); 
 
     useEffect(()=>{
         axios.get(`${host}/vacationCategroy/${category}`)
@@ -63,9 +63,9 @@ export const DocVacation = ({setDocVacation, docVacation})=>{
             <div className={`${styles.row}`}>
                 <div className={styles.title}>휴가 기간</div>
                 <div className={`${styles.content} ${styles.date}`}>
-                    <input type='date' value={vacationStart} disabled></input>
+                    <input type='date' value={vacationStart || ''} disabled></input>
                     <div className={styles.wave}>~</div>
-                    <input type='date' value={vacationEnd} disabled></input>
+                    <input type='date' value={vacationEnd || ''} disabled></input>
                 </div>
             </div>
 

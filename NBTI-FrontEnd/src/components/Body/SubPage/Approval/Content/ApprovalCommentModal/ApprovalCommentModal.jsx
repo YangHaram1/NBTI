@@ -33,7 +33,7 @@ export const ApprovalCommentModal = ({approvalData, onClose}) =>{
                     approvalData.map((data, index)=>{
                         return(
                             <>
-                            <div className={styles.comment_title}>
+                            <div className={styles.comment_title} key={index}>
                                 {index == 0 ? '최초' : index == 1 ?'중간' : '최종'} 결재자 : {data.NAME}({data.JOB_NAME}) / {data.TEAM_NAME}
                                         {
                                                 data.MEMBER_STATE_CODE === 'p' ? ' ( 승인 날짜 : ':  

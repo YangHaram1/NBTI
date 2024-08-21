@@ -139,7 +139,8 @@ export const Detail=()=>{
 
     const handleCloseModal = () => {
         setShowModal(false); // 모달 닫기
-        navi("/approval")
+        // navi("/approval");
+        window.reload();
     };
 
     const handleCloseCommentModal = () => {
@@ -178,8 +179,7 @@ export const Detail=()=>{
         if(result){
         axios.put(`${host}/approval/cancleByMe/${seq}`)
         .then((resp)=>{
-            // console.log(resp);
-            // console.log("취소 성공~!")
+            navi("/approval/listDocWrite");
         })
         .catch((err)=>{
             console.log(err);
