@@ -44,8 +44,8 @@ export const Detail=()=>{
 
     const { approvalLine, setApprovalLine ,resetApprovalLine } = useApprovalLine();
     const { referLine, setReferLine, resetReferLine } = useReferLine();
-    const { docLeave, setDocLeave } = useDocLeave();
-    const { docVacation, setDocVacation } = useDocVacation();
+    // const { docLeave, setDocLeave } = useDocLeave();
+    // const { docVacation, setDocVacation } = useDocVacation();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -90,12 +90,12 @@ export const Detail=()=>{
                 if(approvalLineResponse.data[0].APPROVAL_DATE == null){
                     setCheckFA(true);
                 }
-                console.log("결재라인 체크",approvalLineResponse.data);
+                // console.log("결재라인 체크",approvalLineResponse.data);
 
                 // 참조라인 정보 받아오기
                 const referLineResponse = await axios.get(`${host}/referLine/${seq}`);
                 setReferData(referLineResponse.data);
-                // console.log("참조라인확인",referLineResponse.data);
+                console.log("참조라인확인",referLineResponse.data);
 
                 if(list == '참조/열람 대기'){
                     axios.put(`${host}/referLine/read/${seq}`);
@@ -116,10 +116,10 @@ export const Detail=()=>{
     }, [seq]);
 
     useEffect(()=>{
-        // console.log("참조라인 데이터 확인",referData);
+        console.log("referData 참조라인 데이터 확인",referData);
         axios.post(`${host}/members/approvalSearch`,referData)
         .then((resp)=>{
-            // console.log("데이터 확인",resp.data);
+            console.log("refer데이터 확인",resp.data);
             setRefer(resp.data);
             console.log(refer);
         })
@@ -149,8 +149,8 @@ export const Detail=()=>{
 
     // 제목 클릭시 sysname, oriname 받아오기
     const handleFileDownload = (sysname, oriname) =>{
-        console.log("파일 oriname:", oriname);
-        console.log("파일 sysname:", sysname);
+        // console.log("파일 oriname:", oriname);
+        // console.log("파일 sysname:", sysname);
         
         // const url = `${host}/downloadApproval?oriname=${encodeURIComponent(oriname)}&sysname=${encodeURIComponent(sysname)}`;
 
@@ -270,27 +270,29 @@ export const Detail=()=>{
                         list == '기안 문서함' || list == '결재 문서함' ||list == '참조/열람 문서함'||list == '반려 문서함' ||list == '상신취소 문서함'||list == '결재 예정'||list == '참조/열람 대기'?
                         <>
                         <div className={styles.btns}>
-                            <div className={`${styles.approval_prev_btn} ${styles.btn}`} onClick={()=>{setShowApprovalComment(true)}}><i class="fa-solid fa-user-pen"></i>결재정보</div>
-                            <div className={`${styles.approval_change_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
-                            {checkFA == true && list == '기안 문서함'? <div className={`${styles.approval_cancle_btn} ${styles.btn}`} onClick={handleApprovalCancle}> <i class="fa-regular fa-circle-xmark"></i>상신취소</div> : <></>}
+                            <div className={`${styles.approval_prev_btn} ${styles.btn}`} onClick={()=>{setShowApprovalComment(true)}}><i className="fa-solid fa-user-pen"></i>결재정보</div>
+                            <div className={`${styles.approval_change_btn} ${styles.btn}`}><i className="fa-solid fa-users"></i>인쇄하기</div>
+                            {checkFA == true && list == '기안 문서함'? <div className={`${styles.approval_cancle_btn} ${styles.btn}`} onClick={handleApprovalCancle}> <i className="fa-regular fa-circle-xmark"></i>상신취소</div> : <></>}
                         </div>
                         </>
                         : list == '결재 대기' ?
                         <>
                         <div className={styles.btns}>
-                            <div className={`${styles.approval_submit_btn} ${styles.btn}`} onClick={HandleSubmit}><i class="fa-solid fa-pen-to-square"></i>결재승인</div>
-                            <div className={`${styles.approval_back_btn} ${styles.btn}`} onClick={HandleSubmit}><i class="fa-regular fa-folder-open"></i>결재반려</div>
-                            <div className={`${styles.approval_prev_btn} ${styles.btn}`} onClick={()=>{setShowApprovalComment(true)}}><i class="fa-solid fa-user-pen"></i>결재정보</div>
-                            <div className={`${styles.approval_copy_btn} ${styles.btn}`} onClick={handlePrint}><i class="fa-solid fa-users"></i>복사하기</div>
+                            <div className={`${styles.approval_submit_btn} ${styles.btn}`} onClick={HandleSubmit}><i className="fa-solid fa-pen-to-square"></i>결재승인</div>
+                            <div className={`${styles.approval_back_btn} ${styles.btn}`} onClick={HandleSubmit}><i className="fa-regular fa-folder-open"></i>결재반려</div>
+                            <div className={`${styles.approval_prev_btn} ${styles.btn}`} onClick={()=>{setShowApprovalComment(true)}}><i className="fa-solid fa-user-pen"></i>결재정보</div>
+                            <div className={`${styles.approval_copy_btn} ${styles.btn}`} onClick={handlePrint}><i className="fa-solid fa-users"></i>인쇄하기</div>
                         </div>
                         </>
                         :
                         <>
                         <div className={styles.btns}>
-                            <div className={`${styles.approval_submit_btn} ${styles.btn}`} onClick={handleRewrite}><i class="fa-solid fa-pen-to-square"></i>재기안</div>
-                            <div className={`${styles.approval_prev_btn} ${styles.btn}`} onClick={()=>{setShowApprovalComment(true)}}><i class="fa-solid fa-user-pen"></i>결재정보</div>
-                            <div className={`${styles.approval_copy_btn} ${styles.btn}`}><i class="fa-solid fa-users"></i>복사하기</div>
-                            <div className={`${styles.approval_copy_btn} ${styles.btn}`} onClick={handleDelete}><i class="fa-solid fa-trash-can"></i>삭제하기</div>
+                            <div className={`${styles.approval_submit_btn} ${styles.btn}`} onClick={handleRewrite}><i className="fa-solid fa-pen-to-square"></i>재기안</div>
+                            { list !== '임시 저장 문서함'? 
+                            <div className={`${styles.approval_prev_btn} ${styles.btn}`} onClick={()=>{setShowApprovalComment(true)}}><i className="fa-solid fa-user-pen"></i>결재정보</div>:''
+                            }
+                            <div className={`${styles.approval_copy_btn} ${styles.btn}`}><i className="fa-solid fa-users"></i>복사하기</div>
+                            <div className={`${styles.approval_copy_btn} ${styles.btn}`} onClick={handleDelete}><i className="fa-solid fa-trash-can"></i>삭제하기</div>
                         </div>
                         </>
                     }
@@ -334,7 +336,7 @@ export const Detail=()=>{
                         refer.map((refer)=>{
                             return(
                                 <div className={styles.refer}>
-                                    {refer.NAME} ({refer.JOB_NAME}) / {refer.DEPT_NAME} / {refer.TEAM_NAME}
+                                    {refer.name} ({refer.JOB_NAME}) / {refer.DEPT_NAME} / {refer.TEAM_NAME}
                                 </div>
                             );
                         })
