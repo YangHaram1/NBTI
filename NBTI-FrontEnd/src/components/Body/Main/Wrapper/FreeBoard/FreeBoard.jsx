@@ -146,6 +146,7 @@ export const FreeBoard = () => {
         const currentDate = !isNaN(date)
           ? format(date, "yyyy-MM-dd HH:mm")
           : "Invalid Date";
+
         return (
           <div className={styles.boardList} key={i}>
             <div className={styles.header}>
@@ -155,7 +156,7 @@ export const FreeBoard = () => {
                   src={
                     item.member_img === null
                       ? `${image}`
-                      : `${host}/images/avatar/${item.id}/${item.member_img}`
+                      : `${host}/images/avatar/${item.member_id}/${item.member_img}`
                   }
                   alt=""
                 />
@@ -234,6 +235,8 @@ export const FreeBoard = () => {
                       ? format(reply_date, "yyyy-MM-dd HH:mm:ss")
                       : "Invalid Date";
 
+
+                    console.log("item : ", ritem)
                     return (
                       <div className={styles.replyOutput} key={index}>
                         {/* <img src={image} alt="" /> */}
@@ -241,7 +244,7 @@ export const FreeBoard = () => {
                           src={
                             ritem.member_img === null
                               ? `${image}`
-                              : `${host}/images/avatar/${ritem.id}/${ritem.member_img}`
+                              : `${host}/images/avatar/${ritem.member_id}/${ritem.member_img}`
                           }
                           alt=""
                         />

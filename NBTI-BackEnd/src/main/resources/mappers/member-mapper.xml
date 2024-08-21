@@ -204,5 +204,9 @@
     	update members set ent_yn = 'Y' ,end_date = TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') where id = #{id}
     </update>
     
+    <update id="updateVacation">
+    	update members set vacation_period=${vacation} where id=#{id}
+    </update>
+    
 </mapper>
 

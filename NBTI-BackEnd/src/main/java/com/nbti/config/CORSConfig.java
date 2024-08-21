@@ -14,6 +14,7 @@ public class CORSConfig implements WebMvcConfigurer{
 		 .allowedOriginPatterns("*") // 모든 도메인 허용
         .allowedMethods("*")
         .allowedHeaders("*")
+
         .allowCredentials(true);
 		
 	}

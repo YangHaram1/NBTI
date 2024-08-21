@@ -153,8 +153,13 @@ public class MembersService {
 
 	        return mdao.verifyUser(params);
 	    }
+	    
+	    
+	    ////
+	    public void updateVacation(String id,int vacation) {
+			  mdao.updateVacation(id, vacation);
+		 }
 	      
-	
 	
 
 		
