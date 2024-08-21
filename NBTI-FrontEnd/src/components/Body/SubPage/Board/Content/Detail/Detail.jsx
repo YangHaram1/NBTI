@@ -345,7 +345,7 @@ export const Detail = () => {
       </div>
       <div className={styles.title}>
         <div className={styles.image}>
-          <img src={image} alt="" />
+          <img src={ (detail.member_img === null) ? `${image}` : `${host}/images/avatar/${detail.id}/${detail.member_img}`} alt="" />
         </div>
         <div className={styles.titleWriter}>
           <div className={styles.innerTitle}>

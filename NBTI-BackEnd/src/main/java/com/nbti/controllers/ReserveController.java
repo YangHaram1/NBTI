@@ -82,7 +82,6 @@ public class ReserveController {
 	@PostMapping("/reject")
 	public ResponseEntity<Void> reject(@RequestBody Map<String, Integer> request) throws Exception {
 	    Integer seq = request.get("seq");
-	    System.out.println("반려 seq :" + seq);
 	    if (seq != null) {
 	        rserv.reject(seq); // 예약 상태를 'R'로 업데이트
 	        return ResponseEntity.ok().build();

@@ -28,6 +28,7 @@ import com.nbti.services.ApprovalService;
 import com.nbti.services.FilesService;
 import com.nbti.services.ReferLineService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -740,6 +741,20 @@ public class ApprovalController {
 //		System.out.println("임시저장 seq:"+seq+"setlist:"+setlist);
 		aServ.deleteTemp(seq, setlist);
 		return ResponseEntity.ok().build();
+	}
+	
+	@GetMapping("/history")
+	public List<Map<String, Object>> getVacationHistory(HttpServletRequest request) {
+	    
+	    String memberId = (String) session.getAttribute("loginID");
+	    System.out.println("Retrieved memberId from session: " + memberId);
+
+	    if (memberId == null) {
+	        throw new RuntimeException("No memberId found in session.");
+	    }
+
+	    List<Map<String, Object>> vacationHistory = aServ.getVacationHistory(memberId);
+	    return vacationHistory;
 	}
 
 }

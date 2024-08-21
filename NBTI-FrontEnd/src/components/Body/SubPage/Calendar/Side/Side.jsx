@@ -199,7 +199,7 @@ const handleDeleteSharedCalendar = (calendar_id) => {
       <div className={styles.menus}>
         <ul>
           <li onClick={toggleFreeBoard}>
-            <i className="fa-solid fa-calendar"></i>일정
+            <i className="fa-solid fa-calendar"></i>캘린더
             <ul className={`${styles.submenu} ${FreeBoard ? styles.open : ""}`} onClick={preventPropagation}>
               <li onClick={fullCalendar}>
                 <span><i className="fa-solid fa-circle"></i></span>
@@ -214,7 +214,7 @@ const handleDeleteSharedCalendar = (calendar_id) => {
         </ul>
         <ul>
           <li onClick={toggleNoticeBoard}>
-            <i className="fa-solid fa-calendar"></i>공유 일정<i className="fa-solid fa-plus" id={styles.plus} onClick={handleCalendarAddClick}/>
+            <i className="fa-solid fa-calendar"></i>공유 캘린더<i className="fa-solid fa-plus" id={styles.plus} onClick={handleCalendarAddClick}/>
             <ul className={`${styles.submenu} ${NoticeBoard ? styles.open : ""}`} onClick={preventPropagation}>
               {publicList.map((calendar, index) => ( 
                   <li key={index} onClick={()=>sharedCalendar(calendar.calendar_id)}> 
