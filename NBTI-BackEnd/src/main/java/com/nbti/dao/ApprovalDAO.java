@@ -94,5 +94,10 @@ public class ApprovalDAO {
 	public void updateDocStateCancle(int seq) {
 		mybatis.update("Approval.updateDocStateCancle", seq);
 	}
+	public List<Map<String, Object>> getVacationHistory(String memberId) {
+	    List<Map<String, Object>> result = mybatis.selectList("Approval.getVacationHistory", memberId);
+	    System.out.println("Data retrieved from MyBatis: " + result);
+	    return result;
+	}
 
 }
