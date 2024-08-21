@@ -152,7 +152,16 @@ export const Detail = () => {
   // 파일 삭제
   const handleFileDelete = (seq) => {
     setFileDelArr((prev) => [...prev, seq]);
-    setUpdatedFiles((prev) => prev.filter((file) => file.seq !== seq));
+    setUpdatedFiles((prev) => {
+      const updatedList = prev.filter((file) => file.seq !== seq);
+
+      // 파일 삭제 후 파일 목록이 비어있다면 모달을 닫음
+      if (updatedList.length === 0) {
+        setIsFileListOpen(false); // 모달 닫기
+      }
+
+      return updatedList;
+    });
   };
 
   // 북마크 추가
@@ -287,11 +296,6 @@ export const Detail = () => {
     });
   };
 
-  // 게시글 신고
-  // const handleReport = () => {
-
-  // }
-
   //======================================================================================
 
   return (
@@ -351,7 +355,7 @@ export const Detail = () => {
             src={
               detail.member_img === null
                 ? `${image}`
-                : `${host}/images/avatar/${detail.id}/${detail.member_img}`
+                : `${host}/images/avatar/${detail.member_id}/${detail.member_img}`
             }
             alt=""
           />
@@ -362,6 +366,7 @@ export const Detail = () => {
               <input
                 type="text"
                 value={board.title}
+                maxLength={30}
                 onChange={(e) =>
                   setBoard((prev) => {
                     return { ...prev, title: e.target.value };
@@ -383,7 +388,10 @@ export const Detail = () => {
           <span>{currentDate}</span>
           {updatedFiles.length > 0 && (
             <i
-              className="fa-regular fa-folder-open fa-lg"
+              className={`fa-lg ${isFileListOpen
+                ? "fa-regular fa-folder-open"
+                : "fa-solid fa-folder-open"
+                }`}
               onClick={toggleFileList}
             ></i>
           )}
@@ -430,7 +438,14 @@ export const Detail = () => {
           <span>개의 댓글</span>
         </div>
         <div className={styles.replyInput}>
-          <img src={image} alt="" />
+          <img
+            src={
+              currentUser && currentUser.member_img
+                ? `${host}/images/avatar/${currentUser.id}/${currentUser.member_img}`
+                : `${image}`
+            }
+            alt=""
+          />
           <div
             ref={inputRef} // ref 설정
             className={styles.inputText}
@@ -452,12 +467,11 @@ export const Detail = () => {
 
             return (
               <div className={styles.replyOutput} key={i}>
-                {/* <img src={image} alt="" /> */}
                 <img
                   src={
                     item.member_img === null
                       ? `${image}`
-                      : `${host}/images/avatar/${item.id}/${item.member_img}`
+                      : `${host}/images/avatar/${item.member_id}/${item.member_img}`
                   }
                   alt=""
                 />

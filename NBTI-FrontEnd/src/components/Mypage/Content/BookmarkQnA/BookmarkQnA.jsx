@@ -73,7 +73,7 @@ export const BookmarkQnA = () => {
     const requestBox = { seq: seq, board_code: code };
     axios.put(`${host}/board/viewCount`, requestBox).then((resp) => {
       setBoardSeq(seq);
-      navi("/board/detail");
+      navi(`/mypage/qnaList/${seq}`);
     });
   };
 

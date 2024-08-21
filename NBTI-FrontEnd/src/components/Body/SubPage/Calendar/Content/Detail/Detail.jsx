@@ -249,7 +249,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                 }
             );
         })
-
+        setMembersList([]);
         setCalendarModalOpen(false); // 공유 일정 모달 닫기
     };
     // 내 일정 수정

@@ -13,6 +13,7 @@ export const QnA = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false); // 임시저장 팝업 창 열림/닫힘 상태 관리
   const { boardType, setBoardSeq } = useBoardStore();
   const inputRef = useRef(null);
+  const [files, setFiles] = useState([]); // 파일 상태 관리
 
   const [board, setBoard] = useState({
     title: "",
@@ -41,6 +42,11 @@ export const QnA = () => {
     });
   };
 
+  const handleFileChange = (e) => {
+    setFiles(e.target.files);
+  };
+
+
   // 글 입력 추가버튼
   const handleAddBtn = () => {
     if (board.title.trim() === "" || board.contents.trim() === "") {
@@ -51,14 +57,13 @@ export const QnA = () => {
       return; // 유효성 검사 통과하지 못하면 함수 종료
     }
 
-    const files = inputRef.current.files;
     const formData = new FormData();
+    // 상태로 관리 중인 files 사용
     for (let index = 0; index < files.length; index++) {
       formData.append("files", files[index]);
     }
 
     formData.append("board", JSON.stringify(board));
-    console.log("formData : ", formData);
 
     // 글 작성 완료
     axios.post(`${host}/board`, formData).then((resp) => {
@@ -77,7 +82,12 @@ export const QnA = () => {
   const saveTempBoard = () => {
     let code = 3;
     axios.get(`${host}/tempBoard/tempList/${code}`).then((resp) => {
-      setTempBoardList(resp.data);
+      // board_code가 3인 데이터만 필터링
+      const filteredData = resp.data.filter(item => item.board_code === 3);
+
+      setTempBoardList(filteredData);
+
+      // setTempBoardList(resp.data);
     });
   };
 
@@ -86,14 +96,18 @@ export const QnA = () => {
     setTempBoard(board); // 작성한 내용을 tempBoard에 담기
 
     if (tempBoardList.length >= 10) {
-      alert(
-        "임시 저장된 게시물이 최대 개수(10개)를 초과했습니다. \n기존 게시물을 삭제한 후 다시 시도해주세요."
-      );
+      Swal.fire({
+        icon: "error",
+        text: "임시 저장된 게시물이 최대 개수(10개)를 초과했습니다. 기존 게시물을 삭제한 후 다시 시도해주세요.",
+      });
       return; // 임시 저장 수행 X
     }
 
     if (board.title.trim() === "" || board.contents.trim() === "") {
-      alert("제목, 내용을 작성해주세요");
+      Swal.fire({
+        icon: "error",
+        text: "제목, 내용을 작성해주세요.",
+      });
       return; // 유효성 검사 통과하지 못하면 함수 종료
     }
 
@@ -104,13 +118,19 @@ export const QnA = () => {
         if (resp.data === 1) {
           const now = new Date();
           setTempSaveTime(format(now, "yyyy-MM-dd HH:mm:ss"));
-          alert("임시저장 되었습니다.");
+          Swal.fire({
+            icon: "success",
+            text: "임시저장 되었습니다.",
+          });
           saveTempBoard(); // 임시 저장된 게시물 목록 업데이트 역할
         }
       })
       .catch((error) => {
         console.error("임시저장 오류: ", error);
-        alert("임시저장에 실패했습니다.");
+        Swal.fire({
+          icon: "error",
+          text: "임시저장에 실패했습니다.",
+        });
       });
   };
 
@@ -139,7 +159,10 @@ export const QnA = () => {
         })
         .catch((error) => {
           console.error("임시저장 삭제 실패: ", error);
-          alert("삭제에 실패했습니다.");
+          Swal.fire({
+            icon: "error",
+            text: "삭제에 실패했습니다.",
+          });
         });
     }
   };
@@ -151,6 +174,12 @@ export const QnA = () => {
       setTempSaveTime(
         format(new Date(resp.data.write_date), "yyyy-MM-dd HH:mm:ss")
       ); // 수정할 글의 임시저장 시간을 설정
+
+      // 파일 입력 필드 및 파일 상태 초기화
+      if (inputRef.current) {
+        inputRef.current.value = ""; // 파일 입력 필드 초기화
+      }
+      setFiles([]); // 파일 상태 초기화
 
       closePopup(); // 팝업창 닫는 함수 호출
     });
@@ -193,7 +222,7 @@ export const QnA = () => {
       </div>
       <div className={styles.files}>
         <div>
-          <input type="file" multiple ref={inputRef} name="files" />
+          <input type="file" multiple ref={inputRef} name="files" onChange={handleFileChange} />
         </div>
       </div>
       <div className={styles.contents}>
