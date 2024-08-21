@@ -1,6 +1,7 @@
 package com.nbti.controllers;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -298,8 +299,17 @@ public class MembersController {
        @PostMapping("/approvalSearch")
         public List<Map<String, Object>> approvalSearch(@RequestBody List<Map<String, Object>> approvalLine){
 //        	System.out.println("결재라인 확인 : " + approvalLine);
-        	List<Map<String, Object>> list = mServ.approvalList(approvalLine);
-        	//           Map<String, Object> memberData = mServ.memberData(id);
+    	   List<Map<String, Object>> list = new ArrayList<>();
+    	   	for (Map<String, Object> map : approvalLine) {
+				if(map.get("id") != null) {
+					String id = (String)map.get("id");
+					String order = (String)map.get("order");
+					 Map<String, Object> memberData = mServ.memberData(id);
+					 memberData.put("order",order);
+					 list.add(memberData);
+//					System.out.println(memberData);
+				}
+			}
            return list;
         }
 }

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { host } from '../../../../../../../config/config';
 import { useApprovalLine, useReferLine } from '../../../../../../../store/store';
 
-export const ApprovalLine = ({setTitle, setOrder}) => {
+export const ApprovalLine = ({setTitle, setOrder, setCheck}) => {
 
     const [deptCode, setDeptCode] = useState([{dept_code:'', dept_name:''}]);
     const [teamCode, setTeamCode] = useState([{dept_code:'', team_name:'', team_code:''}]);
@@ -13,6 +13,8 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
     const [selectMember, setSelectMember] = useState({});
     const {approvalLine, setApprovalLine} = useApprovalLine();
     const {referLine, setReferLine} = useReferLine();
+    const [selectedValue, setSelectedValue] = useState("none"); // 현재 선택된 값
+    const defaultValue = "none"; // 기본값
 
     useEffect(()=>{
         axios.get(`${host}/members/selectDepartment`)
@@ -23,11 +25,12 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
             setTeamCode(team.data);
           })
         })
-      },[])
+      },[]);
+
     
       const handleTeamChange =(e)=>{
         setSelectTeam(e.target.value);
-      }
+      };
     
       useEffect(() => {
         if (selectTeam !== '') {
@@ -42,11 +45,33 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
       }, [selectTeam]);
     
       const handleMemberChange =(e)=>{
-        const value = JSON.parse(e.target.value);
-        const id = value.id;
-        const name = value.name;
-        setSelectMember({id:id, name: name});
+        // const value = JSON.parse(e.target.value);
+        // const id = value.id;
+        // const name = value.name;
+        // setSelectMember({id:id, name: name});
+        const value = e.target.value;
+        if (value === defaultValue) {
+            setSelectMember({}); // 기본값이 선택되면 선택된 멤버 초기화
+            setSelectedValue(defaultValue); // 선택된 값 상태 업데이트
+            return;
+        }
+        const parsedValue = JSON.parse(value);
+        setSelectMember({ id: parsedValue.id, name: parsedValue.name });
+        setSelectedValue(value); // 선택된 값 상태 업데이트
+      };
+
+      useEffect(()=>{
+        if (selectMember.id) {
+          const isDuplicate = approvalLine.some(line => line.id === selectMember.id);
+
+          if (isDuplicate) {
+              alert("이미 추가된 아이디입니다.");
+              setSelectedValue(defaultValue); 
+              setSelectMember({}); 
+          } else {
+          }
       }
+      },[selectMember, setCheck])
 
       useEffect(() => {
         if (selectMember !== '') {
@@ -60,7 +85,7 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
     }, [selectMember, setApprovalLine, setOrder]);
       
     const handleAdd = () => {
-        const newRefer = {id: selectMember.id, name:selectMember.name, order: setOrder};
+        const newRefer = {id: selectMember.id||'', name:selectMember.name||'', order: setOrder};
         setReferLine(newRefer);
     }
 
@@ -74,7 +99,7 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
         {/* input hidden으로 order 값 부여하기 */}
         <div className={styles.approval_team}>
             <select onChange={handleTeamChange} value={selectTeam}>
-            <option defaultValue="none">선택</option>
+            <option value={defaultValue}>선택</option>
                 {
                     teamCode.map((team) => {
                         return (<option key={team.team_code} value={team.team_code}>{team.team_name}</option>);
@@ -83,8 +108,8 @@ export const ApprovalLine = ({setTitle, setOrder}) => {
             </select>
         </div>
         <div className={styles.approval_name}>
-            <select onChange={handleMemberChange}>
-                <option value="none">선택</option>
+            <select onChange={handleMemberChange} value={selectedValue}>
+                <option value={defaultValue}>선택</option>
                 {
                     members.map((member) => {
                         // job_code 조인해서 job_name으로 바꾸기

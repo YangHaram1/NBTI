@@ -142,7 +142,7 @@ public class ApprovalController {
 		            long startTime = startDate.getTime();
 		            dvdto.setVacation_start(new java.sql.Timestamp(startTime));
 		        } else {
-		            throw new IllegalArgumentException("Start date cannot be null");
+//		            throw new IllegalArgumentException("Start date cannot be null");
 		        }
 
 		        // 휴가 종료 날짜

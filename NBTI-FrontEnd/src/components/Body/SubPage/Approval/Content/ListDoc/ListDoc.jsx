@@ -190,7 +190,7 @@ export const ListDoc = ({setlist}) => {
                 { 
                     lists.map((list)=>{
                         return(
-                            <div className={styles.list}>
+                            <div className={styles.list} key={list.temp_seq}>
                                 <div className={styles.date}>
                                 {
                                     format(new Date(list.approval_date),'yyyy-MM-dd')
@@ -215,7 +215,7 @@ export const ListDoc = ({setlist}) => {
                                     {/* {console.log("콘솔로 찍어보깅",fileExistenceMap[list.temp_seq])} */}
                                     {
                                     fileExistenceMap[list.temp_seq] != undefined
-                                    ? Array.from(fileExistenceMap[list.temp_seq]).length > 0 ? <i class="fa-solid fa-paperclip"></i> : ''
+                                    ? Array.from(fileExistenceMap[list.temp_seq]).length > 0 ? <i className="fa-solid fa-paperclip"></i> : ''
                                     : '...'} {/* 로딩 중일 때는 '...' 표시 */}
                                 </div>
                                 </>
