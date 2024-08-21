@@ -166,13 +166,43 @@ export const FreeBoard = () => {
                 <div className={styles.boardTitle}>
                   <p>{item.title}</p>
                 </div>
-                <div className={styles.boardContents}>
+                {/* <div className={styles.boardContents}>
                   <p
                     dangerouslySetInnerHTML={{
                       __html:
                         item.contents.length > 200
                           ? item.contents.slice(0, 200) + " ..."
                           : item.contents,
+                    }}
+                  ></p>
+                </div> */}
+                <div className={styles.boardContents}>
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: (() => {
+                        // 이미지 태그를 감지
+                        const imgTagPattern =
+                          /<img\s[^>]*src=["']?([^>"']+)["']?[^>]*>/i;
+                        const hasImgTag = imgTagPattern.test(item.contents);
+
+                        if (hasImgTag) {
+                          // 이미지가 포함된 경우, 이미지 태그를 제거하고 글만 보이게
+                          const textOnly = item.contents
+                            .replace(imgTagPattern, "")
+                            .trim();
+                          // 이미지 태그 제거 후 텍스트가 없으면 아무것도 출력하지 않음
+                          return textOnly.length > 0
+                            ? textOnly.length > 200
+                              ? textOnly.slice(0, 200) + " ..."
+                              : textOnly
+                            : ""; // 텍스트가 없으면 빈 문자열 반환
+                        } else {
+                          // 이미지가 없는 경우, 기존 로직을 그대로 사용
+                          return item.contents.length > 200
+                            ? item.contents.slice(0, 200) + " ..."
+                            : item.contents;
+                        }
+                      })(),
                     }}
                   ></p>
                 </div>
