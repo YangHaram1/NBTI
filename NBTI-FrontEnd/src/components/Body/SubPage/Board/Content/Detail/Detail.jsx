@@ -296,8 +296,6 @@ export const Detail = () => {
     });
   };
 
-  console.log("currentUser : ", currentUser);
-
   //======================================================================================
 
   return (
@@ -391,8 +389,8 @@ export const Detail = () => {
           {updatedFiles.length > 0 && (
             <i
               className={`fa-lg ${isFileListOpen
-                  ? "fa-regular fa-folder-open"
-                  : "fa-solid fa-folder-open"
+                ? "fa-regular fa-folder-open"
+                : "fa-solid fa-folder-open"
                 }`}
               onClick={toggleFileList}
             ></i>

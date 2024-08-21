@@ -285,6 +285,7 @@ export const QnADetail = () => {
               <input
                 type="text"
                 value={board.title}
+                maxLength={30}
                 onChange={(e) =>
                   setBoard((prev) => {
                     return { ...prev, title: e.target.value };
@@ -305,7 +306,11 @@ export const QnADetail = () => {
           <span>{currentDate}</span>
           {updatedFiles.length > 0 && (
             <i
-              className="fa-regular fa-folder-open fa-lg"
+              className={`fa-lg ${
+                isFileListOpen
+                  ? "fa-regular fa-folder-open"
+                  : "fa-solid fa-folder-open"
+              }`}
               onClick={toggleFileList}
             ></i>
           )}
