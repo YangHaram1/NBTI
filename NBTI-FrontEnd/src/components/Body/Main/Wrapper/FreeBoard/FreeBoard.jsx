@@ -24,6 +24,10 @@ export const FreeBoard = () => {
   useEffect(() => {
     // 자유 게시판 글 & 댓글 출력
     axios.get(`${host}/board/freeBoard`).then((resp) => {
+
+
+      console.log("프로필 : ", resp.data);
+
       setBoard(resp.data.list);
       setReply(resp.data.rlist);
       setBoardType("자유");
@@ -146,7 +150,15 @@ export const FreeBoard = () => {
           <div className={styles.boardList} key={i}>
             <div className={styles.header}>
               <div className={styles.profile}>
-                <img src={image} alt="" />
+                {/* <img src={image} alt="" /> */}
+                <img
+                  src={
+                    item.member_img === null
+                      ? `${image}`
+                      : `${host}/images/avatar/${item.id}/${item.member_img}`
+                  }
+                  alt=""
+                />
               </div>
               <div className={styles.writer}>
                 <p>{item.name}</p>
@@ -166,16 +178,6 @@ export const FreeBoard = () => {
                 <div className={styles.boardTitle}>
                   <p>{item.title}</p>
                 </div>
-                {/* <div className={styles.boardContents}>
-                  <p
-                    dangerouslySetInnerHTML={{
-                      __html:
-                        item.contents.length > 200
-                          ? item.contents.slice(0, 200) + " ..."
-                          : item.contents,
-                    }}
-                  ></p>
-                </div> */}
                 <div className={styles.boardContents}>
                   <p
                     dangerouslySetInnerHTML={{
@@ -234,7 +236,15 @@ export const FreeBoard = () => {
 
                     return (
                       <div className={styles.replyOutput} key={index}>
-                        <img src={image} alt="" />
+                        {/* <img src={image} alt="" /> */}
+                        <img
+                          src={
+                            ritem.member_img === null
+                              ? `${image}`
+                              : `${host}/images/avatar/${ritem.id}/${ritem.member_img}`
+                          }
+                          alt=""
+                        />
                         <div>
                           <div className={styles.writer_writeDate}>
                             <span>{ritem.name}</span>

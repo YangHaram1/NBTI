@@ -8,6 +8,8 @@ import { LogoutPopUp } from './LogoutPopUp/LogoutPopUp';
 import { useAuthStore, useMemberStore } from './../../store/store';
 import { host } from '../../config/config';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+
 export const Header = () => {
 
     /* PopUp 관련 */
@@ -17,6 +19,7 @@ export const Header = () => {
     const [user, setUser] = useState([{ member_img: '' }]);
     const { loginID } = useAuthStore();
     const { members } = useMemberStore();
+    const location = useLocation(); // 현재 경로를 가져오는 useLocation 훅
 
     useEffect(() => {
         if (loginID != null && loginID !== 'error') {
@@ -145,12 +148,39 @@ export const Header = () => {
 
     }
 
+    // 현재 경로에 따라 헤더 텍스트 변경
+    const getHeaderTitle = () => {
+        switch (location.pathname) {
+            case "/board":
+                return "게시판";
+            case "/calendar":
+                return "일정";
+            case "/reservation":
+                return "예약";
+            case "/group":
+                return "조직도";
+            case "/approval":
+                return "전자결재";
+            case "/application":
+                return "휴가신청";
+            case "/attendance":
+                return "근무현황";
+            default:
+                return "오피스 홈"; // 기본 텍스트
+        }
+    };
+
+
+
+
+
     return (
         <div className={styles.container}>
             <div className={`${styles.left} ${showPopUp ? styles.dropdownActive : ''}`}>
                 <div className={styles.logo} onClick={() => { navi("/") }}>NBTI</div>
                 <div className={styles.menu_dropdown} onClick={togglePopUp} ref={menuRef}>
-                    <p>오피스 홈</p>
+                    {/* <p>오피스 홈</p> */}
+                    <p>{getHeaderTitle()}</p>
                     <i className="fa-solid fa-caret-down"></i>
                 </div>
             </div>
@@ -174,6 +204,7 @@ export const Header = () => {
             </div>
             {showPopUp && <PopUp ref={popupRef} onClose={() => setShowPopUp(false)} />} {/* 조건부 렌더링 */}
             {showNewPopup && <LogoutPopUp ref={newPopupRef} onClose={() => setShowNewPopup(false)} />} {/* 조건부 렌더링 */}
+
         </div>
     );
 };
