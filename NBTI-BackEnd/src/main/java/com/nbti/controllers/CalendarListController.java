@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,13 +33,13 @@ public class CalendarListController {
 	public ResponseEntity<List<CalendarListDTO>> list () throws Exception{
 		String member_id = (String) session.getAttribute("loginID");
     	List<CalendarListDTO> list = clserv.list(member_id);
-    	for(CalendarListDTO l:list) {
-    		System.out.println("calendar id : " + l.getCalendar_id());
-    		System.out.println("member id : " + l.getMember_id());
-    		System.out.println("calendar name : " + l.getCalendar_name());
-    		System.out.println("calendar type : " + l.getCalendar_type());
-    		System.out.println("");
-    	}
+//    	for(CalendarListDTO l:list) {
+//    		System.out.println("calendar id : " + l.getCalendar_id());
+//    		System.out.println("member id : " + l.getMember_id());
+//    		System.out.println("calendar name : " + l.getCalendar_name());
+//    		System.out.println("calendar type : " + l.getCalendar_type());
+//    		System.out.println("");
+//    	}
     	return ResponseEntity.ok(list);
 	}
 	
@@ -84,13 +85,6 @@ public class CalendarListController {
 	
 	@DeleteMapping("/{calendar_id}")
 	public ResponseEntity<Void> delete(@PathVariable int calendar_id) throws Exception{
-		System.out.println("delete test!!!");
-		
-//		int calendarID = getCalendarID(calendar_name);
-		
-//		clserv.deleteMembers(Integer.parseInt(calendar_id));
-//		clserv.deleteSchedules(Integer.parseInt(calendar_id));
-//		clserv.delete(Integer.parseInt(calendar_id));
 		
 		clserv.deleteMembers(calendar_id);
 		clserv.deleteSchedules(calendar_id);
@@ -101,5 +95,11 @@ public class CalendarListController {
 	
 	public int getCalendarID(String calendarName) throws Exception {
 		return clserv.getCalendarID(calendarName);
+	}
+	
+	@ExceptionHandler(Exception.class)
+	public String exceptionHandler(Exception e) {
+		e.printStackTrace();
+		return "error";
 	}
 }
