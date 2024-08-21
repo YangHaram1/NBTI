@@ -11,24 +11,24 @@ import { format } from 'date-fns';
 const Chats = () => {
     const { loginID } = useAuthStore();
     const { setChatSeq, onMessage } = useCheckList();
-    const { setChatNavi,chatNaviBody ,dragRef} = useContext(ChatsContext);
+    const { setChatNavi, chatNaviBody, dragRef } = useContext(ChatsContext);
     const [group_chats, setGroup_chats] = useState([]);
 
     const [modalDisplay, setModalDisplay] = useState(null);
     const modalRef = useRef([]);
     const [countBookmark, setCountBookmark] = useState(-1);
-    const [countTotal,setCountTotal]= useState(0); //unread total
+    const [countTotal, setCountTotal] = useState(0); //unread total
     useEffect(() => {
         axios.get(`${host}/group_chat`).then((resp) => {
-            console.log(resp);
+            console.log(resp.data);
             if (resp != null) {
-                if (resp.data !== '') {
-                 //   console.log(resp.data);
+                if (resp.data !== '' && resp.data != 'error') {
+                    //   console.log(resp.data);
                     let count = -1;
-                    let countUnread=0;
+                    let countUnread = 0;
                     (resp.data).forEach((temp) => {
                         if (temp.bookmark === 'Y') count++;
-                        countUnread+=temp.unread;
+                        countUnread += temp.unread;
                     })
                     setCountTotal(countUnread);
                     setCountBookmark(count);
@@ -110,13 +110,13 @@ const Chats = () => {
     }, [group_chats])
 
 
-   
+
 
     //if(chatNaviBody==='chats')
     return (
         <div className={styles.container} onClick={handleClick}>
             {
-                
+
                 handleSort().map((item, index) => {
                     let formattedTimestamp = '';
                     if (item.dto != null) {
@@ -133,12 +133,34 @@ const Chats = () => {
                     return (
                         <React.Fragment key={index}>
                             <div className={styles.room} onContextMenu={handleRightClick(index)} onDoubleClick={handleDoubleClick(item.seq)}>
-                                <div>
-                                    <img src={avatar} alt='' className={styles.avatar}></img>
+                                <div className={styles.imgContainer}>
+                                    <div className={styles.imgList}>
+                                        {
+                                            item.list.slice(0, 2).map((img, imgIndex) => {
+                                                return (
+                                                    <React.Fragment key={imgIndex}>
+                                                        <img src={avatar} alt='' className={styles.avatar}></img>
+                                                    </React.Fragment>
+                                                )
+                                            })
+                                        }
+                                    </div>
+                                    <div className={styles.imgList}>
+                                        {
+                                            item.list.slice(2, 4).map((img, imgIndex) => {
+
+                                                return (
+                                                    <React.Fragment key={imgIndex}>
+                                                        <img src={avatar} alt='' className={styles.avatar}></img>
+                                                    </React.Fragment>
+                                                )
+                                            })
+                                        }
+                                    </div>
                                 </div>
                                 <div className={styles.message}>
                                     <div className={styles.name}>
-                                        <div style={{flex:3}}>
+                                        <div style={{ flex: 3 }}>
                                             {item.name}
                                         </div>
                                         <div className={styles.bookmark}>
@@ -153,12 +175,12 @@ const Chats = () => {
                                         <div className={styles.content} dangerouslySetInnerHTML={{ __html: (item.dto != null) ? truncatedText : '메세지가 없습니다' }}>
                                         </div>
                                         <div className={styles.unread}>
-                                            {item.unread>0&&(<span>{item.unread}+</span>)}
+                                            {item.unread > 0 && (<span>{item.unread}+</span>)}
                                         </div>
                                     </div>
 
                                 </div>
-                                <div style={{display:"flex",gap:"10px",paddingRight:"10px"}}>
+                                <div style={{ display: "flex", gap: "10px", paddingRight: "10px" }}>
                                     <div className={styles.write_date}>
                                         {formattedTimestamp}
                                     </div>
@@ -174,7 +196,7 @@ const Chats = () => {
                     );
                 })
             }
-            {(countTotal>0)&&(<div className={styles.fixed}>{countTotal}+</div>)}
+            {(countTotal > 0) && (<div className={styles.fixed}>{countTotal}+</div>)}
         </div>
     )
     /*
