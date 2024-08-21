@@ -65,9 +65,31 @@ export const Write = (props)=>{
     // 기안하기
     const approvalSubmit = () =>{
 
+        // 필수 필드 검증
+        if (setlist === "휴가신청서") {
+            // 휴가 신청서의 경우
+            if (!docVacation.category || !docVacation.start || !docVacation.end) {
+                alert("휴가 종류와 기간을 선택해 주세요.");
+                return;
+            }
+        } else if (setlist === "휴직신청서") {
+            // 휴직 신청서의 경우
+            if (!docLeave.start || !docLeave.end) {
+                alert("휴직 기간을 선택해 주세요.");
+                return;
+            }
+        } else if (setlist === "업무기안서") {
+            // 업무 기안서의 경우
+            if (!date || !dept || !title || !content) {
+                alert("업무 기안서의 모든 필드를 입력해 주세요.");
+                return;
+            }
+        }
+
         let result = window.confirm("긴급 문서로 하시겠습니까?");
         // console.log("개별", date, dept, title, content);
         let requestData;
+
 
          // 파일 업로드 처리
          const formData = new FormData();
@@ -302,10 +324,10 @@ export const Write = (props)=>{
             <div className={styles.content_box}>
                 <div className={styles.content_left}>
                     <div className={styles.btns}>
-                        <div className={`${styles.approval_submit_btn} ${styles.btn}`} onClick={approvalSubmit}><i class="fa-solid fa-pen-to-square"></i>결재요청</div>
-                        <div className={`${styles.approval_temp_btn} ${styles.btn}`} onClick={tempSubmit}><i class="fa-regular fa-folder-open"></i>임시저장</div>
+                        <div className={`${styles.approval_submit_btn} ${styles.btn}`} onClick={approvalSubmit}><i className="fa-solid fa-pen-to-square"></i>결재요청</div>
+                        <div className={`${styles.approval_temp_btn} ${styles.btn}`} onClick={tempSubmit}><i className="fa-regular fa-folder-open"></i>임시저장</div>
                         {/* <div className={`${styles.approval_prev_btn} ${styles.btn}`}>미리보기</div> */}
-                        <div className={`${styles.approval_change_btn} ${styles.btn}`} onClick={handleModal}><i class="fa-solid fa-users"></i>결재선변경</div>
+                        <div className={`${styles.approval_change_btn} ${styles.btn}`} onClick={handleModal}><i className="fa-solid fa-users"></i>결재선변경</div>
                         {/* <div className={`${styles.approval_change_btn} ${styles.btn}`} onClick={handleModal}><i class="fa-solid fa-users"></i>임시저장</div> */}
                     </div>
                     <div className={styles.write_box}>

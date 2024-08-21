@@ -109,7 +109,7 @@ export const Home = ()=>{
                     approvalData.length !== 0 ?
                     approvalData.map((approval)=>{
                         return(
-                            <div className={styles.bubble}>
+                            <div className={styles.bubble} key={approval.temp_seq} >
                                 <div className={styles.bubble_state} >
                                     {
                                         approval.emergency == "Y  " ?  <div className={styles.emergency_badge_bubble}>긴급</div> :"" 
@@ -162,7 +162,7 @@ export const Home = ()=>{
                     { 
                         lists.map((list)=>{
                             return(
-                                <div className={styles.list}>
+                                <div className={styles.list}  key={list.temp_seq}>
                                     <div className={styles.date}>
                                     {
                                         format(new Date(list.approval_date),'yyyy-MM-dd')
@@ -184,7 +184,7 @@ export const Home = ()=>{
                                     <div className={styles.file}>
                                     {
                                     fileExistenceMap[list.temp_seq] != undefined
-                                    ? Array.from(fileExistenceMap[list.temp_seq]).length > 0 ? <i class="fa-solid fa-paperclip"></i> : ''
+                                    ? Array.from(fileExistenceMap[list.temp_seq]).length > 0 ? <i className="fa-solid fa-paperclip"></i> : ''
                                     : '...'} {/* 로딩 중일 때는 '...' 표시 */}
                                      </div>
                                     {/* <div className={styles.writer}> {list.name}</div> */}
@@ -220,7 +220,7 @@ export const Home = ()=>{
                         { 
                             listss.map((list)=>{
                                 return(
-                                    <div className={styles.list}>
+                                    <div className={styles.list} key={list.temp_seq}>
                                         <div className={styles.date}>
                                         {
                                             format(new Date(list.approval_date),'yyyy-MM-dd')
@@ -243,7 +243,7 @@ export const Home = ()=>{
                                             {console.log("참조/열람대기",fileExistenceMap2[list.temp_seq])}
                                         {
                                         fileExistenceMap2[list.temp_seq] != undefined
-                                        ? Array.from(fileExistenceMap2[list.temp_seq]).length > 0 ? <i class="fa-solid fa-paperclip"></i> : ''
+                                        ? Array.from(fileExistenceMap2[list.temp_seq]).length > 0 ? <i className="fa-solid fa-paperclip"></i> : ''
                                         : '...'} {/* 로딩 중일 때는 '...' 표시 */}
                                         </div>
                                         <div className={styles.writer}> {list.name}</div>
