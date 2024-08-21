@@ -359,6 +359,7 @@ export const Detail = () => {
               <input
                 type="text"
                 value={board.title}
+                maxLength={30}
                 onChange={(e) =>
                   setBoard((prev) => {
                     return { ...prev, title: e.target.value };
