@@ -24,7 +24,7 @@ const SecondModal = ({ isOpen, onClose }) => {
     console.log("참조라인 데이터 확인",referLine);
     axios.post(`${host}/members/approvalSearch`,referLine)
     .then((resp)=>{
-        // console.log("데이터 확인",resp.data);
+        console.log("데이터 확인",resp.data);
         setRefer(resp.data);
         console.log(refer);
     })
@@ -61,24 +61,24 @@ const SecondModal = ({ isOpen, onClose }) => {
     console.log(id);
     // referLine에서 해당 id와 일치하지 않는 항목들만 필터링하여 새로운 배열을 생성
     // 현재 기존 배열에 새로 만들어진 배열이 추가로 들어가는 상황 발생 => 수정 필요
-    // const updatedReferLine = referLine.filter(refer => refer.id !== id);
-    // setReferLine(updatedReferLine);
-    // console.log("삭제시 참조라인",referLine);
+    const updatedReferLine = referLine.filter(refer => refer.id !== id);
+    setReferLine(updatedReferLine);
+    console.log("삭제시 참조라인",referLine);
 
     // refer에서 해당 id와 일치하지 않는 항목들만 필터링하여 새로운 배열을 생성
-    // const updatedRefer = refer.filter(r => r.id !== id);
-    // setRefer(updatedRefer);
+    const updatedRefer = refer.filter(r => r.id !== id);
+    setRefer(updatedRefer);
 
-    setReferLine((prevReferLine) => {
-      const updatedReferLine = prevReferLine.filter(refer => refer.id !== id);
-      console.log("삭제시 참조라인", updatedReferLine);
-      return updatedReferLine;
-    });
+    // setReferLine((prevReferLine) => {
+    //   const updatedReferLine = prevReferLine.filter(refer => refer.id !== id);
+    //   console.log("삭제시 참조라인", updatedReferLine);
+    //   return updatedReferLine;
+    // });
   
-    setRefer((prevRefer) => {
-      const updatedRefer = prevRefer.filter(r => r.id !== id);
-      return updatedRefer;
-    });
+    // setRefer((prevRefer) => {
+    //   const updatedRefer = prevRefer.filter(r => r.id !== id);
+    //   return updatedRefer;
+    // });
   }
 
   const isValidValue = (value) => {
