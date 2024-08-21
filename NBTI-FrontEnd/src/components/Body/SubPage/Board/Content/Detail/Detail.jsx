@@ -225,6 +225,8 @@ export const Detail = () => {
   // (좋아요 포함) 댓글 전체 출력
   useEffect(() => {
     axios.get(`${host}/reply/${boardSeq}/${code}`).then((resp) => {
+      console.log("프로필 : ", resp.data);
+
       const { replies, likes } = resp.data;
       setReply(replies); // 좋아요 count 포함된 댓글 배열
       setIsLiked(likes); // 좋아요 true / false 상태
@@ -450,7 +452,15 @@ export const Detail = () => {
 
             return (
               <div className={styles.replyOutput} key={i}>
-                <img src={image} alt="" />
+                {/* <img src={image} alt="" /> */}
+                <img
+                  src={
+                    item.member_img === null
+                      ? `${image}`
+                      : `${host}/images/avatar/${item.id}/${item.member_img}`
+                  }
+                  alt=""
+                />
                 <div>
                   <div className={styles.writer_writeDate}>
                     <span>{item.name}</span>
