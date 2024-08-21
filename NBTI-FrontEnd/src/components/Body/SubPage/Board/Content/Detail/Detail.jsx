@@ -152,7 +152,16 @@ export const Detail = () => {
   // 파일 삭제
   const handleFileDelete = (seq) => {
     setFileDelArr((prev) => [...prev, seq]);
-    setUpdatedFiles((prev) => prev.filter((file) => file.seq !== seq));
+    setUpdatedFiles((prev) => {
+      const updatedList = prev.filter((file) => file.seq !== seq);
+
+      // 파일 삭제 후 파일 목록이 비어있다면 모달을 닫음
+      if (updatedList.length === 0) {
+        setIsFileListOpen(false); // 모달 닫기
+      }
+
+      return updatedList;
+    });
   };
 
   // 북마크 추가
@@ -287,8 +296,6 @@ export const Detail = () => {
     });
   };
 
-  console.log("currentUser : ", currentUser);
-
   //======================================================================================
 
   return (
@@ -381,7 +388,10 @@ export const Detail = () => {
           <span>{currentDate}</span>
           {updatedFiles.length > 0 && (
             <i
-              className="fa-regular fa-folder-open fa-lg"
+              className={`fa-lg ${isFileListOpen
+                ? "fa-regular fa-folder-open"
+                : "fa-solid fa-folder-open"
+                }`}
               onClick={toggleFileList}
             ></i>
           )}
@@ -457,7 +467,6 @@ export const Detail = () => {
 
             return (
               <div className={styles.replyOutput} key={i}>
-                {/* <img src={image} alt="" /> */}
                 <img
                   src={
                     item.member_img === null
