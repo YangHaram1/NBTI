@@ -79,8 +79,8 @@ export const Header = ({docCommonData, approvalData}) => {
                                     <div className={styles.approval_member}>
                                         <div className={styles.stamp}>
                                             {
-                                                approvaler.MEMBER_STATE_CODE === 'p' ? <img src={image_approval} alt="approval" /> :  
-                                                approvaler.MEMBER_STATE_CODE === 'r' ? <img src={image_return} alt="return" /> :
+                                                approvaler.MEMBER_STATE_CODE === 'p' ? <img className="stampimg" src={image_approval} alt="approval" /> :  
+                                                approvaler.MEMBER_STATE_CODE === 'r' ? <img className="stampimg" src={image_return} alt="return" /> :
                                                 approvaler.MEMBER_STATE_CODE === 'b' ? '' :
                                                 ''
                                             }
