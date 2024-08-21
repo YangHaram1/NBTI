@@ -1,5 +1,6 @@
 package com.nbti.services;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -9,8 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nbti.dao.ApprovalDAO;
 import com.nbti.dao.ApprovalLineDAO;
+import com.nbti.dao.DocVacationDAO;
 import com.nbti.dao.MembersDAO;
-import com.nbti.dto.ApprovalLineDTO;
+import com.nbti.dto.DocVacationDTO;
 
 @Service
 public class ApprovalLineService {
@@ -21,6 +23,8 @@ public class ApprovalLineService {
 	private ApprovalDAO adao;
 	@Autowired
 	private MembersDAO mdao;
+	@Autowired
+	private DocVacationDAO dvdao;
 	
 	
 	public List<Map<String,Object>> getApprovalLine(int seq) {
@@ -69,10 +73,26 @@ public class ApprovalLineService {
 				adao.createApprovalSeq(seq, docHeader);
 				
 				if(setlist.equals("휴직신청서")) {
-					System.out.println("휴직 신청서 최신화 : "+ seq);
+//					System.out.println("휴직 신청서 최신화 : "+ seq);
 					String id = adao.getApprovaler(seq);
-					System.out.println("아이디 값 확인 : "+ id);
+//					System.out.println("아이디 값 확인 : "+ id);
 					mdao.updateLeave(id);
+				}else if (setlist.equals("휴가신청서")) {
+					System.out.println("휴가 신청서 최신화" + seq);
+					String id =adao.getApprovaler(seq);
+					System.out.println("아이디값 확인 : " + id);
+					DocVacationDTO dto= dvdao.selectContent(seq);
+					 // 예시 Timestamps
+			        Timestamp vacationStart = dto.getVacation_start();
+			        Timestamp vacationEnd = dto.getVacation_end();
+
+			        // 밀리초 단위 차이 계산
+			        long milliseconds = vacationEnd.getTime() - vacationStart.getTime();
+
+			        // 밀리초를 일수로 변환
+			        int daysDifference = (int)(Math.ceil((milliseconds / (1000 * 60 * 60 * 24)))) ;
+			        
+					mdao.updateVacation(id, 15-daysDifference);
 				}
 				
 			// 현재 내 순서가 최종 순서가 아니라면 다음 결재자 상태 업데이트	
@@ -86,7 +106,7 @@ public class ApprovalLineService {
 		}else {
 			// 문서 상태를 반려로 변경
 			adao.updateDocState(seq, approvalYN);
-			System.out.println("반려 문서로 상태 최신화 중지");
+//			System.out.println("반려 문서로 상태 최신화 중지");
 		}
 		
 	}

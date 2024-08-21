@@ -48,9 +48,6 @@ export const Insert = () => {
     setFiles(e.target.files);
   };
 
-
-
-
   // 글 입력 추가버튼
   const handleAddBtn = () => {
     if (board.title.trim() === "" || board.contents.trim() === "") {
@@ -60,8 +57,6 @@ export const Insert = () => {
       });
       return; // 유효성 검사 통과하지 못하면 함수 종료
     }
-
-    // const files = inputRef.current.files;
 
     const formData = new FormData();
     // 상태로 관리 중인 files 사용
@@ -122,7 +117,10 @@ export const Insert = () => {
   // 임시 저장된 목록 출력
   const saveTempBoard = () => {
     axios.get(`${host}/tempBoard/tempList/${code}`).then((resp) => {
-      setTempBoardList(resp.data);
+      // board_code가 1 또는 2인 데이터만 필터링
+      const filteredData = resp.data.filter(item => item.board_code === 1 || item.board_code === 2);
+
+      setTempBoardList(filteredData);
     });
   };
 
