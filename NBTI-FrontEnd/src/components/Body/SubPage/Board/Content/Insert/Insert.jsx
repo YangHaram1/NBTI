@@ -16,6 +16,7 @@ export const Insert = () => {
   const [isNotice, setIsNotice] = useState(false); // 체크박스 상태 관리
   const { boardType, setBoardSeq } = useBoardStore();
   const inputRef = useRef(null);
+  const [files, setFiles] = useState([]); // 파일 상태 관리
 
   const [board, setBoard] = useState({
     title: "",
@@ -43,6 +44,13 @@ export const Insert = () => {
     });
   };
 
+  const handleFileChange = (e) => {
+    setFiles(e.target.files);
+  };
+
+
+
+
   // 글 입력 추가버튼
   const handleAddBtn = () => {
     if (board.title.trim() === "" || board.contents.trim() === "") {
@@ -53,8 +61,10 @@ export const Insert = () => {
       return; // 유효성 검사 통과하지 못하면 함수 종료
     }
 
-    const files = inputRef.current.files;
+    // const files = inputRef.current.files;
+
     const formData = new FormData();
+    // 상태로 관리 중인 files 사용
     for (let index = 0; index < files.length; index++) {
       formData.append("files", files[index]);
     }
@@ -81,8 +91,6 @@ export const Insert = () => {
           axios
             .get(`${host}/members/selectLevel`)
             .then((resp1) => {
-              console.log("뭔데 : ", resp1.data);
-
               const hrStatus =
                 resp1.data[parseInt(resp.data.member_level) - 1]?.hr; // 배열의 n번째 요소에서 hr 확인
 
@@ -202,6 +210,12 @@ export const Insert = () => {
         format(new Date(resp.data.write_date), "yyyy-MM-dd HH:mm:ss")
       ); // 수정할 글의 임시저장 시간을 설정
 
+      // 파일 입력 필드 및 파일 상태 초기화
+      if (inputRef.current) {
+        inputRef.current.value = ""; // 파일 입력 필드 초기화
+      }
+      setFiles([]); // 파일 상태 초기화
+
       closePopup(); // 팝업창 닫는 함수 호출
     });
   };
@@ -210,6 +224,8 @@ export const Insert = () => {
   const closePopup = () => {
     setIsPopupOpen(false);
   };
+
+  //===========================================================================
 
   return (
     <div className={styles.container}>
@@ -255,7 +271,7 @@ export const Insert = () => {
       </div>
       <div className={styles.files}>
         <div>
-          <input type="file" multiple ref={inputRef} name="files" />
+          <input type="file" multiple ref={inputRef} name="files" onChange={handleFileChange} />
         </div>
       </div>
       <div className={styles.contents}>
@@ -282,8 +298,8 @@ export const Insert = () => {
                   item.board_code === 1
                     ? "자유"
                     : item.board_code === 2
-                    ? "공지"
-                    : "알 수 없음";
+                      ? "공지"
+                      : "알 수 없음";
 
                 return (
                   <div key={i}>

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -133,11 +132,15 @@ public class MembersController {
 		return ResponseEntity.ok().build();
 	}
 	// 관리자 사용자 수정
-	@PutMapping("/updateUser")
-	public ResponseEntity<Void> updateUser(@RequestBody MembersDTO dto){
-		mServ.updateUser(dto);
-		return ResponseEntity.ok().build();
-	}
+	 @PutMapping("/updateUser")
+	    public ResponseEntity<Void> updateUser(@RequestBody MembersDTO dto) {
+	        try {
+	            mServ.updateUser(dto);
+	            return ResponseEntity.ok().build();  // 성공적으로 처리된 경우 200 OK 응답 반환
+	        } catch (Exception e) {
+	            return ResponseEntity.notFound().build();  // 데이터가 존재하지 않는 경우 404 Not Found 응답 반환
+	        }
+	    }
 	// 관리자 회원 탈퇴
 	@DeleteMapping("/deleteUser/{id}")
 	public ResponseEntity<Void> deleteUser(@PathVariable("id") String id){
@@ -298,7 +301,7 @@ public class MembersController {
        // 검색할 아이디에 따른 이름, 팀코드, 팀명, 부서코드, 부서명, 관리자 권한 코드, 관리자 권한명 추출
        @PostMapping("/approvalSearch")
         public List<Map<String, Object>> approvalSearch(@RequestBody List<Map<String, Object>> approvalLine){
-//        	System.out.println("결재라인 확인 : " + approvalLine);
+        	System.out.println("결재라인 확인 : " + approvalLine);
     	   List<Map<String, Object>> list = new ArrayList<>();
     	   	for (Map<String, Object> map : approvalLine) {
 				if(map.get("id") != null) {
@@ -308,6 +311,14 @@ public class MembersController {
 					 memberData.put("order",order);
 					 list.add(memberData);
 //					System.out.println(memberData);
+				}else if(map.get("referer") != null) {
+					
+					System.out.println("참조라인 들어옴"+map.get("referer"));
+					String id = (String)map.get("id");
+//					String name =  (String)map.get("name");
+//					Map<String, Object> memberData = mServ.memberData(id);
+//					memberData.put("name",name);
+//					list.add(memberData);
 				}
 			}
            return list;

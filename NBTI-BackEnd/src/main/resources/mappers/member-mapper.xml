@@ -47,7 +47,7 @@
 	<update id="updateMember">
 		update members set email=#{email},
 		team_code=#{team_code}, job_code=#{job_code},
-		member_call=#{member_call}, ent_yn=#{ent_yn},end_date=#{end_date}
+		member_call=#{member_call}
 		where id=#{id}
 	</update>
 

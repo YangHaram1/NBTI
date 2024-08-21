@@ -287,10 +287,7 @@ export const Detail = () => {
     });
   };
 
-  // 게시글 신고
-  // const handleReport = () => {
-
-  // }
+  console.log("currentUser : ", currentUser);
 
   //======================================================================================
 
@@ -351,7 +348,7 @@ export const Detail = () => {
             src={
               detail.member_img === null
                 ? `${image}`
-                : `${host}/images/avatar/${detail.id}/${detail.member_img}`
+                : `${host}/images/avatar/${detail.member_id}/${detail.member_img}`
             }
             alt=""
           />
@@ -362,6 +359,7 @@ export const Detail = () => {
               <input
                 type="text"
                 value={board.title}
+                maxLength={30}
                 onChange={(e) =>
                   setBoard((prev) => {
                     return { ...prev, title: e.target.value };
@@ -430,7 +428,14 @@ export const Detail = () => {
           <span>개의 댓글</span>
         </div>
         <div className={styles.replyInput}>
-          <img src={image} alt="" />
+          <img
+            src={
+              currentUser && currentUser.member_img
+                ? `${host}/images/avatar/${currentUser.id}/${currentUser.member_img}`
+                : `${image}`
+            }
+            alt=""
+          />
           <div
             ref={inputRef} // ref 설정
             className={styles.inputText}
@@ -457,7 +462,7 @@ export const Detail = () => {
                   src={
                     item.member_img === null
                       ? `${image}`
-                      : `${host}/images/avatar/${item.id}/${item.member_img}`
+                      : `${host}/images/avatar/${item.member_id}/${item.member_img}`
                   }
                   alt=""
                 />

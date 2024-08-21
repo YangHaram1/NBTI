@@ -85,7 +85,7 @@ export const ApprovalLine = ({setTitle, setOrder, setCheck}) => {
     }, [selectMember, setApprovalLine, setOrder]);
       
     const handleAdd = () => {
-        const newRefer = {id: selectMember.id||'', name:selectMember.name||'', order: setOrder};
+        const newRefer = {id: selectMember.id, name:selectMember.name, order: setOrder};
         setReferLine(newRefer);
     }
 

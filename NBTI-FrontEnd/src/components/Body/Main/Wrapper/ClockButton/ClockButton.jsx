@@ -4,7 +4,7 @@ import styles from './ClockButton.module.css'; // 버튼 스타일
 import { format } from 'date-fns';
 import { host } from '../../../../../config/config';
 
-const ClockButton = ({ type }) => {
+const ClockButton = ({ type,check,setCheck }) => {
     const [currentClockIn, setCurrentClockIn] = useState(null);
     const [currentClockOut, setCurrentClockOut] = useState(null);
     const [clockedIn, setClockedIn] = useState(false);
@@ -12,7 +12,6 @@ const ClockButton = ({ type }) => {
     const [isLate, setIsLate] = useState(false);
     const [isAbsent, setIsAbsent] = useState(false);
     const [isEarlyLeave, setIsEarlyLeave] = useState(false);
-    const [disabled, setDisabled] = useState(false);
 
     const memberId = sessionStorage.getItem('loginID');
     const today = new Date().toISOString().split('T')[0];
@@ -43,9 +42,14 @@ const ClockButton = ({ type }) => {
 
             // Disable button if already clocked in/out
             if (type === 'clock-in') {
-                setDisabled(isClockInToday);
+                setCheck((prev)=>{
+                    return {in:isClockInToday,out:!prev.out}
+                });
             } else if (type === 'clock-out') {
-                setDisabled(isClockOutToday || !clockedIn);
+                setCheck((prev)=>{
+                   return {...prev,out:isClockOutToday || !clockedIn}
+                });
+              
             }
         } catch (err) {
             console.error('출근 기록을 가져오는데 실패했습니다.', err.response ? err.response.data : err);
@@ -122,8 +126,8 @@ const ClockButton = ({ type }) => {
                     {type === 'clock-in' && (
                         <button
                             onClick={handleClockIn}
-                            className={`${styles.button} ${disabled ? styles.disabled : ''}`}
-                            disabled={disabled}
+                            className={`${styles.button} ${check.in ? styles.disabled : ''}`}
+                            disabled={check.in}
                         >
                             출근
                         </button>
@@ -131,8 +135,8 @@ const ClockButton = ({ type }) => {
                     {type === 'clock-out' && (
                         <button
                             onClick={handleClockOut}
-                            className={`${styles.button} ${disabled ? styles.disabled : ''}`}
-                            disabled={disabled}
+                            className={`${styles.button} ${check.out ? styles.disabled : ''}`}
+                            disabled={check.out}
                         >
                             퇴근
                         </button>
