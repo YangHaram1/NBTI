@@ -73,7 +73,7 @@ const BoardEditor = ({ board, setBoard, contents }) => {
                 axios.post(`${host}/files/boardImage`, formData).then((resp) => { //서버에서 저장해서 데이터 보내줌
                  
                   const elements = document.querySelectorAll(".tox-textfield");
-                  console.log(elements);
+                 // console.log(elements);
                   Array.from(elements).forEach((el, index) => { // 요소 확인
                     if(index===0){
                       el.value = `${host}/images/board/images/${resp.data.sysname}`;
@@ -84,8 +84,8 @@ const BoardEditor = ({ board, setBoard, contents }) => {
                       el.value = resp.data.height;
                     } else if (index === 4) {
                       el.addEventListener(() => {
-                        axios.post(`${host}/files/boardImage?check=true`, formData).then((response) => {
-                        })
+                        // axios.post(`${host}/files/boardImage?check=true`, formData).then((response) => {
+                        // })
                       })
                     }
                   });

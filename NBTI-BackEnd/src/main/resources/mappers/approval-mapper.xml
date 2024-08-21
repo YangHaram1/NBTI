@@ -371,31 +371,40 @@
  	
  	<!-- 문서번호 생성 및 관리 -->
     <update id="createApprovalSeq" parameterType="map">
-        DECLARE
-            v_form_code VARCHAR2(3) := #{docHeader};
-            v_current_year CHAR(2) := TO_CHAR(SYSDATE, 'YY');
-            v_sequence_number NUMBER;
-        BEGIN
-            
-            SELECT COALESCE(MAX(sequence_number), 0) INTO v_sequence_number
-            FROM document_number
-            WHERE form_code = v_form_code AND year = v_current_year;
-            
-            v_sequence_number := v_sequence_number + 1;
+	DECLARE
+        v_form_code VARCHAR2(3) := #{docHeader};
+        v_current_year CHAR(2) := TO_CHAR(SYSDATE, 'YY');
+        v_sequence_number NUMBER;
+        v_approval_seq VARCHAR2(20);
+    BEGIN
+        -- 1. 현재 시퀀스 번호 조회
+        SELECT COALESCE(MAX(sequence_number), 0) INTO v_sequence_number
+        FROM document_number
+        WHERE form_code = v_form_code AND year = v_current_year;
 
-            MERGE INTO document_number d
-            USING (SELECT v_form_code AS form_code, v_current_year AS year FROM dual) src
-            ON (d.form_code = src.form_code AND d.year = src.year)
-            WHEN MATCHED THEN
-                UPDATE SET sequence_number = v_sequence_number
-            WHEN NOT MATCHED THEN
-                INSERT (form_code, year, sequence_number)
-                VALUES (src.form_code, src.year, v_sequence_number);
+        -- 2. 시퀀스 번호 증가
+        v_sequence_number := document_seq.NEXTVAL;
 
-            UPDATE approval
-            SET approval_seq = v_form_code || '-' || v_current_year || '-' || TO_CHAR(v_sequence_number, 'FM000')
-            WHERE temp_seq = #{temp_seq};
-        END;
+        -- 3. MERGE 문으로 시퀀스 번호 업데이트 또는 삽입
+        MERGE INTO document_number d
+        USING (SELECT v_form_code AS form_code, v_current_year AS year FROM dual) src
+        ON (d.form_code = src.form_code AND d.year = src.year)
+        WHEN MATCHED THEN
+            UPDATE SET sequence_number = v_sequence_number
+        WHEN NOT MATCHED THEN
+            INSERT (form_code, year, sequence_number)
+            VALUES (src.form_code, src.year, v_sequence_number);
+
+        -- 4. 결재 시퀀스 포맷
+        v_approval_seq := v_form_code || '-' || v_current_year || '-' || TO_CHAR(v_sequence_number, 'FM000');
+
+        -- 5. 문서의 결재 시퀀스 업데이트
+        UPDATE approval
+        SET approval_seq = v_approval_seq
+        WHERE temp_seq = #{temp_seq};
+
+        DBMS_OUTPUT.PUT_LINE('v_approval_seq: ' || v_approval_seq);
+    	END;
     </update>
     
     <update id="updateDocStateCancle">
@@ -405,7 +414,9 @@
     <delete id="delete">
     	delete from approval where temp_seq = ${seq}
     </delete>
-  
-  	
+    
+    <select id="selectApprovalerId" resultType="String">
+    	select member_id from approval where temp_seq = #{seq} 
+    </select>
   
  </mapper>

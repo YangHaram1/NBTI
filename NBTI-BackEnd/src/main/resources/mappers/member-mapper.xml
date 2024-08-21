@@ -199,5 +199,10 @@
           AND name = #{name}
           AND birth = #{birth}
     </select>
+    
+    <update id="updateLeave">
+    	update members set ent_yn = 'Y' ,end_date = TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') where id = #{id}
+    </update>
+    
 </mapper>
 

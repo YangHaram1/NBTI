@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nbti.dao.ApprovalDAO;
 import com.nbti.dao.ApprovalLineDAO;
+import com.nbti.dao.MembersDAO;
 import com.nbti.dto.ApprovalLineDTO;
 
 @Service
@@ -18,6 +19,8 @@ public class ApprovalLineService {
 	private ApprovalLineDAO aldao;
 	@Autowired
 	private ApprovalDAO adao;
+	@Autowired
+	private MembersDAO mdao;
 	
 	
 	public List<Map<String,Object>> getApprovalLine(int seq) {
@@ -52,12 +55,25 @@ public class ApprovalLineService {
 			docHeader="VC";
 		}
 		
+		
+		System.out.println("문서 상태: " + approvalYN);
+		System.out.println("총 순서: " + total_seq);
+		System.out.println("현재 순서: " + order);
+		
+		
 		// 문서 상태가 승인일 때, 
 		if(approvalYN.equals("p")) {
 			// 현재 내 순서가 최종 순서라면 문서상태 완료로 업데이트 후 문서번호 추가
 			if(total_seq == order) {
 				adao.updateDocState(seq, approvalYN);
 				adao.createApprovalSeq(seq, docHeader);
+				
+				if(setlist.equals("휴직신청서")) {
+					System.out.println("휴직 신청서 최신화 : "+ seq);
+					String id = adao.getApprovaler(seq);
+					System.out.println("아이디 값 확인 : "+ id);
+					mdao.updateLeave(id);
+				}
 				
 			// 현재 내 순서가 최종 순서가 아니라면 다음 결재자 상태 업데이트	
 			}else if(total_seq > order) {

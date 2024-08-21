@@ -51,4 +51,5 @@ public class ApprovalLineDAO {
 		mybatis.delete("ApprovalLine.delete",seq);
 	}
 
+
 }
