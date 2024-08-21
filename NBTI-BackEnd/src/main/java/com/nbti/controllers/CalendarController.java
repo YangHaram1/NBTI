@@ -54,6 +54,7 @@ public class CalendarController {
     // 수정
     @PutMapping
     public ResponseEntity<Void> update (@RequestBody CalendarDTO dto) throws Exception{
+    	dto.setMember_id((String) session.getAttribute("loginID"));
     	System.out.println("update : " + dto.getSeq());
     	System.out.println("update : " + dto.getTitle());
     	System.out.println("update : " + dto.getContents());

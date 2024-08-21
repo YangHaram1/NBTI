@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import { host, api } from "./../../../config/config";
 import styles from "./BoardEditor.module.css";
+import { parseJSON } from "date-fns";
 
 const BoardEditor = ({ board, setBoard, contents }) => {
   const [content, setContent] = useState(contents);
@@ -58,7 +59,40 @@ const BoardEditor = ({ board, setBoard, contents }) => {
           language: "ko_KR",
           statusbar: false,
           file_picker_types: "file image media",
-          file_picker_callback: (callback, value, meta) => {},
+          file_picker_callback: (callback, value, meta) => {
+            if (meta.filetype === 'image') {
+              let input = document.createElement('input');
+              input.setAttribute('type', 'file');
+              input.setAttribute('accept', 'image/*');
+              input.click();
+              input.onchange =  (e) =>{
+                let file = e.target.files[0];
+                let formData = new FormData();
+              
+                formData.append('file', file);
+                axios.post(`${host}/files/boardImage`, formData).then((resp) => { //서버에서 저장해서 데이터 보내줌
+                 
+                  const elements = document.querySelectorAll(".tox-textfield");
+                 // console.log(elements);
+                  Array.from(elements).forEach((el, index) => { // 요소 확인
+                    if(index===0){
+                      el.value = `${host}/images/board/images/${resp.data.sysname}`;
+                    }
+                    else if (index === 2) {
+                      el.value = resp.data.width;
+                    } else if (index === 3) {
+                      el.value = resp.data.height;
+                    } else if (index === 4) {
+                      el.addEventListener(() => {
+                        // axios.post(`${host}/files/boardImage?check=true`, formData).then((response) => {
+                        // })
+                      })
+                    }
+                  });
+                })
+              };   
+            }
+          },
           setup: (editor) => {
             editor.on("PastePreProcess ", (e) => {
               // 임시 div 요소에 붙여넣기된 콘텐츠를 삽입

@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.nbti.commons.FileConfig;
 import com.nbti.commons.RealpathConfig;
@@ -52,7 +53,7 @@ public class FilesController {
 	private MembersService mserv;
 	
 	private final Gson gson = new Gson();
-	
+	//하람
 	@GetMapping("/downloadChat")
 	public void download(@RequestParam String oriname,@RequestParam String sysname, HttpServletResponse response) throws Exception{
 		String realpath= RealpathConfig.realpath +"chat";
@@ -67,6 +68,13 @@ public class FilesController {
 			dos.write(fileContents);
 			dos.flush();	
 		}
+	}
+	
+	@PostMapping("/boardImage")
+	public ResponseEntity<Map<String,String>> boardImage(@RequestParam(defaultValue = "false") String check,@RequestParam("file") MultipartFile file) throws Exception {
+		String member_id= (String)session.getAttribute("loginID");
+		Map<String,String> obj =serv.boardImage(member_id, -1, check, file);
+		return 	ResponseEntity.ok(obj);
 	}
 	
 	// 유나 게시판 파일 출력

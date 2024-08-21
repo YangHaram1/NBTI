@@ -44,7 +44,7 @@ const Chat = () => {
   const [RoomName, setRoomName] = useState('');
   const [calendar, setCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null); //이거 날짜
-
+  const [maxRetries,setMaxRetries] =useState(0);
 
   useEffect(() => { //group_chat 속성 가저오기 나와의채팅인지 아닌지 
     const { chatSeq } = useCheckList.getState();
@@ -67,7 +67,6 @@ const Chat = () => {
 
   }, [chatSeq])
   // 연결 카운트
-  let maxRetries=0;
   // WebSocket 연결을 설정하는 useEffect
   useEffect(() => {
     //const url = host.replace(/^https?:/, '')
@@ -78,7 +77,9 @@ const Chat = () => {
           setWebSocketCheck();
           console.log("websocket 재연결 시도")
         }
-          maxRetries++;
+        setMaxRetries((prev)=>{
+          return prev+1;
+        })
       };
 
       ws.current.onerror = (error) => {
@@ -87,7 +88,9 @@ const Chat = () => {
           setWebSocketCheck();
           console.log("websocket 재연결 시도")
         }
-          maxRetries++;
+        setMaxRetries((prev)=>{
+          return prev+1;
+        })
       
       };
 
