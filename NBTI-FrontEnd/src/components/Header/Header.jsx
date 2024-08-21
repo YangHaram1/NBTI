@@ -17,6 +17,7 @@ export const Header = () => {
     const menuRef = useRef(null);
     const popupRef = useRef(null);
     const [user, setUser] = useState([{ member_img: '' }]);
+    const [userAdmin,setUserAdmin]=useState(null);
     const { loginID } = useAuthStore();
     const { members } = useMemberStore();
     const location = useLocation(); // 현재 경로를 가져오는 useLocation 훅
@@ -77,13 +78,14 @@ export const Header = () => {
     };
     const [memberLevel, setMemberLevel] = useState(null);
     const [isAdmin, setIsAdmin] = useState(false);
+
     // Fetch user and member level
     useEffect(() => {
         if (loginID != null && loginID !== 'error') {
             if (members.length > 0) {
                 const currentUser = members.find(item => item.id === loginID);
                 if (currentUser) {
-                    setUser([currentUser]);
+                    setUserAdmin([currentUser]);
 
                     // Fetch user level
                     axios.get(`${host}/members/memberInfo`)
@@ -106,6 +108,7 @@ export const Header = () => {
             }
         }
     }, [loginID, members]);
+
     useEffect(() => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
