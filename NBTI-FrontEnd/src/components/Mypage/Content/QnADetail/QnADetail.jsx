@@ -123,7 +123,6 @@ export const QnADetail = () => {
       axios
         .delete(`${host}/files/deleteBoard/${fileDelArr}`)
         .then((resp) => {
-          console.log("삭제:", resp.data);
           setFileList(updatedFiles); // 삭제된 파일을 담고있는 복사본을 원본에 삽입
         })
         .catch((error) => {
@@ -148,7 +147,16 @@ export const QnADetail = () => {
   // 파일 삭제
   const handleFileDelete = (seq) => {
     setFileDelArr((prev) => [...prev, seq]);
-    setUpdatedFiles((prev) => prev.filter((file) => file.seq !== seq));
+    setUpdatedFiles((prev) => {
+      const updatedList = prev.filter((file) => file.seq !== seq);
+
+      // 파일 삭제 후 파일 목록이 비어있다면 모달을 닫음
+      if (updatedList.length === 0) {
+        setIsFileListOpen(false);
+      }
+
+      return updatedList;
+    });
   };
 
   // 북마크 추가
