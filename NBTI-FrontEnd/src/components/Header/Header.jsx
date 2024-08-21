@@ -7,7 +7,7 @@ import { ChatsContext } from './../../Context/ChatsContext';
 import { LogoutPopUp } from './LogoutPopUp/LogoutPopUp';
 import { useAuthStore, useMemberStore } from './../../store/store';
 import { host } from '../../config/config';
-
+import axios from 'axios';
 export const Header = () => {
 
     /* PopUp 관련 */
@@ -17,6 +17,7 @@ export const Header = () => {
     const [user,setUser] =useState([{member_img:''}]);
     const {loginID} =useAuthStore();
     const {members}=useMemberStore();
+    
     useEffect(()=>{
         if(loginID!=null && loginID !=='error'){
             if(members.length>0)
@@ -71,7 +72,37 @@ export const Header = () => {
             setShowNewPopup(false);
         }
     };
+    const [memberLevel, setMemberLevel] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
+    // Fetch user and member level
+    useEffect(() => {
+        if (loginID != null && loginID !== 'error') {
+            if (members.length > 0) {
+                const currentUser = members.find(item => item.id === loginID);
+                if (currentUser) {
+                    setUser([currentUser]);
 
+                    // Fetch user level
+                    axios.get(`${host}/members/memberInfo`)
+                        .then((resp) => {
+                            setMemberLevel(resp.data.member_level);
+                            if (resp.data.member_level === "2" || resp.data.member_level === "3") {
+                                axios.get(`${host}/members/selectLevel`)
+                                    .then((resp1) => {
+                                        const hrstatus = resp1.data[parseInt(resp.data.member_level) - 1]?.hr;
+                                        if (hrstatus === "y") {
+                                            setIsAdmin(true); // Adjust if necessary
+                                        }
+                                    });
+                            }
+                        })
+                        .catch(error => {
+                            console.error("There was an error fetching the member info!", error);
+                        });
+                }
+            }
+        }
+    }, [loginID, members]);
     useEffect(() => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
@@ -124,10 +155,11 @@ export const Header = () => {
                 </div>
             </div>
             <div className={styles.right}>
-                <div className={styles.user_admin}>
-
-                    <i className="fa-solid fa-user-cog fa-xl" onClick={() => { navi("/useradmin") }}></i>
-                </div>
+            {memberLevel === "2" || memberLevel === "3" ? (
+                    <div className={styles.user_admin}>
+                        <i className="fa-solid fa-user-cog fa-xl" onClick={() => { navi("/useradmin") }}></i>
+                    </div>
+                ) : null}
                 <div className={styles.chat}>
                     <i className="fa-regular fa-comments fa-xl" onClick={handleChat}></i>
                 </div>

@@ -1,4 +1,4 @@
-import { MyVacation } from './MyVacation/MyVacation';
+import MyVacation from './MyVacation/MyVacation';
 import { Routes, Route } from 'react-router-dom';
 
 export const Content = () => {

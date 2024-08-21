@@ -173,5 +173,10 @@ public class ApprovalService {
 			System.out.println("첨부파일 없음");
 		}
 	}
-
+	
+	public List<Map<String, Object>> getVacationHistory(String memberId) {
+	    List<Map<String, Object>> result = adao.getVacationHistory(memberId);
+	    System.out.println("Data retrieved from DAO: " + result);
+	    return result;
+	}
 }
