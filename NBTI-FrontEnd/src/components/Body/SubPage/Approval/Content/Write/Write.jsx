@@ -360,8 +360,8 @@ export const Write = (props)=>{
                     {
                         refer.map((refer)=>{
                             return(
-                                <div className={styles.refer}>
-                                    {refer.name} ({refer.JOB_NAME}) / {refer.DEPT_NAME} / {refer.TEAM_NAME}
+                                <div className={styles.refer} key={refer.ID}>
+                                    {refer.NAME} ({refer.JOB_NAME}) / {refer.DEPT_NAME} / {refer.TEAM_NAME}
                                 </div>
                             );
                         })

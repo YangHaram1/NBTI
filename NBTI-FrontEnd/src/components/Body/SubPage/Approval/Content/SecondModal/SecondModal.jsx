@@ -9,7 +9,7 @@ import { host } from '../../../../../../config/config';
 
 const SecondModal = ({ isOpen, onClose }) => {
 
-  const {referLine, setReferLine} = useReferLine();
+  const {referLine, setReferLine, deleteReferLine} = useReferLine();
   const {approvalLine} = useApprovalLine();
   const {docForm} = useDocFormStore();
   const [refer, setRefer] = useState([]);
@@ -21,10 +21,10 @@ const SecondModal = ({ isOpen, onClose }) => {
   };
 
   useEffect(()=>{
-    console.log("참조라인 데이터 확인",referLine);
+    // console.log("참조라인 데이터 확인",referLine);
     axios.post(`${host}/members/approvalSearch`,referLine)
     .then((resp)=>{
-        console.log("데이터 확인",resp.data);
+        // console.log("데이터 확인",resp.data);
         setRefer(resp.data);
         console.log(refer);
     })
@@ -58,32 +58,25 @@ const SecondModal = ({ isOpen, onClose }) => {
   }
 
   const deleteRefer = (id) => {
-    console.log(id);
+    console.log("삭제할 ID",id);
     // referLine에서 해당 id와 일치하지 않는 항목들만 필터링하여 새로운 배열을 생성
-    // 현재 기존 배열에 새로 만들어진 배열이 추가로 들어가는 상황 발생 => 수정 필요
-    const updatedReferLine = referLine.filter(refer => refer.id !== id);
-    setReferLine(updatedReferLine);
-    console.log("삭제시 참조라인",referLine);
+      console.log("=====참조라인:", referLine);
+      deleteReferLine(id);
+      // const updatedReferLine = referLine.filter(refer => refer.id !== id);
+      // setReferLine(...updatedReferLine); // 참조 라인 업데이트
 
-    // refer에서 해당 id와 일치하지 않는 항목들만 필터링하여 새로운 배열을 생성
-    const updatedRefer = refer.filter(r => r.id !== id);
-    setRefer(updatedRefer);
+      // refer에서 해당 id와 일치하지 않는 항목들만 필터링하여 새로운 배열을 생성
+      const updatedRefer = refer.filter(r => r.id !== id);
+      setRefer(updatedRefer); // 화면 표시용 참조 라인 업데이트
 
-    // setReferLine((prevReferLine) => {
-    //   const updatedReferLine = prevReferLine.filter(refer => refer.id !== id);
-    //   console.log("삭제시 참조라인", updatedReferLine);
-    //   return updatedReferLine;
-    // });
-  
-    // setRefer((prevRefer) => {
-    //   const updatedRefer = prevRefer.filter(r => r.id !== id);
-    //   return updatedRefer;
-    // });
-  }
+      console.log("삭제 후 참조라인:", referLine);
+      // console.log("참조라인:", referLine);
+      console.log("삭제 후 화면 표시용 참조라인:", updatedRefer);
+    }
 
-  const isValidValue = (value) => {
-    return value !== undefined && value !== null && value.trim() !== '';
-  };
+    const isValidValue = (value) => {
+      return value !== undefined && value !== null && value.trim() !== '';
+    };
 
   //결재라인에서 최초, 최종 있는지 확인
   useEffect(() => {
@@ -94,7 +87,7 @@ const SecondModal = ({ isOpen, onClose }) => {
     const isOrder3Valid = order3Line && isValidValue(order3Line.id) && isValidValue(order3Line.name);
     let result = isOrder1Valid && isOrder3Valid
     setCheck(result); // order 1과 3이 모두 있을 때만 check를 true로 설정
-    console.log("check 상태 업데이트", { isOrder1Valid, isOrder3Valid, result});
+    // console.log("check 상태 업데이트", { isOrder1Valid, isOrder3Valid, result});
   }, [approvalLine]);
 
   if (!isOpen) return null;
@@ -117,8 +110,8 @@ const SecondModal = ({ isOpen, onClose }) => {
                     refer.length  > 0 ?
                     refer.map((referr)=>{
                       return(
-                        <div key={referr.id} className={styles.refer_member}>
-                           {referr.NAME} ({referr.JOB_NAME}) / {referr.TEAM_NAME} <button onClick={()=>{deleteRefer(referr.id)}}>x</button></div>
+                        <div key={referr.ID} className={styles.refer_member}>
+                           {referr.NAME} ({referr.JOB_NAME}) / {referr.TEAM_NAME} <button type='button' onClick={()=>{deleteRefer(referr.ID)}}>x</button></div>
                       );
                     })
                     :''
