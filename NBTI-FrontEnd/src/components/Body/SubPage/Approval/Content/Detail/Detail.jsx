@@ -271,7 +271,7 @@ export const Detail=()=>{
                         <>
                         <div className={styles.btns}>
                             <div className={`${styles.approval_prev_btn} ${styles.btn}`} onClick={()=>{setShowApprovalComment(true)}}><i className="fa-solid fa-user-pen"></i>결재정보</div>
-                            <div className={`${styles.approval_change_btn} ${styles.btn}`}><i className="fa-solid fa-users"></i>인쇄하기</div>
+                            <div className={`${styles.approval_change_btn} ${styles.btn}`} onClick={handlePrint}><i className="fa-solid fa-users"></i>인쇄하기</div>
                             {checkFA == true && list == '기안 문서함'? <div className={`${styles.approval_cancle_btn} ${styles.btn}`} onClick={handleApprovalCancle}> <i className="fa-regular fa-circle-xmark"></i>상신취소</div> : <></>}
                         </div>
                         </>
@@ -291,7 +291,7 @@ export const Detail=()=>{
                             { list !== '임시 저장 문서함'? 
                             <div className={`${styles.approval_prev_btn} ${styles.btn}`} onClick={()=>{setShowApprovalComment(true)}}><i className="fa-solid fa-user-pen"></i>결재정보</div>:''
                             }
-                            <div className={`${styles.approval_copy_btn} ${styles.btn}`}><i className="fa-solid fa-users"></i>복사하기</div>
+                            <div className={`${styles.approval_copy_btn} ${styles.btn}`} onClick={handlePrint}><i className="fa-solid fa-users"></i>복사하기</div>
                             <div className={`${styles.approval_copy_btn} ${styles.btn}`} onClick={handleDelete}><i className="fa-solid fa-trash-can"></i>삭제하기</div>
                         </div>
                         </>
@@ -335,8 +335,8 @@ export const Detail=()=>{
                     {
                         refer.map((refer)=>{
                             return(
-                                <div className={styles.refer}>
-                                    {refer.name} ({refer.JOB_NAME}) / {refer.DEPT_NAME} / {refer.TEAM_NAME}
+                                <div className={styles.refer} key={refer.ID}>
+                                    {refer.NAME} ({refer.JOB_NAME}) / {refer.DEPT_NAME} / {refer.TEAM_NAME}
                                 </div>
                             );
                         })

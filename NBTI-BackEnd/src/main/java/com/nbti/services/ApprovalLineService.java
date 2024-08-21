@@ -73,9 +73,9 @@ public class ApprovalLineService {
 				adao.createApprovalSeq(seq, docHeader);
 				
 				if(setlist.equals("휴직신청서")) {
-					System.out.println("휴직 신청서 최신화 : "+ seq);
+//					System.out.println("휴직 신청서 최신화 : "+ seq);
 					String id = adao.getApprovaler(seq);
-					System.out.println("아이디 값 확인 : "+ id);
+//					System.out.println("아이디 값 확인 : "+ id);
 					mdao.updateLeave(id);
 				}else if (setlist.equals("휴가신청서")) {
 					System.out.println("휴가 신청서 최신화" + seq);
@@ -106,7 +106,7 @@ public class ApprovalLineService {
 		}else {
 			// 문서 상태를 반려로 변경
 			adao.updateDocState(seq, approvalYN);
-			System.out.println("반려 문서로 상태 최신화 중지");
+//			System.out.println("반려 문서로 상태 최신화 중지");
 		}
 		
 	}
