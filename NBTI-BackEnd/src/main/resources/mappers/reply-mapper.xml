@@ -20,9 +20,10 @@
 	
 	<!-- 댓글 출력 -->
 	<select id="selectReply" resultType="com.nbti.dto.ReplyDTO">
-		SELECT 
+	    SELECT 
 	        r.*, 
-	        m.name AS name, 
+	        m.name AS name,
+	        m.member_img,  <!-- members 테이블에서 member_img 필드 추가 -->
 	        (SELECT COUNT(*) FROM likes l WHERE l.reply_seq = r.seq) AS count
 	    FROM 
 	        reply r
@@ -35,6 +36,7 @@
 	    ORDER BY 
 	        r.seq DESC
 	</select>
+
 	
 	<!-- 댓글 개수 -->
 	<select id="countReply" resultType="int">
