@@ -14,26 +14,26 @@ export const Header = () => {
     const [showPopUp, setShowPopUp] = useState(false);
     const menuRef = useRef(null);
     const popupRef = useRef(null);
-    const [user,setUser] =useState([{member_img:''}]);
-    const {loginID} =useAuthStore();
-    const {members}=useMemberStore();
-    
-    useEffect(()=>{
-        if(loginID!=null && loginID !=='error'){
-            if(members.length>0)
-            setUser(()=>{
-                return (
-                    members.filter((item,index)=>{
-                        if(item.id===loginID){
-                            return true;
-                        }
-                        return false;
-                    })
-                );  
-            })
+    const [user, setUser] = useState([{ member_img: '' }]);
+    const { loginID } = useAuthStore();
+    const { members } = useMemberStore();
+
+    useEffect(() => {
+        if (loginID != null && loginID !== 'error') {
+            if (members.length > 0)
+                setUser(() => {
+                    return (
+                        members.filter((item, index) => {
+                            if (item.id === loginID) {
+                                return true;
+                            }
+                            return false;
+                        })
+                    );
+                })
         }
 
-    },[loginID,members])
+    }, [loginID, members])
 
     const togglePopUp = () => {
         setShowPopUp(prevState => !prevState); // 상태를 토글
@@ -134,17 +134,17 @@ export const Header = () => {
 
     const navi = useNavigate();
 
-    const { setChatNavi ,chatAppRef,dragRef,setChatNaviBody} = useContext(ChatsContext);
+    const { setChatNavi, chatAppRef, dragRef, setChatNaviBody } = useContext(ChatsContext);
     const handleChat = () => {
-        setChatNavi((prev)=>{
-            chatAppRef.current.style.display="flex";
-            dragRef.current.style.display="flex";
+        setChatNavi((prev) => {
+            chatAppRef.current.style.display = "flex";
+            dragRef.current.style.display = "flex";
             return 'home'
         });
         setChatNaviBody("chats");
-        
+
     }
-   
+
     return (
         <div className={styles.container}>
             <div className={`${styles.left} ${showPopUp ? styles.dropdownActive : ''}`}>
@@ -155,7 +155,7 @@ export const Header = () => {
                 </div>
             </div>
             <div className={styles.right}>
-            {memberLevel === "2" || memberLevel === "3" ? (
+                {memberLevel === "2" || memberLevel === "3" ? (
                     <div className={styles.user_admin}>
                         <i className="fa-solid fa-user-cog fa-xl" onClick={() => { navi("/useradmin") }}></i>
                     </div>
@@ -163,12 +163,12 @@ export const Header = () => {
                 <div className={styles.chat}>
                     <i className="fa-regular fa-comments fa-xl" onClick={handleChat}></i>
                 </div>
-                <div className={styles.alarm}>
+                {/* <div className={styles.alarm}>
                     <i className="fa-regular fa-bell fa-xl"></i>
-                </div>
+                </div> */}
                 <div className={`${styles.user_info} ${showNewPopup ? styles.dropdownActive : ''}`}>
                     <div className={styles.user_profile_img} onClick={toggleNewPopup} ref={newMenuRef}>
-                        <img src={ (user[0].member_img === null) ? `${image}` : `${host}/images/avatar/${user[0].id}/${user[0].member_img}`} alt="" />
+                        <img src={(user[0].member_img === null) ? `${image}` : `${host}/images/avatar/${user[0].id}/${user[0].member_img}`} alt="" />
                     </div>
                 </div>
             </div>
