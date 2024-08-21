@@ -15,7 +15,19 @@
 		    ON cl.calendar_id = cm.calendar_id
 		WHERE cm.member_id = #{member_id}
 		    OR c.member_id = #{member_id}
-    </select> 
+    </select>  
+<!--     <select id="list" resultType="com.nbti.dto.CalendarDTO" >
+		SELECT DISTINCT c.*, m.name
+		FROM calendar c
+		LEFT JOIN calendar_list cl
+		    ON c.calendar_name = cl.calendar_name
+		LEFT JOIN calendar_members cm
+		    ON cl.calendar_id = cm.calendar_id
+		LEFT JOIN members m
+		    ON c.member_id = m.id  
+		WHERE cm.member_id =  #{member_id}
+		    OR c.member_id =  #{member_id}
+    </select>   -->
     
   	<!-- 입력 -->
 	<insert id="insert">

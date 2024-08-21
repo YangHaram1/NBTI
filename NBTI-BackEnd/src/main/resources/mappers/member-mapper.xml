@@ -20,7 +20,7 @@
 		SET address = #{address},
 		member_call = #{member_call},
 		email = #{email},
-		team_code = #{team_code},
+		team_code = #{team_code},0
 		job_code = #{job_code},
 		member_level = #{member_level}
 		WHERE id = #{id}
