@@ -19,7 +19,7 @@ export const SubPage = () => {
         <Route path="/reservation/*" element={<Reservation  />} />
         {<Route path="/group/*" element={<Group/>} />}
         <Route path="/approval/*" element={<Approval  />} />
-        {/* <Route path="/application/*" element={<Application/>}></Route> */}
+        <Route path="/application/*" element={<Application/>}></Route>
         {/* <Route path="/approval" element={<Approval  />} /> */}
         <Route path="/attendance/*" element={<Attendance />} />
       </Routes>

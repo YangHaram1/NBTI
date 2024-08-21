@@ -2,113 +2,118 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { host } from "../../../../../../config/config";
 import styles from './MyVacation.module.css';
- const MyVacation = () => {
+
+const convertKeysToLowerCase = (obj) => {
+    return Object.fromEntries(
+        Object.entries(obj).map(([key, value]) => [key.toLowerCase(), value])
+    );
+};
+
+const convertArrayKeysToLowerCase = (arr) => {
+    return arr.map(convertKeysToLowerCase);
+};
+
+const calculateVacationStats = (history) => {
+    const totalDays = 15; // 기본 총 휴가 일수
+    const usedDays = history
+        .filter(item => item.status === '완료')
+        .reduce((acc, curr) => acc + curr.days, 0);  // 서버에서 계산된 days 필드 사용
+    const remainingDays = totalDays - usedDays;
+
+    return {
+        total: totalDays,
+        used: usedDays,
+        remaining: remainingDays,
+    };
+};
+
+const MyVacation = () => {
     const [vacationInfo, setVacationInfo] = useState({ total: '', used: '', remaining: '' });
     const [vacationHistory, setVacationHistory] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const memberId = sessionStorage.getItem('loginID');
 
         if (memberId) {
-            console.log("Member ID from sessionStorage:", memberId);
-
-            // 휴가 정보 가져오기
-            axios.get(`${host}/members/apply`, { params: { memberId, days: 0 } })
+            axios.get(`${host}/members/apply`, { params: { memberId } })
                 .then(response => {
-                    console.log("Vacation info response:", response.data);
                     setVacationInfo(response.data);
                 })
                 .catch(error => {
-                    console.error("Error fetching vacation info:", error);
+                    setError("휴가 정보를 가져오는 데 문제가 발생했습니다.");
                 });
 
-            // 휴가 신청 내역 가져오기
-         // 휴가 신청 내역 가져오기
-         axios.get(`${host}/approval/history`, { params: { memberId },withCredentials: true  })
-         .then(response => {
-             console.log("Vacation history response:", response.data);
-             const historyData = response.data.map(history => ({
-                 ...history,
-                 vacationType: mapVacationType(history.vacationType),
-                 days: calculateVacationDays(history.vacation_start, history.vacation_end),
-             }));
-             setVacationHistory(historyData);
-         })
-         .catch(error => {
-             console.error("Error fetching vacation history:", error);
-             
-         });
+            axios.get(`${host}/approval/history`, { params: { memberId }, withCredentials: true })
+                .then(response => {
+                    const historyData = convertArrayKeysToLowerCase(response.data);
+                    setVacationHistory(historyData);
+                    const updatedStats = calculateVacationStats(historyData);
+                    setVacationInfo(updatedStats);
+                })
+                .catch(error => {
+                    setError("휴가 신청 내역을 가져오는 데 문제가 발생했습니다.");
+                });
         } else {
-            console.error("No memberId found in sessionStorage.");
+            setError("회원 ID를 세션에서 찾을 수 없습니다.");
         }
     }, []);
 
-    const mapVacationType = (type) => {
-        switch (type) {
-            case 1: return "연차";
-            case 2: return "경조";
-            case 3: return "공가";
-            case 4: return "질병휴가";
-            default: return "기타";
-        }
-    };
-
-    const calculateVacationDays = (start, end) => {
-        const startDate = new Date(start);
-        const endDate = new Date(end);
-        const diffTime = Math.abs(endDate - startDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return diffDays + 1;
-    };
-
     return (
         <div className={styles.container}>
-            <h3 className={styles.title}>휴가내역</h3>
-            <table className={styles.vacationTable}>
-                <thead>
-                    <tr>
-                        <th>총 휴가 일수</th>
-                        <th>사용 휴가 일수</th>
-                        <th>잔여 휴가 일수</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{vacationInfo.total} 일</td>
-                        <td>{vacationInfo.used} 일</td>
-                        <td>{vacationInfo.remaining} 일</td>
-                    </tr>
-                </tbody>
-            </table>
+            {error && <div className={styles.error}>{error}</div>}
+
+            <h3 className={styles.title}>휴가 내역</h3>
+            {vacationInfo.total ? (
+                <table className={styles.vacationTable}>
+                    <thead>
+                        <tr>
+                            <th>총 휴가 일수</th>
+                            <th>사용 휴가 일수</th>
+                            <th>잔여 휴가 일수</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{vacationInfo.total} 일</td>
+                            <td>{vacationInfo.used} 일</td>
+                            <td>{vacationInfo.remaining} 일</td>
+                        </tr>
+                    </tbody>
+                </table>
+            ) : (
+                <p>휴가 정보를 불러오는 중입니다...</p>
+            )}
 
             <h3 className={styles.title}>휴가 신청 내역</h3>
-            <table className={styles.vacationHistoryTable}>
-                <thead>
-                    <tr>
-                        <th>번호</th>
-                        <th>신청자</th>
-                        <th>휴가 종류</th>
-                        <th>일수</th>
-                        <th>기간</th>
-                        <th>상태</th>
-                        <th>상세</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {vacationHistory.map((history, index) => (
-                        <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>{history.applicant}</td>
-                            <td>{history.vacationType}</td>
-                            <td>{history.days} 일</td>
-                            <td>{history.vacation_start} - {history.vacation_end}</td>
-                            <td>{history.status}</td>
-                            <td><button>상세보기</button></td>
+            {vacationHistory.length > 0 ? (
+                <table className={styles.vacationHistoryTable}>
+                    <thead>
+                        <tr>
+                            <th>휴가 종류</th>
+                            <th>일수</th>
+                            <th>기간</th>
+                            <th>상태</th>
+                            <th>상세</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {vacationHistory.map((history, index) => (
+                            <tr key={index}>
+                                <td>{history.category_name}</td>
+                                <td>{history.days} 일</td>
+                                <td>{history.vacation_start} - {history.vacation_end}</td>
+                                <td>{history.status}</td>
+                                <td><button>상세보기</button></td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p>휴가 신청 내역이 없습니다.</p>
+            )}
         </div>
     );
 };
+
 export default MyVacation;

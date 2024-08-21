@@ -417,32 +417,38 @@
 
   
  <select id="getVacationHistory" resultType="map">
-    SELECT
-        dv.vacation_seq AS seq,
-        m.name AS applicant,
-        dc.doc_sub_name AS vacation_type,
-        (TRUNC(dv.vacation_end) - TRUNC(dv.vacation_start) + 1) AS days,
-        TO_CHAR(dv.vacation_start, 'YYYY-MM-DD') AS vacation_start,
-        TO_CHAR(dv.vacation_end, 'YYYY-MM-DD') AS vacation_end,
-        ams.member_state_name AS status
-    FROM
-        doc_vacation dv
-    JOIN
-        approval ap ON dv.vacation_seq = ap.doc_sub_seq
-    JOIN
-        members m ON ap.member_id = m.id
-    JOIN
-        doc_sub dc ON ap.doc_sub_seq = dc.doc_sub_seq
-    JOIN
-        approval_member_state ams ON ap.doc_state = ams.member_state_code
-    WHERE
-        m.id = #{memberId}
-    ORDER BY
-        dv.vacation_seq
+SELECT
+    ap.temp_seq AS seq,
+    ap.member_id AS applicant,
+    dc.doc_sub_name AS sub_type,
+    TO_CHAR(dv.vacation_start, 'YYYY-MM-DD') AS vacation_start,
+    TO_CHAR(dv.vacation_end, 'YYYY-MM-DD') AS vacation_end,
+    (TRUNC(dv.vacation_end) - TRUNC(dv.vacation_start) + 1) AS days,
+    vc.VCATEGORY_NAME AS category_name,
+    ads.doc_state_name AS status
+FROM
+    approval ap
+JOIN
+    doc_vacation dv ON ap.temp_seq = dv.vacation_seq
+JOIN
+    doc_sub dc ON ap.doc_sub_seq = dc.doc_form_seq
+JOIN
+    vacation_category vc ON dv.vacation_category = vc.VCATEGORY_SEQ
+JOIN
+    approval_doc_state ads ON ap.doc_state = ads.doc_state_code
+WHERE
+    ap.member_id = #{memberId}
+ORDER BY
+    ap.temp_seq
 </select>
     <select id="selectApprovalerId" resultType="String">
     	select member_id from approval where temp_seq = #{seq} 
 
     </select>
-  
+      <update id="updateRemainingVacation" parameterType="map">
+        UPDATE members
+        SET vacation_period = #{vacationPeriod}
+        WHERE id = #{memberId}
+    </update>
+    
  </mapper>
