@@ -92,7 +92,7 @@ public class ApprovalLineService {
 					Timestamp vacationEnd = dto.getVacation_end();
 
 					// 총 휴가 일수 가져오기
-					int totalVacationDays = mdao.selectPeriod(id); // 예시, DB에서 가져오는 메소드
+					double totalVacationDays = mdao.selectPeriod(id); // 예시, DB에서 가져오는 메소드
 
 					// 반차 여부 확인
 					String startHalf = dto.getStart_half(); // boolean으로 처리

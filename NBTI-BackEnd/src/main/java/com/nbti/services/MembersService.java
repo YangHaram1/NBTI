@@ -107,7 +107,7 @@ public class MembersService {
 	}
 	
 	
-	public int selectPeriod(String id) {
+	public double selectPeriod(String id) {
 		return mdao.selectPeriod(id);
 	}
 
