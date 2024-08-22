@@ -21,6 +21,11 @@
   color: #6b9080;
   cursor: pointer;
 }
+.content{
+  display: flex;
+  max-height: 500px;
+  overflow: auto;
+}
 
 /* 수정, 삭제 버튼 */
 .container .top .right {

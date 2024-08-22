@@ -65,6 +65,7 @@ export const AdminQnA = () => {
       // setCpage(1);
       return !prev;
     });
+    setCpage(1);
   };
 
   // 조회수 증가 및 상세 페이지로 이동

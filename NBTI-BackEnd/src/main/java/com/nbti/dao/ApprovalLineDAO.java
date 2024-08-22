@@ -31,14 +31,14 @@ public class ApprovalLineDAO {
 	// 결재 승인, 반려 코멘트 저장 시 해당 아이디의 order 검색
 	public int selectOrder(Map<String, Object> map) {
 		int order = mybatis.selectOne("ApprovalLine.selectOrder", map);
-		System.out.println(order);
+//		System.out.println(order);
 		return order;
 	}
 	
 	// 임시번호에 따른 결재라인 수 출력 (현재는 3이 나와야 함.)
 	public int selectLineCount(Map<String, Object> map) {
 		int count = mybatis.selectOne("ApprovalLine.selectLineCount", map);
-		System.out.println("결재라인 수 count : "+count);
+//		System.out.println("결재라인 수 count : "+count);
 		return count;
 	}
 	

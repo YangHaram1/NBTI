@@ -1,8 +1,9 @@
 .container{ 
     position: absolute;
-    width: 80%; 
-    height: 80%; 
+    width: 280px; /* 사이드바의 너비 */
+    height: 400px;
     left: 350px;
+    top: 40px;
     background-color: white;
     z-index: 200;
 }

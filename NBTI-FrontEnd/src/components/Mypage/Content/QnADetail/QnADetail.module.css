@@ -6,7 +6,11 @@
   flex-direction: column;
   padding: 0px 20px;
 }
-
+.content{
+  display: flex;
+  max-height: 500px;
+  overflow: auto;
+}
 .container .top {
   display: flex;
   height: 90px;

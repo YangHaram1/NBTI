@@ -25,9 +25,6 @@ export const FreeBoard = () => {
     // 자유 게시판 글 & 댓글 출력
     axios.get(`${host}/board/freeBoard`).then((resp) => {
 
-
-      console.log("프로필 : ", resp.data);
-
       setBoard(resp.data.list);
       setReply(resp.data.rlist);
       setBoardType("자유");

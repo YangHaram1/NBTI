@@ -59,9 +59,7 @@ public class ApprovalController {
 	
 	@PostMapping
 	public ResponseEntity<Void> approval(@RequestPart("requestData") String requestData, @RequestPart(value="files",required = false) MultipartFile[] files) {
-		
-		System.out.println("문서저장");
-		
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -72,11 +70,41 @@ public class ApprovalController {
 	        e.printStackTrace();
 	        return ResponseEntity.badRequest().build();
 	    }
-		
+	    
+	   
 		int docType = (int)requestDataMap.get("docType");
 		boolean emergency = (boolean)requestDataMap.get("emergency");
-//		System.out.println("Received: " + requestData);
-//		System.out.println(docType +":"+ emergency);
+		
+		Object value = requestDataMap.get("temp_seq");
+		int tempSeq;
+		
+		if (value instanceof Integer) {
+		    // 값이 Integer 타입일 경우, 그대로 캐스팅
+		    tempSeq = (Integer) value;
+		} else if (value instanceof String) {
+		    // 값이 String 타입일 경우, Integer로 변환
+			if((String) value == "") {
+				tempSeq = 0;
+			}else {
+				tempSeq = Integer.parseInt((String) value);
+			}
+		} else {
+		    // 값이 예상하지 못한 타입일 경우의 처리
+		    throw new IllegalArgumentException("Unexpected type for temp_seq: " + value.getClass().getName());
+		}
+
+		// 임시저장 내용 삭제 후 새로운 문서번호 부여
+		if(tempSeq > 0) {
+		    String setlist = "";
+		    if(docType == 1) {
+		    	setlist="업무기안서";
+		    }else if(docType == 2) {
+		    	setlist = "휴직신청서";
+		    }else if(docType == 3) {
+		    	setlist = "휴가신청서";
+		    }
+		    aServ.deleteTemp(tempSeq, setlist);
+	    }
 		
 		DocDraftDTO ddto = new DocDraftDTO();
 		DocVacationDTO dvdto = new DocVacationDTO();
@@ -84,7 +112,6 @@ public class ApprovalController {
 		
 		
 		// 각 객체 배열 변수에 저장하기
-		
 		// 결제라인 (결재자 id, 이름, 순서 = 1,2,3)
         List<Map<String, Object>> approvalLine = (List<Map<String, Object>>) requestDataMap.get("approvalLine");
         // 참조라인 (참조자 id, 이름, 순서 = 4)
@@ -130,7 +157,6 @@ public class ApprovalController {
 		        // 휴가 종류
 		        if (docVacation.get("category") != null) {
 		        	 int category = Integer.parseInt(docVacation.get("category").toString());
-//		            System.out.println(category);
 		            dvdto.setVacation_category(category);
 		        } else {
 		            throw new IllegalArgumentException("Category cannot be null");
@@ -236,17 +262,37 @@ public class ApprovalController {
 		
 		// 각 라인별 temp_seq는 서비스에서 받기
 		List<ReferLineDTO> referline = new ArrayList<>();
+		if(referline.size() > 0 ) {
 		 for (Map<String, Object> map : referLine) {
 	            ReferLineDTO dto = new ReferLineDTO();
 	            dto.setReferer((String) map.get("id")); // id를 referer로 사용
 	            referline.add(dto);
 	        }
 		 
+		}
 		 List<ApprovalLineDTO> approvalline = new ArrayList<>();
 		 for (Map<String, Object> map : approvalLine) {
 			 ApprovalLineDTO dto = new ApprovalLineDTO();
-	            dto.setApproval_id((String) map.get("id")); // 
-	            int order = Integer.parseInt((String)map.get("order"));
+	            dto.setApproval_id((String) map.get("id")); 
+	            Object ordervalue = map.get("order");
+
+	    		int order;
+	    		if (ordervalue instanceof Integer) {
+	    		    // 값이 Integer 타입일 경우, 그대로 캐스팅
+	    			order = (Integer) ordervalue;
+	    		} else if (ordervalue instanceof String) {
+	    		    // 값이 String 타입일 경우, Integer로 변환
+	    			if((String) ordervalue == "") {
+	    				order = 0;
+	    			}else {
+	    				order = Integer.parseInt((String) ordervalue);
+	    			}
+	    		} else {
+	    		    // 값이 예상하지 못한 타입일 경우의 처리
+	    		    throw new IllegalArgumentException("Unexpected type for temp_seq: " + ordervalue.getClass().getName());
+	    		}	            
+	            
+//	            int order = Integer.parseInt((String)map.get("order"));
 	            if(order == 1) {
 	            	dto.setMember_state_code("w");
 	            }else {
@@ -260,7 +306,7 @@ public class ApprovalController {
 		 for (MultipartFile file : files) {
 	            // Process each file (save, validate, etc.)
 	            String filename = file.getOriginalFilename();
-	            System.out.println("파일 이름 출력 : " + filename);
+//	            System.out.println("파일 이름 출력 : " + filename);
 	            // Save file to disk or database
 	        }
 		 }
@@ -273,7 +319,7 @@ public class ApprovalController {
 	@PostMapping("/tempSave")
 	public ResponseEntity<Void> tempSave(@RequestBody String requestData) {
 		
-		System.out.println("임시저장 시작");
+//		System.out.println("임시저장 시작");
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		
@@ -387,23 +433,23 @@ public class ApprovalController {
 		        }
 
 		        if (docVacation.get("halfStartAP") != "") {
-		        	System.out.println(docVacation.get("halfStartAP"));
-		        	System.out.println("halfStartAP is not null");
+//		        	System.out.println(docVacation.get("halfStartAP"));
+//		        	System.out.println("halfStartAP is not null");
 		            dvdto.setStart_half_ap((String) docVacation.get("halfStartAP"));
 		        } else {
-		        	System.out.println("halfStartAP is null");
+//		        	System.out.println("halfStartAP is null");
 		            dvdto.setStart_half_ap("n");
 		        }
 
 		        if (docVacation.get("halfEndAP") != "") {
-		        	System.out.println("halfEndAP is not null");
+//		        	System.out.println("halfEndAP is not null");
 		            dvdto.setEnd_half_ap((String) docVacation.get("halfEndAP"));
 		        } else {
-		        	System.out.println("halfEndAP is null");
+//		        	System.out.println("halfEndAP is null");
 		            dvdto.setEnd_half_ap("n");
 		        }
 
-		        System.out.println("정보출력 : " + dvdto.getVacation_category() + ":" + dvdto.getVacation_start() + ":" + dvdto.getVacation_end() + ":" + dvdto.getStart_half() + ":" + dvdto.getStart_half_ap() + ":" + dvdto.getEnd_half() + ":" + dvdto.getEnd_half_ap());
+//		        System.out.println("정보출력 : " + dvdto.getVacation_category() + ":" + dvdto.getVacation_start() + ":" + dvdto.getVacation_end() + ":" + dvdto.getStart_half() + ":" + dvdto.getStart_half_ap() + ":" + dvdto.getEnd_half() + ":" + dvdto.getEnd_half_ap());
 
 		    } catch(Exception e) {
 		        e.printStackTrace();
@@ -714,7 +760,7 @@ public class ApprovalController {
 		countData.put("category", "temp");
 		int count = aServ.getCount(countData);
 		
-		Map<String, Object> result =new HashMap<>();
+		Map<String, Object> result = new HashMap<>();
 		result.put("list",list);
 		result.put("count", count);
 				
