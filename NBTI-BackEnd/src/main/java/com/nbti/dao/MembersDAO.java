@@ -89,8 +89,8 @@ public boolean login(MembersDTO dto) {
 		return mybatis.selectOne("Member.memberData", id);
 	}
 
-	public int selectPeriod(String id) {
-		int result = mybatis.selectOne("Member.selectPeriod",id);
+	public double selectPeriod(String id) {
+		double result = mybatis.selectOne("Member.selectPeriod",id);
 		return result;
 	}
 	
@@ -137,7 +137,7 @@ public boolean login(MembersDTO dto) {
 	  
 	  
 	  ///
-	  public void updateVacation(String id,int vacation) {
+	  public void updateVacation(String id,double vacation) {
 		  Map<String , Object> map=new HashMap<>();
 		  map.put("id", id);
 		  map.put("vacation", vacation);
