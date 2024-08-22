@@ -38,7 +38,6 @@ export const MyBoardList = () => {
 
             setBoardList(resp.data.list); // 서버에서 list와 count 보낸 것 중 list만 담기
 
-            console.log("목록 : ", resp.data.list);
 
             // 페이지네이션
             const recordTotalCount = resp.data.count;
@@ -48,7 +47,6 @@ export const MyBoardList = () => {
             else {
                 setPageTotalCount(Math.floor(recordTotalCount / recordCountPerPage) + 1);
             }
-            console.log("Total Record Count:", recordTotalCount);
 
 
         });

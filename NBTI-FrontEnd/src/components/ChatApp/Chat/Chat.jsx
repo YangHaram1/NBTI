@@ -454,7 +454,7 @@ const Chat = ({ setDisabled }) => {
 
   useEffect(() => {//group_seq에 맞는 member list 뽑기
     axios.get(`${host}/group_member?group_seq=${chatSeq}`).then((resp) => {
-      console.log(resp.data);
+     // console.log(resp.data);
       setChatCheck(resp.data);
     })
   }, [invite, updateMember, chatNavi]);

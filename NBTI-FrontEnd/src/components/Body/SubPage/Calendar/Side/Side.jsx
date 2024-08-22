@@ -49,7 +49,6 @@ export const Side = ({ setAddOpen , setCalendarModalOpen, calendarModalOpen}) =>
   const [selectedDate, setSelectedDate] = useState(null);
   //모달창 열기
   const handleDateClick = (arg) => {
-      console.log("handleDateClick");
       setSelectedDate(arg.dateStr);
       setAddOpen(true);
   };

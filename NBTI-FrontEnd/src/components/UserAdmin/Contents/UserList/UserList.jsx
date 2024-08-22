@@ -58,8 +58,6 @@ const UserList = () => {
                 const lowerCaseUsers = convertKeysToLowerCase(userResponse.data);
                 const lowerCaseTeams = convertKeysToLowerCase(teamResponse.data);
     
-                console.log('Teams Data:', lowerCaseTeams); // 팀 데이터 확인용 로그
-    
                 setUsers(lowerCaseUsers);
                 setTeams(lowerCaseTeams);
                 setFilteredUsers(lowerCaseUsers);
