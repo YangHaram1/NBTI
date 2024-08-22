@@ -417,15 +417,25 @@
 
   
  <select id="getVacationHistory" resultType="map">
-SELECT
+   SELECT
     ap.temp_seq AS seq,
     ap.member_id AS applicant,
     dc.doc_sub_name AS sub_type,
     TO_CHAR(dv.vacation_start, 'YYYY-MM-DD') AS vacation_start,
     TO_CHAR(dv.vacation_end, 'YYYY-MM-DD') AS vacation_end,
-    (TRUNC(dv.vacation_end) - TRUNC(dv.vacation_start) + 1) AS days,
     vc.VCATEGORY_NAME AS category_name,
-    ads.doc_state_name AS status
+    ads.doc_state_name AS status,
+    -- 반차 여부를 계산하여 추가
+    CASE 
+        WHEN dv.start_half = 'true' OR dv.end_half = 'true' THEN 'O'
+        ELSE 'X'
+    END AS half_day,
+    -- 반차 고려한 일수 계산
+    (CASE
+        WHEN dv.start_half = 'true' AND dv.end_half = 'true' THEN (TRUNC(dv.vacation_end) - TRUNC(dv.vacation_start)) + 0.5
+        WHEN dv.start_half = 'true' OR dv.end_half = 'true' THEN (TRUNC(dv.vacation_end) - TRUNC(dv.vacation_start)) + 0.5
+        ELSE (TRUNC(dv.vacation_end) - TRUNC(dv.vacation_start) + 1)
+    END) AS days
 FROM
     approval ap
 JOIN
@@ -437,7 +447,7 @@ JOIN
 JOIN
     approval_doc_state ads ON ap.doc_state = ads.doc_state_code
 WHERE
-    ap.member_id = #{memberId}
+    ap.member_id = 'tkdgur'
 ORDER BY
     ap.temp_seq
 </select>

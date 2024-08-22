@@ -78,21 +78,51 @@ public class ApprovalLineService {
 					System.out.println("아이디 값 확인 : "+ id);
 					mdao.updateLeave(id);
 				}else if (setlist.equals("휴가신청서")) {
-					System.out.println("휴가 신청서 최신화" + seq);
-					String id =adao.getApprovaler(seq);
-					System.out.println("아이디값 확인 : " + id);
-					DocVacationDTO dto= dvdao.selectContent(seq);
-					 // 예시 Timestamps
-			        Timestamp vacationStart = dto.getVacation_start();
-			        Timestamp vacationEnd = dto.getVacation_end();
+					System.out.println("휴가 신청서 최신화: " + seq);
 
-			        // 밀리초 단위 차이 계산
-			        long milliseconds = vacationEnd.getTime() - vacationStart.getTime();
+					// ID 가져오기
+					String id = adao.getApprovaler(seq);
+					System.out.println("아이디값 확인: " + id);
 
-			        // 밀리초를 일수로 변환
-			        int daysDifference = (int)(Math.ceil((milliseconds / (1000 * 60 * 60 * 24)))) ;
-			        
-					mdao.updateVacation(id, 15-daysDifference);
+					// DocVacationDTO 객체 가져오기
+					DocVacationDTO dto = dvdao.selectContent(seq);
+
+					// 예시 Timestamps
+					Timestamp vacationStart = dto.getVacation_start();
+					Timestamp vacationEnd = dto.getVacation_end();
+
+					// 총 휴가 일수 가져오기
+					int totalVacationDays = mdao.selectPeriod(id); // 예시, DB에서 가져오는 메소드
+
+					// 반차 여부 확인
+					String startHalf = dto.getStart_half(); // boolean으로 처리
+					String endHalf = dto.getEnd_half();     // boolean으로 처리
+
+					// 밀리초 단위 차이 계산
+					long milliseconds = vacationEnd.getTime() - vacationStart.getTime();
+
+					// 밀리초를 일수로 변환
+					double daysDifference = milliseconds / (1000.0 * 60 * 60 * 24);
+
+					// 소수점 한 자리까지 반올림
+					daysDifference = Math.ceil(daysDifference * 10) / 10;
+
+					double result;
+					if("true ".equalsIgnoreCase(startHalf) || "true ".equalsIgnoreCase(endHalf)) {
+					    result = daysDifference + 0.5;
+					    System.out.println("반차 맞니 " + result);
+					} else {
+					    result = daysDifference;
+					    System.out.println("반차 아니니 " + result);
+					}
+
+					// 잔여 휴가 일수 계산
+					double remainingDays = totalVacationDays - result;
+					System.out.println(remainingDays);
+					// 데이터베이스 업데이트
+					mdao.updateVacation(id, remainingDays);
+					map.put("remainingDays", remainingDays);
+					
 				}
 				
 			// 현재 내 순서가 최종 순서가 아니라면 다음 결재자 상태 업데이트	

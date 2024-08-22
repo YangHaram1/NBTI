@@ -13,21 +13,6 @@ const convertArrayKeysToLowerCase = (arr) => {
     return arr.map(convertKeysToLowerCase);
 };
 
-const calculateVacationStats = (history) => {
-    const totalDays = 15; // 기본 총 휴가 일수
-    // const usedDays = history
-    //     .filter(item => item.status === '완료')
-    //     .reduce((acc, curr) => acc + curr.days, 0);  // 서버에서 계산된 days 필드 사용
-    const remainingDays = 7;
-
-    return {
-        total: totalDays,
-        used: totalDays-remainingDays,
-        remaining: remainingDays,
-    };
-};
-
-
 const MyVacation = () => {
     const [vacationInfo, setVacationInfo] = useState({ total: '', used: '', remaining: '' });
     const [vacationHistory, setVacationHistory] = useState([]);
@@ -39,9 +24,15 @@ const MyVacation = () => {
         if (memberId) {
             axios.get(`${host}/members/apply`, { params: { memberId } })
                 .then(response => {
-                    console.log(response.data)
-                    response.data.used=15-response.data.remaining;
-                    setVacationInfo(response.data);
+                    const totalDays = 15; // 기본 총 휴가 일수
+                    const remainingDays = response.data.remaining;
+                    const usedDays = totalDays - remainingDays;
+                    console.log(remainingDays);
+                    setVacationInfo({
+                        total: totalDays.toFixed(1),
+                        used: usedDays.toFixed(1),
+                        remaining: remainingDays.toFixed(1),
+                    });
                 })
                 .catch(error => {
                     setError("휴가 정보를 가져오는 데 문제가 발생했습니다.");
@@ -51,8 +42,6 @@ const MyVacation = () => {
                 .then(response => {
                     const historyData = convertArrayKeysToLowerCase(response.data);
                     setVacationHistory(historyData);
-                    const updatedStats = calculateVacationStats(historyData);
-                    setVacationInfo(updatedStats);
                 })
                 .catch(error => {
                     setError("휴가 신청 내역을 가져오는 데 문제가 발생했습니다.");
@@ -96,6 +85,7 @@ const MyVacation = () => {
                             <th>휴가 종류</th>
                             <th>일수</th>
                             <th>기간</th>
+                            <th>반차 여부</th>
                             <th>상태</th>
                             <th>상세</th>
                         </tr>
@@ -104,8 +94,9 @@ const MyVacation = () => {
                         {vacationHistory.map((history, index) => (
                             <tr key={index}>
                                 <td>{history.category_name}</td>
-                                <td>{history.days} 일</td>
+                                <td>{parseFloat(history.days).toFixed(1)} 일</td> {/* 소수점 1자리까지 표시 */}
                                 <td>{history.vacation_start} - {history.vacation_end}</td>
+                                <td>{history.half_day}</td> {/* 반차 여부 표시 */}
                                 <td>{history.status}</td>
                                 <td><button>상세보기</button></td>
                             </tr>

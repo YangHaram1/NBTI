@@ -111,9 +111,9 @@ public class MembersService {
 		return mdao.selectPeriod(id);
 	}
 
-	   public Map<String, Integer> applyForVacation(String memberId, int days) {
+	   public Map<String, Object> applyForVacation(String memberId, double days) {
 	        // 현재 남은 휴가 일수 가져오기
-	        int remainingVacation = mdao.selectPeriod(memberId);
+	        double remainingVacation = mdao.selectPeriod(memberId);
 	        System.out.println("applyForVacation 호출됨");  // 호출 여부 확인
 	        // 남은 휴가 일수가 부족한지 확인
 	        if (remainingVacation < days) {
@@ -130,7 +130,7 @@ public class MembersService {
 	        remainingVacation -= days;
 
 	        // 결과 반환
-	        Map<String, Integer> vacationInfo = new HashMap<>();
+	        Map<String, Object> vacationInfo = new HashMap<>();
 	        vacationInfo.put("total", 15); // 총 휴가 일수 (고정값)
 	        vacationInfo.put("used", 15 - remainingVacation); // 사용한 휴가 일수
 	        vacationInfo.put("remaining", remainingVacation); // 남은 휴가 일수

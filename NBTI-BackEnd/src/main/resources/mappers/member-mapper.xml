@@ -162,7 +162,7 @@
 		where id = #{id}
 	</select>
 
-	<select id="selectPeriod" resultType="int">
+	<select id="selectPeriod" resultType="double">
 		select vacation_period from
 		members where id = #{id}
 	</select>
