@@ -53,7 +53,6 @@ export const Detail = () => {
     if (boardSeq === -1) navi("/board"); // detail 화면에서 f5 -> 목록으로 이동
     if (boardSeq !== -1) {
       axios.get(`${host}/board/${boardSeq}/${code}`).then((resp) => {
-        console.log("직급 : ", resp.data);
         setDetail(resp.data); // 취소 시 원본 데이터
         setBoard(resp.data);
       });
@@ -234,7 +233,6 @@ export const Detail = () => {
   // (좋아요 포함) 댓글 전체 출력
   useEffect(() => {
     axios.get(`${host}/reply/${boardSeq}/${code}`).then((resp) => {
-      console.log("프로필 : ", resp.data);
 
       const { replies, likes } = resp.data;
       setReply(replies); // 좋아요 count 포함된 댓글 배열
@@ -265,7 +263,7 @@ export const Detail = () => {
     setIsLiked((prev) => ({ ...prev, [seq]: true })); // 상태를 true로 변환
 
     axios.post(`${host}/likes/insert`, { reply_seq: seq }).then((resp) => {
-      if (resp.data === 1) console.log("조아요 성공");
+      // if (resp.data === 1) console.log("조아요 성공");
     });
 
     setReply((prev) => {

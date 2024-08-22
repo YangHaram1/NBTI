@@ -4,7 +4,7 @@ import { Detail } from "./Detail/Detail";
 
 
 export const Content = ({addOpen, setAddOpen, calendarModalOpen, setCalendarModalOpen}) => {
-    console.log("3")
+    
     return(
         <div className={styles.container}>
             <Routes>

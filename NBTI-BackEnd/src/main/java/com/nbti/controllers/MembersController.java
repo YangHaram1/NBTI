@@ -160,7 +160,7 @@ public class MembersController {
 		return ResponseEntity.ok(byteam);
 	}
 	 @GetMapping("/apply")
-     public ResponseEntity<Map<String, Integer>> getVacationInfo(HttpSession session, @RequestParam(required = false) String memberId) {
+     public ResponseEntity<Map<String, Object>> getVacationInfo(HttpSession session, @RequestParam(required = false) String memberId) {
        System.out.println("applyForVacation 컨트롤러 호출됨");  // 호출 여부 확인
          // 세션에서 로그인한 사용자의 ID를 가져옵니다.
          if (memberId == null) {
@@ -171,35 +171,11 @@ public class MembersController {
          }
          
          // days는 기본적으로 0으로 설정하여 초기 로딩 시 사용 휴가를 차감하지 않도록 합니다.
-         Map<String, Integer> vacationInfo = mServ.applyForVacation(memberId, 0);
+         Map<String, Object> vacationInfo = mServ.applyForVacation(memberId, 0);
          return ResponseEntity.ok(vacationInfo);
      }
 
-     @PostMapping("/find-id")
-     public ResponseEntity<String> findId(@RequestParam String email, @RequestParam String name) {
-         String foundId = mServ.findIdByEmailAndName(email, name);
-         if (foundId != null) {
-             return ResponseEntity.ok(foundId);
-         } else {
-             return ResponseEntity.status(404).body("아이디를 찾을 수 없습니다.");
-         }
-     }
 
-     @PostMapping("/find-pw")
-     public ResponseEntity<String> findPw(@RequestParam String id, @RequestParam String name, @RequestParam String birth) {
-         boolean exists = mServ.verifyUser(id, name, birth);
-         if (exists) {
-             return ResponseEntity.ok("success");  // 성공 메시지를 반환
-         } else {
-             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("입력하신 정보와 일치하는 사용자가 없습니다.");
-         }
-     }
-     @PostMapping("/verify-user")
-     public ResponseEntity<Boolean> verifyUser(@RequestParam String id, @RequestParam String name, @RequestParam String birth) {
-         boolean verified = mServ.verifyUser(id, name, birth);
-         return ResponseEntity.ok(verified);  // true 또는 false 반환
-     }
-	
 	
 	// 작성일 24.07.30 
 	// 작성자 김지연

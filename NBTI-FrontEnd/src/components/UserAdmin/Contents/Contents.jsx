@@ -13,6 +13,7 @@ export const Contents = () => {
   return (
     <div className={styles.container}>
       <Routes>
+        <Route path='/' element={<Signup/>}></Route>
         <Route path='/useradmin' element={<UserList setUserDetail={setUserDetail} />} />
         <Route path='signup' element={<Signup />} />
         <Route path='userlist' element={<UserList setUserDetail={setUserDetail} />} />

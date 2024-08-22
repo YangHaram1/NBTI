@@ -12,6 +12,11 @@
   height: 90px;
   padding: 20px 10px;
 }
+.content{
+  display: flex;
+  max-height: 500px;
+  overflow: auto;
+}
 .container .top .left {
   width: 50%;
   display: flex;

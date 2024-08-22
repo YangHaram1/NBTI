@@ -14,7 +14,7 @@ const ChangePw = ({ authData, onBack }) => {
             return;
         }
 
-        axios.post(`${host}/members/updatePw`, {
+        axios.post(`${host}/auth/updatePw`, {
             id: authData.id,  // 여기서 authData.id로 접근
             newPassword: newPassword
         })

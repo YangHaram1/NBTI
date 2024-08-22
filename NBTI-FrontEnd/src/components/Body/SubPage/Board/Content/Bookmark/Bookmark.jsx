@@ -38,7 +38,6 @@ export const Bookmark = () => {
 
         axios.get(`${host}/board/bookmarkList`, { params }).then((resp) => {
 
-            console.log("결과 : ", resp.data.list);
             setBoardList(resp.data.list); // 서버에서 list와 count 보내준 것 중 list만 담기
 
             // 페이지네이션
