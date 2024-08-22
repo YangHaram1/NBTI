@@ -147,6 +147,10 @@ export const useReferLine = create((set) => {
                 console.log("저장소", newReferLine);
                 return {referLine:newReferLine};
         }),
+        deleteReferLine: (refer) => set((prev)=>{
+            const updatedReferLine = prev.referLine.filter(line => line.id !== refer);
+            return {referLine:updatedReferLine};
+        }),
         resetReferLine: () => set({ referLine: [] })
     }
 });
