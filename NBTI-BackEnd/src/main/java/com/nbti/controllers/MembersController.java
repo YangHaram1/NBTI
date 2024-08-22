@@ -314,11 +314,11 @@ public class MembersController {
 				}else if(map.get("referer") != null) {
 					
 					System.out.println("참조라인 들어옴"+map.get("referer"));
-					String id = (String)map.get("id");
-//					String name =  (String)map.get("name");
-//					Map<String, Object> memberData = mServ.memberData(id);
-//					memberData.put("name",name);
-//					list.add(memberData);
+					String id = (String)map.get("referer");
+					String name =  (String)map.get("name");
+					Map<String, Object> memberData = mServ.memberData(id);
+					memberData.put("name",name);
+					list.add(memberData);
 				}
 			}
            return list;

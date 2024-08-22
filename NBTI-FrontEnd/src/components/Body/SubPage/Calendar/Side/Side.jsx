@@ -92,12 +92,12 @@ export const Side = ({ setAddOpen , setCalendarModalOpen, calendarModalOpen}) =>
 
   // 공유 [+] 버튼
     const handleCalendarAddClick = () => {
-      if (sharedCalendarCount.current >= 7) { // 공유 캘린더 개수 체크
+      if (sharedCalendarCount.current >= 10) { // 공유 캘린더 개수 체크
         // alert("공유 캘린더는 최대 7개까지 추가될 수 있습니다.");
         Swal.fire({
           icon: "error",
           title: "공유",
-          text: "공유 캘린더는 최대 7개까지 추가될 수 있습니다.",
+          text: "공유 캘린더는 최대 10개까지 추가할 수 있습니다.",
         }); 
         return;
       }
@@ -217,11 +217,11 @@ const handleDeleteSharedCalendar = (calendar_id) => {
             <i className="fa-solid fa-calendar"></i>공유 캘린더<i className="fa-solid fa-plus" id={styles.plus} onClick={handleCalendarAddClick}/>
             <ul className={`${styles.submenu} ${NoticeBoard ? styles.open : ""}`} onClick={preventPropagation}>
               {publicList.map((calendar, index) => ( 
-                  <li key={index} onClick={()=>sharedCalendar(calendar.calendar_id)}> 
+                  <li key={index}> 
                       <span>
                           <i className="fa-solid fa-circle" style={{ color: '#fb8500' }}></i>
                       </span>
-                      <span>{calendar.calendar_name}</span> 
+                      <span onClick={()=>sharedCalendar(calendar.calendar_id)}>{calendar.calendar_name}</span> 
 
                       {calendar.member_id === loginID && ( // 공유캘린더 생성자만 삭제 버튼
                         // <button onClick={() => handleDeleteSharedCalendar(calendar.calendar_id)}><i className="fa-solid fa-trash"></i></button>

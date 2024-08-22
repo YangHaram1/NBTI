@@ -3,19 +3,31 @@ import React, { useEffect, useState } from 'react';
 import styles from './DocDraft.module.css';
 import { Header } from '../Header/Header';
 import ApprovalEditor from '../ApprovalEditor/ApprovalEditor';
+import { useApprovalLine } from '../../../../../../../store/store';
 
 export const DocDraft = ({userdata, content ,setDocData, setContent, setDate, setDept, setTitle}) => {
 
+    const {approvalLine} = useApprovalLine();
+    const [editorCheck, setEditorCheck] = useState(true);
+
+    useEffect(()=>{
+        if(approvalLine.length <= 0){
+            setEditorCheck(false);
+        }else{
+            setEditorCheck(true);
+        }
+    },[approvalLine]);
+
     const handleDate = (e)=>{
-        console.log(e.target.value);
+        // console.log(e.target.value);
         setDate(e.target.value);
     } 
     const handleDept = (e)=>{
-        console.log(e.target.innerText);
+        // console.log(e.target.innerText);
         setDept(e.target.innerText);
     } 
     const handleTitle = (e)=>{
-        console.log(e.target.innerText);
+        // console.log(e.target.innerText);
         setTitle(e.target.innerText);
     } 
 
@@ -38,8 +50,8 @@ export const DocDraft = ({userdata, content ,setDocData, setContent, setDate, se
                 <div className={styles.subtitle_title}> 제목 </div>
                 <div className={styles.subtitle_content} contentEditable="true" onInput={handleTitle} suppressContentEditableWarning='true'></div>
             </div>
-            <div className={styles.content}>
-                <ApprovalEditor setContent={setContent} content = {content} />
+            <div className={styles.content} >
+                {editorCheck&&<ApprovalEditor setContent={setContent} content ={content} />}
             </div>
         </div>
     );

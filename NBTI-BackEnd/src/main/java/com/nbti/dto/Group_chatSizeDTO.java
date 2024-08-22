@@ -9,9 +9,8 @@ public class Group_chatSizeDTO {
 	private String bookmark;
 	private int size;
 	private int unread;
-	private List<String> list;
+	private List<MembersDTO> list;
 	private ChatDTO dto;
-	
 	public int getSeq() {
 		return seq;
 	}
@@ -48,10 +47,10 @@ public class Group_chatSizeDTO {
 	public void setUnread(int unread) {
 		this.unread = unread;
 	}
-	public List<String> getList() {
+	public List<MembersDTO> getList() {
 		return list;
 	}
-	public void setList(List<String> list) {
+	public void setList(List<MembersDTO> list) {
 		this.list = list;
 	}
 	public ChatDTO getDto() {
@@ -61,7 +60,7 @@ public class Group_chatSizeDTO {
 		this.dto = dto;
 	}
 	public Group_chatSizeDTO(int seq, String name, String alarm, String bookmark, int size, int unread,
-			List<String> list, ChatDTO dto) {
+			List<MembersDTO> list, ChatDTO dto) {
 		super();
 		this.seq = seq;
 		this.name = name;

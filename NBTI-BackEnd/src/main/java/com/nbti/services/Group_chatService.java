@@ -98,7 +98,7 @@ public class Group_chatService {
 		for (int i = 0; i < chatList.size(); i++) {
 			int size = 0;
 			Group_chatDTO dto = chatList.get(i);
-			List<String> member_img= new ArrayList<>();
+			List<MembersDTO> userList= new ArrayList<>();
 			for (Group_memberDTO MemberDTO : list) {
 				if (MemberDTO.getGroup_seq() == dto.getSeq()) {
 					List<Group_memberDTO> memberList = mdao.members(MemberDTO.getGroup_seq()); // seq에맞는 멤버 목록
@@ -106,7 +106,6 @@ public class Group_chatService {
 					int last_chat_seq = 0;
 					
 					//List<MembersDTO> userList=new ArrayList<>(); //방 멤버 개개인의 컬럼 가저오기
-					int index=0;
 					for (Group_memberDTO member : memberList) {
 						if (member.getMember_id().equals(loginID)) {
 							last_chat_seq = member.getLast_chat_seq();
@@ -114,19 +113,18 @@ public class Group_chatService {
 						else {
 							MembersDTO membersDTO=msdao.selectMyData(member.getMember_id());
 							if(membersDTO!=null) {
-								index++;
-								member_img.add(membersDTO.getMember_img());
+								membersDTO.setPw("");
+								userList.add(membersDTO);
 							}
 						}
 					}
-					System.out.println(index);
 					ChatDTO cdto = cdao.getLastDTO(dto.getSeq()); // 그룹채팅방에서 마지막 메세지 가저오는거고
 					int unread = 0;
 					if (cdto != null) {
 						unread = cdao.unread(dto.getSeq(), last_chat_seq, cdto.getSeq()) - 1;
 					}
 					result.add(new Group_chatSizeDTO(dto.getSeq(), MemberDTO.getName(), MemberDTO.getAlarm(),
-							MemberDTO.getBookmark(), size, unread, member_img,cdto));
+							MemberDTO.getBookmark(), size, unread, userList,cdto));
 					break;
 				}
 			}

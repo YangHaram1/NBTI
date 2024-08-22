@@ -162,7 +162,6 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
     
         axios.post(`${host}/calendar`, postData)
             .then((resp) => {
-
                 // 캘린더에 이벤트 추가 (UI)
                 setEvents(prev => [
                     ...prev,
@@ -296,8 +295,6 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
             .then((resp) => {
                 selectedEvent.setProp('title', editedTitle);
                 selectedEvent.setExtendedProp('contents', editedContents);
-                
-                // console.log("~~~~~"+selectedEvent);
 
                 setSelectedEventSave({
                     title: editedTitle,
@@ -308,6 +305,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                         contents : editedContents,
                         calendar_name : selectedEventSave.extendedProps.calendar_name,
                         member_id : selectedEventSave.extendedProps.member_id,
+                        member_name : selectedEventSave.extendedProps.member_name
                     },
                 });
 
@@ -368,21 +366,30 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
         // console.log(info.event.title);
         // console.log("test"+selectedEventSave);
 
-        setSelectedEventSave({
-            title: info.event.title,
-            start: info.event.start,
-            end: info.event.end,
-            extendedProps: {
-                contents : info.event.extendedProps.contents,
-                calendar_name : info.event.extendedProps.calendar_name,
-                member_id: info.event.extendedProps.member_id
-            },
-        });
+        axios.get(`${host}/members/${info.event.extendedProps.member_id}`).then((resp)=>{
+            // console.log("member : " + resp.data.name);
+            const memberName = resp.data.name;
 
-        
-        setSelectedEvent(info.event); // 선택한 이벤트 저장
-        setModalOpen(true); // 상세보기 모달 열기
-        setAddOpen(false); // 일정 추가 모달 닫기
+            setSelectedEventSave({
+                title: info.event.title,
+                start: info.event.start,
+                end: info.event.end,
+                extendedProps: {
+                    contents : info.event.extendedProps.contents,
+                    calendar_name : info.event.extendedProps.calendar_name,
+                    member_id: info.event.extendedProps.member_id,
+                    member_name : memberName
+                },
+            });
+
+            
+            setSelectedEvent(info.event); // 선택한 이벤트 저장
+            setModalOpen(true); // 상세보기 모달 열기
+            setAddOpen(false); // 일정 추가 모달 닫기
+        }).catch((error) => {
+        console.error("Error", error);
+    });
+
     };
 
     useEffect(() => {
@@ -415,8 +422,6 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
             });
     }
 
-
-    // console.log("2"+calendarList[4].member_id);
     return (
         <div className={styles.calender}>
             <div className={styles.calenderColor}>
@@ -477,14 +482,11 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                                     <div className={styles.detail}>
                                         <p>{selectedEventSave.extendedProps.calendar_name == 1 ? '내 캘린더' : selectedEventSave.extendedProps.calendar_name}</p>
                                         <hr/>
-                                        <p>
-                                            제목 : <input type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} />
-                                        </p>
+                                        <p>작성자 : {selectedEventSave ? selectedEventSave.extendedProps.member_name : ""}</p>
+                                        <p>제목 : <input type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} /></p>
                                         <p>시작 : {selectedEventSave.start.toLocaleString()}</p>
                                         <p>종료 : {selectedEventSave.end ? selectedEventSave.end.toLocaleString() : '없음'}</p>
-                                        <p>
-                                            내용 : <input type="text" value={editedContents} onChange={(e) => setEditedContents(e.target.value)} />
-                                        </p>
+                                        <p> 내용 : <input type="text" value={editedContents} onChange={(e) => setEditedContents(e.target.value)} /></p>
                                         <div className={styles.detailBtn}>
                                             <button onClick={() => setIsEditing(false)}>취소</button>
                                             <button onClick={handleSaveClick}>저장</button>
@@ -497,7 +499,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                                     <p>{selectedEventSave && selectedEventSave.extendedProps && selectedEventSave.extendedProps.calendar_name == 1
                                         ? '내 캘린더' : (selectedEventSave ? selectedEventSave.extendedProps.calendar_name : "")}</p>
                                     <hr/>
-                                    <p>작성자 : {selectedEventSave ? selectedEventSave.extendedProps.member_id : ""}</p>
+                                    <p>작성자 : {selectedEventSave ? selectedEventSave.extendedProps.member_name : ""}</p>
                                     <p>제목 : {selectedEventSave ? selectedEventSave.title : ""}</p>
                                     <p>시작 : {selectedEventSave ? selectedEventSave.start.toLocaleString() : ""}</p>
                                     <p>종료 : {selectedEventSave ? selectedEventSave.end.toLocaleString() : ""}</p>

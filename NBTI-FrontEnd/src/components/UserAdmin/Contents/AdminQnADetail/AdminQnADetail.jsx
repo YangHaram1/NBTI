@@ -160,7 +160,6 @@ export const AdminQnADetail = () => {
     });
   };
 
-
   // 북마크 추가
   const handleBookmarkAdd = (seq) => {
     setIsBookmarked(!isBookmarked);
@@ -315,7 +314,11 @@ export const AdminQnADetail = () => {
           <span>{currentDate}</span>
           {updatedFiles.length > 0 && (
             <i
-              className={`fa-lg ${isFileListOpen ? "fa-regular fa-folder-open" : "fa-solid fa-folder-open"}`}
+              className={`fa-lg ${
+                isFileListOpen
+                  ? "fa-regular fa-folder-open"
+                  : "fa-solid fa-folder-open"
+              }`}
               onClick={toggleFileList}
             ></i>
           )}
@@ -365,7 +368,14 @@ export const AdminQnADetail = () => {
         </div>
         {isAdmin && (
           <div className={styles.replyInput}>
-            <img src={image} alt="" />
+            <img
+              src={
+                currentUser && currentUser.member_img
+                  ? `${host}/images/avatar/${currentUser.id}/${currentUser.member_img}`
+                  : `${image}`
+              }
+              alt=""
+            />
             <div
               ref={inputRef} // ref 설정
               className={styles.inputText}
@@ -388,10 +398,18 @@ export const AdminQnADetail = () => {
 
             return (
               <div className={styles.replyOutput} key={i}>
-                <img src={image} alt="" />
+                <img
+                  src={
+                    item.member_img === null
+                      ? `${image}`
+                      : `${host}/images/avatar/${item.member_id}/${item.member_img}`
+                  }
+                  alt=""
+                />
                 <div>
                   <div className={styles.writer_writeDate}>
                     <span>{item.name}</span>
+                    <span>{item.job_name}</span>
                     <span>{reply_currentDate}</span>
                   </div>
                   <div

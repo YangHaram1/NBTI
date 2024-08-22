@@ -1,6 +1,4 @@
 
-import { Routes, Route, BrowserRouter as Router, Outlet, Link } from 'react-router-dom';
-
 import Chat from './Chat/Chat';
 import Home from './Home/Home';
 import axios from 'axios';
@@ -11,7 +9,7 @@ import { useEffect } from 'react';
 import { useAuthStore } from './../../store/store';
 axios.defaults.withCredentials = true;
 
-const ChatApp = ({websocketRef,draggableRef}) => {
+const ChatApp = ({websocketRef,draggableRef,setDisabled}) => {
     const { chatAppRef,chatNavi,ws,setChatNavi,dragRef} = useContext(ChatsContext);
     const { loginID } = useAuthStore;
     ws.current=websocketRef.current;
@@ -57,9 +55,9 @@ const ChatApp = ({websocketRef,draggableRef}) => {
       
 
         <div className={styles.container} ref={chatAppRef}>
-            {chatNavi==='home' && <Home/>}
-            {chatNavi===('chat1') && <Chat/>}
-            {chatNavi===('chat') && <Chat/>}
+            {chatNavi==='home' && <Home setDisabled={setDisabled}/>}
+            {chatNavi===('chat1') && <Chat setDisabled={setDisabled}/>}
+            {chatNavi===('chat') && <Chat setDisabled={setDisabled}/>}
         </div>
     );
 
