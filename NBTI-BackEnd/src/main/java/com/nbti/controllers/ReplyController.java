@@ -43,7 +43,7 @@ public class ReplyController {
 			String member_id = (String) session.getAttribute("loginID");
 			dto.setMember_id(member_id);
 			
-			System.out.println(dto.getName());
+			//System.out.println(dto.getName());
 			
 			return ResponseEntity.ok(rserv.insert(dto));
 		}
