@@ -105,7 +105,10 @@ const MyVacation = () => {
                                 <td>{history.half_day}</td> {/* 반차 여부 표시 */}
                                 <td>{history.status}</td>
                                 <td>
-                                    <button onClick={() => handleDetailClick(history.seq)}>상세보기</button>
+                                <button 
+                className={styles.detailButton} 
+                onClick={() => handleDetailClick(history.seq)}
+            >상세보기</button>
                                 </td>
                             </tr>
                         ))}
