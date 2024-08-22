@@ -95,10 +95,16 @@ public class ApprovalDAO {
 		mybatis.update("Approval.updateDocStateCancle", seq);
 	}
 
-	public List<Map<String, Object>> getVacationHistory(String memberId) {
-	    List<Map<String, Object>> result = mybatis.selectList("Approval.getVacationHistory", memberId);
-	    System.out.println("Data retrieved from MyBatis: " + result);
-	    return result;
+	public List<Map<String, Object>> getVacationHistory(String memberId,int start, int end) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("start", start);
+		param.put("end", end);
+		param.put("memberId", memberId);
+		
+		return mybatis.selectList("Approval.getVacationHistory", param);
+	}
+	public int getTotalRecordCount(String memberId) {
+		return mybatis.selectOne("Approval.getTotalRecordCount",memberId);
 	}
 	
 	public String getApprovaler(int seq) {

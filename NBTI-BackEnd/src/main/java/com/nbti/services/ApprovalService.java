@@ -1,17 +1,14 @@
 package com.nbti.services;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.nbti.commons.RealpathConfig;
 import com.nbti.dao.ApprovalDAO;
 import com.nbti.dao.ApprovalLineDAO;
 import com.nbti.dao.DocDraftDAO;
@@ -23,7 +20,6 @@ import com.nbti.dto.ApprovalLineDTO;
 import com.nbti.dto.DocDraftDTO;
 import com.nbti.dto.DocLeaveDTO;
 import com.nbti.dto.DocVacationDTO;
-import com.nbti.dto.FilesDTO;
 import com.nbti.dto.ListDocDTO;
 import com.nbti.dto.ReferLineDTO;
 
@@ -176,9 +172,15 @@ public class ApprovalService {
 		}
 	}
 	
-	public List<Map<String, Object>> getVacationHistory(String memberId) {
-	    List<Map<String, Object>> result = adao.getVacationHistory(memberId);
-	    System.out.println("Data retrieved from DAO: " + result);
-	    return result;
-	}
+	public Map<String, Object> getVacationHistory(String memberId, int start, int end) {
+        List<Map<String, Object>> history = adao.getVacationHistory(memberId, start, end);
+        int totalRecordCount = adao.getTotalRecordCount(memberId);
+
+        // 결과를 맵으로 묶어서 반환
+        Map<String, Object> result = new HashMap<>();
+        result.put("history", history);
+        result.put("totalRecordCount", totalRecordCount);
+
+        return result;
+    }
 }

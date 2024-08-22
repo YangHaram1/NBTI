@@ -538,40 +538,51 @@
 
   
  <select id="getVacationHistory" resultType="map">
-   SELECT
-    ap.temp_seq AS seq,
-    ap.member_id AS applicant,
-    dc.doc_sub_name AS sub_type,
-    TO_CHAR(dv.vacation_start, 'YYYY-MM-DD') AS vacation_start,
-    TO_CHAR(dv.vacation_end, 'YYYY-MM-DD') AS vacation_end,
-    vc.VCATEGORY_NAME AS category_name,
-    ads.doc_state_name AS status,
-    -- 반차 여부를 계산하여 추가
-    CASE 
-        WHEN dv.start_half = 'true' OR dv.end_half = 'true' THEN 'O'
-        ELSE 'X'
-    END AS half_day,
-    -- 반차 고려한 일수 계산
-    (CASE
-        WHEN dv.start_half = 'true' AND dv.end_half = 'true' THEN (TRUNC(dv.vacation_end) - TRUNC(dv.vacation_start)) + 0.5
-        WHEN dv.start_half = 'true' OR dv.end_half = 'true' THEN (TRUNC(dv.vacation_end) - TRUNC(dv.vacation_start)) + 0.5
-        ELSE (TRUNC(dv.vacation_end) - TRUNC(dv.vacation_start) + 1)
-    END) AS days
-FROM
-    approval ap
-JOIN
-    doc_vacation dv ON ap.temp_seq = dv.vacation_seq
-JOIN
-    doc_sub dc ON ap.doc_sub_seq = dc.doc_form_seq
-JOIN
-    vacation_category vc ON dv.vacation_category = vc.VCATEGORY_SEQ
-JOIN
-    approval_doc_state ads ON ap.doc_state = ads.doc_state_code
-WHERE
-    ap.member_id = #{memberId}
-ORDER BY
-    ap.temp_seq
+ 
+SELECT a.*
+FROM (
+    SELECT
+        ap.temp_seq AS seq,
+        ap.member_id AS applicant,
+        dc.doc_sub_name AS sub_type,
+        TO_CHAR(dv.vacation_start, 'YYYY-MM-DD') AS vacation_start,
+        TO_CHAR(dv.vacation_end, 'YYYY-MM-DD') AS vacation_end,
+        vc.VCATEGORY_NAME AS category_name,
+        ads.doc_state_name AS status,
+        -- 반차 여부를 계산하여 추가
+        CASE 
+            WHEN dv.start_half = 'true' OR dv.end_half = 'true' THEN 'O'
+            ELSE 'X'
+        END AS half_day,
+        -- 반차 고려한 일수 계산
+        CASE
+            WHEN dv.start_half = 'true' AND dv.end_half = 'true' THEN (TRUNC(dv.vacation_end) - TRUNC(dv.vacation_start)) + 0.5
+            WHEN dv.start_half = 'true' OR dv.end_half = 'true' THEN (TRUNC(dv.vacation_end) - TRUNC(dv.vacation_start)) + 0.5
+            ELSE (TRUNC(dv.vacation_end) - TRUNC(dv.vacation_start)) + 1
+        END AS days,
+        ROW_NUMBER() OVER (ORDER BY ap.temp_seq DESC) AS rown 
+    FROM
+        approval ap
+    JOIN
+        doc_vacation dv ON ap.temp_seq = dv.vacation_seq
+    JOIN
+        doc_sub dc ON ap.doc_sub_seq = dc.doc_form_seq
+    JOIN
+        vacation_category vc ON dv.vacation_category = vc.VCATEGORY_SEQ
+    JOIN
+        approval_doc_state ads ON ap.doc_state = ads.doc_state_code
+    WHERE
+        ap.member_id = #{memberId}
+) a
+WHERE a.rown BETWEEN #{start} AND #{end}
+ORDER BY a.seq DESC
 </select>
+    <select id="getTotalRecordCount" resultType="int">
+        SELECT COUNT(*)
+        FROM approval
+        WHERE member_id = #{memberId}
+          AND doc_sub_seq = '3' <!-- 필요에 따라 수정 -->
+    </select>
     <select id="selectApprovalerId" resultType="String">
     	select member_id from approval where temp_seq = #{seq} 
 
