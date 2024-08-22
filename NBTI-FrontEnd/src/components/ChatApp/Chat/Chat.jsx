@@ -20,9 +20,10 @@ import notice from '../../../images/notice.png';
 import Swal from 'sweetalert2';
 import SweetAlert from '../../../function/SweetAlert.js';
 import Calendar from './Calendar/Calendar';
+import Invited from './Invited/Invited.jsx';
 
 axios.defaults.withCredentials = true;
-const Chat = () => {
+const Chat = ({ setDisabled }) => {
   const editorRef = useRef(null);
   const sidebarRef = useRef(null);
   const containerRef = useRef(null);
@@ -36,15 +37,16 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [search, setSearch] = useState('');
-  const { webSocketCheck,searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage, setWebSocketCheck, chatController, setChatController } = useCheckList();
+  const { webSocketCheck, searchDisplay, setSearchDisplay, chatSeq, setChatSeq, setOnmessage, setWebSocketCheck, chatController, setChatController } = useCheckList();
   const [searchList, setSearchList] = useState([]);
   const [invite, setInvite] = useState(false);
+  const [invited,setInVited] =useState(false);
   const [updateMember, setUpdateMember] = useState(false);
   const [checkInvite, setCheckInvite] = useState(false);
   const [RoomName, setRoomName] = useState('');
   const [calendar, setCalendar] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null); //이거 날짜
-  const [maxRetries,setMaxRetries] =useState(0);
+  const [maxRetries, setMaxRetries] = useState(0);
 
   useEffect(() => { //group_chat 속성 가저오기 나와의채팅인지 아닌지 
     const { chatSeq } = useCheckList.getState();
@@ -73,25 +75,25 @@ const Chat = () => {
     if (loginID != null && loginID !== 'error') {
       ws.current.onclose = () => {
         console.log('Disconnected from WebSocket');
-        if(maxRetries<10){
+        if (maxRetries < 10) {
           setWebSocketCheck();
           console.log("websocket 재연결 시도")
         }
-        setMaxRetries((prev)=>{
-          return prev+1;
+        setMaxRetries((prev) => {
+          return prev + 1;
         })
       };
 
       ws.current.onerror = (error) => {
         console.log('WebSocket error observed:', error);
-        if(maxRetries<10){
+        if (maxRetries < 10) {
           setWebSocketCheck();
           console.log("websocket 재연결 시도")
         }
-        setMaxRetries((prev)=>{
-          return prev+1;
+        setMaxRetries((prev) => {
+          return prev + 1;
         })
-      
+
       };
 
       ws.current.onmessage = (e) => {
@@ -154,7 +156,7 @@ const Chat = () => {
     return () => {
     };
 
-  }, [chatNavi,webSocketCheck]);
+  }, [chatNavi, webSocketCheck]);
 
   useEffect(() => {
     if (loginID != null && loginID !== 'error') {
@@ -176,7 +178,7 @@ const Chat = () => {
   const notify = useCallback((item) => {
     const { maxCount, count, increment, decrement } = useNotification.getState();
     const { chatSeq } = useCheckList.getState();
-   // console.log(`chatSeq= ${chatSeq} item.group_seq=${item.group_seq}`);
+    // console.log(`chatSeq= ${chatSeq} item.group_seq=${item.group_seq}`);
     if (chatSeq !== 0) {
       return false;
     }
@@ -243,6 +245,13 @@ const Chat = () => {
     setSelectedDate(null);
   }
 
+  const handleDrag = (check) => {
+    setDisabled(check);
+
+  }
+  const handleInvited=()=>{
+    setInVited((prev)=>{return !prev})
+  }
 
 
   const handleSearch = (e) => { //여기가 지금 serch component 보이게 하는곳
@@ -276,7 +285,7 @@ const Chat = () => {
       Array.from(elements).forEach(e => { // 요소 확인
         // 여기서 원하는 작업을 수행할 수 있습니다.
         if (e.innerHTML === selectedDate) {
-           e.scrollIntoView({ behavior: 'smooth',  block: 'center', inline: 'nearest'});
+          e.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
           // const elementTop = e.getBoundingClientRect().Top;
           // divRef.current.scrollTo({
           //   top: elementTop,
@@ -445,10 +454,12 @@ const Chat = () => {
 
   useEffect(() => {//group_seq에 맞는 member list 뽑기
     axios.get(`${host}/group_member?group_seq=${chatSeq}`).then((resp) => {
-      // console.log(resp.data);
+      console.log(resp.data);
       setChatCheck(resp.data);
     })
   }, [invite, updateMember, chatNavi]);
+
+ 
 
 
   if (isLoading === true) {
@@ -458,9 +469,12 @@ const Chat = () => {
     return (
       <React.Fragment>
         <div className={styles.container} ref={containerRef}>
-          <div className={styles.header}>
+          <div className={styles.header} onMouseEnter={() => handleDrag(false)} onMouseLeave={() => handleDrag(true)}>
             <div className={styles.header1}>
               {RoomName}
+              <div>
+                <i className="fa-regular fa-user fa-lr" onClick={handleInvited}></i>
+              </div>
             </div>
             <div className={styles.header2}>
               <button onClick={handleCalendar}>📅</button>
@@ -469,7 +483,7 @@ const Chat = () => {
               <button onClick={handleCancel}>❌</button>
             </div>
           </div>
-          <div className={styles.contents} ref={divRef}>
+          <div className={styles.contents} ref={divRef} onMouseDown={() => handleDrag(true)}>
             {
               list
             }
@@ -481,6 +495,7 @@ const Chat = () => {
         <Search search={search} setSearch={setSearch} searchRef={searchRef} setSearchList={setSearchList} handleSearch={handleSearch} chatRef={chatRef} divRef={divRef}></Search>
         <Emoticon sidebarRef={sidebarRef} editorRef={editorRef} />
         {invite && (<Invite setInvite={setInvite} chatCheck={chatCheck}></Invite>)}
+        {invited && (<Invited chatCheck={chatCheck}/>)}
         {calendar && (<Calendar setSelectedDate={setSelectedDate} />)}
       </React.Fragment>
     );

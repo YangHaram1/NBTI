@@ -12,6 +12,8 @@ import { Slide, ToastContainer } from 'react-toastify';
 import styles from './App.module.css';
 import Draggable from 'react-draggable';
 import styleHome from './components/ChatApp/Home/Home.module.css';
+import { ResizableBox } from 'react-resizable';
+import 'react-resizable/css/styles.css'
 
 axios.defaults.withCredentials = true;
 
@@ -23,7 +25,7 @@ function App() {
   const { webSocketCheck, onMessage, chatController } = useCheckList();
   const [unread, setUnread] = useState();
   const draggableRef = useRef(null);
-  const [disabled,setDisabled]=useState(true);
+  const [disabled, setDisabled] = useState(true);
 
   useEffect(() => {
     setLoginID(sessionStorage.getItem("loginID"));
@@ -75,7 +77,7 @@ function App() {
 
 
   const chatApp = loginID != null && loginID !== 'error' ? (
-    <ChatApp websocketRef={websocketRef} draggableRef={draggableRef} setDisabled={setDisabled}/>
+    <ChatApp websocketRef={websocketRef} draggableRef={draggableRef} setDisabled={setDisabled} />
   ) : (
     <div></div>
   );
@@ -90,9 +92,20 @@ function App() {
             <Route path='/*' element={<Body />} />
           </Routes>
           {(loginID != null && loginID !== 'error') && <Draggable nodeRef={draggableRef} disabled={disabled}>
-            <div className={styles.chatapp} ref={draggableRef}>
-              {chatApp}
+            <div className={styles.chatContainer} ref={draggableRef}>
+              <ResizableBox
+                width={350}
+                height={500}
+                minConstraints={[350, 500]}
+                maxConstraints={[600, 650]}
+                axis="both" 
+                handleSize={[30, 30]} 
+                resizeHandles={['se']}
+              >
+                  {chatApp}
+              </ResizableBox>
             </div>
+
           </Draggable>}
         </div>
         <ToastContainer

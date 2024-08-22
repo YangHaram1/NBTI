@@ -76,7 +76,8 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
 
         }}
         init={{
-          height: 126,
+          width:"auto",
+          height: "126",
           menubar: false,
           plugins: 'wordcount anchor  code', //image
           toolbar: 'fileupload emoticon| forecolor backcolor  blocks fontfamily fontsize fontcolor | bold italic underline strikethrough | link image media table mergetags  | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat ',
