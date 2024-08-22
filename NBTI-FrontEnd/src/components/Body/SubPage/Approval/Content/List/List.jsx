@@ -51,6 +51,8 @@ export const List = ({setlist}) => {
             default:
                 return;
         }
+
+
         axios.get(url +`?start=${start}&end=${end}&target=${target}&keyword=${keyword}`)
         .then(async (resp) => {
             console.log(resp.data);
@@ -83,17 +85,18 @@ export const List = ({setlist}) => {
             }), {});
             
             setFileExistenceMap(fileMap);
+            
         })
         .catch((error) => {
             console.error(error);
         });
-    },[cpage,search,setlist])
+    },[cpage, setlist, search])
 
     useEffect(()=>{
         setKeyword('');
         setTarget('select');
         // setCpage(1);
-    },[lists])
+    },[setlist])
 
     const handleMove = (tempSeq, docSubName) => {
         navi("/approval/detail", {state:{seq:tempSeq, setlist:docSubName, list:setlist}});
@@ -114,6 +117,7 @@ export const List = ({setlist}) => {
     const handleKeyword = (e)=>{
         setKeyword(e.target.value);
         console.log("키워드",e.target.value);
+        console.log("검색 종류",target);
     }
 
     const handlePage = (selectedPage) => {

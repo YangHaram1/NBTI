@@ -1,15 +1,7 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styles from './ApprovalCommentModal.module.css';
 
 export const ApprovalCommentModal = ({approvalData, onClose}) =>{
-
-    // const handleClose = () => {
-    //     onClose();
-    // }
-
-    // useEffect(()=>{
-    //     console.log("결재정보",approvalData);
-    // },[approvalData]);
 
     const formatDate = (dateTimeString) => {
         if(dateTimeString != null){
@@ -32,8 +24,8 @@ export const ApprovalCommentModal = ({approvalData, onClose}) =>{
                     {
                     approvalData.map((data, index)=>{
                         return(
-                            <>
-                            <div className={styles.comment_title} key={index}>
+                            <React.Fragment key={index}>
+                            <div className={styles.comment_title}>
                                 {index == 0 ? '최초' : index == 1 ?'중간' : '최종'} 결재자 : {data.NAME}({data.JOB_NAME}) / {data.TEAM_NAME}
                                         {
                                                 data.MEMBER_STATE_CODE === 'p' ? ' ( 승인 날짜 : ':  
@@ -48,7 +40,7 @@ export const ApprovalCommentModal = ({approvalData, onClose}) =>{
                                         }
                             </div>
                             <div className={styles.comment_content}>결재 의견 : { data.COMMENTS != null ? data.COMMENTS : '미작성'} </div>
-                            </>
+                            </React.Fragment>
                         );
                     })
                     }

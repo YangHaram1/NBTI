@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useApprovalLine, useDocLeave, useDocVacation, useReferLine } from '../../../../../../store/store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SecondModal from '../SecondModal/SecondModal';
+import Swal from 'sweetalert2';
 
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import {faPenToSquare} from '@fortawesome/free-solid-svg-icons';
@@ -22,7 +23,7 @@ export const Write = (props)=>{
     const [title, setTitle] = useState('');
     const { referLine, resetReferLine} = useReferLine();
     const { approvalLine, resetApprovalLine } = useApprovalLine();
-    const { docLeave, setDocLeave } = useDocLeave();
+    const { docLeave } = useDocLeave();
     const { docVacation } = useDocVacation();
     const [refer, setRefer] = useState([]);
     const [fileInfo, setFileInfo] = useState([]);
@@ -64,30 +65,87 @@ export const Write = (props)=>{
 
 
     // 기안하기
-    const approvalSubmit = () =>{
+    const approvalSubmit =  async () =>{
 
         // 필수 필드 검증
         if (setlist === "휴가신청서") {
             // 휴가 신청서의 경우
             if (!docVacation.category || !docVacation.start || !docVacation.end) {
-                alert("휴가 종류와 기간을 선택해 주세요.");
+                Swal.fire(
+                    { 
+                      icon: 'error',
+                      title: '전자결제',
+                      text: '휴가 종류와 기간을 선택해 주세요.'
+                    }
+                    );
+                // alert("휴가 종류와 기간을 선택해 주세요.");
                 return;
             }
         } else if (setlist === "휴직신청서") {
             // 휴직 신청서의 경우
             if (!docLeave.start || !docLeave.end) {
-                alert("휴직 기간을 선택해 주세요.");
+                Swal.fire(
+                    { 
+                      icon: 'error',
+                      title: '전자결제',
+                      text: '휴직 기간을 선택해 주세요.'
+                    }
+                    );
+                // alert("휴직 기간을 선택해 주세요.");
                 return;
             }
         } else if (setlist === "업무기안서") {
             // 업무 기안서의 경우
             if (!date || !dept || !title || !content) {
-                alert("업무 기안서의 모든 필드를 입력해 주세요.");
+                Swal.fire(
+                    { 
+                      icon: 'error',
+                      title: '전자결제',
+                      text: '업무 기안서의 모든 필드를 입력해 주세요.'
+                    }
+                    );
+                // alert("업무 기안서의 모든 필드를 입력해 주세요.");
                 return;
             }
         }
 
-        let result = window.confirm("긴급 문서로 하시겠습니까?");
+        // Swal 모달을 사용하여 긴급 문서 여부 확인
+    const Sresult = await Swal.fire({
+        icon: 'qeustion',
+        title: '전자결제',
+        text: '긴급 문서로 하시겠습니까?',
+        showCloseButton: true,
+        showCancelButton: true,
+        allowOutsideClick: false,
+        confirmButtonText: '긴급',
+        cancelButtonText: '일반',
+        customClass: {
+            popup: 'custom-swal-popup',  // 커스텀 클래스 이름 지정
+        }
+    });
+
+    let result = false;
+
+    if (Sresult.dismiss === Swal.DismissReason.close) {
+        // 닫기 버튼을 클릭한 경우
+        return; // 아무 작업도 하지 않고 종료
+    }else if (Sresult.isConfirmed) {
+        // 확인 버튼을 클릭한 경우
+        const confirmResult = await Swal.fire({
+            icon: 'warning',
+            title: '긴급 문서로 기안됩니다.',
+        });
+        result = true; // 긴급 문서로 처리
+    } else if (Sresult.dismiss === Swal.DismissReason.cancel) {
+        // 취소 버튼을 클릭한 경우
+        await Swal.fire({
+            icon: 'info',
+            title: '일반 문서로 기안됩니다.'
+        });
+        result = false; // 긴급 문서로 처리하지 않음
+    }
+            
+        // let result = window.confirm("긴급 문서로 하시겠습니까?");
         // console.log("개별", date, dept, title, content);
         let requestData;
 
@@ -100,12 +158,10 @@ export const Write = (props)=>{
                  formData.append('files', file); // 'files' is the expected part name on the server side
              });
          } else {
-             console.error("업로드할 파일이 없습니다.");
-            //  return;
+            //  console.error("업로드할 파일이 없습니다.");
          }
 
         if(setlist === "업무기안서"){
-            // docData => 업무기안서 내용 => else if 시 다른 변수로 변경 필요
             requestData = {
                 docDraft: {
                     effective_date: date,
@@ -128,10 +184,6 @@ export const Write = (props)=>{
                 docType : 3,
                 temp_seq: temp_seq
             };
-            // console.log("휴가",docVacation);
-            // console.log("휴가 신청서");
-            // console.log("휴가 결재",approvalLine);
-            // console.log("휴가 참조",referLine);
 
         }else if(setlist === "휴직신청서"){
             requestData = {
@@ -142,10 +194,6 @@ export const Write = (props)=>{
                 docType : 2,
                 temp_seq: temp_seq
             };
-            // console.log("휴직", docLeave);
-            // console.log("휴직 신청서");
-            // console.log("휴직 결재",approvalLine);
-            // console.log("휴직 참조",referLine);
         }
     
         formData.append('requestData', JSON.stringify(requestData));
@@ -155,88 +203,102 @@ export const Write = (props)=>{
         });
 
         // Send the request
-        axios.post(`${host}/approval`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })
-        .then(response => {
+        try {
+            await axios.post(`${host}/approval`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
             resetReferLine();
             resetApprovalLine();
-            // console.log("성공!");
             navi("/approval");
-        })
-        .catch(error => {
+        } catch (error) {
             console.error("문서 제출 실패:", error);
-        });
+        }
     }
 
     // 임시저장
-    const tempSubmit = () =>{
+    const tempSubmit = async () => {
 
-        let result = window.confirm("첨부 파일은 저장되지 않습니다.");
-        // console.log("개별", date, dept, title, content);
+        const Sresult = await Swal.fire({
+            icon: 'question',
+            title: '전자결제',
+            text: '첨부 파일은 저장되지 않습니다.',
+            showCancelButton: true,
+            allowOutsideClick: false,
+            confirmButtonText: '확인',
+            cancelButtonText: '취소',
+            customClass: {
+                popup: 'custom-swal-popup',  // 커스텀 클래스 이름 지정
+            }
+        });
+    
+        let result = false;
+
+        if (Sresult.isConfirmed) {
+            // 확인 버튼을 클릭한 경우
+            await Swal.fire({
+                icon: 'success',
+                title: '임시 저장이 완료 되었습니다., 임시 저장함으로 이동합니다.',
+            });
+            result = true;
+        } else if (Sresult.dismiss === Swal.DismissReason.cancel) {
+            // 취소 버튼을 클릭한 경우
+            await Swal.fire({
+                icon: 'error',
+                title: '임시 저장이 취소되었습니다.'
+            });
+            result = false; // 긴급 문서로 처리하지 않음
+        }
+
         let requestData;
 
         if(result){
-        if(setlist === "업무기안서"){
-            // docData => 업무기안서 내용 => else if 시 다른 변수로 변경 필요
-            requestData = {
-                docDraft: {
-                    effective_date: date,
-                    cooperation_dept: dept,
-                    title: title,
-                    content: content
-                },
-                approvalLine: approvalLine,
-                referLine: referLine,
-                emergency: false,
-                docType : 1
-            };  
-            console.log("결재",approvalLine);
-            console.log("참조",referLine);
-        }else if(setlist === "휴가신청서"){
-            requestData = {
-                docVacation: docVacation,
-                approvalLine: approvalLine,
-                referLine: referLine,
-                emergency: false,
-                docType : 3
-            };
-            // console.log("휴가",docVacation);
-            // console.log("휴가 신청서");
-            // console.log("휴가 결재",approvalLine);
-            // console.log("휴가 참조",referLine);
+            if(setlist === "업무기안서"){
+                // docData => 업무기안서 내용 => else if 시 다른 변수로 변경 필요
+                requestData = {
+                    docDraft: {
+                        effective_date: date,
+                        cooperation_dept: dept,
+                        title: title,
+                        content: content
+                    },
+                    approvalLine: approvalLine,
+                    referLine: referLine,
+                    emergency: false,
+                    docType : 1
+                };  
+                // console.log("결재",approvalLine);
+                // console.log("참조",referLine);
+            }else if(setlist === "휴가신청서"){
+                requestData = {
+                    docVacation: docVacation,
+                    approvalLine: approvalLine,
+                    referLine: referLine,
+                    emergency: false,
+                    docType : 3
+                };
 
-        }else if(setlist === "휴직신청서"){
-            requestData = {
-                docLeave: docLeave,
-                approvalLine: approvalLine,
-                referLine: referLine,
-                emergency: false,
-                docType : 2
-            };
-            // console.log("휴직", docLeave);
-            // console.log("휴직 신청서");
-            // console.log("휴직 결재",approvalLine);
-            // console.log("휴직 참조",referLine);
+            }else if(setlist === "휴직신청서"){
+                requestData = {
+                    docLeave: docLeave,
+                    approvalLine: approvalLine,
+                    referLine: referLine,
+                    emergency: false,
+                    docType : 2
+                };
+            }
+
+            try {
+                await axios.post(`${host}/approval/tempSave`, requestData);
+                resetReferLine();
+                resetApprovalLine();
+                navi("/approval/listDocTemp/");
+            } catch (error) {
+                console.error("문서 제출 실패:", error);
+            }
         }
-
-        // Send the request
-        axios.post(`${host}/approval/tempSave`, requestData)
-        .then(response => {
-            resetReferLine();
-            resetApprovalLine();
-            console.log("성공!");
-            navi("/approval/listDocTemp/");
-        })
-        .catch(error => {
-            console.error("문서 제출 실패:", error);
-        });
-
-        }
-    }
-
+    };
 
      // 파일 첨부
      const handleFileChange  = (e)=>{
@@ -253,6 +315,20 @@ export const Write = (props)=>{
         if (nonDuplicateFiles.length === 0) {
             alert("이미 선택된 파일입니다.");
             return;
+        }
+
+        const MAX_SIZE = 1024 * 1024 * 1024; // 1GB
+
+        const validFiles = nonDuplicateFiles.filter(file => {
+            if (file.size > MAX_SIZE) {
+                alert(`파일 "${file.name}" 이(가) 1GB 용량 제한을 초과했습니다.`);
+                return false;
+            }
+            return true;
+        });
+
+        if (validFiles.length === 0) {
+            return; // 유효한 파일이 없으면 종료
         }
 
         const newFileInfo = selectedFiles.map(file => ({
