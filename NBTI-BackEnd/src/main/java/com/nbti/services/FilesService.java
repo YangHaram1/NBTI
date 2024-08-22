@@ -276,7 +276,7 @@ public class FilesService {
 
 		// 결재라인 입력
 		for (ApprovalLineDTO dto : alist) {
-			System.out.println("결재라인 입력 전 데이터 확인"+dto.getApproval_order() + dto.getApproval_id());
+//			System.out.println("결재라인 입력 전 데이터 확인"+dto.getApproval_order() + dto.getApproval_id());
 			dto.setTemp_seq(temp_seq);
 			if(dto.getApproval_id() != null) {
 				aldao.insert(dto);

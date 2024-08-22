@@ -22,6 +22,7 @@ const SecondModal = ({ isOpen, onClose }) => {
 
   useEffect(()=>{
     // console.log("참조라인 데이터 확인",referLine);
+    if(referLine.length > 0){
     axios.post(`${host}/members/approvalSearch`,referLine)
     .then((resp)=>{
         // console.log("데이터 확인",resp.data);
@@ -31,6 +32,7 @@ const SecondModal = ({ isOpen, onClose }) => {
     .catch((err)=>{
         console.log(err);
     })
+  }
   },[referLine])
 
   const navi = useNavigate();

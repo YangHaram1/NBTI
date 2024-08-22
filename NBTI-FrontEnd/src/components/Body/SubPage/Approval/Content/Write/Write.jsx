@@ -30,6 +30,7 @@ export const Write = (props)=>{
 
     const location = useLocation();
     const setlist = props.setlist || location.state?.setlist || "기본 문서 제목";
+    const temp_seq = location.state?.temp_seq || '';
     const [isSecondModalOpen, setIsSecondModalOpen] = useState(false); // 두 번째 모달 상태
 
     const navi = useNavigate();
@@ -115,7 +116,8 @@ export const Write = (props)=>{
                 approvalLine: approvalLine,
                 referLine: referLine,
                 emergency: result,
-                docType : 1
+                docType : 1,
+                temp_seq: temp_seq
             };  
         }else if(setlist === "휴가신청서"){
             requestData = {
@@ -123,7 +125,8 @@ export const Write = (props)=>{
                 approvalLine: approvalLine,
                 referLine: referLine,
                 emergency: result,
-                docType : 3
+                docType : 3,
+                temp_seq: temp_seq
             };
             // console.log("휴가",docVacation);
             // console.log("휴가 신청서");
@@ -136,7 +139,8 @@ export const Write = (props)=>{
                 approvalLine: approvalLine,
                 referLine: referLine,
                 emergency: result,
-                docType : 2
+                docType : 2,
+                temp_seq: temp_seq
             };
             // console.log("휴직", docLeave);
             // console.log("휴직 신청서");
@@ -189,6 +193,8 @@ export const Write = (props)=>{
                 emergency: false,
                 docType : 1
             };  
+            console.log("결재",approvalLine);
+            console.log("참조",referLine);
         }else if(setlist === "휴가신청서"){
             requestData = {
                 docVacation: docVacation,
@@ -222,7 +228,7 @@ export const Write = (props)=>{
             resetReferLine();
             resetApprovalLine();
             console.log("성공!");
-            // navi("/approval");
+            navi("/approval/listDocTemp/");
         })
         .catch(error => {
             console.error("문서 제출 실패:", error);
@@ -300,6 +306,7 @@ export const Write = (props)=>{
 
     useEffect(()=>{
         // console.log("참조라인 데이터 확인",referLine);
+        if(referLine.length > 0){
         axios.post(`${host}/members/approvalSearch`,referLine)
         .then((resp)=>{
             // console.log("데이터 확인",resp.data);
@@ -309,6 +316,7 @@ export const Write = (props)=>{
         .catch((err)=>{
             console.log(err);
         })
+    }
     },[referLine])
 
     useEffect(()=>{
