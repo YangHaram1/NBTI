@@ -187,6 +187,7 @@ const UserList = () => {
         const selectedTeamCode = e.target.value;
         console.log('Selected Team Code:', selectedTeamCode); // 선택된 팀 코드 확인
         setSelectedTeam(selectedTeamCode);
+        setCpage(1);
     };
 
     const handleFilterChange = (e) => {
