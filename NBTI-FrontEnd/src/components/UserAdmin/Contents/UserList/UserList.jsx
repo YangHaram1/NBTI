@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMemberStore } from '../../../../store/store';
 import SearchUser from './SearchUser/SearchUser';
 import Team from './Team/Team';
+import ReactPaginate from 'react-paginate';
 
 const UserList = () => {
     const convertKeysToLowerCase = (obj) => {
@@ -46,39 +47,63 @@ const UserList = () => {
     const getLevelName = (levelSeq) => {
         return levelMap[levelSeq] || '권한 없음';
     };
+    const [cpage, setCpage] = useState(1);
+    const [page_total_count, setPage_total_count] = useState(1);
+    const [search, setSearch] = useState(false);
+
+    const record_count_per_page = 20;
+    const navi_count_per_page = 5;
+
+  
+
 
     useEffect(() => {
+        const start = cpage * record_count_per_page - (record_count_per_page - 1); //1
+        const end = cpage * record_count_per_page; //10
+        const record_total_count = 50; 
+
         const fetchData = async () => {
             try {
                 const [userResponse, teamResponse] = await Promise.all([
                     axios.get(`${host}/members/selectMembers`),
                     axios.get(`${host}/members/selectTeam`)
                 ]);
-    
+
                 const lowerCaseUsers = convertKeysToLowerCase(userResponse.data);
                 const lowerCaseTeams = convertKeysToLowerCase(teamResponse.data);
-    
+
                 setUsers(lowerCaseUsers);
                 setTeams(lowerCaseTeams);
-                setFilteredUsers(lowerCaseUsers);
+                setFilteredUsers(lowerCaseUsers); // 
                 setLoading(false);
+
+               
+                if (record_total_count % record_count_per_page === 0) {
+                    setPage_total_count(Math.floor(record_total_count / record_count_per_page));
+                }
+                else {
+                    setPage_total_count(Math.floor(record_total_count / record_count_per_page) + 1);
+                }
+
             } catch (err) {
                 console.error('Error fetching data:', err);
                 setError('데이터를 가져오는 데 실패했습니다.');
                 setLoading(false);
             }
         };
-    
         fetchData();
     }, []);
-    
+
 
     const fetchFilteredUsers = async () => {
+        const start = cpage * record_count_per_page - (record_count_per_page - 1); //1
+        const end = cpage * record_count_per_page; //10
+        const record_total_count = 50; 
         try {
             let response;
             if (filterType === 'name' && searchTerm) {
                 response = await axios.get(`${host}/members/searchUser`, {
-                    params: { 
+                    params: {
                         name: searchTerm
                     }
                 });
@@ -90,10 +115,19 @@ const UserList = () => {
             } else {
                 response = { data: users };
             }
-    
+
             console.log('Filtered Users API Response:', response.data); // API 응답 데이터 로그
             const lowerCaseData = convertKeysToLowerCase(response.data);
             setFilteredUsers(lowerCaseData);
+
+            ////
+            if (record_total_count % record_count_per_page === 0) {
+                setPage_total_count(Math.floor(record_total_count / record_count_per_page));
+            }
+            else {
+                setPage_total_count(Math.floor(record_total_count / record_count_per_page) + 1);
+            }
+            
         } catch (err) {
             console.error('사용자 데이터를 가져오는 데 실패했습니다.', err);
         }
@@ -105,20 +139,13 @@ const UserList = () => {
             fetchFilteredUsers();
         }
     }, [selectedTeam]); // selectedTeam이 변경될 때마다 호출
-    
+
 
     const handleEditClick = (userId) => {
         setSelectedMember(userId); // 상태에 사용자 ID 저장
         navigate(`/useradmin/userdetail/${userId}`); // 사용자 업데이트 페이지로 이동
     };
 
-    const handleSearch = () => {
-        if (filterType === 'name' && !searchTerm.trim()) {
-            alert('검색어를 입력해주세요.');
-            return;
-        }
-        fetchFilteredUsers(); // 검색 버튼 클릭 시 검색 수행
-    };
 
     const handleTeamChange = (e) => {
         const selectedTeamCode = e.target.value;
@@ -134,8 +161,29 @@ const UserList = () => {
         setFilteredUsers(users); // 전체 사용자 목록으로 초기화
     };
 
+    ////
+
+    const handlePage = (selectedPage) => {
+        setCpage(selectedPage.selected + 1);
+    }
+
+    const handleSearch = () => {
+        if (filterType === 'name' && !searchTerm.trim()) {
+            alert('검색어를 입력해주세요.');
+            return;
+        }
+        setSearch((prev) => {
+            setCpage(1);
+            return !prev;
+        })
+        fetchFilteredUsers(); // 검색 버튼 클릭 시 검색 수행
+    };
+
+
+
     if (loading) return <div className={styles.loading}>로딩 중...</div>;
     if (error) return <div className={styles.error}>{error}</div>;
+
 
     return (
         <div className={styles.container}>
@@ -146,10 +194,10 @@ const UserList = () => {
                     <option value="team">팀</option>
                 </select>
                 {filterType === 'name' && (
-                    <SearchUser 
-                        searchTerm={searchTerm} 
-                        setSearchTerm={setSearchTerm} 
-                        onSearch={handleSearch} 
+                    <SearchUser
+                        searchTerm={searchTerm}
+                        setSearchTerm={setSearchTerm}
+                        onSearch={handleSearch}
                     />
                 )}
                 {filterType === 'team' && (
@@ -159,7 +207,7 @@ const UserList = () => {
                         onTeamChange={handleTeamChange}
                     />
                 )}
-                
+
             </div>
 
             {filteredUsers.length > 0 ? (
@@ -193,8 +241,8 @@ const UserList = () => {
                                 <td>{user.ent_yn === 'Y' ? '휴직' : '재직'}</td>
                                 <td>{user.vacation_period != null ? `${user.vacation_period}일` : '휴가 정보 없음'}</td>
                                 <td>
-                                    <button 
-                                        onClick={() => handleEditClick(user.id)} 
+                                    <button
+                                        onClick={() => handleEditClick(user.id)}
                                         className={styles.editButton} // 스타일 클래스 추가
                                     >
                                         수정하기
@@ -207,6 +255,22 @@ const UserList = () => {
             ) : (
                 <p>사용자가 없습니다.</p>
             )}
+
+            <ReactPaginate
+                pageCount={page_total_count} // 페이지 총 개수
+                pageRangeDisplayed={navi_count_per_page} // 현재 페이지를 기준으로 표시할 페이지 범위 수
+                marginPagesDisplayed={1} // 양쪽 끝에 표시할 페이지 수
+                onPageChange={handlePage} // 페이지 변경 핸들러
+                containerClassName={styles.pagination} // 스타일 클래스
+                activeClassName={styles.active} // 활성 페이지 클래스
+                initialPage={0} //초기 page 값
+                previousLabel={'<'} // 이전 페이지 버튼 레이블
+                previousClassName={styles.previous} // 이전 버튼의 클래스명
+                nextLabel={'>'} // 다음 페이지 버튼 레이블
+                nextClassName={styles.next} // 다음 버튼의 클래스명
+                breakLabel={'...'} // 생략 표시 제거
+                breakClassName={null} // 생략 표시의 클래스명 제거
+            />
         </div>
     );
 };
