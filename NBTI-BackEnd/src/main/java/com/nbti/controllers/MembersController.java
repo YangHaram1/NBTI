@@ -301,12 +301,14 @@ public class MembersController {
        // 검색할 아이디에 따른 이름, 팀코드, 팀명, 부서코드, 부서명, 관리자 권한 코드, 관리자 권한명 추출
        @PostMapping("/approvalSearch")
         public List<Map<String, Object>> approvalSearch(@RequestBody List<Map<String, Object>> approvalLine){
-        	System.out.println("결재라인 확인 : " + approvalLine);
+//    	   System.out.println("결재라인 확인?? : " + approvalLine);
     	   List<Map<String, Object>> list = new ArrayList<>();
+    	   if(approvalLine.size() > 0) {
     	   	for (Map<String, Object> map : approvalLine) {
-				if(map.get("id") != null) {
+    	   		if(map != null) {
+    	   		if(map.get("id") != null) {
 					String id = (String)map.get("id");
-					String order = (String)map.get("order");
+					String order = map.get("order").toString();
 					 Map<String, Object> memberData = mServ.memberData(id);
 					 memberData.put("order",order);
 					 list.add(memberData);
@@ -320,7 +322,9 @@ public class MembersController {
 					memberData.put("name",name);
 					list.add(memberData);
 				}
+    	   		}
 			}
+    	   }
            return list;
-        }
+       }
 }

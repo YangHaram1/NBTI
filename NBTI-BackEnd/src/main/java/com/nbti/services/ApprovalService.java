@@ -159,7 +159,9 @@ public class ApprovalService {
     	// 결재라인 입력
 		for(ApprovalLineDTO dto: alist) {
 			dto.setTemp_seq(temp_seq);
-			aldao.insert(dto);
+			if(dto.getApproval_id() != null) {
+				aldao.insert(dto);
+			}
 		}
 
 		if(rlist.size() > 0) {

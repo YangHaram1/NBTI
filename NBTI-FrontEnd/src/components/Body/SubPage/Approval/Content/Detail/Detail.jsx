@@ -52,6 +52,7 @@ export const Detail=()=>{
             setLoading(true);
             try {
                 // 내 정보 받아오기 (이게 필요할까..?)
+                console.log("재기안인데 이게 나오는 중인가요");
                 const userDataResponse = await axios.get(`${host}/members/docData`);
                 // console.log("내정보",userDataResponse);
                 setUserData(userDataResponse.data);
@@ -90,7 +91,7 @@ export const Detail=()=>{
                 if(approvalLineResponse.data[0].APPROVAL_DATE == null){
                     setCheckFA(true);
                 }
-                // console.log("결재라인 체크",approvalLineResponse.data);
+                console.log("결재라인 체크",approvalLineResponse.data);
 
                 // 참조라인 정보 받아오기
                 const referLineResponse = await axios.get(`${host}/referLine/${seq}`);
@@ -117,6 +118,7 @@ export const Detail=()=>{
 
     useEffect(()=>{
         console.log("referData 참조라인 데이터 확인",referData);
+        if(referData.length > 0){
         axios.post(`${host}/members/approvalSearch`,referData)
         .then((resp)=>{
             console.log("refer데이터 확인",resp.data);
@@ -126,6 +128,7 @@ export const Detail=()=>{
         .catch((err)=>{
             console.log(err);
         })
+    }
     },[referData])
 
     if (loading) return <p>Loading...</p>;
@@ -198,14 +201,17 @@ export const Detail=()=>{
             }
             setApprovalLine(array);
         });
+
         resetReferLine();
         console.log("refer",refer);
         const newRefer = refer.map((data)=>{
-            return ({id:data.ID, name: data.NAME,order:4 });
+            return ({id:data.ID, name: data.NAME,order:"4" });
         })
         setReferLine(...newRefer);
 
-        navi("/approval/write", { state: { setlist: setlist } });
+        console.log("재기안 결재라인",approvalData);
+        console.log("approval",approvalData);
+        navi("/approval/write", { state: { setlist: setlist, temp_seq: docCommonData.temp_seq } });
     }
 
 
