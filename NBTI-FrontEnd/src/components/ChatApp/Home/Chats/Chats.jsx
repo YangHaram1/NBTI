@@ -45,7 +45,7 @@ const Chats = () => {
                         })
                         item=sortedItems;
                     })
-                    console.log(resp.data);
+                //    console.log(resp.data);
                     
                     setGroup_chats(resp.data);
                 }
@@ -124,7 +124,21 @@ const Chats = () => {
         return sortedItems;
     }, [group_chats])
 
-
+    const truncateHtmlText = (htmlString, maxLength) => {
+        // HTML 문자열을 DOM 요소로 파싱
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlString, 'text/html');
+        
+        // 텍스트만 추출
+        const textContent = doc.body.textContent || '';
+      
+        // 텍스트를 자르고 ... 추가
+        const truncatedText = textContent.length > maxLength
+          ? textContent.slice(0, maxLength) + '...'
+          : textContent;
+      
+        return truncatedText;
+      };
 
 
     //if(chatNaviBody==='chats')
@@ -140,7 +154,9 @@ const Chats = () => {
 
                     let truncatedText;
                     if ((item.dto != null) && (item.dto.message.length > 10)) {
-                        truncatedText = item.dto.message.slice(0, 10) + '...';
+                       
+                        truncatedText =  truncateHtmlText(item.dto.message,10);
+                        //item.dto.message.slice(0, 10) + '...';
                     }
                     else if ((item.dto != null)) {
                         truncatedText = item.dto.message;

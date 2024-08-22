@@ -85,27 +85,15 @@ const Home = ({ setDisabled }) => {
     }
 
     const handleDrag = (check) => {
-        // const allowedArea = document.getElementsByClassName(styleHome.div1)[0].getBoundingClientRect();
-        // const { clientX, clientY } = e;
-
-        // if (
-        //     clientX < allowedArea.left ||
-        //     clientX > allowedArea.right ||
-        //     clientY < allowedArea.top ||
-        //     clientY > allowedArea.bottom
-        // ) { 
         setDisabled(check);
          
     }
-    const triggerDoubleMouseDown =(check)=>{
-        handleDrag(check);
-      
-    }
+  
 
     // if(chatNavi==='home')
     return (
         <div className={styles.container}>
-            <div className={styles.div1} onMouseDown={()=>handleDrag(false)} onMouseLeave={()=>handleDrag(true)}>
+            <div className={styles.div1} onMouseEnter={()=>handleDrag(false)} onMouseLeave={()=>handleDrag(true)}>
                 <div className={styles.div1_1}>
                     <img src={(user[0].member_img === null) ? `${avatar}` : `${host}/images/avatar/${user[0].id}/${user[0].member_img}`} alt='' className={styles.avatar}></img>
                 </div>
@@ -123,7 +111,7 @@ const Home = ({ setDisabled }) => {
                     <button className={styles.button} onClick={handleCancel}>❌</button>
                 </div>
             </div>
-            <div className={styles.div2}  onMouseDown={()=>handleDrag(true)}>
+            <div className={styles.div2}  onMouseDown={()=>handleDrag(true)} >
                 <div className={color.member ? styles.white : styles.none} onClick={handleMemberList}>
                     <i className="fa-regular fa-user fa-xl"></i>
                 </div>

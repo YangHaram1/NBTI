@@ -56,8 +56,8 @@ const ChatApp = ({websocketRef,draggableRef,setDisabled}) => {
 
         <div className={styles.container} ref={chatAppRef}>
             {chatNavi==='home' && <Home setDisabled={setDisabled}/>}
-            {chatNavi===('chat1') && <Chat/>}
-            {chatNavi===('chat') && <Chat/>}
+            {chatNavi===('chat1') && <Chat setDisabled={setDisabled}/>}
+            {chatNavi===('chat') && <Chat setDisabled={setDisabled}/>}
         </div>
     );
 
