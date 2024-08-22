@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { host } from "../../../../../../config/config";
+import { useNavigate } from 'react-router-dom'; // 추가
 import styles from './MyVacation.module.css';
 
 const convertKeysToLowerCase = (obj) => {
@@ -17,6 +18,7 @@ const MyVacation = () => {
     const [vacationInfo, setVacationInfo] = useState({ total: '', used: '', remaining: '' });
     const [vacationHistory, setVacationHistory] = useState([]);
     const [error, setError] = useState(null);
+    const navigate = useNavigate(); // 추가
 
     useEffect(() => {
         const memberId = sessionStorage.getItem('loginID');
@@ -50,6 +52,10 @@ const MyVacation = () => {
             setError("회원 ID를 세션에서 찾을 수 없습니다.");
         }
     }, []);
+
+    const handleDetailClick = (seq) => {
+        navigate("/approval/detail", { state: { seq, setlist: "휴가신청서", list: "기안문서함" } });
+    };
 
     return (
         <div className={styles.container}>
@@ -98,7 +104,9 @@ const MyVacation = () => {
                                 <td>{history.vacation_start} - {history.vacation_end}</td>
                                 <td>{history.half_day}</td> {/* 반차 여부 표시 */}
                                 <td>{history.status}</td>
-                                <td><button>상세보기</button></td>
+                                <td>
+                                    <button onClick={() => handleDetailClick(history.seq)}>상세보기</button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
