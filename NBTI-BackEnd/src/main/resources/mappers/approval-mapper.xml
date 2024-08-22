@@ -447,7 +447,7 @@ JOIN
 JOIN
     approval_doc_state ads ON ap.doc_state = ads.doc_state_code
 WHERE
-    ap.member_id = 'tkdgur'
+    ap.member_id = #{memberId}
 ORDER BY
     ap.temp_seq
 </select>
