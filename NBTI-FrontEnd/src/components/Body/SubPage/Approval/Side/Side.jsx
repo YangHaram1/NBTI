@@ -5,7 +5,7 @@ import Modal from "../Content/Modal/Modal";
 import SecondModal from "../Content/SecondModal/SecondModal";
 import DocTree from "../Content/Modal/DocTree/DocTree";
 import { FormDetail } from "../Content/FormDetail/FormDetial";
-import { useApprovalLine, useDocFormStore, useReferLine } from "../../../../../store/store";
+import { useApprovalLine, useDocFormStore, useEditorCheck, useReferLine } from "../../../../../store/store";
 
 export const Side = () => {
   // ===== 메뉴 토글 =====
@@ -19,6 +19,7 @@ export const Side = () => {
 
   const {resetReferLine} = useReferLine();
   const {approvalLine, resetApprovalLine } = useApprovalLine();
+  const {setEditorCheck} = useEditorCheck();
 
   const toggleFreeBoard = () => {
     setFreeBoard(!FreeBoard);
@@ -48,6 +49,9 @@ export const Side = () => {
   };
 
   const handlePopupForm = () => {
+
+    setEditorCheck(false);
+
     console.log(approvalLine.length);
     // 결재 라인 1번에 이름이 없을 시 => 작서
     if(approvalLine.length > 1){
@@ -70,6 +74,7 @@ export const Side = () => {
   };
 
   const closeSecondModal = () => {
+    setEditorCheck(true);
     setIsSecondModalOpen(false); // 두 번째 모달 닫기
   };
 
@@ -134,12 +139,6 @@ export const Side = () => {
               className={`${styles.submenu} ${NoticeBoard ? styles.open : ""}`}
               onClick={preventPropagation}
             >
-              {/* <li onClick={()=>{navi("listDocAll")}}>
-                <span>
-                  <i className="fa-solid fa-clipboard fa-sm"></i>
-                </span>
-                <span>전체 문서함</span>
-              </li> */}
               <li onClick={()=>{navi("listDocWrite")}}>
                 <span>
                   <i className="fa-solid fa-file-pen"></i>
