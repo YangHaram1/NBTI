@@ -237,7 +237,12 @@
   margin-bottom: 5px;
 }
 .replyOutputWrap .replyOutput > div .writer_writeDate > span:nth-child(2) {
-  margin: 0 20px;
+  margin-left: 8px;
+  color: #6b9080;
+  font-size: 12px;
+}
+.replyOutputWrap .replyOutput > div .writer_writeDate > span:nth-child(3) {
+  margin: 0 13px;
   color: #959595;
   font-size: 0.75rem;
 }

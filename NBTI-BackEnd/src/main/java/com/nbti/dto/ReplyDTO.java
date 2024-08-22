@@ -13,6 +13,7 @@ public class ReplyDTO {
 	private int count; // 좋아요 개수
 	private String name; // 이름 추가
 	private String member_img; // 프로필 사진
+	private String job_name;
 	
 	public ReplyDTO() {
 	}
@@ -43,6 +44,14 @@ public class ReplyDTO {
 	
 
 	
+	public String getJob_name() {
+		return job_name;
+	}
+
+	public void setJob_name(String job_name) {
+		this.job_name = job_name;
+	}
+
 	public String getMember_img() {
 		return member_img;
 	}

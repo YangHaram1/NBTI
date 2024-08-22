@@ -478,6 +478,7 @@ export const Detail = () => {
                 <div>
                   <div className={styles.writer_writeDate}>
                     <span>{item.name}</span>
+                    <span>{item.job_name}</span>
                     <span>{reply_currentDate}</span>
                   </div>
                   <div
