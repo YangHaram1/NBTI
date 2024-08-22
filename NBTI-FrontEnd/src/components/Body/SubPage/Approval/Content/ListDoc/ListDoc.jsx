@@ -68,7 +68,8 @@ export const ListDoc = ({setlist}) => {
         axios.get(url+`?start=${start}&end=${end}&target=${target}&keyword=${keyword}`)
         .then(async (resp) => {
             console.log(resp.data);
-
+            console.log("왜 키워드가 안들어가는거같지?",start, end, keyword, target );
+            
             // 검색 및 페이지 네이션 목록 출력
             setLists(() => {
                 const record_total_count = resp.data.count;//106 10 // 10
@@ -108,9 +109,9 @@ export const ListDoc = ({setlist}) => {
 
     useEffect(()=>{
         setKeyword('');
-        setTarget('');
+        setTarget('select');
         // setCpage(1);
-    },[lists])
+    },[setlist])
 
 
     const renderDocStateBadge = (docState) => {
@@ -135,6 +136,7 @@ export const ListDoc = ({setlist}) => {
     const handleSearch = () =>{
         setSearch((prev)=>{
             setCpage(1);
+            console.log(search);
             return !prev;
         })
     }
@@ -147,6 +149,7 @@ export const ListDoc = ({setlist}) => {
     const handleKeyword = (e)=>{
         setKeyword(e.target.value);
         console.log("키워드",e.target.value);
+        console.log("검색 종류",target);
     }
 
     const handlePage = (selectedPage) => {
@@ -158,13 +161,13 @@ export const ListDoc = ({setlist}) => {
         <div className={styles.container}>
             <div className={styles.title}>{setlist}</div>
             <div className={styles.search_box}>
-                <select onChange={handleTarget}>
+                <select onChange={handleTarget} value={target}>
                     <option value="select">선택</option>
                     <option value="writer">기안자</option>
                     <option value="doc_seq">문서번호</option>
                     <option value="title">제목</option>
                 </select>
-                <input type='text' placeholder='Seach' onChange={handleKeyword}></input>
+                <input type='text' placeholder='Seach' onChange={handleKeyword} value={keyword}></input>
                 <button onClick={handleSearch}>검색</button>
             </div>
             <div className={styles.content}>

@@ -551,6 +551,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "writerIsMe");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result =new HashMap<>();
@@ -577,6 +579,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "referIsMe");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result =new HashMap<>();
@@ -603,6 +607,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "approvalIsMe");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result =new HashMap<>();
@@ -629,6 +635,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "return");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result =new HashMap<>();
@@ -654,6 +662,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "cancle");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result =new HashMap<>();
@@ -681,6 +691,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "wait");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result =new HashMap<>();
@@ -707,6 +719,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "book");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result =new HashMap<>();
@@ -733,6 +747,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "referwait");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result =new HashMap<>();
@@ -758,6 +774,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "temp");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result = new HashMap<>();

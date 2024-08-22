@@ -324,43 +324,164 @@
  	</select>
  	
  	<select id="selectCount" resultType="int">
- 		select count(*) from approval
+ 		select count(*) from approval a
  		<if test="category == 'writerIsMe'">
+ 			left outer join members m on a.member_id = m.id
+			left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
+			left outer join doc_draft dd on a.temp_seq = dd.draft_seq
+			left outer join doc_leave dl on a.temp_seq = dl.leave_seq
+			left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
  			where member_id = #{id} and doc_state not in 't'
+ 			<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
  		</if>
  		<if test="category == 'referIsMe'">
-			a 
 	        left outer join REFER_LINE rl on a.temp_seq = rl.TEMP_SEQ
+	        left outer join members m on a.member_id = m.id
+			left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
+			left outer join doc_draft dd on a.temp_seq = dd.draft_seq
+			left outer join doc_leave dl on a.temp_seq = dl.leave_seq
+			left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
  			where referer = #{id} and read='Y' and a.doc_state not in ('c','r')
+ 			<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
  		</if>
- 		<if test="category == 'approvalIsMe'">
-	 		a 
+ 		<if test="category == 'approvalIsMe'"> 
 		    left outer join approval_LINE al on a.temp_seq = al.TEMP_SEQ
+		    left outer join members m on a.member_id = m.id
+			left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
+			left outer join doc_draft dd on a.temp_seq = dd.draft_seq
+			left outer join doc_leave dl on a.temp_seq = dl.leave_seq
+			left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
 		 	where approval_id = #{id} and a.doc_state not in ('c','t')
+		 	<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
  		</if>
  		<if test="category == 'return'">
+ 			left outer join members m on a.member_id = m.id
+			left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
+			left outer join doc_draft dd on a.temp_seq = dd.draft_seq
+			left outer join doc_leave dl on a.temp_seq = dl.leave_seq
+			left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
  			where member_id = #{id} and doc_state = 'r'
+ 			<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
  		</if>
  		<if test="category == 'cancle'">
+ 		left outer join members m on a.member_id = m.id
+			left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
+			left outer join doc_draft dd on a.temp_seq = dd.draft_seq
+			left outer join doc_leave dl on a.temp_seq = dl.leave_seq
+			left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
  			where member_id = #{id} and doc_state = 'c'
+ 			<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
  		</if>
  		<if test="category == 'temp'">
+ 			left outer join members m on a.member_id = m.id
+			left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
+			left outer join doc_draft dd on a.temp_seq = dd.draft_seq
+			left outer join doc_leave dl on a.temp_seq = dl.leave_seq
+			left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
  			where member_id = #{id} and doc_state = 't'
+ 			<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
  		</if>
  		<if test="category == 'wait'">
- 			a 
+ 			left outer join members m on a.member_id = m.id
+			left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
+			left outer join doc_draft dd on a.temp_seq = dd.draft_seq
+			left outer join doc_leave dl on a.temp_seq = dl.leave_seq
+			left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq 
 	        left outer join approval_LINE al on a.temp_seq = al.TEMP_SEQ
 	 		where al.approval_id = #{id} and al.member_state_code='w' and a.doc_state ='i'
+	 		<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
  		</if>
  		<if test="category == 'book'">
- 			a 
+ 			left outer join members m on a.member_id = m.id
+			left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
+			left outer join doc_draft dd on a.temp_seq = dd.draft_seq
+			left outer join doc_leave dl on a.temp_seq = dl.leave_seq
+			left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
 	        left outer join approval_LINE al on a.temp_seq = al.TEMP_SEQ
 	 		where al.approval_id = #{id} and al.member_state_code='b' and a.doc_state ='i'
+	 		<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
  		</if>
  		<if test="category == 'referwait'">
- 			a 
+ 			left outer join members m on a.member_id = m.id
+			left outer join doc_sub ds on a.doc_sub_seq = ds.doc_form_seq
+			left outer join doc_draft dd on a.temp_seq = dd.draft_seq
+			left outer join doc_leave dl on a.temp_seq = dl.leave_seq
+			left outer join doc_vacation dv on a.temp_seq = dv.vacation_seq
 	        left outer join REFER_LINE rl on a.temp_seq = rl.TEMP_SEQ
  			where referer = #{id} and read = 'N' and a.doc_state not in ('c','r')
+ 			<if test="target =='writer'">
+				and m.name like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='doc_seq'">
+				and a.APPROVAL_SEQ like '%'||#{keyword}||'%'
+			</if>
+			<if test="target =='title'">
+				and (dd.TITLE like '%'||#{keyword}||'%' or ds.DOC_SUB_NAME like '%'||#{keyword}||'%')
+			</if>
  		</if>
  	</select>
  	

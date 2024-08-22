@@ -54,7 +54,7 @@ export const Header = ({userdata}) => {
                     approval.map((approvaler) => {
 
                         return (
-                            <div className={styles.approval_box} key={approvaler.id}>
+                            <div className={styles.approval_box} key={approvaler.ID}>
                                 <div className={styles.approval_box_side}>
                                     {
                                         approvaler.order === '1' ? "최초" : approvaler.order === '2' ? "중간" : "최종"

@@ -23,40 +23,6 @@ export const List = ()=>{
         fetchApproveList(); // 컴포넌트가 마운트될 때 예약 목록 가져오기
     }, [setApprove]); // 의존성 배열에 추가
 
-
-    // useEffect(() => {
-    //     // 대기 목록
-    //     const fetchReservations = () => {
-    //         axios.get(`${host}/reserve`)
-    //             .then(resp => {
-    //                 // console.log("대기 목록"+JSON.stringify(resp))
-    //                 // 응답 데이터가 배열이 아닐 경우 배열로 변환
-    //                 const data = Array.isArray(resp.data) ? resp.data : [resp.data];
-    //                 setReservations(data); // 목록 상태 업데이트
-    //             })
-    //             .catch((error) => {
-    //                 console.error('대기 목록 오류 발생:', error);
-    //             });
-    //     };
-    //     fetchReservations(); // 컴포넌트가 마운트될 때 대기 목록 가져오기
-    // }, [setReservations]); // 의존성 배열에 추가
-
-
-    // const cancelReservation = (seq) => {
-    //     // 예약 취소
-    //     axios.delete(`${host}/reserve/${seq}`)
-    //         .then(resp => {
-    //             console.log("예약 취소 성공:", resp);
-    //             setReservations(prevItems => 
-    //                 prevItems.filter(reservation => reservation.seq !== seq)
-    //             );
-    //         })
-    //         .catch(error => {
-    //             console.error('예약 취소 중 오류 발생:', error);
-    //         });
-    // };
-
-
     const cancelReservation = (seq) => {
         // 예약 취소
         axios.delete(`${host}/reserve/${seq}`)
@@ -88,16 +54,10 @@ export const List = ()=>{
     }, []); // 빈 배열로 설정하여 컴포넌트가 마운트될 때만 실행
     
 
-
-    
-    
-    
-    
-
     return(
         <div className={styles.container}>
             <div className={styles.title}>
-                <h3><i className="fa-solid fa-square-check"></i>   내 예약 목록</h3>   
+                <h3>나의 예약 목록</h3>   
             </div>
             <div className={styles.content}>
                 <div className={styles.ReservationList}>
@@ -125,11 +85,13 @@ export const List = ()=>{
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={3}>리스트가 존재하지 않음</td>
+                                    <td colSpan={3}>예약 목록이 존재하지 않습니다.</td>
                                 </tr>
                             )}
                             </tbody>
                         </table>
+                        <br/>
+                        <p>* 날짜가 지난 예약은 표시되지 않습니다.</p>
                 </div>
 
                 <div className={styles.waitingList}>
@@ -157,7 +119,7 @@ export const List = ()=>{
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={5}>리스트가 존재하지 않음</td>
+                                    <td colSpan={5}>대기 목록이 존재하지 않습니다.</td>
                                 </tr>
                             )}
                         </tbody>
