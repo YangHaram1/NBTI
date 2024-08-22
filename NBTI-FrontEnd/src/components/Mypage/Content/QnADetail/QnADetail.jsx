@@ -368,7 +368,14 @@ export const QnADetail = () => {
         </div>
         {isAdmin && (
           <div className={styles.replyInput}>
-            <img src={image} alt="" />
+            <img
+              src={
+                currentUser && currentUser.member_img
+                  ? `${host}/images/avatar/${currentUser.id}/${currentUser.member_img}`
+                  : `${image}`
+              }
+              alt=""
+            />
             <div
               ref={inputRef} // ref 설정
               className={styles.inputText}
@@ -391,10 +398,18 @@ export const QnADetail = () => {
 
             return (
               <div className={styles.replyOutput} key={i}>
-                <img src={image} alt="" />
+                <img
+                  src={
+                    item.member_img === null
+                      ? `${image}`
+                      : `${host}/images/avatar/${item.member_id}/${item.member_img}`
+                  }
+                  alt=""
+                />
                 <div>
                   <div className={styles.writer_writeDate}>
                     <span>{item.name}</span>
+                    <span>{item.job_name}</span>
                     <span>{reply_currentDate}</span>
                   </div>
                   <div
