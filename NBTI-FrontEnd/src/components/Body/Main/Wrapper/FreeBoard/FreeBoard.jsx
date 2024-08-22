@@ -234,9 +234,6 @@ export const FreeBoard = () => {
                     const reply_currentDate = !isNaN(reply_date)
                       ? format(reply_date, "yyyy-MM-dd HH:mm:ss")
                       : "Invalid Date";
-
-
-                    console.log("item : ", ritem)
                     return (
                       <div className={styles.replyOutput} key={index}>
                         {/* <img src={image} alt="" /> */}

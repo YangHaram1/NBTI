@@ -20,9 +20,9 @@ const Chats = () => {
     const [countTotal, setCountTotal] = useState(0); //unread total
     useEffect(() => {
         axios.get(`${host}/group_chat`).then((resp) => {
-            console.log(resp.data);
+            
             if (resp != null) {
-                if (resp.data !== '' && resp.data != 'error') {
+                if (resp.data !== '' && resp.data !== 'error') {
                     //   console.log(resp.data);
                     let count = -1;
                     let countUnread = 0;
@@ -32,6 +32,21 @@ const Chats = () => {
                     })
                     setCountTotal(countUnread);
                     setCountBookmark(count);
+
+                    resp.data.forEach((item,index)=>{ //member_img null이 뒤로가게 정렬
+                        const sortedItems = item.list.sort((a, b) => {
+                            if (a.member_img === null && b.member_img !== null) {
+                                return 1; // b를 위로 이동
+                            }
+                            if (a.member_img !== null && b.member_img === null) {
+                                return -1; // a를 위로 이동
+                            }
+                            return 0;
+                        })
+                        item=sortedItems;
+                    })
+                    console.log(resp.data);
+                    
                     setGroup_chats(resp.data);
                 }
                 else {
@@ -136,22 +151,34 @@ const Chats = () => {
                                 <div className={styles.imgContainer}>
                                     <div className={styles.imgList}>
                                         {
-                                            item.list.slice(0, 2).map((img, imgIndex) => {
-                                                return (
-                                                    <React.Fragment key={imgIndex}>
-                                                        <img src={avatar} alt='' className={styles.avatar}></img>
-                                                    </React.Fragment>
-                                                )
+                                            item.list.slice(0, 2).map((member, imgIndex) => {
+                                                if (item.list.length === 1) {
+                                                    return (
+                                                        <React.Fragment key={imgIndex}>
+                                                            <img src={(member.member_img === null) ? `${avatar}` : `${host}/images/avatar/${member.id}/${member.member_img}`} alt=''
+                                                                className={styles.avatartOne}></img>
+                                                        </React.Fragment>
+                                                    )
+                                                }
+                                                else {
+                                                    return (
+                                                        <React.Fragment key={imgIndex}>
+                                                            <img src={(member.member_img === null) ? `${avatar}` : `${host}/images/avatar/${member.id}/${member.member_img}`} alt=''
+                                                                className={styles.avatar}></img>
+                                                        </React.Fragment>
+                                                    )
+                                                }
+
                                             })
                                         }
                                     </div>
                                     <div className={styles.imgList}>
                                         {
-                                            item.list.slice(2, 4).map((img, imgIndex) => {
+                                            item.list.slice(2, 4).map((member, imgIndex) => {
 
                                                 return (
                                                     <React.Fragment key={imgIndex}>
-                                                        <img src={avatar} alt='' className={styles.avatar}></img>
+                                                        <img src={(member.member_img === null) ? `${avatar}` : `${host}/images/avatar/${member.id}/${member.member_img}`} alt='' className={styles.avatar}></img>
                                                     </React.Fragment>
                                                 )
                                             })

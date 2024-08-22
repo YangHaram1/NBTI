@@ -11,6 +11,7 @@ import { host } from './config/config';
 import { Slide, ToastContainer } from 'react-toastify';
 import styles from './App.module.css';
 import Draggable from 'react-draggable';
+import styleHome from './components/ChatApp/Home/Home.module.css';
 
 axios.defaults.withCredentials = true;
 
@@ -22,8 +23,8 @@ function App() {
   const { webSocketCheck, onMessage, chatController } = useCheckList();
   const [unread, setUnread] = useState();
   const draggableRef = useRef(null);
+  const [disabled,setDisabled]=useState(true);
 
- 
   useEffect(() => {
     setLoginID(sessionStorage.getItem("loginID"));
     //console.log(setLoginID);
@@ -35,7 +36,7 @@ function App() {
         .then((resp) => {
           const filteredMembers = resp.data.map(({ pw, ...rest }) => rest);
           setMembers(filteredMembers);
-        //  console.log('Fetched Members:', filteredMembers);
+          //  console.log('Fetched Members:', filteredMembers);
         })
     }
   }, [loginID])
@@ -43,12 +44,12 @@ function App() {
   //웹소켓 전체 관리
   useEffect(() => {
     if (loginID !== null && loginID !== 'error') {
-     const url = host.replace(/^https?:/, '')
+      const url = host.replace(/^https?:/, '')
       websocketRef.current = new WebSocket(`ws:${url}/chatWebsocket`);
-    } 
+    }
     if (websocketRef.current != null) {
       websocketRef.current.onopen = () => {
-        console.log('Connected to WebSocket'); 
+        console.log('Connected to WebSocket');
       }
     }
 
@@ -63,8 +64,8 @@ function App() {
   useEffect(() => {
     if (loginID != null && loginID !== 'error') {
       axios.get(`${host}/chat/unread`).then((resp) => {
-        if(resp.data!=='error')
-        setUnread(parseInt(resp.data));
+        if (resp.data !== 'error')
+          setUnread(parseInt(resp.data));
       })
     }
 
@@ -72,25 +73,25 @@ function App() {
 
 
 
-  
+
   const chatApp = loginID != null && loginID !== 'error' ? (
-    <ChatApp websocketRef={websocketRef} draggableRef={draggableRef} />
+    <ChatApp websocketRef={websocketRef} draggableRef={draggableRef} setDisabled={setDisabled}/>
   ) : (
     <div></div>
   );
 
- 
+
   return (
     <ChatsProvider>
       <Router>
         <div className="container">
           {(loginID != null && loginID !== 'error') && <Header />}
           <Routes>
-            <Route path='/*' element={<Body />}/>
+            <Route path='/*' element={<Body />} />
           </Routes>
-         {(loginID != null && loginID !== 'error') && <Draggable nodeRef={draggableRef}>
+          {(loginID != null && loginID !== 'error') && <Draggable nodeRef={draggableRef} disabled={disabled}>
             <div className={styles.chatapp} ref={draggableRef}>
-                {chatApp}
+              {chatApp}
             </div>
           </Draggable>}
         </div>

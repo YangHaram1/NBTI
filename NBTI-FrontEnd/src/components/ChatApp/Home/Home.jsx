@@ -11,7 +11,7 @@ import Setting from './Setting/Setting';
 import { host } from '../../../config/config';
 axios.defaults.withCredentials = true;
 
-const Home = () => {
+const Home = ({ setDisabled }) => {
 
     const [color, setColor] = useState({ member: false, chat: true, file: false });
     const { loginID } = useAuthStore();
@@ -83,10 +83,29 @@ const Home = () => {
             return !prev;
         })
     }
+
+    const handleDrag = (check) => {
+        // const allowedArea = document.getElementsByClassName(styleHome.div1)[0].getBoundingClientRect();
+        // const { clientX, clientY } = e;
+
+        // if (
+        //     clientX < allowedArea.left ||
+        //     clientX > allowedArea.right ||
+        //     clientY < allowedArea.top ||
+        //     clientY > allowedArea.bottom
+        // ) { 
+        setDisabled(check);
+         
+    }
+    const triggerDoubleMouseDown =(check)=>{
+        handleDrag(check);
+      
+    }
+
     // if(chatNavi==='home')
     return (
         <div className={styles.container}>
-            <div className={styles.div1}>
+            <div className={styles.div1} onMouseDown={()=>handleDrag(false)} onMouseLeave={()=>handleDrag(true)}>
                 <div className={styles.div1_1}>
                     <img src={(user[0].member_img === null) ? `${avatar}` : `${host}/images/avatar/${user[0].id}/${user[0].member_img}`} alt='' className={styles.avatar}></img>
                 </div>
@@ -104,7 +123,7 @@ const Home = () => {
                     <button className={styles.button} onClick={handleCancel}>❌</button>
                 </div>
             </div>
-            <div className={styles.div2}>
+            <div className={styles.div2}  onMouseDown={()=>handleDrag(true)}>
                 <div className={color.member ? styles.white : styles.none} onClick={handleMemberList}>
                     <i className="fa-regular fa-user fa-xl"></i>
                 </div>
@@ -115,8 +134,8 @@ const Home = () => {
                     <i className="fa-regular fa-file fa-xl"></i>
                 </div>
             </div>
-            <div className={styles.div3}>
-                {chatNaviBody === 'members' && <Members/>}
+            <div className={styles.div3}  onMouseDown={()=>handleDrag(true)}>
+                {chatNaviBody === 'members' && <Members />}
                 {chatNaviBody === 'chats' && <Chats />}
                 {chatNaviBody === 'files' && <Files />}
             </div>
