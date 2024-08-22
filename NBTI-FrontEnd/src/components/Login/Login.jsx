@@ -56,7 +56,7 @@ const Login = () => {
                 setLoginID(resp.data);
             })
             .catch(err => {
-                setError('ID 또는 PW를 다시 확인 해주세요');
+                alert('ID 또는 PW를 다시 확인 해주세요');
             });
     };
 
