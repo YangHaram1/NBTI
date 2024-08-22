@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import styles from './UserList.module.css';
 import { host } from '../../../../config/config';
@@ -51,7 +51,7 @@ const UserList = () => {
     const [page_total_count, setPage_total_count] = useState(1);
     const [search, setSearch] = useState(false);
 
-    const record_count_per_page = 20;
+    const record_count_per_page = 10;
     const navi_count_per_page = 5;
 
   
@@ -60,13 +60,13 @@ const UserList = () => {
     useEffect(() => {
         const start = cpage * record_count_per_page - (record_count_per_page - 1); //1
         const end = cpage * record_count_per_page; //10
-        const record_total_count = 50; 
-
+     
         const fetchData = async () => {
             try {
-                const [userResponse, teamResponse] = await Promise.all([
+                const [userResponse, teamResponse,listResponese] = await Promise.all([
                     axios.get(`${host}/members/selectMembers`),
-                    axios.get(`${host}/members/selectTeam`)
+                    axios.get(`${host}/members/selectTeam`),
+                    axios.get(`${host}/members/list?start=${start}&end=${end}`)
                 ]);
 
                 const lowerCaseUsers = convertKeysToLowerCase(userResponse.data);
@@ -74,10 +74,11 @@ const UserList = () => {
 
                 setUsers(lowerCaseUsers);
                 setTeams(lowerCaseTeams);
-                setFilteredUsers(lowerCaseUsers); // 
+                setFilteredUsers(convertKeysToLowerCase(listResponese.data)); // 
                 setLoading(false);
 
-               
+                const record_total_count = lowerCaseUsers.length; 
+
                 if (record_total_count % record_count_per_page === 0) {
                     setPage_total_count(Math.floor(record_total_count / record_count_per_page));
                 }
@@ -91,43 +92,78 @@ const UserList = () => {
                 setLoading(false);
             }
         };
-        fetchData();
-    }, []);
+        if (filterType === 'name' && searchTerm) {
+            fetchFilteredUsers(); // 검색 버튼 클릭 시 검색 수행
+        }
+        else if (filterType === 'team' && selectedTeam) {
+            fetchFilteredUsers(); // 검색 버튼 클릭 시 검색 수행
+        } 
+        else{
+            fetchData();
+        }
+      
+        
+    }, [cpage,search]);
 
 
-    const fetchFilteredUsers = async () => {
+    const fetchFilteredUsers =async () => {
         const start = cpage * record_count_per_page - (record_count_per_page - 1); //1
         const end = cpage * record_count_per_page; //10
-        const record_total_count = 50; 
+     
         try {
             let response;
             if (filterType === 'name' && searchTerm) {
                 response = await axios.get(`${host}/members/searchUser`, {
                     params: {
-                        name: searchTerm
+                        name: searchTerm, 
+                        start:start,
+                        end:end
                     }
                 });
+               
             } else if (filterType === 'team' && selectedTeam) {
                 console.log('Fetching users for team code:', selectedTeam); // 선택된 팀 코드 로그
                 response = await axios.get(`${host}/members/selectByTeam`, {
-                    params: { team_code: selectedTeam }
+                    params: {
+                         team_code: selectedTeam ,
+                         start:start,
+                         end:end
+                    }
                 });
+               
             } else {
                 response = { data: users };
             }
+            if (filterType === 'name' && searchTerm) {
+                axios.get(`${host}/members/searchUserCount?name=${searchTerm}`).then((resp)=>{
+                    console.log(resp.data)
+                    const  record_total_count=resp.data;
+                    if (record_total_count % record_count_per_page === 0) {
+                        setPage_total_count(Math.floor(record_total_count / record_count_per_page));
+                    }
+                    else {
+                        setPage_total_count(Math.floor(record_total_count / record_count_per_page) + 1);
+                    }
+                })
+            }
+            else if (filterType === 'team' && selectedTeam) {
+                axios.get(`${host}/members/selectByTeamCount?team_code=${selectedTeam}`).then((resp)=>{
+                    const  record_total_count=resp.data;
+                    if (record_total_count % record_count_per_page === 0) {
+                        setPage_total_count(Math.floor(record_total_count / record_count_per_page));
+                    }
+                    else {
+                        setPage_total_count(Math.floor(record_total_count / record_count_per_page) + 1);
+                    }
+        
+                })
+            } 
 
             console.log('Filtered Users API Response:', response.data); // API 응답 데이터 로그
             const lowerCaseData = convertKeysToLowerCase(response.data);
             setFilteredUsers(lowerCaseData);
 
-            ////
-            if (record_total_count % record_count_per_page === 0) {
-                setPage_total_count(Math.floor(record_total_count / record_count_per_page));
-            }
-            else {
-                setPage_total_count(Math.floor(record_total_count / record_count_per_page) + 1);
-            }
-            
+            //// 
         } catch (err) {
             console.error('사용자 데이터를 가져오는 데 실패했습니다.', err);
         }
@@ -158,7 +194,7 @@ const UserList = () => {
         setFilterType(selectedFilter); // 선택한 필터 타입으로 상태 업데이트
         setSearchTerm(''); // 검색어 초기화
         setSelectedTeam(''); // 팀 선택 초기화
-        setFilteredUsers(users); // 전체 사용자 목록으로 초기화
+      //  setFilteredUsers(users); // 전체 사용자 목록으로 초기화
     };
 
     ////
@@ -176,7 +212,7 @@ const UserList = () => {
             setCpage(1);
             return !prev;
         })
-        fetchFilteredUsers(); // 검색 버튼 클릭 시 검색 수행
+       
     };
 
 
