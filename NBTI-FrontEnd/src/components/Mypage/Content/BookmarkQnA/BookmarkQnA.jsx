@@ -110,9 +110,6 @@ export const BookmarkQnA = () => {
           <div>
             <p>작성일</p>
           </div>
-          {/* <div>
-            <p>조회수</p>
-          </div> */}
         </div>
         {boardList.map((item, index) => {
           const date = new Date(item.write_date);
@@ -121,6 +118,7 @@ export const BookmarkQnA = () => {
             : "Invalid Date";
 
           const status = item.reply_count > 0 ? "답변완료" : "진행중";
+          console.log("개수 : ", item.reply_count);
 
           return (
             <div className={styles.list} key={index}>
@@ -139,15 +137,9 @@ export const BookmarkQnA = () => {
                   {item.title}
                 </p>
               </div>
-              {/* <div className={styles.writer}>
-                <p>{item.name}</p>
-              </div> */}
               <div className={styles.writeDate}>
                 <p>{currentDate}</p>
               </div>
-              {/* <div className={styles.viewCount}>
-                <p>{item.view_count}</p>
-              </div> */}
             </div>
           );
         })}

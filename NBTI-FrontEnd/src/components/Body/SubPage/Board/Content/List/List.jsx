@@ -44,6 +44,9 @@ export const List = () => {
     };
 
     axios.get(`${host}/board/list`, { params }).then((resp) => {
+      console.log("뭐나와 : ", resp.data.list);
+
+      console.log("전체 레코드 수: ", resp.data.count);
       setBoardList(resp.data.list); // 서버에서 list와 count 보내준 것 중 list만 담기
 
       // 페이지네이션
