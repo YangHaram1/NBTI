@@ -50,7 +50,7 @@ const Login = () => {
         axios
             .post(`${host}/auth`, auth)
             .then(resp => {
-                console.log('Server Response:', resp.data);
+             
                 sessionStorage.setItem('loginID', resp.data);
                 setLoginID(resp.data);
             })

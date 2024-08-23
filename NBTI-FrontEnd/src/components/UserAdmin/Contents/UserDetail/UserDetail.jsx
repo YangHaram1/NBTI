@@ -104,7 +104,7 @@ const UserDetail = () => {
                 navigate(`/useradmin/userlist`);
             })
             .catch(error => {
-                console.error('Error updating user:', error);
+               
                 alert('회원 정보 업데이트 중 오류가 발생했습니다.');
             });
     };
@@ -117,7 +117,7 @@ const UserDetail = () => {
                     navigate(`/useradmin/userlist`);
                 })
                 .catch(error => {
-                    console.error('Error deleting user:', error);
+                   
                     alert('회원 탈퇴 중 오류가 발생했습니다.');
                 });
         }

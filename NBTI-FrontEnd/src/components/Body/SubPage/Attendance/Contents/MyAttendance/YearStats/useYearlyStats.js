@@ -33,7 +33,7 @@ const useYearlyStats = (memberId) => {
                 withCredentials: true
             });
 
-            console.log('API 응답 데이터:', response.data);
+          
 
             const { lateCount, absentCount, earlyLeaveCount, statsDay, statsHours } = response.data;
 
@@ -47,7 +47,7 @@ const useYearlyStats = (memberId) => {
             setError(null);
         } catch (err) {
             setError('연간 통계 정보를 가져오는데 실패했습니다.');
-            console.error('연간 통계 정보를 가져오는데 실패했습니다.', err.response ? err.response.data : err);
+          
         } finally {
             setLoading(false);
         }

@@ -83,7 +83,7 @@ const WeeklyStats = ({ memberId }) => {
 
     useEffect(() => {
         getWeekDataFromStats();
-        console.log("Events array:", events); // 콘솔에 events 배열을 출력하여 디버깅
+      
     }, [getWeekDataFromStats]);
 
     const getWeekRange = (date) => {

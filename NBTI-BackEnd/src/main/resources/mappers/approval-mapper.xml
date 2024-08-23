@@ -577,26 +577,25 @@ FROM (
 WHERE a.rown BETWEEN #{start} AND #{end}
 ORDER BY a.seq DESC
 </select>
+
 <select id="getAllVacationHistory" resultType="map">
-	SELECT a.*
+SELECT a.*
 FROM (
     SELECT
         ap.temp_seq AS seq,
         ap.member_id AS applicant,
-        m.name AS applicant_name,   -- 신청자의 이름 추가
-        t.team_name AS team_name,  -- 부서 팀명 추가
-        j.job_name AS job_name,  -- 직급 추가
+        m.name AS applicant_name,
+        t.team_name AS team_name,
+        j.job_name AS job_name,
         dc.doc_sub_name AS sub_type,
         TO_CHAR(dv.vacation_start, 'YYYY-MM-DD') AS vacation_start,
         TO_CHAR(dv.vacation_end, 'YYYY-MM-DD') AS vacation_end,
         vc.VCATEGORY_NAME AS category_name,
         ads.doc_state_name AS status,
-        -- 반차 여부를 계산하여 추가
         CASE 
             WHEN dv.start_half = 'true' OR dv.end_half = 'true' THEN 'O'
             ELSE 'X'
         END AS half_day,
-        -- 반차 고려한 일수 계산
         CASE
             WHEN dv.start_half = 'true' AND dv.end_half = 'true' THEN (TRUNC(dv.vacation_end) - TRUNC(dv.vacation_start)) + 0.5
             WHEN dv.start_half = 'true' OR dv.end_half = 'true' THEN (TRUNC(dv.vacation_end) - TRUNC(dv.vacation_start)) + 0.5
@@ -614,17 +613,20 @@ FROM (
     JOIN
         approval_doc_state ads ON ap.doc_state = ads.doc_state_code
     JOIN
-        members m ON ap.member_id = m.id  -- 신청자 정보를 담고 있는 테이블과 조인
+        members m ON ap.member_id = m.id
     JOIN
-        teams t ON m.team_code = t.team_code  -- 팀 정보와 조인
+        teams t ON m.team_code = t.team_code
     JOIN
-        department d ON t.dept_code = d.dept_code  -- 부서 정보와 조인
+        department d ON t.dept_code = d.dept_code
     JOIN
-        job j ON m.job_code = j.job_code  -- 직급 정보와 조인
+        job j ON m.job_code = j.job_code
+    WHERE 
+        (#{team} IS NULL OR #{team} = '' OR t.team_code = #{team})
 ) a
 WHERE a.rown BETWEEN #{start} AND #{end}
 ORDER BY a.seq DESC
 </select>
+
     <select id="getTotalRecordCount" resultType="int">
         SELECT COUNT(*)
         FROM approval
@@ -634,8 +636,20 @@ ORDER BY a.seq DESC
     
         <select id="getAllRecordCount" resultType="int">
         SELECT COUNT(*)
-        FROM approval
-        WHERE doc_sub_seq = '3' <!-- 필요에 따라 수정 -->
+        FROM approval 
+        WHERE doc_sub_seq = '3'
+
+        
+    </select>
+    <select id ="getTeamRecordCount" resultType="int">
+    	        SELECT COUNT(*)
+        FROM approval ap
+        JOIN
+        members m ON ap.member_id = m.id
+         JOIN
+        teams t ON m.team_code = t.team_code
+        WHERE doc_sub_seq = '3'
+        and t.team_code = #{team}
     </select>
     <select id="selectApprovalerId" resultType="String">
     	select member_id from approval where temp_seq = #{seq} 

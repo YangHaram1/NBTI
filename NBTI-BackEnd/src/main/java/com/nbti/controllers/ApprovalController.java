@@ -825,11 +825,10 @@ public class ApprovalController {
 	 @GetMapping("/allhistory")
 	    public ResponseEntity<Map<String, Object>> getAllVacationHistory(
 	        @RequestParam int start, 
-	        @RequestParam int end
+	        @RequestParam int end,
+	        @RequestParam String team
 	    ) {
-	      
-
-	        Map<String, Object> result = aServ.getAllVacationHistory( start, end);
+	        Map<String, Object> result = aServ.getAllVacationHistory(team, start, end);
 	        return ResponseEntity.ok(result);
 	    }
 }
