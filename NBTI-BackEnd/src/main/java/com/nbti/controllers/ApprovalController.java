@@ -118,7 +118,7 @@ public class ApprovalController {
         // 참조라인 (참조자 id, 이름, 순서 = 4)
         List<Map<String, Object>> referLine = (List<Map<String, Object>>) requestDataMap.get("referLine");
 //        System.out.println("Received approvalLine: " + approvalLine);
-	    System.out.println("Received referLine: " + referLine);
+//	    System.out.println("Received referLine: " + referLine);
 //        System.out.println("Received requestData" + requestData);
         
         // 업무 기안서 데이터 저장
@@ -263,7 +263,7 @@ public class ApprovalController {
 		
 		// 각 라인별 temp_seq는 서비스에서 받기
 		List<ReferLineDTO> referline = new ArrayList<>();
-		System.out.println("컨트롤러 참조라인 사이즈 확인"+referLine.size()+referLine);
+//		System.out.println("컨트롤러 참조라인 사이즈 확인"+referLine.size()+referLine);
 		if(referLine.size() > 0 ) {
 		 for (Map<String, Object> map : referLine) {
 	            ReferLineDTO dto = new ReferLineDTO();

@@ -283,17 +283,18 @@ public class FilesService {
 			}
 		}
 
-		System.out.println("참조라인 입력 시작"+rlist);
+//		System.out.println("참조라인 입력 시작"+rlist);
 		if (rlist.size() > 0) {
 			// 참조라인 입력
-			System.out.println("참조라인 입력중");
+//			System.out.println("참조라인 입력중");
 			for (ReferLineDTO dto : rlist) {
-				System.out.println("참조라인 입력중 등록중");
+//				System.out.println("참조라인 입력중 등록중");
 				dto.setTemp_seq(temp_seq);
 				rldao.insert(dto);
 			}
 		}
-		System.out.println("참조라인 입력끝");
+//		System.out.println("참조라인 입력끝");
+		
 		// 첨부파일 추가
 		String realpath = RealpathConfig.realpath + "approval" + File.separator + temp_seq + File.separator;
 		File realPathFile = new File(realpath);
