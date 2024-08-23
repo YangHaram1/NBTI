@@ -96,6 +96,14 @@ public class MembersController {
         List<Map<String, Object>> selectMembers = mServ.getMembers();
         return ResponseEntity.ok(selectMembers);
     }
+    
+    // 사용자 조회
+    @GetMapping("/list")
+    public ResponseEntity<java.util.List<Map<String, Object>>> list(@RequestParam int start,@RequestParam int end){
+        List<Map<String, Object>> selectMembers = mServ.list(start, end);
+        return ResponseEntity.ok(selectMembers);
+    }
+    
     // 부서 추출
     @GetMapping("/selectDepartment")
     public ResponseEntity<List<DepartmentDTO>> selectDepartment(){
@@ -149,15 +157,26 @@ public class MembersController {
 	}
 	// 사용자목록 검색
 	@GetMapping("/searchUser")
-	public ResponseEntity<List<Map<String, Object>>> searchUser(@RequestParam String name){
-	    List<Map<String, Object>> users = mServ.searchUser(name);
+	public ResponseEntity<List<Map<String, Object>>> searchUser(@RequestParam String name,@RequestParam int start,@RequestParam int end){
+	    List<Map<String, Object>> users = mServ.searchUser(name,start,end);
 	    return ResponseEntity.ok(users);
+	}
+	
+	@GetMapping("/searchUserCount")
+	public ResponseEntity<Integer> searchUserCount(@RequestParam String name){
+		int count = mServ.searchUserCount(name);
+	    return ResponseEntity.ok(count);
 	}
 	// 사용자목록 팀 조회
 	@GetMapping("/selectByTeam")
-	public ResponseEntity<List<MembersDTO>> selectByTeam(@RequestParam String team_code){
-		List<MembersDTO> byteam = mServ.selectByTeam(team_code);
+	public ResponseEntity<List<MembersDTO>> selectByTeam(@RequestParam String team_code,@RequestParam int start,@RequestParam int end){
+		List<MembersDTO> byteam = mServ.selectByTeam(team_code,start,end);
 		return ResponseEntity.ok(byteam);
+	}
+	@GetMapping("/selectByTeamCount")
+	public ResponseEntity<Integer> selectByTeamCount(@RequestParam String team_code){
+		int count = mServ.selectByTeamCount(team_code);
+		return ResponseEntity.ok(count);
 	}
 	 @GetMapping("/apply")
      public ResponseEntity<Map<String, Object>> getVacationInfo(HttpSession session, @RequestParam(required = false) String memberId) {

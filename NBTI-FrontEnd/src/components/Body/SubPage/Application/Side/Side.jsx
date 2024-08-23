@@ -84,15 +84,11 @@ export const Side = () => {
             </li>
         </ul>
         <ul>
-          <li onClick={()=>{navi("/attendance/monthlystats")}}>
-            
+          <li onClick={()=>{navi("/application/allvacation")}}>
+            전체 휴가 현황
           </li>
         </ul>
-        <ul>
-            <li onClick={() => { navi("/attendance/allattendance") }}>
-                부서 근무 현황 
-            </li>
-        </ul>
+
       </div>
       {/* 결재선 모달 */}
       <SecondModal

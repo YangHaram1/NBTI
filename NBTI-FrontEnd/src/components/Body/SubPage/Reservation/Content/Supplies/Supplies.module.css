@@ -1,5 +1,6 @@
 .container{
     min-width: 900px;
+    padding: 20px;
 }
 .reservationContent {
     height: inherit;
@@ -7,7 +8,7 @@
 }
 .customTitle {
     text-align: left; /* 텍스트를 중앙 정렬 */
-    margin: 10px; /* 캘린더와의 간격 */
+    margin-bottom: 10px;
     font-size: 1rem; /* 제목 크기 조정 */
     font-weight: bold; /* 굵은 글씨 */
 }

@@ -9,9 +9,7 @@
 .list thead th {
     background-color: #A4C3B2; 
     color: white;
-    letter-spacing: 2px;
-    font-weight: 400;
-    text-shadow: 1px 1px 1px #9b9b9b;
+    letter-spacing: 3px;
     padding: 14px 10px 14px 15px
 }
 .list tbody td, 
@@ -19,11 +17,11 @@
     padding: 12px 10px 12px 15px
 }
 .list {
-    border: 1px solid gainsboro;
+    /* border: 1px solid gainsboro; */
     /* box-shadow: 3px 2px 4px gainsboro; */
     width: 100%;
-    border-radius: 5px;
-    padding: 5px;
+    /* border-radius: 5px; */
+    /* padding: 5px; */
 }
 tr,td {
     border: 1px solid gainsboro;
@@ -34,6 +32,6 @@ tr,td {
 /* .btn{
     display: flex;flex-direction: row; 
 } */
-.btn > button {border: none; border-radius: 5px; height: 100;width: 45%; transition: all 0.2s ease; cursor: pointer;}
+.btn > button {border: none; border-radius: 5px; height: 100;width: 45%; transition: all 0.1s ease; cursor: pointer;}
 .btn > button:first-child {margin-right: 10%;}
 .btn > button:hover {border: none;}
