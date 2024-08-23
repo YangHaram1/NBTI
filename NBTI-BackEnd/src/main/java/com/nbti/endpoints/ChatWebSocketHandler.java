@@ -52,7 +52,11 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		
 		HttpSession httpSession = (HttpSession) session.getAttributes().get("HTTPSESSIONID"); 
-		int group_seq=(int)httpSession.getAttribute("group_seq");		
+		Object attribute=httpSession.getAttribute("group_seq");
+		int group_seq=0;
+		if(attribute!=null) {
+			group_seq=(int)httpSession.getAttribute("group_seq");	
+		}
 		String sender =(String) httpSession.getAttribute("loginID");	
 		List<Group_memberDTO> list=memberService.members(group_seq);
 		boolean jsonValidate =validateJson(message.getPayload());
