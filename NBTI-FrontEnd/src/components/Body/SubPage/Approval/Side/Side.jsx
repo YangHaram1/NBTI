@@ -50,6 +50,7 @@ export const Side = () => {
   };
 
   const handlePopupForm = () => {
+
     if(approvalLine.length > 1){
       Swal.fire({
         icon: 'warning',
@@ -73,6 +74,7 @@ export const Side = () => {
                 resetApprovalLine();
                 resetReferLine();
                 setDocForm({name:"", id:"", period:""});
+                console.log(docForm);
                 console.log(docForm.name);
                 setIsModalOpen(true); // 첫 번째 모달 열기
                 setEditorCheck(false);
@@ -85,18 +87,29 @@ export const Side = () => {
               icon:'error',
               title:  'Cancelled'
           }
-            
           ).then((result) => {
-            setIsModalOpen(true);
+            return;
           });
 
         }
       });
-    };
+    }else{
+      setIsModalOpen(true); 
+      setDocForm({name:"", id:"", period:""});
+      setEditorCheck(false);
+      resetReferLine();
+    }
   }
 
   const closeFirstModal = () => {
     setIsModalOpen(false); // 첫 번째 모달 닫기
+    Swal.fire({
+      icon:'warning',
+      title:'전자결재 홈으로 돌아갑니다.',
+      showConfirmButton: false,
+      timer: 1500
+    });
+    navi("/approval");
   };
 
   const closeSecondModal = () => {
@@ -113,7 +126,11 @@ export const Side = () => {
       // 두 번째 모달 열기
       setIsSecondModalOpen(true);
     }else{
-      alert("문서 종류를 선택해주세요.");
+      Swal.fire({
+        icon: 'warning',
+        title: '전자결재',
+        text: '문서 종류를 선택해주세요.'
+      })
     }
     
   };

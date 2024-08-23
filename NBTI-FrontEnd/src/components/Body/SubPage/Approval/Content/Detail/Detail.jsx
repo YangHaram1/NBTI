@@ -179,11 +179,12 @@ export const Detail=()=>{
 
     const handleRewrite = () =>{
 
+        // console.log("======재기안========")
         setEditorCheck(false);
         resetApprovalLine();
         resetReferLine();
 
-        console.log("approval",approvalData);
+        // console.log("approval",approvalData);
         approvalData.map((data) => {
            const array = {
                 id: data.APPROVAL_ID,
@@ -194,16 +195,13 @@ export const Detail=()=>{
         });
 
         // resetReferLine();
-        console.log("refer",refer);
+        // console.log("refer",refer);
         const newRefer = refer.map((data)=>{
             const referdata = { id: data.ID, name: data.NAME, order: "4" }
             setReferLine(referdata);
         })
 
         setEditorCheck(true);
-
-        console.log("재기안 참조라인",referLine);
-        console.log("재기안 결재라인",approvalLine);
         navi("/approval/write", { state: { setlist: setlist, temp_seq: docCommonData.temp_seq } });
     }
 

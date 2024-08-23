@@ -51,6 +51,14 @@ export const Write = (props)=>{
         document.head.removeChild(link);
         };
     }, []);
+
+
+    useEffect(()=>{
+        console.log('URL이 변경되었습니다:', location.pathname);
+        setFileInfo([]);
+        setFiles([]);
+        console.log("파일이 날아갑니당");
+    },[location])
       
 
     // 결재션 변경 창 열기
@@ -320,8 +328,10 @@ export const Write = (props)=>{
 
         // 중복 파일 체크 및 필터링
         const nonDuplicateFiles = selectedFiles.filter(file => !currentFileNames.includes(file.name));
-        
-        if (nonDuplicateFiles.length === files.length) {
+        const nonDuplicateCheck = files.filter(file=>!currentFileNames.includes(file.name));
+
+        console.log("전체 배열 길이", nonDuplicateCheck);
+        if (nonDuplicateFiles.length === 0) {
             Swal.fire(
                 { 
                   icon: 'warning',
@@ -329,10 +339,10 @@ export const Write = (props)=>{
                   text: '이미 선택된 파일입니다.'
                 }
                 );
-            return;
         }
         console.log("중복제거 목록 보기", nonDuplicateFiles);
-        const MAX_SIZE = 1024 * 1024 * 100; // 1GB
+
+        const MAX_SIZE = 1024 * 1024 * 100; // 100MB
 
         const validFiles = nonDuplicateFiles.filter(file => {
             if (file.size > MAX_SIZE) {
@@ -348,17 +358,17 @@ export const Write = (props)=>{
             return true;
         });
 
-        // if (validFiles.length === 0) {
-        //     return; // 유효한 파일이 없으면 종료
-        // }
+        if (validFiles.length === 0) {
+            return; // 유효한 파일이 없으면 종료
+        }
 
-        const newFileInfo = selectedFiles.map(file => ({
+        const newFileInfo = validFiles.map(file => ({
             name: file.name,
             size: `${(file.size / 1024).toFixed(2)} KB`, // Size in KB
             id: file.name + date // Unique identifier
         }));
 
-        const newFile = selectedFiles.map(file => ({
+        const newFile = validFiles.map(file => ({
             file, // 원본 파일 객체
             id: file.name + date // 고유 식별자
         }));
@@ -409,7 +419,7 @@ export const Write = (props)=>{
     },[])
 
     useEffect(()=>{
-        console.log("참조라인 데이터 확인",referLine);
+        // console.log("참조라인 데이터 확인",referLine);
         if(referLine.length > 0){
         axios.post(`${host}/members/approvalSearch`,referLine)
         .then((resp)=>{

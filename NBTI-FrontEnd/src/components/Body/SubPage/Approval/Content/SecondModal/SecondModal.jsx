@@ -23,8 +23,8 @@ const SecondModal = ({ isOpen, onClose }) => {
 
   useEffect(()=>{
     // resetReferLine();
-    console.log("결재 모달창 참조라인 확인",referLine);
-    console.log("refer",refer);
+    // console.log("결재 모달창 참조라인 확인",referLine);
+    // console.log("refer",refer);
   },[])
 
   useEffect(()=>{
@@ -32,7 +32,7 @@ const SecondModal = ({ isOpen, onClose }) => {
     if(referLine.length > 0){
     axios.post(`${host}/members/approvalSearch`,referLine)
     .then((resp)=>{
-        console.log("이게 말이되나?",refer, referLine);
+        // console.log("이게 말이되나?",refer, referLine);
         setRefer(resp.data);
     })
     .catch((err)=>{

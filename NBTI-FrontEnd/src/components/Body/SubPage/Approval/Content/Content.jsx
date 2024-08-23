@@ -15,11 +15,11 @@ export const Content = ()=>{
     const { resetApprovalLine } = useApprovalLine();
 
     useEffect(() => {
-            console.log('URL이 변경되었습니다:', location.pathname);
-            if(location.pathname === "/approval/write/docVacation"||location.pathname === '/approval/write/docLeave'||location.pathname === '/approval/write/docDraft'){
-                console.log("데이터 보존");
+            // console.log('URL이 변경되었습니다:', location.pathname);
+            if(location.pathname === "/approval/write/docVacation"||location.pathname === '/approval/write/docLeave'||location.pathname === '/approval/write/docDraft'||location.pathname === '/approval/write'){
+                // console.log("데이터 보존");
             }else{
-                console.log("데이터 삭제");
+                // console.log("데이터 삭제");
                 resetReferLine();
                 resetApprovalLine();
             }
