@@ -408,7 +408,7 @@ const Chat = ({ setDisabled }) => {
             {!systemCheck && (
               <div className={idCheck ? styles.div1Left : styles.div1} >
                 {
-                  !idCheck && (<div className={styles.avatar}><img src={avatar} alt="" /></div>)
+                  !idCheck && (<div className={styles.avatar}><img src={(item.member_img === null) ? `${avatar}` : `${host}/images/avatar/${item.member_id}/${item.member_img}`} alt="" /></div>)
                 }
                 <div>
                   <div className={idCheck ? styles.nameReverse : styles.name}>{item.member_id}</div>

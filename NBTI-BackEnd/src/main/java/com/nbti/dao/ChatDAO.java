@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.nbti.dto.ChatDTO;
+import com.nbti.dto.ChatImgDTO;
 
 @Repository
 public class ChatDAO {
@@ -22,11 +23,11 @@ public class ChatDAO {
 		return dto;
 	}
 	
-	public List<ChatDTO> list(int group_seq) throws Exception{
+	public List<ChatImgDTO> list(int group_seq) throws Exception{
 		return mybatis.selectList("Chat.list",group_seq);
 	}
 	
-	public List<ChatDTO> search(String content,int group_seq) throws Exception{
+	public List<ChatImgDTO> search(String content,int group_seq) throws Exception{
 		Map<String, String> maps=new HashMap<>();
 		maps.put("content", content);
 		maps.put("group_seq", String.valueOf(group_seq));
