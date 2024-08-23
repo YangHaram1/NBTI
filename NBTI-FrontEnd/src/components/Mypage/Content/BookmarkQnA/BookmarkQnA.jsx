@@ -41,6 +41,8 @@ export const BookmarkQnA = () => {
     };
 
     axios.get(`${host}/board/bookmarkList`, { params }).then((resp) => {
+      console.log("갯수 : ", resp.data.list);
+
       setBoardList(resp.data.list); // 서버에서 list와 count 보내준 것 중 list만 담기
       setBoardType("문의");
 

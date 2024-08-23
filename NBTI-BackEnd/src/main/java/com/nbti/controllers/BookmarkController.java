@@ -42,8 +42,6 @@ public class BookmarkController {
 	@DeleteMapping("/delete/{seq}")
 	public ResponseEntity<Integer> delete(@PathVariable int seq){
 		
-		System.out.println("seq : " + seq); // 게시물 seq번호임 
-		
 		String member_id = (String) session.getAttribute("loginID");
 		
 		Map<String, Object> map = new HashMap<>();
