@@ -122,11 +122,7 @@ export const MonthlyStats = () => {
                     </button>
                 </div>
             </div>
-            <div className={styles.stats}>
-                <p>지각 횟수: {stats.lateCount}</p>
-                <p>결근 횟수: {stats.absentCount}</p>
-                <p>조기 퇴근 횟수: {stats.earlyLeaveCount}</p>
-            </div>
+
             <div className={styles.minical}>
                 <FullCalendar
                     ref={calendarRef}

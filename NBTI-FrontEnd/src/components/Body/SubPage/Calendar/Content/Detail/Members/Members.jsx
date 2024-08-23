@@ -72,7 +72,8 @@ const Members = ( {membersList, setMembersList} ) => {
                                                                     <div>
                                                                         {member.job_name}
                                                                     </div>
-                                                                </div>                                                    <input 
+                                                                </div>
+                                                                <input 
                                                                     type="checkbox" 
                                                                     checked={membersList.some(item => item.id === member.id)} // 체크 상태 가져오기
                                                                     onChange={() => handleCheckboxChange(member)} // 상태 변경 핸들러 연결

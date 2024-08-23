@@ -37,8 +37,9 @@ export const AllVacation = () => {
             .catch(error => {
                 setError("팀 목록을 가져오는 데 문제가 발생했습니다.");
             });
-    }, []);
+    }, [cpage]);
 
+    // 휴가 내역을 가져오는 useEffect
     useEffect(() => {
         const start = (cpage - 1) * recordCountPerPage + 1;
         const end = cpage * recordCountPerPage;
@@ -51,16 +52,16 @@ export const AllVacation = () => {
             }
         })
         .then(response => {
-            
             const { history, totalRecordCount } = response.data;
             const historyData = convertArrayKeysToLowerCase(history);
             setVacationHistory(historyData);
-
+            console.log(start,end);
+            console.log(historyData);
+            console.log(totalRecordCount);
             const pageCount = Math.ceil(totalRecordCount / recordCountPerPage);
             setPageTotalCount(pageCount);
         })
         .catch(error => {
-            
             setError("휴가 신청 내역을 가져오는 데 문제가 발생했습니다.");
         });
     }, [cpage, selectedTeam]);
@@ -85,7 +86,7 @@ export const AllVacation = () => {
         <div className={styles.container}>
             <h3 className={styles.title}>휴가 신청 내역</h3>
             <div className={styles.searchAndFilter}>
-                <label htmlFor="team-filter">팀:</label>
+                
                 <select 
                     id="team-filter" 
                     value={selectedTeam} 
@@ -147,7 +148,7 @@ export const AllVacation = () => {
                 onPageChange={handlePage}
                 containerClassName={styles.pagination}
                 activeClassName={styles.active}
-                initialPage={0}
+                initialPage={cpage - 1} // 현재 페이지를 올바르게 설정
                 previousLabel={'<'}
                 previousClassName={styles.previous}
                 nextLabel={'>'}
