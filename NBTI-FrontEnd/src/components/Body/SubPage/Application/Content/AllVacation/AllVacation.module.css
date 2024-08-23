@@ -1,0 +1,111 @@
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  
+    width: calc(100% - 250px);
+    padding: 30px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-left: 250px;
+    overflow: auto;
+  }
+  
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .vacationTable,
+  .vacationHistoryTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+  }
+  
+  .vacationTable th,
+  .vacationTable td,
+  .vacationHistoryTable th,
+  .vacationHistoryTable td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .vacationTable th,
+  .vacationHistoryTable th {
+    background-color: #6b9080;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .vacationTable td,
+  .vacationHistoryTable td {
+    background-color: #f9f9f9;
+    color: #333;
+  }
+  
+  .button {
+    padding: 5px 10px;
+    background-color: #6b9080;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .button:hover {
+    background-color: #6b9080cc;
+  }
+  .detailButton {
+    background-color: #6b9080;
+    color: white; /* 글자색 */
+    padding: 10px 20px; /* 패딩 */
+    margin: 10px 0; /* 버튼과 다른 요소 간격 */
+    border: none; /* 테두리 제거 */
+    border-radius: 5px; /* 모서리를 둥글게 */
+    cursor: pointer; /* 마우스를 올렸을 때 커서 모양 변경 */
+    font-size: 16px; /* 글자 크기 */
+  
+  }
+
+  /**/
+.pagination {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: auto;
+  }
+  
+  .pagination li {
+    cursor: pointer;
+    margin: 0 5px;
+  }
+  
+  .pagination a {
+    text-decoration: none;
+    color: #6b9080;
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .pagination a:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .pagination .active a {
+    background-color: #6b9080;
+    color: white;
+  }
+  .next {
+    display: none;
+  }
+  .previous {
+    display: none;
+  }
+  
+  
