@@ -54,10 +54,10 @@ export const Write = (props)=>{
 
 
     useEffect(()=>{
-        console.log('URL이 변경되었습니다:', location.pathname);
+        // console.log('URL이 변경되었습니다:', location.pathname);
         setFileInfo([]);
         setFiles([]);
-        console.log("파일이 날아갑니당");
+        // console.log("파일이 날아갑니당");
     },[location])
       
 
@@ -321,16 +321,16 @@ export const Write = (props)=>{
         // 기존 있던 파일
         const currentFileNames = files.map(fileObj => fileObj.file.name);
         // const count = 0;
-        console.log("파일 선택 목록 보기", selectedFiles);
-        console.log("파일 기존 목록 보기", files);
-        console.log("파일 최근 목록 보기", currentFileNames);
+        // console.log("파일 선택 목록 보기", selectedFiles);
+        // console.log("파일 기존 목록 보기", files);
+        // console.log("파일 최근 목록 보기", currentFileNames);
         const date = Date.now();
 
         // 중복 파일 체크 및 필터링
         const nonDuplicateFiles = selectedFiles.filter(file => !currentFileNames.includes(file.name));
         const nonDuplicateCheck = files.filter(file=>!currentFileNames.includes(file.name));
 
-        console.log("전체 배열 길이", nonDuplicateCheck);
+        // console.log("전체 배열 길이", nonDuplicateCheck);
         if (nonDuplicateFiles.length === 0) {
             Swal.fire(
                 { 
@@ -340,7 +340,7 @@ export const Write = (props)=>{
                 }
                 );
         }
-        console.log("중복제거 목록 보기", nonDuplicateFiles);
+        // console.log("중복제거 목록 보기", nonDuplicateFiles);
 
         const MAX_SIZE = 1024 * 1024 * 100; // 100MB
 
@@ -434,8 +434,8 @@ export const Write = (props)=>{
     },[referLine])
 
     useEffect(()=>{
-        console.log("파일",files);
-        console.log("파일 정보",fileInfo);
+        // console.log("파일",files);
+        // console.log("파일 정보",fileInfo);
     },[files, fileInfo])
 
     return(
@@ -469,7 +469,7 @@ export const Write = (props)=>{
                             <div className={styles.file_list}>
                                 {fileInfo.map((file, index) => (
                                     <div key={index} className={styles.file_item}>
-                                        {file.name} ({file.size}) <button  onClick={() => handleFileDelete(file.id)}>X</button>
+                                        {file.name} ({file.size}) <button className={styles.filedeletebtn} onClick={() => handleFileDelete(file.id)}>X</button>
                                     </div>
                                 ))}
                             </div>

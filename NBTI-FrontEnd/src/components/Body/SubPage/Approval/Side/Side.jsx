@@ -74,8 +74,8 @@ export const Side = () => {
                 resetApprovalLine();
                 resetReferLine();
                 setDocForm({name:"", id:"", period:""});
-                console.log(docForm);
-                console.log(docForm.name);
+                // console.log(docForm);
+                // console.log(docForm.name);
                 setIsModalOpen(true); // 첫 번째 모달 열기
                 setEditorCheck(false);
               }

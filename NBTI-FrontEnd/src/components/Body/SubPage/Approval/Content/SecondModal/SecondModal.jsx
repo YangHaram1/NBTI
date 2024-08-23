@@ -58,7 +58,7 @@ const SecondModal = ({ isOpen, onClose }) => {
       );
       return; 
     }
-    console.log(docForm.name);
+    // console.log(docForm.name);
     if(docForm.name === '휴가신청서'){
       navi("/approval/write/docVacation");
     }else if(docForm.name === '휴직신청서'){
