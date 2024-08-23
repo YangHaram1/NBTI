@@ -58,7 +58,7 @@ div {
     cursor: pointer;
     margin: 0 0 20px 0;
     padding: 0;
-    font-size: 0.9rem;
+    /* font-size: 0.9rem; */
   }
   .container .menus ul > li {
     position: relative;
@@ -141,16 +141,6 @@ div {
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
   }
-
-
-
-/* 
-.editBox {background-color: red;width: 100%;display: flex;justify-content: space-between;}
-.editBox > input {background-color: aqua; width: 100px;}
-
-.editBox > span {background-color: yellow;}
-.editBox > button {background-color: #ccc;}
- */
 
 /* 사이드 미니 캘린더 */
 .mini{
