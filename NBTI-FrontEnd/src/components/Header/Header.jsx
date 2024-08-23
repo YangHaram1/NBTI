@@ -169,6 +169,8 @@ export const Header = () => {
             return "휴가신청";
         } else if (path.startsWith("/attendance")) {
             return "근무현황";
+        } else if (path.startsWith("/useradmin")) {
+            return "관리자";
         } else {
             return "오피스 홈"; // 기본 텍스트
         }
