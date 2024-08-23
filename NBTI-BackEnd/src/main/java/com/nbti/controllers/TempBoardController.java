@@ -76,20 +76,6 @@ public class TempBoardController {
 	}
 	
 	
-	//==========================[ QnA 임시저장 ]========================
-	
-//	// QnA 임시저장 목록 출력
-//	@GetMapping("/tempQnAList")
-//	public ResponseEntity<List<TempBoardDTO>> selectAllQnA(){
-//		
-//		String member_id = (String) session.getAttribute("loginID");
-//		
-//		List<TempBoardDTO> list = tserv.selectAll(member_id);
-//		System.out.println("list : " +list);
-//		return ResponseEntity.ok(list);
-//	}
-	
-	
 	
 	
 	

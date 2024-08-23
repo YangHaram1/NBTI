@@ -74,8 +74,6 @@ public class BoardController {
 	    result.put("count", bserv.getBoardCount(map));
 	    result.put("list", list );
 	    
-	    System.out.println("댓글 수 : " + bserv.getBoardCount(map));
-	    
 		return ResponseEntity.ok(result);
 	}
 	
