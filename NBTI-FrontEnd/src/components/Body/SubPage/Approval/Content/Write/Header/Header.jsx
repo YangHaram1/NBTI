@@ -16,7 +16,7 @@ export const Header = ({userdata}) => {
     const [approval, setApproval] = useState([]);
     
     useEffect(()=>{
-        console.log("작성시 전결라인",approvalLine);
+        // console.log("작성시 전결라인",approvalLine);
         axios.post(`${host}/members/approvalSearch`,approvalLine)
         .then((resp)=>{
             // console.log("데이터 확인",resp.data);

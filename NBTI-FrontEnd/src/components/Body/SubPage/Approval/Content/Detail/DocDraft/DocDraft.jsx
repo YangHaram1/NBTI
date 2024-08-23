@@ -9,7 +9,7 @@ export const DocDraft = ({setDocDraft, docDraft})=>{
 
     const [date, setDate] = useState('');
 
-    console.log("데이터 확인",docDraft);
+    // console.log("데이터 확인",docDraft);
     useEffect(() => {
         if (docDraft.effective_date) {
             setDate(format(new Date(docDraft.effective_date), 'yyyy-MM-dd'));

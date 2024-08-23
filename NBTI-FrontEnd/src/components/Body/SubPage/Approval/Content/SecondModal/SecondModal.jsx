@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 
 const SecondModal = ({ isOpen, onClose }) => {
 
-  const {referLine, setReferLine, deleteReferLine} = useReferLine();
+  const {referLine, resetReferLine, deleteReferLine} = useReferLine();
   const {approvalLine} = useApprovalLine();
   const {docForm} = useDocFormStore();
   const [refer, setRefer] = useState([]);
@@ -22,9 +22,17 @@ const SecondModal = ({ isOpen, onClose }) => {
   };
 
   useEffect(()=>{
+    // resetReferLine();
+    // console.log("결재 모달창 참조라인 확인",referLine);
+    // console.log("refer",refer);
+  },[])
+
+  useEffect(()=>{
+
     if(referLine.length > 0){
     axios.post(`${host}/members/approvalSearch`,referLine)
     .then((resp)=>{
+        // console.log("이게 말이되나?",refer, referLine);
         setRefer(resp.data);
     })
     .catch((err)=>{
@@ -39,6 +47,7 @@ const SecondModal = ({ isOpen, onClose }) => {
   const handlePageMove = (e)=>{
     e.preventDefault();
 
+    setRefer([]);
     if(check == false){
       Swal.fire(
       { 
@@ -49,7 +58,7 @@ const SecondModal = ({ isOpen, onClose }) => {
       );
       return; 
     }
-    console.log(docForm.name);
+    // console.log(docForm.name);
     if(docForm.name === '휴가신청서'){
       navi("/approval/write/docVacation");
     }else if(docForm.name === '휴직신청서'){
@@ -92,9 +101,9 @@ const SecondModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div className={styles.overlay}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.closeButton} onClick={onClose}>×</button>
+        {/* <button className={styles.closeButton} onClick={onClose}>×</button> */}
         <h2>결재선 지정</h2>
         <form onSubmit={handleSubmit}>
         <div className={styles.form_box}>
@@ -106,7 +115,7 @@ const SecondModal = ({ isOpen, onClose }) => {
               <div className={styles.form_refer}>
                 <div className={styles.form_refer_box}>
                   {
-                    refer.length  > 0 ?
+                    refer.length > 0 ?
                     refer.map((referr)=>{
                       return(
                         <div key={referr.ID} className={styles.refer_member}>

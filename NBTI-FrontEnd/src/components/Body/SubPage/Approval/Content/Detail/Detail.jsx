@@ -3,7 +3,7 @@ import { host } from '../../../../../../config/config';
 import styles from './Detail.module.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useApprovalLine, useDocLeave, useDocVacation, useReferLine } from '../../../../../../store/store';
+import { useApprovalLine, useDocLeave, useDocVacation, useEditorCheck, useReferLine } from '../../../../../../store/store';
 // import html2pdf from 'html2pdf.js';
 import { DocLeave } from './DocLeave/DocLeave';
 import { Header } from './Header/Header';
@@ -46,7 +46,7 @@ export const Detail=()=>{
 
     const { approvalLine, setApprovalLine ,resetApprovalLine } = useApprovalLine();
     const { referLine, setReferLine, resetReferLine } = useReferLine();
-    // const { docLeave, setDocLeave } = useDocLeave();
+    const { setEditorCheck } = useEditorCheck();
     // const { docVacation, setDocVacation } = useDocVacation();
 
     useEffect(() => {
@@ -179,7 +179,11 @@ export const Detail=()=>{
 
     const handleRewrite = () =>{
 
+        // console.log("======재기안========")
+        setEditorCheck(false);
         resetApprovalLine();
+        resetReferLine();
+
         // console.log("approval",approvalData);
         approvalData.map((data) => {
            const array = {
@@ -190,15 +194,14 @@ export const Detail=()=>{
             setApprovalLine(array);
         });
 
-        resetReferLine();
-        console.log("refer",refer);
+        // resetReferLine();
+        // console.log("refer",refer);
         const newRefer = refer.map((data)=>{
-            return ({id:data.ID, name: data.NAME,order:"4" });
+            const referdata = { id: data.ID, name: data.NAME, order: "4" }
+            setReferLine(referdata);
         })
-        setReferLine(...newRefer);
 
-        // console.log("재기안 결재라인",approvalData);
-        // console.log("approval",approvalData);
+        setEditorCheck(true);
         navi("/approval/write", { state: { setlist: setlist, temp_seq: docCommonData.temp_seq } });
     }
 
