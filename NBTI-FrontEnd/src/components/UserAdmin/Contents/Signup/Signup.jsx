@@ -5,6 +5,7 @@ import { host } from '../../../../config/config';
 import { useMemberStore } from '../../../../store/store';
 import { useNavigate } from 'react-router-dom';
 
+
 const Signup = () => {
     const [formData, setFormData] = useState({
         id: '',
@@ -78,10 +79,54 @@ const Signup = () => {
         if (level.payment==='Y') return '결제 권한';
         return '권한 없음';
     };
+    const validateFormData = (formData) => {
+        // 아이디 유효성 검사: 4자 이상 20자 이하의 영문자, 숫자, 밑줄(_)만 허용
+        const idPattern = /^[a-zA-Z0-9_]{4,20}$/;
+        if (!idPattern.test(formData.id)) {
+            alert('아이디는 4자 이상 20자 이하의 영문자, 숫자, 밑줄(_)만 사용할 수 있습니다.');
+            return false;
+        }
+
+        // 이메일 유효성 검사
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(formData.email)) {
+            alert('유효한 이메일 주소를 입력하세요.');
+            return false;
+        }
+
+        // 전화번호 유효성 검사: 한국 전화번호 형식 (예: 010-1234-5678)
+        const phonePattern = /^(010|011|016|017|018|019)-\d{3,4}-\d{4}$/;
+        if (formData.member_call && !phonePattern.test(formData.member_call)) {
+            alert('유효한 전화번호를 입력하세요. (예: 010-1234-5678)');
+            return false;
+        }
+
+        const birthPattern = /^\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/;
+        if (formData.birth && !birthPattern.test(formData.birth)) {
+            alert('유효한 생년월일을 입력하세요. (예: 900203)');
+            return false;
+        }
+
+        // 비밀번호 유효성 검사: 최소 8자 이상, 영문자, 숫자, 특수문자 포함
+        const pwPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!pwPattern.test(formData.pw)) {
+            alert('비밀번호는 최소 8자 이상이어야 하며, 영문자, 숫자, 특수문자를 포함해야 합니다.');
+            return false;
+        }
+
+        return true;  // 모든 유효성 검사를 통과하면 true 반환
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // `enter_date`를 포함하지 않음
+
+        // 유효성 검사 실행
+        if (!validateFormData(formData)) {
+            // 유효성 검사를 통과하지 못하면 더 이상 진행하지 않음
+            return;
+        }
+
+        // 유효성 검사를 통과하면 서버에 데이터 전송
         axios.post(`${host}/members`, formData)
             .then(response => {
                 alert('회원가입이 성공적으로 완료되었습니다.');

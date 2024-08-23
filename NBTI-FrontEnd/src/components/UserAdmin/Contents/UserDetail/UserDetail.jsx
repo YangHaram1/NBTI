@@ -18,9 +18,9 @@ const UserDetail = () => {
         address: '',
         birth: '',
         gender: '',
-
-        vacation_period: 15
-
+        ent_yn: 'N',
+        vacation_period: 15,
+        end_date: ''
     });
     const [teams, setTeams] = useState([]);
     const [jobs, setJobs] = useState([]);
@@ -72,23 +72,17 @@ const UserDetail = () => {
         }).open();
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-    
-        try {
-            // 클라이언트에서 데이터를 서버로 전송
-            const response = await axios.put(`${host}/members/updateUser`, user);
-    
-            if (response.status === 200) {
+        axios.put(`${host}/members/updateUser`, user)
+            .then(response => {
                 alert('회원 정보가 성공적으로 업데이트되었습니다.');
                 navigate(`/useradmin/userlist`);
-            } else {
+            })
+            .catch(error => {
+                console.error('Error updating user:', error);
                 alert('회원 정보 업데이트 중 오류가 발생했습니다.');
-            }
-        } catch (error) {
-            console.error('Error updating user:', error);
-            alert('회원 정보 업데이트 중 오류가 발생했습니다.');
-        }
+            });
     };
 
     const handleDelete = () => {
@@ -233,7 +227,23 @@ const UserDetail = () => {
                 <option value="M">남성</option>
                 <option value="F">여성</option>
             </select>
-         
+            <select
+                name="ent_yn"
+                value={user.ent_yn}
+                onChange={handleChange}
+            >
+                <option value="N">재직</option>
+                <option value="Y">휴직</option>
+            </select>
+            {user.ent_yn === 'Y' && (
+                <input
+                    type="text"
+                    placeholder="휴직일"
+                    name="end_date"
+                    value={user.end_date}
+                    onChange={handleChange}
+                />
+            )}
             <input
                 type="number"
                 placeholder="휴가 기간"

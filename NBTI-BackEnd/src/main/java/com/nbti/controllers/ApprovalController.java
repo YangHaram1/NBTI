@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -807,18 +808,17 @@ public class ApprovalController {
 		return ResponseEntity.ok().build();
 	}
 	
-	@GetMapping("/history")
-	public List<Map<String, Object>> getVacationHistory(HttpServletRequest request) {
-	    
-	    String memberId = (String) session.getAttribute("loginID");
-	    System.out.println("Retrieved memberId from session: " + memberId);
+	 @GetMapping("/history")
+	    public ResponseEntity<Map<String, Object>> getVacationHistory(
+	        @RequestParam int start, 
+	        @RequestParam int end
+	    ) {
+	        String memberId = (String) session.getAttribute("loginID");
+	        if (memberId == null) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+	        }
 
-	    if (memberId == null) {
-	        throw new RuntimeException("No memberId found in session.");
+	        Map<String, Object> result = aServ.getVacationHistory(memberId, start, end);
+	        return ResponseEntity.ok(result);
 	    }
-
-	    List<Map<String, Object>> vacationHistory = aServ.getVacationHistory(memberId);
-	    return vacationHistory;
-	}
-
 }

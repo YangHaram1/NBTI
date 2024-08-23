@@ -101,7 +101,7 @@ const UserList = () => {
         else{
             fetchData();
         }
-      
+       
         
     }, [cpage,search]);
 
