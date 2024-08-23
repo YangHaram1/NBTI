@@ -80,7 +80,7 @@ public class MembersController {
 	public ResponseEntity<Void> update(@RequestBody MembersDTO dto) {
 		String id = (String)session.getAttribute("loginID");
 		dto.setId(id);
-		System.out.println(dto.getAddress() +":"+ dto.getEmail() +":"+ dto.getMember_call());
+//		System.out.println(dto.getAddress() +":"+ dto.getEmail() +":"+ dto.getMember_call());
 		mServ.updateMyData(dto);
 		return ResponseEntity.ok().build();
 	}
@@ -180,7 +180,7 @@ public class MembersController {
 	}
 	 @GetMapping("/apply")
      public ResponseEntity<Map<String, Object>> getVacationInfo(HttpSession session, @RequestParam(required = false) String memberId) {
-       System.out.println("applyForVacation 컨트롤러 호출됨");  // 호출 여부 확인
+//       System.out.println("applyForVacation 컨트롤러 호출됨");  // 호출 여부 확인
          // 세션에서 로그인한 사용자의 ID를 가져옵니다.
          if (memberId == null) {
              memberId = (String) session.getAttribute("loginID");
@@ -310,7 +310,7 @@ public class MembersController {
 //					System.out.println(memberData);
 				}else if(map.get("referer") != null) {
 					
-					System.out.println("참조라인 들어옴"+map.get("referer"));
+//					System.out.println("참조라인 들어옴"+map.get("referer"));
 					String id = (String)map.get("referer");
 					String name =  (String)map.get("name");
 					Map<String, Object> memberData = mServ.memberData(id);

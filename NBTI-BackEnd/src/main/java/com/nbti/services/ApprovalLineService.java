@@ -60,9 +60,9 @@ public class ApprovalLineService {
 		}
 		
 		
-		System.out.println("문서 상태: " + approvalYN);
-		System.out.println("총 순서: " + total_seq);
-		System.out.println("현재 순서: " + order);
+//		System.out.println("문서 상태: " + approvalYN);
+//		System.out.println("총 순서: " + total_seq);
+//		System.out.println("현재 순서: " + order);
 		
 		
 		// 문서 상태가 승인일 때, 
@@ -78,11 +78,11 @@ public class ApprovalLineService {
 //					System.out.println("아이디 값 확인 : "+ id);
 					mdao.updateLeave(id);
 				}else if (setlist.equals("휴가신청서")) {
-					System.out.println("휴가 신청서 최신화: " + seq);
+//					System.out.println("휴가 신청서 최신화: " + seq);
 
 					// ID 가져오기
 					String id = adao.getApprovaler(seq);
-					System.out.println("아이디값 확인: " + id);
+//					System.out.println("아이디값 확인: " + id);
 
 					// DocVacationDTO 객체 가져오기
 					DocVacationDTO dto = dvdao.selectContent(seq);
@@ -110,10 +110,10 @@ public class ApprovalLineService {
 					double result;
 					if("true ".equalsIgnoreCase(startHalf) || "true ".equalsIgnoreCase(endHalf)) {
 					    result = daysDifference + 0.5;
-					    System.out.println("반차 맞니 " + result);
+//					    System.out.println("반차 맞니 " + result);
 					} else {
 					    result = daysDifference;
-					    System.out.println("반차 아니니 " + result);
+//					    System.out.println("반차 아니니 " + result);
 					}
 
 					// 잔여 휴가 일수 계산
