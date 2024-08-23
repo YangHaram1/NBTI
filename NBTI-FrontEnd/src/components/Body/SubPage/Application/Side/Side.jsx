@@ -3,91 +3,85 @@ import styles from "./Side.module.css";
 import { useNavigate } from "react-router-dom";
 import { useApprovalLine, useDocFormStore, useReferLine } from "../../../../../store/store";
 import SecondModal from "../../Approval/Content/SecondModal/SecondModal";
-
+import axios from 'axios'; // axios import
+import { host } from "../../../../../config/config"; // API 주소 import
 
 export const Side = () => {
-  // ===== 메뉴 토글 =====
-//   const [FreeBoard, setFreeBoard] = useState(false);
-//   const [NoticeBoard, setNoticeBoard] = useState(false);
+  const [memberLevel, setMemberLevel] = useState(''); // memberLevel 상태
+  const [isSecondModalOpen, setIsSecondModalOpen] = useState(false); // 모달 상태
+  const { setDocForm } = useDocFormStore();
+  const { resetReferLine } = useReferLine();
+  const { resetApprovalLine } = useApprovalLine();
+  const navi = useNavigate();
 
-//   const toggleFreeBoard = () => {
-//     setFreeBoard(!FreeBoard);
-//   };
-
-//   const toggleNoticeBoard = () => {
-//     setNoticeBoard(!NoticeBoard);
-//   };
-
-  // ===== 아이콘 =====
+  // 외부 스타일시트 추가
   useEffect(() => {
-    // 외부 스타일시트를 동적으로 추가
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href =
-      "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css";
+    link.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css";
     document.head.appendChild(link);
 
-    // 컴포넌트가 언마운트될 때 스타일시트를 제거
     return () => {
       document.head.removeChild(link);
     };
   }, []);
 
-//   const preventPropagation = (e) => {
-//     e.stopPropagation();
-//   };
+  // 사용자 레벨 가져오기
+  useEffect(() => {
+    const fetchUserLevel = async () => {
+      try {
+        const response = await axios.get(`${host}/members/memberInfo`);
+        setMemberLevel(response.data.member_level);
+      } catch (error) {
+        console.error("Error fetching user level:", error);
+      }
+    };
 
-  const navi = useNavigate();
-  const [isSecondModalOpen, setIsSecondModalOpen] = useState(false); // 모달 상태
-  const {setDocForm} = useDocFormStore();
-  const {resetReferLine} = useReferLine();
-  const {resetApprovalLine} = useApprovalLine();
+    fetchUserLevel();
+  }, []);
 
   const handleModal = (data) => {
-    // 만약 기존 내용이 있다면 초기화
     resetReferLine();
     resetApprovalLine();
-    // 휴가신청서 정보 입력
-    if(data === 'vacation'){
-      setDocForm({name:"휴가신청서", id:"3", period:"1년"});
-    }else if(data === 'leave'){
-      setDocForm({name:"휴직신청서", id:"2", period:"10년"});
+    if (data === 'vacation') {
+      setDocForm({ name: "휴가신청서", id: "3", period: "1년" });
+    } else if (data === 'leave') {
+      setDocForm({ name: "휴직신청서", id: "2", period: "10년" });
     }
-    // 모달 열기
     setIsSecondModalOpen(true);
   }
 
   const closeSecondModal = () => {
-    setIsSecondModalOpen(false); // 모달 닫기
+    setIsSecondModalOpen(false);
   };
 
   return (
     <div className={styles.container}>
-          
       <div className={styles.mainBtn}>
-        <button onClick={()=>{handleModal('vacation')}}>
+        <button onClick={() => { handleModal('vacation') }}>
           <i className="fa-solid fa-plus"></i>
           <p>휴가 신청</p>
         </button>
       </div>
       <div className={styles.mainBtn}>
-      <button onClick={()=>{handleModal('leave')}}>
+        <button onClick={() => { handleModal('leave') }}>
           <i className="fa-solid fa-plus"></i>
           <p>휴직 신청</p>
         </button>
-      </div>  
+      </div>
       <div className={styles.menus}>
-        
         <ul>
-            <li onClick={() => { navi("/application/myvacation") }}>
-                휴가 현황
-            </li>
-        </ul>
-        <ul>
-          <li onClick={()=>{navi("/application/allvacation")}}>
-            전체 휴가 현황
+          <li onClick={() => { navi("/application/myvacation") }}>
+            휴가 현황
           </li>
         </ul>
+        {(memberLevel === '2' || memberLevel === '3') && (
+          <ul>
+            <li onClick={() => { navi("/application/allvacation") }}>
+              전체 휴가 신청 현황
+            </li>
+          </ul>
+        )}
 
       </div>
       {/* 결재선 모달 */}

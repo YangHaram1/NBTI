@@ -38,7 +38,7 @@ const MyVacation = () => {
                     const totalDays = 15; // 기본 총 휴가 일수
                     const remainingDays = response.data.remaining;
                     const usedDays = totalDays - remainingDays;
-                    console.log(remainingDays);
+                    
                     setVacationInfo({
                         total: totalDays.toFixed(1),
                         used: usedDays.toFixed(1),
@@ -53,7 +53,7 @@ const MyVacation = () => {
                     const { history, totalRecordCount } = response.data;
                     const historyData = convertArrayKeysToLowerCase(history);
                     setVacationHistory(historyData);
-                    console.log(historyData);
+                    
     
                     // 총 레코드 수에 기반하여 페이지 총 개수 계산
                     const pageCount = Math.ceil(totalRecordCount / record_count_per_page);

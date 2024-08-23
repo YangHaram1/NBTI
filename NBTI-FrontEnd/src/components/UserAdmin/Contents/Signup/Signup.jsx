@@ -33,15 +33,15 @@ const Signup = () => {
     useEffect(() => {
         axios.get(`${host}/members/selectTeam`)
             .then(response => setTeams(response.data))
-            .catch(error => console.error('Error fetching teams:', error));
+  
 
         axios.get(`${host}/members/selectJob`)
             .then(response => setJobs(response.data))
-            .catch(error => console.error('Error fetching jobs:', error));
+     
 
         axios.get(`${host}/members/selectLevel`)
             .then(response => setLevels(response.data))
-            .catch(error => console.error('Error fetching levels:', error));
+            
     }, []);
 
     useEffect(() => {
@@ -140,7 +140,7 @@ const Signup = () => {
                 navi("/");
             })
             .catch(error => {
-                console.error('Error submitting form:', error);
+               
                 alert('회원가입 중 오류가 발생했습니다.');
             });
     };
