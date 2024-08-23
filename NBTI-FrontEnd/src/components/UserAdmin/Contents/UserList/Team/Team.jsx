@@ -12,7 +12,7 @@ const Team = ({ teams, selectedTeam, onTeamChange }) => {
 >
     <option value="">팀 선택</option>
     {teams.map((team) => {
-        console.log('Rendering Option:', team.team_code, team.team_name); // 팀 코드와 이름을 로그로 확인
+      
         return (
             <option key={team.team_code} value={team.team_code}>
                 {team.team_name}

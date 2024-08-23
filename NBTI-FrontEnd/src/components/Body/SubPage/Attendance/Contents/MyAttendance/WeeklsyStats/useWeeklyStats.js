@@ -7,14 +7,13 @@ const useWeeklyStats = (memberId) => {
     const [dailyStats, setDailyStats] = useState({});
 
     const fetchWeeklyStats = async () => {
-        console.log("Fetching weekly stats...");
+
         try {
             const response = await axios.get(`${host}/attendance/weekly-stats`, {
                 params: { memberId },
                 withCredentials: true
             });
-            console.log("Response status:", response.status);
-            console.log("Response data:", response.data);
+
             
             if (response.data) {
                 setStats({
@@ -26,7 +25,7 @@ const useWeeklyStats = (memberId) => {
                 setDailyStats(response.data.dailyStats || {});
             }
         } catch (err) {
-            console.error('Failed to fetch weekly stats.', err.response ? err.response.data : err);
+           
         }
     };
     useEffect(() => {

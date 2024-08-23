@@ -37,7 +37,7 @@ export const MonthlyStats = () => {
         if (storedMemberId) {
             setMemberId(storedMemberId);
         } else {
-            console.error('SessionStorage에서 memberId를 찾을 수 없습니다.');
+          
         }
     }, []);
 
@@ -151,6 +151,7 @@ export const MonthlyStats = () => {
                     }}
                 />
             </div>
+
         </div>
     );
 };

@@ -15,7 +15,7 @@ import SweetAlert from "../../../../../function/SweetAlert";
 
 export const Content = () => {
 
-    const {selectedDate,modalOpen,setModalOpen, setSelectedDate, setReservations } = useReservationList();
+    const {selectedDate,modalOpen,setModalOpen, setSelectedDate, setReservations , approve } = useReservationList();
 
     // 현재 날짜를 "YYYY-MM-DD" 형식으로 얻음 (지난 날짜 막기)
     const today = new Date().toISOString().split('T')[0];
@@ -87,6 +87,45 @@ export const Content = () => {
               }); 
             return;
         }
+
+    // ===== 중복 예약 체크 ===== 
+    // 자원 코드와 자원 이름을 매핑
+    const resourceMap = {
+        '1': '회의실',
+        '2': '노트북',
+        '3': '차량'
+    };
+
+    const isOverlap = approve.some(item => {
+        const startTime = new Date(item.start_time);
+        const endTime = new Date(item.end_time);
+
+        // 자원 코드에 따라 자원 이름 변환
+        const currentResource = resourceMap[reserve_title_code]; // 현재 예약
+        const existingResource = item.reserve_title_code; // 기존 예약 
+
+        return (
+            currentResource === existingResource && 
+            (
+                (startTimeObj >= startTime && startTimeObj < endTime) ||
+                (endTimeObj > startTime && endTimeObj <= endTime) || 
+                (startTimeObj <= startTime && endTimeObj >= endTime) 
+            )
+        );
+    });
+
+    if (isOverlap) {
+        Swal.fire({
+            icon: "error",
+            title: "예약",
+            text: "선택한 시간대에 이미 예약이 있습니다.",
+        });
+        return; // 중복이 있으면 추가하지 않음
+    }
+
+
+
+
 
         // AJAX 요청
         axios.post(`${host}/reserve`, {
