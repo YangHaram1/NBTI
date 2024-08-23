@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { host } from '../../../../../../../config/config';
 import { useApprovalLine, useReferLine } from '../../../../../../../store/store';
+import Swal from 'sweetalert2';
 
 export const ApprovalLine = ({setTitle, setOrder, setCheck}) => {
 
@@ -65,7 +66,13 @@ export const ApprovalLine = ({setTitle, setOrder, setCheck}) => {
           const isDuplicate = approvalLine.some(line => line.id === selectMember.id);
 
           if (isDuplicate) {
-              alert("이미 추가된 아이디입니다.");
+              Swal.fire({
+                icon:'warning',
+                title:'이미 추가된 아이디입니다.',
+                showConfirmButton: false,
+                timer: 1500
+              })
+              // alert("이미 추가된 아이디입니다.");
               setSelectedValue(defaultValue); 
               setSelectMember({}); 
           } else {
@@ -85,8 +92,17 @@ export const ApprovalLine = ({setTitle, setOrder, setCheck}) => {
     }, [selectMember, setApprovalLine, setOrder]);
       
     const handleAdd = () => {
-        const newRefer = {id: selectMember.id, name:selectMember.name, order: setOrder};
+      const newRefer = {id: selectMember.id||'', name:selectMember.name||'', order: setOrder};
+      if(newRefer.name !== ''){
         setReferLine(newRefer);
+      }else{
+        Swal.fire({
+          icon:'warning',
+          title:'추가할 사원을 선택해주세요',
+          showConfirmButton: false,
+          timer: 1500
+        })
+      }
     }
 
     useEffect(()=>{
