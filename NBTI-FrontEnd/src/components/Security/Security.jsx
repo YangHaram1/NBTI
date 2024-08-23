@@ -62,10 +62,10 @@ const Security = () => {
             </div>
             <div className={styles.header}>
                 <div>
-                    Seq
+                    번호
                 </div>
                 <div>
-                    User_ID
+                    ID
                 </div>
                 <div>
                     IP

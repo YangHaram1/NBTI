@@ -40,7 +40,7 @@ export const Side = () => {
       <div className={styles.menus}>
         <ul>
           <li onClick={() => { navi("/attendance/myattendance") }}>
-            휴가 / 근무
+             근무 현황
           </li>
         </ul>
         <ul>
