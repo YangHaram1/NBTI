@@ -6,72 +6,50 @@ import koLocale from '@fullcalendar/core/locales/ko';
 import useAllWeeklyStats from './useAllAttendance';
 import styles from './AllAttendance.module.css';
 import SearchUser from './SearchUser/SearchUser';
+import ReactPaginate from 'react-paginate';
 
-// 시간 포맷 함수
 const formatTime = (date) => {
     const options = { hour: '2-digit', minute: '2-digit' };
     return new Date(date).toLocaleTimeString('ko-KR', options);
 };
 
-// 날짜 포맷 함수
 const formatDate = (date) => new Date(date).toISOString().split('T')[0];
 
-// 요일 계산 함수 (월요일을 주의 시작일로 설정)
-const getDayOfWeek = (date) => (date.getDay() + 6) % 7; // 0 (월요일)부터 6 (일요일)
+const getDayOfWeek = (date) => (date.getDay() + 6) % 7;
 
-// 주의 시작일 계산 함수 (월요일)
 const getStartOfWeek = (date) => {
     const day = date.getDay();
-    // 월요일을 기준으로 주의 첫날을 계산합니다
     const monday = new Date(date);
-    monday.setDate(date.getDate() - (day === 0 ? 6 : day -2));
+    monday.setDate(date.getDate() - (day === 0 ? 6 : day - 2));
     return monday;
 };
 
-// 근무 시간 계산 함수
 const calculateWorkingHours = (startDate, endDate) => {
     if (!startDate || !endDate) return 'N/A';
-
     const start = new Date(startDate);
     const end = new Date(endDate);
-
     const diffMs = end - start;
-    if (diffMs < 0) return 'N/A'; // 유효하지 않은 시간
-
+    if (diffMs < 0) return 'N/A';
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-
     return `${diffHours}시간 ${diffMinutes}분`;
-};
-
-// 기본 이벤트 생성 함수
-const createDefaultEvent = (date, memberName, teamName) => {
-    return {
-        title: ' 출근: N/A\n퇴근: N/A\n근무 시간: N/A\n',
-        start: date,
-        extendedProps: {
-            backgroundColor: 'gray',
-            textColor: 'white',
-            dayOfWeek: getDayOfWeek(new Date(date)),
-            memberName,
-            teamName
-        }
-    };
 };
 
 export const AllAttendance = () => {
     const { stats, loading } = useAllWeeklyStats();
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredMembers, setFilteredMembers] = useState([]);
-    const [list, setList] = useState([]);
+    const [currentPageMembers, setCurrentPageMembers] = useState([]);
     const [currentWeekStart, setCurrentWeekStart] = useState(getStartOfWeek(new Date()));
     const calendarRef = useRef(null);
+    const [cpage, setCpage] = useState(0);
+    const [page_total_count, setPage_total_count] = useState(1);
+
+    const record_count_per_page = 10;
+    
 
     const handleList = useCallback(() => {
         const startOfWeek = getStartOfWeek(currentWeekStart);
-
-        const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 6); // 주의 끝 날짜
 
         const membersToDisplay = filteredMembers.length > 0 ? filteredMembers : Object.keys(stats).map(memberId => {
             const memberStats = stats[memberId] || {};
@@ -83,47 +61,21 @@ export const AllAttendance = () => {
             };
         });
 
-        const events = membersToDisplay.flatMap(({ memberId, name, teamName }) => {
-            return Array.from({ length: 7 }).map((_, index) => {
-                const date = new Date(startOfWeek);
-                date.setDate(date.getDate() + index);
-                const formattedDate = formatDate(date);
+        // 페이지당 10명씩 표시
+        const totalMembers = membersToDisplay.length;
+        setPage_total_count(Math.ceil(totalMembers / record_count_per_page));
 
-                const { startDate, endDate } = stats[memberId]?.[formattedDate] || {};
-
-                const startTime = startDate ? formatTime(startDate) : 'N/A';
-                const endTime = endDate ? formatTime(endDate) : 'N/A';
-                const workingHours = calculateWorkingHours(startDate, endDate);
-
-                const title = `출근: ${startTime}\n퇴근: ${endTime}\n근무 시간: ${workingHours}\n`;
-
-                let backgroundColor = 'white';
-                let textColor = 'black';
-
-                if (!startDate && !endDate) {
-                    backgroundColor = 'gray';
-                    textColor = 'white';
-                }
-
-                return {
-                    title,
-                    start: formattedDate,
-                    extendedProps: {
-                        backgroundColor,
-                        textColor,
-                        dayOfWeek: getDayOfWeek(date),
-                        memberName: name,
-                        teamName
-                    }
-                };
-            });
-        });
-        setList(events);
-    }, [filteredMembers, stats, currentWeekStart]);
+        const paginatedMembers = membersToDisplay.slice(cpage * record_count_per_page, (cpage + 1) * record_count_per_page);
+        setCurrentPageMembers(paginatedMembers);
+    }, [filteredMembers, stats, currentWeekStart, cpage]);
 
     useEffect(() => {
         handleList();
-    }, [handleList]); // 종속성 배열에서 handleList를 추가
+    }, [handleList]);
+
+    const handlePage = (data) => {
+        setCpage(data.selected);
+    };
 
     const handleSearch = useCallback(() => {
         if (searchTerm.trim() === '') {
@@ -149,6 +101,7 @@ export const AllAttendance = () => {
 
             setFilteredMembers(filtered);
         }
+        setCpage(0);
     }, [searchTerm, stats]);
 
     useEffect(() => {
@@ -202,17 +155,51 @@ export const AllAttendance = () => {
                 locale="ko"
                 selectable={true}
                 height="auto"
-                events={list}
-                firstDay={1} // 월요일을 주의 시작일로 설정
+                events={currentPageMembers.flatMap(({ memberId, name, teamName }) => {
+                    const startOfWeek = getStartOfWeek(currentWeekStart);
+                    return Array.from({ length: 7 }).map((_, index) => {
+                        const date = new Date(startOfWeek);
+                        date.setDate(date.getDate() + index);
+                        const formattedDate = formatDate(date);
+
+                        const { startDate, endDate } = stats[memberId]?.[formattedDate] || {};
+
+                        const startTime = startDate ? formatTime(startDate) : 'N/A';
+                        const endTime = endDate ? formatTime(endDate) : 'N/A';
+                        const workingHours = calculateWorkingHours(startDate, endDate);
+
+                        const title = `출근: ${startTime}\n퇴근: ${endTime}\n근무 시간: ${workingHours}\n`;
+
+                        let backgroundColor = 'white';
+                        let textColor = 'black';
+
+                        if (!startDate && !endDate) {
+                            backgroundColor = 'gray';
+                            textColor = 'white';
+                        }
+
+                        return {
+                            title,
+                            start: formattedDate,
+                            extendedProps: {
+                                backgroundColor,
+                                textColor,
+                                dayOfWeek: getDayOfWeek(date),
+                                memberName: name,
+                                teamName
+                            }
+                        };
+                    });
+                })}
+                firstDay={1}
                 headerToolbar={{
-                    left: 'prev,next today', // 왼쪽 버튼
-                    center: 'title',         // 가운데 제목
-                    right: ''                // 오른쪽 버튼을 빈 문자열로 설정하여 기본 툴바 버튼 제거
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: ''
                 }}
                 datesSet={handleDatesSet}
                 eventContent={({ event }) => {
                     const lines = event.title.split('\n');
-
                     return (
                         <div
                             className={styles.eventContent}
@@ -230,6 +217,21 @@ export const AllAttendance = () => {
                         </div>
                     );
                 }}
+            />
+            <ReactPaginate
+                pageCount={page_total_count}
+                pageRangeDisplayed={5}
+                marginPagesDisplayed={1}
+                onPageChange={handlePage}
+                containerClassName={styles.pagination}
+                activeClassName={styles.active}
+                initialPage={cpage}
+                previousLabel={'<'}
+                previousClassName={styles.previous}
+                nextLabel={'>'}
+                nextClassName={styles.next}
+                breakLabel={'...'}
+                breakClassName={null}
             />
         </div>
     );
