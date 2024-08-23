@@ -20,7 +20,7 @@ public class ApprovalDAO {
 	public int write(ApprovalDTO adto) {
 		mybatis.insert("Approval.insert", adto);
 		int temp_seq = adto.getTemp_seq();
-		System.out.println(temp_seq);
+//		System.out.println(temp_seq);
 		return temp_seq;
 	}
 	

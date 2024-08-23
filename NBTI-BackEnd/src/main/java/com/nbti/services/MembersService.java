@@ -120,7 +120,7 @@ public class MembersService {
 	public Map<String, Object> applyForVacation(String memberId, double days) {
 		// 현재 남은 휴가 일수 가져오기
 		double remainingVacation = mdao.selectPeriod(memberId);
-		System.out.println("applyForVacation 호출됨"); // 호출 여부 확인
+//		System.out.println("applyForVacation 호출됨"); // 호출 여부 확인
 		// 남은 휴가 일수가 부족한지 확인
 		if (remainingVacation < days) {
 			throw new IllegalArgumentException("남은 휴가 일수가 부족합니다.");
