@@ -280,7 +280,7 @@ const UserList = () => {
                                 <td>
                                     <button
                                         onClick={() => handleEditClick(user.id)}
-                                        className={styles.editButton} // 스타일 클래스 추가
+                                        className={styles.button} // 스타일 클래스 추가
                                     >
                                         수정하기
                                     </button>

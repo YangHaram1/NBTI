@@ -109,7 +109,7 @@ export const MyAttendance = () => {
                             <div className={styles.timeDisplay}>
                                 <p>출근 시간: {currentClockIn || '출근 기록 없음'}</p>
                                 {isLate && <span className={styles.comment}>지각</span>}
-                                {isAbsent && <p>오늘 출근하지 않아 결근 처리되었습니다.</p>}
+                                
                             </div>
                             <div className={styles.buttonsContainer}>
                                 <button
