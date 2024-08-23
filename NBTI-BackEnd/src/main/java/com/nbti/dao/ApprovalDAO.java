@@ -106,17 +106,19 @@ public class ApprovalDAO {
 	public int getTotalRecordCount(String memberId) {
 		return mybatis.selectOne("Approval.getTotalRecordCount",memberId);
 	}
-	public List<Map<String,Object>> getAllVacationHistory(int start,int end){
-		Map<String, Object> param = new HashMap<>();
-		param.put("start", start);
-		param.put("end", end);
-		
-		return mybatis.selectList("Approval.getAllVacationHistory",param);
-	}
-	public int getAllRecordCount() {
-		return mybatis.selectOne("Approval.getAllRecordCount");
-	}
-	
+	  public List<Map<String, Object>> getAllVacationHistory(String team, int start, int end) {
+	        Map<String, Object> params = new HashMap<>();
+	        params.put("team", team);
+	        params.put("start", start);
+	        params.put("end", end);
+	        return mybatis.selectList("Approval.getAllVacationHistory", params);
+	    }
+	  public int getAllRecordCount() {
+	        return mybatis.selectOne("Approval.getAllRecordCount");
+	    }
+	  public int getTeamRecordCount(String team) {
+	        return mybatis.selectOne("Approval.getTeamRecordCount", team);
+	    }
 	public String getApprovaler(int seq) {
 		return mybatis.selectOne("Approval.selectApprovalerId", seq);
 

@@ -86,8 +86,9 @@ export const Write = (props)=>{
                 Swal.fire(
                     { 
                       icon: 'error',
-                      title: '전자결제',
-                      text: '휴가 종류와 기간을 선택해 주세요.'
+                      title: '휴가 종류와 기간을 선택해 주세요.',
+                      showConfirmButton: false,
+                      timer: 1500
                     }
                     );
                 // alert("휴가 종류와 기간을 선택해 주세요.");
@@ -95,25 +96,49 @@ export const Write = (props)=>{
             }
         } else if (setlist === "휴직신청서") {
             // 휴직 신청서의 경우
-            if (!docLeave.start || !docLeave.end) {
+            const phoneRegex = /^010-\d{4}-\d{4}$/;
+
+            if (!docLeave.start || !docLeave.end ) {
                 Swal.fire(
                     { 
                       icon: 'error',
-                      title: '전자결제',
-                      text: '휴직 기간을 선택해 주세요.'
+                      title: '휴직 기간을 선택해 주세요.',
+                      showConfirmButton: false,
+                      timer: 1500
                     }
                     );
                 // alert("휴직 기간을 선택해 주세요.");
                 return;
+            }else if(!docLeave.reason){
+                Swal.fire(
+                    { 
+                      icon: 'error',
+                      title: '휴직 사유를 작성해 주세요.',
+                      showConfirmButton: false,
+                      timer: 1500
+                    }
+                    );
+                // alert("휴직 기간을 선택해 주세요.");
+                return;
+            }else if(!phoneRegex.test(docLeave.phone)){
+                Swal.fire({
+                    icon:'warning',
+                    title:'연락처는 000-0000-0000 과 같이 입력해주세요',
+                    showConfirmButton: false,
+                    timer: 1500
+                  });
+                  return;
             }
+            
         } else if (setlist === "업무기안서") {
             // 업무 기안서의 경우
             if (!date || !dept || !title || !content) {
                 Swal.fire(
                     { 
                       icon: 'error',
-                      title: '전자결제',
-                      text: '업무 기안서의 모든 필드를 입력해 주세요.'
+                      title: '업무 기안서의 모든 필드를 입력해 주세요.',
+                      showConfirmButton: false,
+                      timer: 1500
                     }
                     );
                 // alert("업무 기안서의 모든 필드를 입력해 주세요.");
@@ -213,6 +238,8 @@ export const Write = (props)=>{
         files.forEach(fileObj => {
             formData.append('files', fileObj.file); // 파일 객체를 FormData에 추가
         });
+
+        console.log("refer",referLine);
 
         // Send the request
         try {

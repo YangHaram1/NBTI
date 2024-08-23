@@ -22,12 +22,6 @@ const SecondModal = ({ isOpen, onClose }) => {
   };
 
   useEffect(()=>{
-    // resetReferLine();
-    // console.log("결재 모달창 참조라인 확인",referLine);
-    // console.log("refer",refer);
-  },[])
-
-  useEffect(()=>{
 
     if(referLine.length > 0){
     axios.post(`${host}/members/approvalSearch`,referLine)
@@ -38,6 +32,9 @@ const SecondModal = ({ isOpen, onClose }) => {
     .catch((err)=>{
         console.log(err);
     })
+  }else{
+    // console.log("이게 말이되는지?", refer, referLine);
+    setRefer(referLine);
   }
   },[referLine])
 
@@ -66,14 +63,20 @@ const SecondModal = ({ isOpen, onClose }) => {
     }else if(docForm.name ==='업무기안서'){
       navi("/approval/write/docDraft");
     }else{
-      alert("오류가 발생되었습니다. 전자결재 홈으로 돌아갑니다.");
+      Swal.fire({
+        icon:'warning',
+        title:'오류가 발생되었습니다. 전자결재 홈으로 돌아갑니다.',
+        showConfirmButton: false,
+        timer: 1500
+      })
+      // alert("오류가 발생되었습니다. 전자결재 홈으로 돌아갑니다.");
       navi("/approval");
     }
     onClose();
   }
 
   const deleteRefer = (id) => {
-    console.log("삭제할 ID",id);
+    // console.log("삭제할 ID",id);
     // referLine에서 해당 id와 일치하지 않는 항목들만 필터링하여 새로운 배열을 생성
       // console.log("=====참조라인:", referLine);
       deleteReferLine(id);

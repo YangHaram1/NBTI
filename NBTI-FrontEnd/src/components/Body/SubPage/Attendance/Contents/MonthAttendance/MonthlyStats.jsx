@@ -37,7 +37,7 @@ export const MonthlyStats = () => {
         if (storedMemberId) {
             setMemberId(storedMemberId);
         } else {
-            console.error('SessionStorage에서 memberId를 찾을 수 없습니다.');
+          
         }
     }, []);
 
@@ -122,11 +122,7 @@ export const MonthlyStats = () => {
                     </button>
                 </div>
             </div>
-            <div className={styles.stats}>
-                <p>지각 횟수: {stats.lateCount}</p>
-                <p>결근 횟수: {stats.absentCount}</p>
-                <p>조기 퇴근 횟수: {stats.earlyLeaveCount}</p>
-            </div>
+
             <div className={styles.minical}>
                 <FullCalendar
                     ref={calendarRef}
@@ -151,6 +147,7 @@ export const MonthlyStats = () => {
                     }}
                 />
             </div>
+
         </div>
     );
 };

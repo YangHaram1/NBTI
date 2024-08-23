@@ -87,7 +87,7 @@ const UserList = () => {
                 }
 
             } catch (err) {
-                console.error('Error fetching data:', err);
+              
                 setError('데이터를 가져오는 데 실패했습니다.');
                 setLoading(false);
             }
@@ -122,7 +122,7 @@ const UserList = () => {
                 });
                
             } else if (filterType === 'team' && selectedTeam) {
-                console.log('Fetching users for team code:', selectedTeam); // 선택된 팀 코드 로그
+              
                 response = await axios.get(`${host}/members/selectByTeam`, {
                     params: {
                          team_code: selectedTeam ,
@@ -136,7 +136,7 @@ const UserList = () => {
             }
             if (filterType === 'name' && searchTerm) {
                 axios.get(`${host}/members/searchUserCount?name=${searchTerm}`).then((resp)=>{
-                    console.log(resp.data)
+                  
                     const  record_total_count=resp.data;
                     if (record_total_count % record_count_per_page === 0) {
                         setPage_total_count(Math.floor(record_total_count / record_count_per_page));
@@ -159,13 +159,13 @@ const UserList = () => {
                 })
             } 
 
-            console.log('Filtered Users API Response:', response.data); // API 응답 데이터 로그
+          
             const lowerCaseData = convertKeysToLowerCase(response.data);
             setFilteredUsers(lowerCaseData);
 
             //// 
         } catch (err) {
-            console.error('사용자 데이터를 가져오는 데 실패했습니다.', err);
+           
         }
     };
 
@@ -185,7 +185,7 @@ const UserList = () => {
 
     const handleTeamChange = (e) => {
         const selectedTeamCode = e.target.value;
-        console.log('Selected Team Code:', selectedTeamCode); // 선택된 팀 코드 확인
+     
         setSelectedTeam(selectedTeamCode);
         setCpage(1);
     };
@@ -280,7 +280,7 @@ const UserList = () => {
                                 <td>
                                     <button
                                         onClick={() => handleEditClick(user.id)}
-                                        className={styles.editButton} // 스타일 클래스 추가
+                                        className={styles.button} // 스타일 클래스 추가
                                     >
                                         수정하기
                                     </button>

@@ -44,8 +44,8 @@ export const Detail=()=>{
     const [error, setError] = useState(null);
     const [checkFA, setCheckFA] = useState(false);
 
-    const { approvalLine, setApprovalLine ,resetApprovalLine } = useApprovalLine();
-    const { referLine, setReferLine, resetReferLine } = useReferLine();
+    const { setApprovalLine ,resetApprovalLine } = useApprovalLine();
+    const { setReferLine, resetReferLine } = useReferLine();
     const { setEditorCheck } = useEditorCheck();
     // const { docVacation, setDocVacation } = useDocVacation();
 

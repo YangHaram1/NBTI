@@ -263,7 +263,8 @@ public class ApprovalController {
 		
 		// 각 라인별 temp_seq는 서비스에서 받기
 		List<ReferLineDTO> referline = new ArrayList<>();
-		if(referline.size() > 0 ) {
+//		System.out.println("컨트롤러 참조라인 사이즈 확인"+referLine.size()+referLine);
+		if(referLine.size() > 0 ) {
 		 for (Map<String, Object> map : referLine) {
 	            ReferLineDTO dto = new ReferLineDTO();
 	            dto.setReferer((String) map.get("id")); // id를 referer로 사용
@@ -825,11 +826,10 @@ public class ApprovalController {
 	 @GetMapping("/allhistory")
 	    public ResponseEntity<Map<String, Object>> getAllVacationHistory(
 	        @RequestParam int start, 
-	        @RequestParam int end
+	        @RequestParam int end,
+	        @RequestParam String team
 	    ) {
-	      
-
-	        Map<String, Object> result = aServ.getAllVacationHistory( start, end);
+	        Map<String, Object> result = aServ.getAllVacationHistory(team, start, end);
 	        return ResponseEntity.ok(result);
 	    }
 }

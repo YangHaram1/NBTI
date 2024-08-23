@@ -240,7 +240,7 @@ export const Home = ()=>{
                                         <input type='hidden' value={list.doc_sub_name}></input>
                                         </div>
                                         <div className={styles.file}>
-                                            {console.log("참조/열람대기",fileExistenceMap2[list.temp_seq])}
+                                            
                                         {
                                         fileExistenceMap2[list.temp_seq] != undefined
                                         ? Array.from(fileExistenceMap2[list.temp_seq]).length > 0 ? <i className="fa-solid fa-paperclip"></i> : ''
