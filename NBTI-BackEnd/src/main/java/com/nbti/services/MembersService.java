@@ -19,7 +19,7 @@ public class MembersService {
 	private MembersDAO mdao;
 
 	// 로그인
-	public boolean login(MembersDTO dto) {
+	public String login(MembersDTO dto) {
 		return mdao.login(dto);
 	}
 

@@ -50,12 +50,17 @@ const Login = () => {
         axios
             .post(`${host}/auth`, auth)
             .then(resp => {
-             
                 sessionStorage.setItem('loginID', resp.data);
                 setLoginID(resp.data);
+                setError(''); // 로그인 성공 시 오류 메시지 초기화
             })
             .catch(err => {
-                alert('ID 또는 PW를 다시 확인 해주세요');
+                // 서버 응답에서 오류 메시지를 가져와 설정
+                if (err.response && err.response.data) {
+                    alert(err.response.data);
+                } else {
+                    alert('로그인 중 오류가 발생했습니다.');
+                }
             });
     };
 
@@ -97,7 +102,7 @@ const Login = () => {
                     name="id"
                     value={auth.id}
                     onChange={handleChange}
-                    onKeyDown={handleKeyDown} // Add key down handler
+                    onKeyDown={handleKeyDown}
                     className={styles.input}
                 />
                 <input
@@ -106,7 +111,7 @@ const Login = () => {
                     name="pw"
                     value={auth.pw}
                     onChange={handleChange}
-                    onKeyDown={handleKeyDown} // Add key down handler
+                    onKeyDown={handleKeyDown}
                     className={styles.input}
                 />
                 <div className={styles.rememberId}>

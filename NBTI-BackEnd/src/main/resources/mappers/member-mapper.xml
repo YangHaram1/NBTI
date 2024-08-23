@@ -7,10 +7,12 @@
 <mapper namespace="Member">
 
 
-	<select id="login" resultType="String">
-		SELECT id FROM members WHERE
-		id=#{id} AND pw=#{pw}
-	</select>
+<select id="login" resultType="String">
+    SELECT ent_yn 
+    FROM members 
+    WHERE id = #{id} 
+    AND pw = #{pw}
+</select>
 
 	<select id="mydata" resultType="com.nbti.dto.MembersDTO">
 		select * from members where id =
