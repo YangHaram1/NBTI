@@ -14,7 +14,7 @@ const ChangePw = ({ authData, onBack }) => {
             return;
         }
 
-        axios.post(`${host}/members/updatePw`, {
+        axios.post(`${host}/auth/updatePw`, {
             id: authData.id,  // 여기서 authData.id로 접근
             newPassword: newPassword
         })
@@ -47,7 +47,7 @@ const ChangePw = ({ authData, onBack }) => {
                 />
                 {error && <div className={styles.error}>{error}</div>}
                 <button onClick={handleChangePassword} className={styles.button}>비밀번호 변경</button>
-                <button onClick={onBack} className={styles.linkButton}>로그인으로 돌아가기</button>
+                <button onClick={onBack} className={styles.button}>돌아가기</button>
             </div>
         </div>
     );

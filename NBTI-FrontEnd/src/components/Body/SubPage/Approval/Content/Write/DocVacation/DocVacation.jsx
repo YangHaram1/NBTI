@@ -17,6 +17,7 @@ export const DocVacation = ({userdata})=>{
     const [halfStartAP, setHalfStartAP] = useState('');
     const [halfEndAP, setHalfEndAP] = useState(''); 
     const {setDocVacation} = useDocVacation();
+    
 
     const handleStartDate = (e) => {
         const startDate = e.target.value;
@@ -109,6 +110,15 @@ export const DocVacation = ({userdata})=>{
         });
     }, [end, start, category, halfEnd, halfStart, halfEndAP, halfStartAP]);
 
+    useEffect(() => {
+        axios.get(`${host}/members/selectVacation`)
+            .then((resp) => {
+                setVPeriod(resp.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
 
     const isOneDay = total <= 1;
     const isMoreThanOneDay = total > 1;
@@ -156,7 +166,7 @@ export const DocVacation = ({userdata})=>{
                 <div className={styles.subtitle_title}>연차 일수</div>
                 <div className={`${styles.subtitle_content} ${styles.align}`}>
                     <div className={styles.vacation_day}> 잔여연차 : </div>
-                    <div className={styles.vacation_day_b}> 15일 </div>
+                    <div className={styles.vacation_day_b}> {vPeriod}일 </div>
                     <div className={styles.half_check}> 신청 연차 : </div>
                     <div className={styles.vacation_day_b}> {total === 0 ? "0일" : `${total}일`} </div>
                 </div>

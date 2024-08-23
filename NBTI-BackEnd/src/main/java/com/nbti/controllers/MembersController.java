@@ -80,7 +80,7 @@ public class MembersController {
 	public ResponseEntity<Void> update(@RequestBody MembersDTO dto) {
 		String id = (String)session.getAttribute("loginID");
 		dto.setId(id);
-		System.out.println(dto.getAddress() +":"+ dto.getEmail() +":"+ dto.getMember_call());
+//		System.out.println(dto.getAddress() +":"+ dto.getEmail() +":"+ dto.getMember_call());
 		mServ.updateMyData(dto);
 		return ResponseEntity.ok().build();
 	}
@@ -96,6 +96,14 @@ public class MembersController {
         List<Map<String, Object>> selectMembers = mServ.getMembers();
         return ResponseEntity.ok(selectMembers);
     }
+    
+    // 사용자 조회
+    @GetMapping("/list")
+    public ResponseEntity<java.util.List<Map<String, Object>>> list(@RequestParam int start,@RequestParam int end){
+        List<Map<String, Object>> selectMembers = mServ.list(start, end);
+        return ResponseEntity.ok(selectMembers);
+    }
+    
     // 부서 추출
     @GetMapping("/selectDepartment")
     public ResponseEntity<List<DepartmentDTO>> selectDepartment(){
@@ -149,19 +157,30 @@ public class MembersController {
 	}
 	// 사용자목록 검색
 	@GetMapping("/searchUser")
-	public ResponseEntity<List<Map<String, Object>>> searchUser(@RequestParam String name){
-	    List<Map<String, Object>> users = mServ.searchUser(name);
+	public ResponseEntity<List<Map<String, Object>>> searchUser(@RequestParam String name,@RequestParam int start,@RequestParam int end){
+	    List<Map<String, Object>> users = mServ.searchUser(name,start,end);
 	    return ResponseEntity.ok(users);
+	}
+	
+	@GetMapping("/searchUserCount")
+	public ResponseEntity<Integer> searchUserCount(@RequestParam String name){
+		int count = mServ.searchUserCount(name);
+	    return ResponseEntity.ok(count);
 	}
 	// 사용자목록 팀 조회
 	@GetMapping("/selectByTeam")
-	public ResponseEntity<List<MembersDTO>> selectByTeam(@RequestParam String team_code){
-		List<MembersDTO> byteam = mServ.selectByTeam(team_code);
+	public ResponseEntity<List<MembersDTO>> selectByTeam(@RequestParam String team_code,@RequestParam int start,@RequestParam int end){
+		List<MembersDTO> byteam = mServ.selectByTeam(team_code,start,end);
 		return ResponseEntity.ok(byteam);
+	}
+	@GetMapping("/selectByTeamCount")
+	public ResponseEntity<Integer> selectByTeamCount(@RequestParam String team_code){
+		int count = mServ.selectByTeamCount(team_code);
+		return ResponseEntity.ok(count);
 	}
 	 @GetMapping("/apply")
      public ResponseEntity<Map<String, Object>> getVacationInfo(HttpSession session, @RequestParam(required = false) String memberId) {
-       System.out.println("applyForVacation 컨트롤러 호출됨");  // 호출 여부 확인
+//       System.out.println("applyForVacation 컨트롤러 호출됨");  // 호출 여부 확인
          // 세션에서 로그인한 사용자의 ID를 가져옵니다.
          if (memberId == null) {
              memberId = (String) session.getAttribute("loginID");
@@ -175,31 +194,7 @@ public class MembersController {
          return ResponseEntity.ok(vacationInfo);
      }
 
-     @PostMapping("/find-id")
-     public ResponseEntity<String> findId(@RequestParam String email, @RequestParam String name) {
-         String foundId = mServ.findIdByEmailAndName(email, name);
-         if (foundId != null) {
-             return ResponseEntity.ok(foundId);
-         } else {
-             return ResponseEntity.status(404).body("아이디를 찾을 수 없습니다.");
-         }
-     }
 
-     @PostMapping("/find-pw")
-     public ResponseEntity<String> findPw(@RequestParam String id, @RequestParam String name, @RequestParam String birth) {
-         boolean exists = mServ.verifyUser(id, name, birth);
-         if (exists) {
-             return ResponseEntity.ok("success");  // 성공 메시지를 반환
-         } else {
-             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("입력하신 정보와 일치하는 사용자가 없습니다.");
-         }
-     }
-     @PostMapping("/verify-user")
-     public ResponseEntity<Boolean> verifyUser(@RequestParam String id, @RequestParam String name, @RequestParam String birth) {
-         boolean verified = mServ.verifyUser(id, name, birth);
-         return ResponseEntity.ok(verified);  // true 또는 false 반환
-     }
-	
 	
 	// 작성일 24.07.30 
 	// 작성자 김지연
@@ -315,7 +310,7 @@ public class MembersController {
 //					System.out.println(memberData);
 				}else if(map.get("referer") != null) {
 					
-					System.out.println("참조라인 들어옴"+map.get("referer"));
+//					System.out.println("참조라인 들어옴"+map.get("referer"));
 					String id = (String)map.get("referer");
 					String name =  (String)map.get("name");
 					Map<String, Object> memberData = mServ.memberData(id);

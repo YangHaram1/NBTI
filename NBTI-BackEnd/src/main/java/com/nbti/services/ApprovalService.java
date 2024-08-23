@@ -1,17 +1,14 @@
 package com.nbti.services;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.nbti.commons.RealpathConfig;
 import com.nbti.dao.ApprovalDAO;
 import com.nbti.dao.ApprovalLineDAO;
 import com.nbti.dao.DocDraftDAO;
@@ -23,7 +20,6 @@ import com.nbti.dto.ApprovalLineDTO;
 import com.nbti.dto.DocDraftDTO;
 import com.nbti.dto.DocLeaveDTO;
 import com.nbti.dto.DocVacationDTO;
-import com.nbti.dto.FilesDTO;
 import com.nbti.dto.ListDocDTO;
 import com.nbti.dto.ReferLineDTO;
 
@@ -149,7 +145,7 @@ public class ApprovalService {
     		dddao.insert(ddto);    		
     	}else if(type == 3){
     		dvdto.setVacation_seq(temp_seq);
-    		System.out.println("임시저장 테스트"+dvdto.getVacation_category() +":"+dvdto.getVacation_seq()+":"+dvdto.getVacation_start());
+//    		System.out.println("임시저장 테스트"+dvdto.getVacation_category() +":"+dvdto.getVacation_seq()+":"+dvdto.getVacation_start());
     		dvdao.insert(dvdto);
     	}else if(type == 2) {
     		dldto.setLeave_seq(temp_seq);
@@ -172,13 +168,30 @@ public class ApprovalService {
 			}
 		}
 		else {
-			System.out.println("첨부파일 없음");
+//			System.out.println("첨부파일 없음");
 		}
 	}
 	
-	public List<Map<String, Object>> getVacationHistory(String memberId) {
-	    List<Map<String, Object>> result = adao.getVacationHistory(memberId);
-	    System.out.println("Data retrieved from DAO: " + result);
-	    return result;
-	}
+	public Map<String, Object> getVacationHistory(String memberId, int start, int end) {
+        List<Map<String, Object>> history = adao.getVacationHistory(memberId, start, end);
+        int totalRecordCount = adao.getTotalRecordCount(memberId);
+
+        // 결과를 맵으로 묶어서 반환
+        Map<String, Object> result = new HashMap<>();
+        result.put("history", history);
+        result.put("totalRecordCount", totalRecordCount);
+
+        return result;
+    }
+    public Map<String, Object> getAllVacationHistory(int start, int end) {
+        List<Map<String, Object>> allhistory = adao.getAllVacationHistory(start, end);
+        int allRecordCount = adao.getAllRecordCount();
+
+        // 결과를 맵으로 묶어서 반환
+        Map<String, Object> result = new HashMap<>();
+        result.put("history", allhistory);
+        result.put("totalRecordCount", allRecordCount);
+
+        return result;
+    }
 }

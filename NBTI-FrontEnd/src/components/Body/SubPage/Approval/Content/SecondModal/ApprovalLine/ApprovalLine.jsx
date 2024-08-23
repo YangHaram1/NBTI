@@ -111,9 +111,9 @@ export const ApprovalLine = ({setTitle, setOrder, setCheck}) => {
             <select onChange={handleMemberChange} value={selectedValue}>
                 <option value={defaultValue}>선택</option>
                 {
-                    members.map((member) => {
+                    members.map((member, index) => {
                         // job_code 조인해서 job_name으로 바꾸기
-                        return (<option key={member.ID} value={JSON.stringify({id:member.ID, name:member.NAME})}>{member.NAME}({member.JOB_NAME})</option>);
+                        return (<option key={index} value={JSON.stringify({id:member.ID, name:member.NAME})}>{member.NAME}({member.JOB_NAME})</option>);
                     })
                 }
             </select>

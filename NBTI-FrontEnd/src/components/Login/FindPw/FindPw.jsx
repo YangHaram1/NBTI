@@ -10,8 +10,9 @@ const FindPw = ({ onSuccess, onBack }) => {
     const [error, setError] = useState('');
 
     const handleFindPw = () => {
-        axios.post(`${host}/members/verify-user`, null, {
-            params: { id, name, birth }
+        axios.post(`${host}/auth/verify-user`, null, {
+            params: { id, name, birth },
+            // withCredentials: true  // 비로그인 상태에서는 이 줄을 제거합니다.
         })
         .then(response => {
             if (response.data) {
@@ -20,8 +21,12 @@ const FindPw = ({ onSuccess, onBack }) => {
                 setError('입력하신 정보가 일치하지 않습니다. 다시 확인해주세요.');
             }
         })
-        .catch(() => {
-            setError('사용자 정보를 확인할 수 없습니다. 입력하신 정보를 확인하세요.');
+        .catch((err) => {
+            if (err.response && err.response.status === 401) {
+                setError('인증에 실패했습니다. 로그인 정보를 확인해주세요.');
+            } else {
+                setError('사용자 정보를 확인할 수 없습니다. 입력하신 정보를 확인하세요.');
+            }
         });
     };
 
@@ -52,7 +57,7 @@ const FindPw = ({ onSuccess, onBack }) => {
                 />
                 <button onClick={handleFindPw} className={styles.button}>비밀번호 찾기</button>
                 {error && <div className={styles.error}>{error}</div>}
-                <button onClick={onBack} className={styles.linkButton}>로그인으로 돌아가기</button>
+                <button onClick={onBack} className={styles.button}>돌아가기</button>
             </div>
         </div>
     );

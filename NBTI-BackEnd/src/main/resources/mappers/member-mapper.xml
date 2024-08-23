@@ -8,40 +8,50 @@
 
 
 	<select id="login" resultType="String">
-		SELECT id FROM members WHERE id=#{id} AND pw=#{pw}
+		SELECT id FROM members WHERE
+		id=#{id} AND pw=#{pw}
 	</select>
 
 	<select id="mydata" resultType="com.nbti.dto.MembersDTO">
-		select * from members where id = #{id}
+		select * from members where id =
+		#{id}
 	</select>
 
 	<update id="updateUser">
 		UPDATE members
 		SET address = #{address},
-		member_call = #{member_call},
+		member_call =
+		#{member_call},
 		email = #{email},
 		team_code = #{team_code},0
-		job_code = #{job_code},
+		job_code =
+		#{job_code},
 		member_level = #{member_level}
 		WHERE id = #{id}
 	</update>
 
 	<update id="updateMyData">
-		update members set email=#{email},member_call=#{member_call},
-		address=#{address} , member_img = #{member_img, jdbcType=VARCHAR}
+		update members set
+		email=#{email},member_call=#{member_call},
+		address=#{address} ,
+		member_img = #{member_img, jdbcType=VARCHAR}
 		where id =#{id}
 	</update>
 
 	<update id="updateMyDataNoImg">
-		update members set email=#{email},member_call=#{member_call},
-		address=#{address} where id =#{id}
+		update members set
+		email=#{email},member_call=#{member_call},
+		address=#{address} where id
+		=#{id}
 	</update>
 
 	<select id="selectAll" resultType="com.nbti.dto.MembersDTO">
-		select m.id,m.name,m.gender,m.birth,t.team_name as team_code,m.member_img,
+		select
+		m.id,m.name,m.gender,m.birth,t.team_name as team_code,m.member_img,
 		j.job_name as job_code
 		from members m
-		LEFT JOIN job j ON m.job_code = j.job_code
+		LEFT JOIN job j ON m.job_code =
+		j.job_code
 		LEFT JOIN teams t ON m.team_code = t.team_code
 	</select>
 	<update id="updateMember">
@@ -54,10 +64,13 @@
 
 	<insert id="insert" parameterType="com.nbti.dto.MembersDTO">
 		INSERT INTO members (
-		id, pw, name, email, team_code, job_code, member_level, member_call,
-		address, birth, gender, ent_yn, vacation_period, enter_date
+		id, pw,
+		name, email, team_code, job_code, member_level, member_call,
+		address,
+		birth, gender, ent_yn, vacation_period, enter_date
 		) VALUES (
-		#{id}, #{pw}, #{name}, #{email}, #{team_code}, #{job_code}, #{member_level},
+		#{id},
+		#{pw}, #{name}, #{email}, #{team_code}, #{job_code}, #{member_level},
 		#{member_call}, #{address}, #{birth}, #{gender}, #{ent_yn},
 		#{vacation_period}, SYSDATE
 		)
@@ -80,11 +93,14 @@
 		m.ent_yn,
 		m.vacation_period
 		FROM members m
-		LEFT JOIN teams t ON m.team_code = t.team_code
+		LEFT JOIN teams t ON
+		m.team_code = t.team_code
 		LEFT JOIN job j ON m.job_code = j.job_code
 	</select>
-	<select id="selectByTeam" resultType="map">
-		SELECT
+	<select id="list" resultType="map">
+		select a.*
+		from
+		(SELECT
 		m.id,
 		m.pw,
 		m.name,
@@ -95,24 +111,14 @@
 		m.member_call,
 		m.gender,
 		m.ent_yn,
-		m.vacation_period
+		m.vacation_period,
+		ROW_NUMBER() OVER (ORDER BY name
+		DESC) AS rown
 		FROM members m
 		LEFT JOIN teams t ON m.team_code = t.team_code
-		LEFT JOIN job j ON m.job_code = j.job_code
-		WHERE m.team_code = #{team_code}
-
-	</select>
-	<select id="checkPw" resultType="boolean">
-		select count(*) from members
-		where id = #{id} and pw = #{pw}
-	</select>
-
-	<update id="changePw">
-		update members set pw = #{pw}, pw_change_date = sysdate where id = #{id}
-	</update>
-	
-	<select id="selectChangeDate" resultType="java.sql.Timestamp">
-		select pw_change_date from members where id = #{id}
+		LEFT JOIN job
+		j ON m.job_code = j.job_code)a
+		where rown between ${start} and ${end}
 	</select>
 
 	<select id="searchMembers" resultType="map">
@@ -120,16 +126,54 @@
 		m.id, m.name,
 		m.team_code, t.team_name,
 		m.job_code, j.job_name,
-		t.dept_code, d.dept_name
+		t.dept_code,
+		d.dept_name
 		from teams t
-		left outer join members m on t.team_code = m.team_code
+		left outer join members m on t.team_code =
+		m.team_code
 		left outer join job j on m.job_code = j.job_code
-		left outer join department d on t.dept_code = d.dept_code
-		where t.team_code = #{team}
+		left outer
+		join department d on t.dept_code = d.dept_code
+		where t.team_code =
+		#{team}
 		order by j.job_code asc
+	</select>
+
+	<select id="selectByTeam" resultType="map">
+		select a.*
+		from
+		(SELECT
+		m.id,
+		m.pw,
+		m.name,
+		m.email,
+		t.team_name,
+		j.job_name,
+		m.member_level,
+		m.member_call,
+		m.gender,
+		m.ent_yn,
+		m.vacation_period,
+		ROW_NUMBER() OVER (ORDER BY m.name DESC) AS rown
+		FROM members m
+		LEFT JOIN teams t ON m.team_code = t.team_code
+		LEFT JOIN job
+		j ON m.job_code = j.job_code
+		WHERE m.team_code = #{team_code} ) a
+		where
+		rown between ${start} and ${end}
+
+	</select>
+
+	<select id="selectByTeamCount" resultType="int">
+		SELECT count(*)
+		FROM members 
+		WHERE team_code = #{team_code}
 	</select>
 	
 	<select id="searchUser" resultType="map">
+		select a.*
+		from(
 		SELECT
 		m.id,
 		m.pw,
@@ -141,24 +185,56 @@
 		m.member_call,
 		m.gender,
 		m.ent_yn,
-		m.vacation_period
+		m.vacation_period,
+		ROW_NUMBER() OVER
+		(ORDER BY m.name DESC) AS rown
 		FROM members m
 		LEFT JOIN teams t ON m.team_code = t.team_code
-		LEFT JOIN job j ON m.job_code = j.job_code
-		WHERE m.name LIKE '%' || #{name} || '%'
-		ORDER BY m.name
+		LEFT JOIN job
+		j ON m.job_code = j.job_code
+		WHERE m.name LIKE '%' || #{name} || '%') a
+		where rown between ${start} and ${end}
 	</select>
+
+	<select id="searchUserCount" resultType="int">
+		SELECT count(*)
+		FROM
+		members 
+		WHERE name LIKE '%' || #{name} || '%'
+	</select>
+
+	<select id="checkPw" resultType="boolean">
+		select count(*) from members
+		where id = #{id} and pw = #{pw}
+	</select>
+
+	<update id="changePw">
+		update members set pw = #{pw}, pw_change_date =
+		sysdate where id = #{id}
+	</update>
+
+	<select id="selectChangeDate" resultType="java.sql.Timestamp">
+		select pw_change_date
+		from members where id = #{id}
+	</select>
+
+
+
+
 
 	<select id="memberData" resultType="map">
 		select
 		m.id, m.name,
 		m.team_code, t.team_name,
 		m.job_code, j.job_name,
-		t.dept_code, d.dept_name
+		t.dept_code,
+		d.dept_name
 		from members m
-		left outer join teams t on m.team_code = t.team_code
+		left outer join teams t on m.team_code =
+		t.team_code
 		left outer join job j on m.job_code = j.job_code
-		left outer join department d on t.dept_code = d.dept_code
+		left outer
+		join department d on t.dept_code = d.dept_code
 		where id = #{id}
 	</select>
 
@@ -168,45 +244,49 @@
 	</select>
 
 	<!-- 여기부터 채팅관련 멤버 이름 리스트 -->
-	<select id="chatMembersName" parameterType="java.util.List" resultType="com.nbti.dto.MembersDTO">
+	<select id="chatMembersName" parameterType="java.util.List"
+		resultType="com.nbti.dto.MembersDTO">
 		select name,id from members where id in
 		<foreach item="item" index="index" collection="list" open="("
 			close=")" separator=",">
 			#{item}
 		</foreach>
 	</select>
-	
+
 	<select id="getMemberName" resultType="String">
-		select name from members where id= #{id}
+		select name from members
+		where id= #{id}
 	</select>
 
-    <update id="updateVacationPeriod" parameterType="map">
-    UPDATE members 
-    SET vacation_period = vacation_period - #{days, jdbcType=INTEGER}
-    WHERE id = #{id, jdbcType=VARCHAR}
-    </update>
-    <select id="findIdByEmailAndName" resultType="String">
-        SELECT id FROM members WHERE email = #{email} AND name = #{name}
-    </select>
+	<update id="updateVacationPeriod" parameterType="map">
+		UPDATE members
+		SET vacation_period = vacation_period - #{days, jdbcType=INTEGER}
+		WHERE id = #{id, jdbcType=VARCHAR}
+	</update>
+	<select id="findIdByEmailAndName" resultType="String">
+		SELECT id FROM members WHERE email = #{email} AND name = #{name}
+	</select>
 
-    <select id="findPwByIdNameAndBirth" resultType="String">
-        SELECT pw FROM members WHERE id = #{id} AND name = #{name} AND birth = #{birth}
-    </select>
-        <select id="verifyUser" resultType="int">
-        SELECT COUNT(*)
-        FROM members
-        WHERE id = #{id}
-          AND name = #{name}
-          AND birth = #{birth}
-    </select>
-    
-    <update id="updateLeave">
-    	update members set ent_yn = 'Y' ,end_date = TO_DATE(TO_CHAR(SYSDATE, 'YYYY-MM-DD'), 'YYYY-MM-DD') where id = #{id}
-    </update>
-    
-    <update id="updateVacation">
-    	update members set vacation_period=${vacation} where id=#{id}
-    </update>
-    
+	<select id="findPwByIdNameAndBirth" resultType="String">
+		SELECT pw FROM members WHERE id = #{id} AND name = #{name} AND birth =
+		#{birth}
+	</select>
+	<select id="verifyUser" resultType="int">
+		SELECT COUNT(*)
+		FROM members
+		WHERE id = #{id}
+		AND name = #{name}
+		AND birth = #{birth}
+	</select>
+
+	<update id="updateLeave">
+		update members set ent_yn = 'Y' ,end_date = TO_DATE(TO_CHAR(SYSDATE,
+		'YYYY-MM-DD'), 'YYYY-MM-DD') where id = #{id}
+	</update>
+
+	<update id="updateVacation">
+		update members set vacation_period=${vacation} where id=#{id}
+	</update>
+
 </mapper>
 

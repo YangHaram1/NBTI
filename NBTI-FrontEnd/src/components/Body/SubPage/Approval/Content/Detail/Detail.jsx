@@ -3,7 +3,7 @@ import { host } from '../../../../../../config/config';
 import styles from './Detail.module.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useApprovalLine, useDocLeave, useDocVacation, useReferLine } from '../../../../../../store/store';
+import { useApprovalLine, useDocLeave, useDocVacation, useEditorCheck, useReferLine } from '../../../../../../store/store';
 // import html2pdf from 'html2pdf.js';
 import { DocLeave } from './DocLeave/DocLeave';
 import { Header } from './Header/Header';
@@ -11,6 +11,8 @@ import { DocDraft } from './DocDraft/DocDraft';
 import { DocVacation } from './DocVacation/DocVacation';
 import { ApprovalModal } from '../ApprovalModal/ApprovalModal';
 import { ApprovalCommentModal } from '../ApprovalCommentModal/ApprovalCommentModal';
+import Swal from 'sweetalert2';
+import SweetAlert from '../../../../../../function/SweetAlert';
 
 export const Detail=()=>{
 
@@ -44,59 +46,49 @@ export const Detail=()=>{
 
     const { approvalLine, setApprovalLine ,resetApprovalLine } = useApprovalLine();
     const { referLine, setReferLine, resetReferLine } = useReferLine();
-    // const { docLeave, setDocLeave } = useDocLeave();
+    const { setEditorCheck } = useEditorCheck();
     // const { docVacation, setDocVacation } = useDocVacation();
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                // 내 정보 받아오기 (이게 필요할까..?)
-                console.log("재기안인데 이게 나오는 중인가요");
                 const userDataResponse = await axios.get(`${host}/members/docData`);
-                // console.log("내정보",userDataResponse);
                 setUserData(userDataResponse.data);
 
                 // 문서 공통 정보 받아오기
                 const docDataResponse = await axios.get(`${host}/approval/${seq}`)
-                console.log("문서공통정보",docDataResponse);
-                console.log("문서코드", docDataResponse.data.doc_sub_seq);
                 setDocCommonData(docDataResponse.data);
                 let form_code = docDataResponse.data.doc_sub_seq;
                 // 문서양식 별 데이터 받아오기
                 if(form_code == 1){
                     // 업무기안
                     const docMainDataResponse = await axios.get(`${host}/docDraft/${seq}`);
-                    // console.log("업무기안서",docMainDataResponse);
                     setDocDrafts(docMainDataResponse.data);
                 }
                 else if(form_code == 2){
                     // 휴직 신청서
                     const docMainDataResponse = await axios.get(`${host}/docLeave/${seq}`);
-                    // console.log("휴직신청서",docMainDataResponse);
                     setDocLeaves(docMainDataResponse.data);
                 }else if(form_code == 3){
                     // 휴가 신청서
                     const docMainDataResponse = await axios.get(`${host}/docVacation/${seq}`);
-                    // console.log("휴가신청서",docMainDataResponse);
                     setDocVacations(docMainDataResponse.data);
                 }
                 else{
                     console.log("값이 안나오는 중");
                 }
-                // 결재라인 정보 받아오기
-                // console.log("날짜 있는지 확인", checkFA);
                 const approvalLineResponse = await axios.get(`${host}/approvalLine/${seq}`);
                 setApprovalData(approvalLineResponse.data);
                 if(approvalLineResponse.data[0].APPROVAL_DATE == null){
                     setCheckFA(true);
                 }
-                console.log("결재라인 체크",approvalLineResponse.data);
+                // console.log("결재라인 체크",approvalLineResponse.data);
 
                 // 참조라인 정보 받아오기
                 const referLineResponse = await axios.get(`${host}/referLine/${seq}`);
                 setReferData(referLineResponse.data);
-                console.log("참조라인확인",referLineResponse.data);
+                // console.log("참조라인확인",referLineResponse.data);
 
                 if(list == '참조/열람 대기'){
                     axios.put(`${host}/referLine/read/${seq}`);
@@ -117,13 +109,13 @@ export const Detail=()=>{
     }, [seq]);
 
     useEffect(()=>{
-        console.log("referData 참조라인 데이터 확인",referData);
+        // console.log("referData 참조라인 데이터 확인",referData);
         if(referData.length > 0){
         axios.post(`${host}/members/approvalSearch`,referData)
         .then((resp)=>{
-            console.log("refer데이터 확인",resp.data);
+            // console.log("refer데이터 확인",resp.data);
             setRefer(resp.data);
-            console.log(refer);
+            // console.log(refer);
         })
         .catch((err)=>{
             console.log(err);
@@ -135,7 +127,7 @@ export const Detail=()=>{
     if (error) return <p>Error occurred: {error.message}</p>;
 
     const HandleSubmit = (e) =>{
-        console.log("이름값 확인",e.target.innerText);
+        // console.log("이름값 확인",e.target.innerText);
         setApprovalYN(e.target.innerText);
         setShowModal(true);
     }
@@ -143,7 +135,7 @@ export const Detail=()=>{
     const handleCloseModal = () => {
         setShowModal(false); // 모달 닫기
         // navi("/approval");
-        window.reload();
+        window.location.reload();
     };
 
     const handleCloseCommentModal = () => {
@@ -153,10 +145,6 @@ export const Detail=()=>{
 
     // 제목 클릭시 sysname, oriname 받아오기
     const handleFileDownload = (sysname, oriname) =>{
-        // console.log("파일 oriname:", oriname);
-        // console.log("파일 sysname:", sysname);
-        
-        // const url = `${host}/downloadApproval?oriname=${encodeURIComponent(oriname)}&sysname=${encodeURIComponent(sysname)}`;
 
         axios.get(`${host}/files/downloadApproval?oriname=${encodeURIComponent(oriname)}&sysname=${encodeURIComponent(sysname)}&temp_seq=${seq}`, { responseType: 'blob' })
         .then(response => {
@@ -178,20 +166,24 @@ export const Detail=()=>{
 
     const handleApprovalCancle = ()=>{
         
-        const result = window.confirm("기안 문서를 취소하겠습니까?");
-        if(result){
-        axios.put(`${host}/approval/cancleByMe/${seq}`)
-        .then((resp)=>{
-            navi("/approval/listDocWrite");
-        })
-        .catch((err)=>{
-            console.log(err);
-        })}
+        SweetAlert('question', '전자결제', '기안 문서를 취소하겠습니까?', () => {
+            axios.put(`${host}/approval/cancleByMe/${seq}`)
+                .then((resp) => {
+                    navi("/approval/listDocWrite");
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        });
     }
 
     const handleRewrite = () =>{
 
+        // console.log("======재기안========")
+        setEditorCheck(false);
         resetApprovalLine();
+        resetReferLine();
+
         // console.log("approval",approvalData);
         approvalData.map((data) => {
            const array = {
@@ -202,15 +194,14 @@ export const Detail=()=>{
             setApprovalLine(array);
         });
 
-        resetReferLine();
-        console.log("refer",refer);
+        // resetReferLine();
+        // console.log("refer",refer);
         const newRefer = refer.map((data)=>{
-            return ({id:data.ID, name: data.NAME,order:"4" });
+            const referdata = { id: data.ID, name: data.NAME, order: "4" }
+            setReferLine(referdata);
         })
-        setReferLine(...newRefer);
 
-        console.log("재기안 결재라인",approvalData);
-        console.log("approval",approvalData);
+        setEditorCheck(true);
         navi("/approval/write", { state: { setlist: setlist, temp_seq: docCommonData.temp_seq } });
     }
 
@@ -255,14 +246,48 @@ export const Detail=()=>{
     };
 
     const handleDelete = () => {
-        axios.delete(`${host}/approval/deleteTemp?seq=${seq}&setlist=${setlist}`)
-        .then(()=>{
-            console.log("문서삭제완료");
-            navi("/approval/listDocTemp")
-        })
-        .catch((err)=>{
-            console.log(err);
-        })
+
+        Swal.fire({
+            icon: "question",
+            title: "전자결재",
+            text: "임시 저장 문서를 삭제하시겠습니까?",
+            showCancelButton: true,
+            allowOutsideClick: false,
+            confirmButtonText: '확인',
+            cancelButtonText: '취소',
+            customClass: {
+                popup: 'custom-swal-popup',  // 커스텀 클래스 이름 지정
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // 확인 버튼을 클릭한 경우
+                Swal.fire({
+                    icon: 'success',
+                    title:  'comfirm!',
+                }
+                ).then((result) => {
+                    if (result.isConfirmed) {
+                        axios.delete(`${host}/approval/deleteTemp?seq=${seq}&setlist=${setlist}`)
+                        .then(()=>{
+                            console.log("문서삭제완료");
+                            navi("/approval/listDocTemp")
+                        })
+                    }
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // 취소 버튼을 클릭한 경우
+                Swal.fire({
+                    icon:'error',
+                    title:  'Cancelled'
+                }
+                  
+                ).then((result) => {
+                        //취소후 로직 
+                });
+    
+            }
+        });
+
     }
 
     return(

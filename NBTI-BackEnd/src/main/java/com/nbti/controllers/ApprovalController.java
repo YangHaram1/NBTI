@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -551,6 +552,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "writerIsMe");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result =new HashMap<>();
@@ -577,6 +580,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "referIsMe");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result =new HashMap<>();
@@ -603,6 +608,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "approvalIsMe");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result =new HashMap<>();
@@ -629,6 +636,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "return");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result =new HashMap<>();
@@ -654,6 +663,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "cancle");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result =new HashMap<>();
@@ -681,6 +692,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "wait");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result =new HashMap<>();
@@ -707,6 +720,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "book");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result =new HashMap<>();
@@ -733,6 +748,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "referwait");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result =new HashMap<>();
@@ -758,6 +775,8 @@ public class ApprovalController {
 		Map<String,String> countData = new HashMap<>();
 		countData.put("id", id);
 		countData.put("category", "temp");
+		countData.put("target", target);
+		countData.put("keyword", keyword);
 		int count = aServ.getCount(countData);
 		
 		Map<String, Object> result = new HashMap<>();
@@ -789,18 +808,28 @@ public class ApprovalController {
 		return ResponseEntity.ok().build();
 	}
 	
-	@GetMapping("/history")
-	public List<Map<String, Object>> getVacationHistory(HttpServletRequest request) {
-	    
-	    String memberId = (String) session.getAttribute("loginID");
-	    System.out.println("Retrieved memberId from session: " + memberId);
+	 @GetMapping("/history")
+	    public ResponseEntity<Map<String, Object>> getVacationHistory(
+	        @RequestParam int start, 
+	        @RequestParam int end
+	    ) {
+	        String memberId = (String) session.getAttribute("loginID");
+	        if (memberId == null) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+	        }
 
-	    if (memberId == null) {
-	        throw new RuntimeException("No memberId found in session.");
+	        Map<String, Object> result = aServ.getVacationHistory(memberId, start, end);
+	        return ResponseEntity.ok(result);
 	    }
+	 
+	 @GetMapping("/allhistory")
+	    public ResponseEntity<Map<String, Object>> getAllVacationHistory(
+	        @RequestParam int start, 
+	        @RequestParam int end
+	    ) {
+	      
 
-	    List<Map<String, Object>> vacationHistory = aServ.getVacationHistory(memberId);
-	    return vacationHistory;
-	}
-
+	        Map<String, Object> result = aServ.getAllVacationHistory( start, end);
+	        return ResponseEntity.ok(result);
+	    }
 }

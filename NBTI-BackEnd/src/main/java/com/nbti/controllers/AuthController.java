@@ -1,5 +1,6 @@
 package com.nbti.controllers;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nbti.commons.EncryptionUtils;
@@ -94,5 +96,37 @@ public class AuthController {
 	public String exceptionHandler(Exception e) {
 		e.printStackTrace();
 		return "error";
+	}
+	
+    @PostMapping("/find-id")
+    public ResponseEntity<String> findId(@RequestParam String email, @RequestParam String name) {
+        String foundId = mServ.findIdByEmailAndName(email, name);
+        if (foundId != null) {
+            return ResponseEntity.ok(foundId);
+        } else {
+            return ResponseEntity.status(404).body("아이디를 찾을 수 없습니다.");
+        }
+    }
+
+    @PostMapping("/verify-user")
+    public ResponseEntity<Boolean> verifyUser(@RequestParam String id, @RequestParam String name, @RequestParam String birth) {
+        boolean verified = mServ.verifyUser(id, name, birth);
+        return ResponseEntity.ok(verified);  // true 또는 false 반환
+    }
+	@PostMapping("/updatePw")
+	public ResponseEntity<Boolean> updatePw(@RequestBody Map<String, String> request) {
+	    String newPassword = EncryptionUtils.getSHA512(request.get("newPassword"));
+	    String id = request.get("id");
+
+	    HashMap<String, String> map = new HashMap<>();
+	    map.put("id", id);
+	    map.put("pw", newPassword);
+
+	    boolean result = mServ.changePw(map);
+	    if (result) {
+	        return ResponseEntity.ok(result);
+	    } else {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+	    }
 	}
 }

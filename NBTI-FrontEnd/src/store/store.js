@@ -121,7 +121,7 @@ export const useApprovalLine = create((set) => {
             );} else{
                 newApprovalLine = [...prev.approvalLine, approval];
             }
-            console.log("저장소", newApprovalLine);
+            // console.log("저장소", newApprovalLine);
             return {approvalLine : newApprovalLine};
         }),
         resetApprovalLine: () => set({ approvalLine: [] })
@@ -144,7 +144,7 @@ export const useReferLine = create((set) => {
                 );} else{
                     newReferLine = [...prev.referLine, refer];
                 }
-                console.log("저장소", newReferLine);
+                // console.log("저장소", newReferLine);
                 return {referLine:newReferLine};
         }),
         deleteReferLine: (refer) => set((prev)=>{
@@ -174,3 +174,13 @@ export const useDocLeave = create((set)=>{
         }))
     }
 });
+
+// 에디터 유무
+export const useEditorCheck = create((set)=>{
+    return {
+        editorCheck:false,
+        setEditorCheck: (result)=>set(()=>({
+            editorCheck:result
+        }))
+    }
+})

@@ -6,7 +6,6 @@ import { host } from "../../config/config";
 import FindId from "./FindId/FindId";
 import FindPw from "./FindPw/FindPw";
 import ChangePw from "./FindPw/ChangePw/ChangePw";
-import { Await } from "react-router-dom";
 
 axios.defaults.withCredentials = true;
 
@@ -56,7 +55,7 @@ const Login = () => {
                 setLoginID(resp.data);
             })
             .catch(err => {
-                setError('ID 또는 PW를 다시 확인 해주세요');
+                alert('ID 또는 PW를 다시 확인 해주세요');
             });
     };
 
@@ -67,6 +66,13 @@ const Login = () => {
     const handleFindPwSuccess = (data) => {
         setAuthData(data); // 인증 데이터 설정
         setPage('changepw'); // ChangePw 페이지로 변경
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // 기본 폼 제출 방지
+            handleLogin();
+        }
     };
 
     if (page === 'findId') {
@@ -91,6 +97,7 @@ const Login = () => {
                     name="id"
                     value={auth.id}
                     onChange={handleChange}
+                    onKeyDown={handleKeyDown} // Add key down handler
                     className={styles.input}
                 />
                 <input
@@ -99,6 +106,7 @@ const Login = () => {
                     name="pw"
                     value={auth.pw}
                     onChange={handleChange}
+                    onKeyDown={handleKeyDown} // Add key down handler
                     className={styles.input}
                 />
                 <div className={styles.rememberId}>

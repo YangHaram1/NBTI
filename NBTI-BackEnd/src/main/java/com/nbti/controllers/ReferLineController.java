@@ -34,7 +34,7 @@ public class ReferLineController {
 	
 	@PutMapping("/read/{seq}")
 	public void readCheck(@PathVariable int seq) {
-		System.out.println("참조/열람 시 게시글 번호" + seq);
+//		System.out.println("참조/열람 시 게시글 번호" + seq);
 		String id = (String)session.getAttribute("loginID");
 		rlServ.readCheak(seq, id);
 	}

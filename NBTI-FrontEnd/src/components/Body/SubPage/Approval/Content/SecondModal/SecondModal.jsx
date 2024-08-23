@@ -1,15 +1,16 @@
 // import { useEffect, useState } from 'react';
 import styles from './SecondModal.module.css'; // 스타일시트 경로는 동일하게 유지
-import { useApprovalLine, useDocFormStore, useReferLine } from '../../../../../../store/store';
+import { useApprovalLine, useDocFormStore, useEditorCheck, useReferLine } from '../../../../../../store/store';
 import { ApprovalLine } from './ApprovalLine/ApprovalLine';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 import { host } from '../../../../../../config/config';
+import Swal from 'sweetalert2';
 
 const SecondModal = ({ isOpen, onClose }) => {
 
-  const {referLine, setReferLine, deleteReferLine} = useReferLine();
+  const {referLine, resetReferLine, deleteReferLine} = useReferLine();
   const {approvalLine} = useApprovalLine();
   const {docForm} = useDocFormStore();
   const [refer, setRefer] = useState([]);
@@ -21,13 +22,18 @@ const SecondModal = ({ isOpen, onClose }) => {
   };
 
   useEffect(()=>{
-    // console.log("참조라인 데이터 확인",referLine);
+    // resetReferLine();
+    // console.log("결재 모달창 참조라인 확인",referLine);
+    // console.log("refer",refer);
+  },[])
+
+  useEffect(()=>{
+
     if(referLine.length > 0){
     axios.post(`${host}/members/approvalSearch`,referLine)
     .then((resp)=>{
-        // console.log("데이터 확인",resp.data);
+        // console.log("이게 말이되나?",refer, referLine);
         setRefer(resp.data);
-        console.log(refer);
     })
     .catch((err)=>{
         console.log(err);
@@ -41,11 +47,18 @@ const SecondModal = ({ isOpen, onClose }) => {
   const handlePageMove = (e)=>{
     e.preventDefault();
 
+    setRefer([]);
     if(check == false){
-      alert("결재는 최초결재자, 최종결재자 최소 2명은 선택하셔야합니다.");
+      Swal.fire(
+      { 
+        icon: 'error',
+        title: '전자결제',
+        text: '결재는 최초결재자, 최종결재자 최소 2명은 선택하셔야합니다.'
+      }
+      );
       return; 
     }
-    console.log(docForm.name);
+    // console.log(docForm.name);
     if(docForm.name === '휴가신청서'){
       navi("/approval/write/docVacation");
     }else if(docForm.name === '휴직신청서'){
@@ -62,18 +75,11 @@ const SecondModal = ({ isOpen, onClose }) => {
   const deleteRefer = (id) => {
     console.log("삭제할 ID",id);
     // referLine에서 해당 id와 일치하지 않는 항목들만 필터링하여 새로운 배열을 생성
-      console.log("=====참조라인:", referLine);
+      // console.log("=====참조라인:", referLine);
       deleteReferLine(id);
-      // const updatedReferLine = referLine.filter(refer => refer.id !== id);
-      // setReferLine(...updatedReferLine); // 참조 라인 업데이트
-
       // refer에서 해당 id와 일치하지 않는 항목들만 필터링하여 새로운 배열을 생성
       const updatedRefer = refer.filter(r => r.id !== id);
       setRefer(updatedRefer); // 화면 표시용 참조 라인 업데이트
-
-      console.log("삭제 후 참조라인:", referLine);
-      // console.log("참조라인:", referLine);
-      console.log("삭제 후 화면 표시용 참조라인:", updatedRefer);
     }
 
     const isValidValue = (value) => {
@@ -95,9 +101,9 @@ const SecondModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div className={styles.overlay}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.closeButton} onClick={onClose}>×</button>
+        {/* <button className={styles.closeButton} onClick={onClose}>×</button> */}
         <h2>결재선 지정</h2>
         <form onSubmit={handleSubmit}>
         <div className={styles.form_box}>
@@ -109,7 +115,7 @@ const SecondModal = ({ isOpen, onClose }) => {
               <div className={styles.form_refer}>
                 <div className={styles.form_refer_box}>
                   {
-                    refer.length  > 0 ?
+                    refer.length > 0 ?
                     refer.map((referr)=>{
                       return(
                         <div key={referr.ID} className={styles.refer_member}>

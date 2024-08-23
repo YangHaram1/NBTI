@@ -1,12 +1,30 @@
 import styles from './Content.module.css';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { Home } from './Home/Home';
 import { Write } from './Write/Write';
 import { List } from './List/List';
 import { ListDoc } from './ListDoc/ListDoc';
 import { Detail } from './Detail/Detail';
+import { useEffect } from 'react';
+import { useApprovalLine, useReferLine } from '../../../../../store/store';
 
 export const Content = ()=>{
+
+    const location = useLocation();
+    const { resetReferLine } = useReferLine();
+    const { resetApprovalLine } = useApprovalLine();
+
+    useEffect(() => {
+            // console.log('URL이 변경되었습니다:', location.pathname);
+            if(location.pathname === "/approval/write/docVacation"||location.pathname === '/approval/write/docLeave'||location.pathname === '/approval/write/docDraft'||location.pathname === '/approval/write'){
+                // console.log("데이터 보존");
+            }else{
+                // console.log("데이터 삭제");
+                resetReferLine();
+                resetApprovalLine();
+            }
+    }, [location]);
+
     return(
         <div className={styles.container}> 
             <Routes>

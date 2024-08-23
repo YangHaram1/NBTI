@@ -19,22 +19,17 @@
 .list > thead th {
     background-color: #A4C3B2; 
     color: white;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     font-weight: 400;
     text-shadow: 1px 1px 1px #9b9b9b;
     padding: 14px 10px 14px 15px;
 }
 .list > tbody td, 
 .list > tbody td {
-    text-align: center;
     padding: 14px 10px 14px 15px;
 }
 .list {
-    border: 1px solid gainsboro;
-    /* box-shadow: 3px 2px 4px gainsboro; */
     width: 100%;
-    border-radius: 5px;
-    padding: 5px;
 }
 .list tbody tr {}
 

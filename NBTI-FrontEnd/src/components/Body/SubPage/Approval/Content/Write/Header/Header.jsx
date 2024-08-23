@@ -16,7 +16,7 @@ export const Header = ({userdata}) => {
     const [approval, setApproval] = useState([]);
     
     useEffect(()=>{
-        console.log("작성시 전결라인",approvalLine);
+        // console.log("작성시 전결라인",approvalLine);
         axios.post(`${host}/members/approvalSearch`,approvalLine)
         .then((resp)=>{
             // console.log("데이터 확인",resp.data);
@@ -54,7 +54,7 @@ export const Header = ({userdata}) => {
                     approval.map((approvaler) => {
 
                         return (
-                            <div className={styles.approval_box} key={approvaler.id}>
+                            <div className={styles.approval_box} key={approvaler.ID}>
                                 <div className={styles.approval_box_side}>
                                     {
                                         approvaler.order === '1' ? "최초" : approvaler.order === '2' ? "중간" : "최종"

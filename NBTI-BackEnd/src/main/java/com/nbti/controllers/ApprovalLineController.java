@@ -55,8 +55,8 @@ public class ApprovalLineController {
 		
 		map.put("approvalYN",state);
 		map.put("id", id);
-		System.out.println("temp_seq: " +temp_seq);
-		System.out.println("setlist: " + setlist);
+//		System.out.println("temp_seq: " +temp_seq);
+//		System.out.println("setlist: " + setlist);
 //		System.out.println(approvalYN +":"+id+":"+temp_seq+":"+comment+":"+state);
 //		 본인 결재라인 업데이트
 		alServ.updateMyLine(map);

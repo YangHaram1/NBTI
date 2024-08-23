@@ -24,7 +24,7 @@ export const ListDoc = ({setlist}) => {
     const navi_count_per_page = 5;
 
     useEffect(()=>{
-        console.log("setlist 변경", cpage);
+        // console.log("setlist 변경", cpage);
         setCpage(1);
     },[setlist])
 
@@ -38,28 +38,28 @@ export const ListDoc = ({setlist}) => {
         // console.log(setlist);
         switch (setlist) {
             case '기안 문서함':
-                console.log("기안문서");
+                // console.log("기안문서");
                 url = `${host}/approval/getWriterIsMe`;
                 break;
             case '결재 문서함':
-                console.log("결재문서")
+                // console.log("결재문서")
                 url = `${host}/approval/getApprovalIsMe`;
                 break;
             // case '수신 문서함':
             case '참조/열람 문서함':
-                console.log("참조/열람 문서함");
+                // console.log("참조/열람 문서함");
                 url = `${host}/approval/getReferIsMe`
                 break;
             case '반려 문서함':
-                console.log("반려 문서함");
+                // console.log("반려 문서함");
                 url = `${host}/approval/getReturn`
                 break;
             case '상신취소 문서함':
-                console.log("상신취소 문서함");
+                // console.log("상신취소 문서함");
                 url = `${host}/approval/getCancle`
                 break;
             case '임시 저장 문서함':
-                console.log("임시 저장 문서함");
+                // console.log("임시 저장 문서함");
                 url = `${host}/approval/getTemp`
                 break;
             default:
@@ -67,8 +67,9 @@ export const ListDoc = ({setlist}) => {
         }
         axios.get(url+`?start=${start}&end=${end}&target=${target}&keyword=${keyword}`)
         .then(async (resp) => {
-            console.log(resp.data);
-
+            // console.log(resp.data);
+            // console.log("왜 키워드가 안들어가는거같지?",start, end, keyword, target );
+            
             // 검색 및 페이지 네이션 목록 출력
             setLists(() => {
                 const record_total_count = resp.data.count;//106 10 // 10
@@ -108,9 +109,9 @@ export const ListDoc = ({setlist}) => {
 
     useEffect(()=>{
         setKeyword('');
-        setTarget('');
+        setTarget('select');
         // setCpage(1);
-    },[lists])
+    },[setlist])
 
 
     const renderDocStateBadge = (docState) => {
@@ -135,18 +136,20 @@ export const ListDoc = ({setlist}) => {
     const handleSearch = () =>{
         setSearch((prev)=>{
             setCpage(1);
+            console.log(search);
             return !prev;
         })
     }
 
     const handleTarget = (e)=>{
         setTarget(e.target.value);
-        console.log("검색 종류",e.target.value);
+        // console.log("검색 종류",e.target.value);
     }
 
     const handleKeyword = (e)=>{
         setKeyword(e.target.value);
-        console.log("키워드",e.target.value);
+        // console.log("키워드",e.target.value);
+        // console.log("검색 종류",target);
     }
 
     const handlePage = (selectedPage) => {
@@ -158,13 +161,13 @@ export const ListDoc = ({setlist}) => {
         <div className={styles.container}>
             <div className={styles.title}>{setlist}</div>
             <div className={styles.search_box}>
-                <select onChange={handleTarget}>
+                <select onChange={handleTarget} value={target}>
                     <option value="select">선택</option>
                     <option value="writer">기안자</option>
                     <option value="doc_seq">문서번호</option>
                     <option value="title">제목</option>
                 </select>
-                <input type='text' placeholder='Seach' onChange={handleKeyword}></input>
+                <input type='text' placeholder='Seach' onChange={handleKeyword} value={keyword}></input>
                 <button onClick={handleSearch}>검색</button>
             </div>
             <div className={styles.content}>

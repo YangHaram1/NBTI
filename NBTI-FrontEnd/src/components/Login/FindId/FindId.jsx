@@ -8,7 +8,7 @@ const FindId = ({ onBack }) => {
     const [name, setName] = useState('');
 
     const handleFindId = () => {
-        axios.post(`${host}/members/find-id`, null, {
+        axios.post(`${host}/auth/find-id`, null, {
             params: { email, name }
         })
         .then(response => {
@@ -38,8 +38,8 @@ const FindId = ({ onBack }) => {
                     onChange={(e) => setEmail(e.target.value)}
                     className={styles.input}
                 />
-                <button onClick={handleFindId} className={styles.button}>아이디 찾기</button>
-                <button onClick={onBack} className={styles.linkButton}>로그인으로 돌아가기</button>
+                 <button onClick={handleFindId} className={styles.button}>아이디 찾기</button>
+                 <button onClick={onBack} className={styles.button}>돌아가기</button>
             </div>
         </div>
     );
