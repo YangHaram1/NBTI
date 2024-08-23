@@ -6,6 +6,7 @@ import SecondModal from "../Content/SecondModal/SecondModal";
 import DocTree from "../Content/Modal/DocTree/DocTree";
 import { FormDetail } from "../Content/FormDetail/FormDetial";
 import { useApprovalLine, useDocFormStore, useEditorCheck, useReferLine } from "../../../../../store/store";
+import Swal from "sweetalert2";
 
 export const Side = () => {
   // ===== 메뉴 토글 =====
@@ -49,25 +50,50 @@ export const Side = () => {
   };
 
   const handlePopupForm = () => {
-
-    setEditorCheck(false);
-
-    console.log(approvalLine.length);
-    // 결재 라인 1번에 이름이 없을 시 => 작서
     if(approvalLine.length > 1){
-      // 알림창 이쁘게 바꾸기
-      const result = window.confirm("글 내용이 삭제됩니다.");
-      if(result){
-        resetApprovalLine();
-        resetReferLine();
-        setDocForm({name:"", id:"", period:""});
-        console.log(docForm.name);
-        setIsModalOpen(true); // 첫 번째 모달 열기
-      }
-    }else{
-      setIsModalOpen(true);
-    }
-  };
+      Swal.fire({
+        icon: 'warning',
+        title: '전자결재',
+        text: '글 내용이 삭제 됩니다.',
+        showCancelButton: true,
+        allowOutsideClick: false,
+        confirmButtonText: '확인',
+        cancelButtonText: '취소',
+        customClass: {
+            popup: 'custom-swal-popup',  // 커스텀 클래스 이름 지정
+        }
+      }).then((result) => {
+      if (result.isConfirmed) {
+          // 확인 버튼을 클릭한 경우
+          Swal.fire({
+              icon: 'success',
+              title:  'comfirm!',
+          }).then((result) => {
+              if (result.isConfirmed) {
+                resetApprovalLine();
+                resetReferLine();
+                setDocForm({name:"", id:"", period:""});
+                console.log(docForm.name);
+                setIsModalOpen(true); // 첫 번째 모달 열기
+                setEditorCheck(false);
+              }
+          });
+
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          // 취소 버튼을 클릭한 경우
+          Swal.fire({
+              icon:'error',
+              title:  'Cancelled'
+          }
+            
+          ).then((result) => {
+            setIsModalOpen(true);
+          });
+
+        }
+      });
+    };
+  }
 
   const closeFirstModal = () => {
     setIsModalOpen(false); // 첫 번째 모달 닫기

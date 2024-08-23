@@ -90,8 +90,8 @@ export const Home = ()=>{
         }
     };
 
-    const handleMove = (tempSeq, docSubName) => {
-        navi("/approval/detail", {state:{seq:tempSeq, setlist:docSubName, list:"doc"}});
+    const handleMove = (tempSeq, docSubName, listName) => {
+        navi("/approval/detail", {state:{seq:tempSeq, setlist:docSubName, list:listName}});
     };
 
     // console.log("approvalData length:", approvalData.length);
@@ -174,7 +174,7 @@ export const Home = ()=>{
                                                 list.emergency == "Y  " ?  <div className={styles.emergency_badge}>긴급</div> :"" 
                                             }
                                     </div>
-                                    <div className={styles.content_title} onClick={() => handleMove(list.temp_seq, list.doc_sub_name)}>
+                                    <div className={styles.content_title} onClick={() => handleMove(list.temp_seq, list.doc_sub_name, '기안 문서함')}>
                                         {
                                             list.title !== null ? list.title : list.doc_sub_name 
                                         }
@@ -232,7 +232,7 @@ export const Home = ()=>{
                                                     list.emergency == "Y  " ?  <div className={styles.emergency_badge}>긴급</div> :"" 
                                                 }
                                         </div>
-                                        <div className={styles.content_title} onClick={() => handleMove(list.temp_seq, list.doc_sub_name)}>
+                                        <div className={styles.content_title} onClick={() => handleMove(list.temp_seq, list.doc_sub_name, '참조/열람 대기')}>
                                         {
                                             list.title !== null ? list.title : list.doc_sub_name 
                                         }

@@ -15,7 +15,7 @@ export const TreeNode = ({ node }) => {
         const name = event.currentTarget.querySelector('input[name="name"]').value;
         const id = event.currentTarget.querySelector('input[name="id"]').value;
         const period = event.currentTarget.querySelector('input[name="period"]').value;
-        console.log({ name, id, period });
+        // console.log({ name, id, period });
         setDocForm({name:name, id:id, period:period});
       };
 
