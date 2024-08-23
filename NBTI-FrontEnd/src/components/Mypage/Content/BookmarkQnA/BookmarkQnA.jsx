@@ -118,7 +118,6 @@ export const BookmarkQnA = () => {
             : "Invalid Date";
 
           const status = item.reply_count > 0 ? "답변완료" : "진행중";
-          console.log("개수 : ", item.reply_count);
 
           return (
             <div className={styles.list} key={index}>
