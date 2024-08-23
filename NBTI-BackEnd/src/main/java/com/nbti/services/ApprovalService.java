@@ -183,4 +183,15 @@ public class ApprovalService {
 
         return result;
     }
+    public Map<String, Object> getAllVacationHistory(int start, int end) {
+        List<Map<String, Object>> allhistory = adao.getAllVacationHistory(start, end);
+        int allRecordCount = adao.getAllRecordCount();
+
+        // 결과를 맵으로 묶어서 반환
+        Map<String, Object> result = new HashMap<>();
+        result.put("history", allhistory);
+        result.put("totalRecordCount", allRecordCount);
+
+        return result;
+    }
 }

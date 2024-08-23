@@ -72,8 +72,32 @@ const UserDetail = () => {
         }).open();
     };
 
+    const validateFormData = (formData) => {
+        // 이메일 유효성 검사
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(formData.email)) {
+            alert('유효한 이메일 주소를 입력하세요.');
+            return false;
+        }
+
+        // 전화번호 유효성 검사: 한국 전화번호 형식 (예: 010-1234-5678)
+        const phonePattern = /^(010|011|016|017|018|019)-\d{3,4}-\d{4}$/;
+        if (formData.member_call && !phonePattern.test(formData.member_call)) {
+            alert('유효한 전화번호를 입력하세요. (예: 010-1234-5678)');
+            return false;
+        }
+
+        return true;  // 모든 유효성 검사를 통과하면 true 반환
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        // 유효성 검사
+        if (!validateFormData(user)) {
+            return;  // 유효성 검사 실패 시 함수 종료
+        }
+        
         axios.put(`${host}/members/updateUser`, user)
             .then(response => {
                 alert('회원 정보가 성공적으로 업데이트되었습니다.');

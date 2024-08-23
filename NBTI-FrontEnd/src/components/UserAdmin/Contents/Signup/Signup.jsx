@@ -114,6 +114,12 @@ const Signup = () => {
             return false;
         }
 
+        const namePattern = /^[가-힣]{2,5}$/;
+        if (!namePattern.test(formData.name)) {
+            alert('이름은 한글로 2글자에서 5글자까지 입력할 수 있습니다.');
+            return false;
+        }
+
         return true;  // 모든 유효성 검사를 통과하면 true 반환
     };
 
