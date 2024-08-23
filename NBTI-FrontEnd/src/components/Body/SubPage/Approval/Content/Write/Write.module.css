@@ -133,5 +133,19 @@
     margin-top: 3px;
 }
 
+.filedeletebtn{
+    background-color: #6b908000;
+    border: 0px;
+}
+
+.filedeletebtn:hover{
+    background-color: #6b908000;
+    border: 0px;
+    color: #6B9080;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+
 
 

@@ -24,7 +24,7 @@ export const List = ({setlist}) => {
     const navi_count_per_page = 5;
 
     useEffect(()=>{
-        console.log("setlist 변경", cpage);
+        // console.log("setlist 변경", cpage);
         setCpage(1);
     },[setlist])
 
@@ -33,18 +33,18 @@ export const List = ({setlist}) => {
         const start = cpage * record_count_per_page - (record_count_per_page - 1);
         const end = cpage * record_count_per_page;
 
-        console.log(setlist);
+        // console.log(setlist);
         switch (setlist) {
             case '결재 대기':
-                console.log("결재대기");
+                // console.log("결재대기");
                 url = `${host}/approval/getApprovalWait`;
                 break;
             case '결재 예정':
-                console.log("결재 예정")
+                // console.log("결재 예정")
                 url = `${host}/approval/getApprovalBook`;
                 break;
             case '참조/열람 대기':
-                console.log("참조/열람 대기");
+                // console.log("참조/열람 대기");
                 url = `${host}/approval/getReferIsMeWait`
                 break;
             // case '반려 문서함':
@@ -55,7 +55,7 @@ export const List = ({setlist}) => {
 
         axios.get(url +`?start=${start}&end=${end}&target=${target}&keyword=${keyword}`)
         .then(async (resp) => {
-            console.log(resp.data);
+            // console.log(resp.data);
 
             setLists(() => {
                 const record_total_count = resp.data.count;//106 10 // 10

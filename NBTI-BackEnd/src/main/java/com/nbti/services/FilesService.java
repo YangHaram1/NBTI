@@ -203,7 +203,7 @@ public class FilesService {
 			throws Exception {
 		String Path = "board" + File.separator + "images";
 		String realPath = RealpathConfig.realpath + Path;
-		System.out.println(realPath);
+//		System.out.println(realPath);
 		File uploadPath = new File(realPath);
 		Map<String, String> maps = new HashMap<>();
 		if (!uploadPath.exists()) {
@@ -317,7 +317,7 @@ public class FilesService {
 				}
 			}
 		} else {
-			System.out.println("첨부파일 없음");
+//			System.out.println("첨부파일 없음");
 		}
 	}
 

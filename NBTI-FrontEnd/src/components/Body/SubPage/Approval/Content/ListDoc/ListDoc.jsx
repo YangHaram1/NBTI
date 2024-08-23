@@ -24,7 +24,7 @@ export const ListDoc = ({setlist}) => {
     const navi_count_per_page = 5;
 
     useEffect(()=>{
-        console.log("setlist 변경", cpage);
+        // console.log("setlist 변경", cpage);
         setCpage(1);
     },[setlist])
 
@@ -38,28 +38,28 @@ export const ListDoc = ({setlist}) => {
         // console.log(setlist);
         switch (setlist) {
             case '기안 문서함':
-                console.log("기안문서");
+                // console.log("기안문서");
                 url = `${host}/approval/getWriterIsMe`;
                 break;
             case '결재 문서함':
-                console.log("결재문서")
+                // console.log("결재문서")
                 url = `${host}/approval/getApprovalIsMe`;
                 break;
             // case '수신 문서함':
             case '참조/열람 문서함':
-                console.log("참조/열람 문서함");
+                // console.log("참조/열람 문서함");
                 url = `${host}/approval/getReferIsMe`
                 break;
             case '반려 문서함':
-                console.log("반려 문서함");
+                // console.log("반려 문서함");
                 url = `${host}/approval/getReturn`
                 break;
             case '상신취소 문서함':
-                console.log("상신취소 문서함");
+                // console.log("상신취소 문서함");
                 url = `${host}/approval/getCancle`
                 break;
             case '임시 저장 문서함':
-                console.log("임시 저장 문서함");
+                // console.log("임시 저장 문서함");
                 url = `${host}/approval/getTemp`
                 break;
             default:
@@ -67,8 +67,8 @@ export const ListDoc = ({setlist}) => {
         }
         axios.get(url+`?start=${start}&end=${end}&target=${target}&keyword=${keyword}`)
         .then(async (resp) => {
-            console.log(resp.data);
-            console.log("왜 키워드가 안들어가는거같지?",start, end, keyword, target );
+            // console.log(resp.data);
+            // console.log("왜 키워드가 안들어가는거같지?",start, end, keyword, target );
             
             // 검색 및 페이지 네이션 목록 출력
             setLists(() => {
@@ -143,13 +143,13 @@ export const ListDoc = ({setlist}) => {
 
     const handleTarget = (e)=>{
         setTarget(e.target.value);
-        console.log("검색 종류",e.target.value);
+        // console.log("검색 종류",e.target.value);
     }
 
     const handleKeyword = (e)=>{
         setKeyword(e.target.value);
-        console.log("키워드",e.target.value);
-        console.log("검색 종류",target);
+        // console.log("키워드",e.target.value);
+        // console.log("검색 종류",target);
     }
 
     const handlePage = (selectedPage) => {

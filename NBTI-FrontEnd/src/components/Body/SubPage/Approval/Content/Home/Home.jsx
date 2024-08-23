@@ -24,7 +24,7 @@ export const Home = ()=>{
         axios.get(`${host}/approval/getApprovalWait?start=1&end=5&target=''&keyword=''`)
         .then((resp)=>{
             setApprovalData(resp.data.list);
-            console.log("버블 목록출력",resp.data.list);
+            // console.log("버블 목록출력",resp.data.list);
         })
     },[])
 
@@ -56,21 +56,21 @@ export const Home = ()=>{
         axios.get(`${host}/approval/getWriterIsMe?start=1&end=5&target=''&keyword=''`)
             .then((resp) => {
                 setLists(resp.data.list);
-                console.log("lists",resp.data.list);
+                // console.log("lists",resp.data.list);
                 fetchFileExistence(resp.data.list, setFileExistenceMap);
             });
 
         axios.get(`${host}/approval/getReferIsMeWait?start=1&end=5&target=''&keyword=''`)
             .then((resp) => {
                 setListss(resp.data.list);
-                console.log("listss",resp.data.list);
+                // console.log("listss",resp.data.list);
                 fetchFileExistence(resp.data.list, setFileExistenceMap2);
             });
     }, []);
 
     const HandleSubmit = (seq) =>{
         setShowModal(true);
-        console.log("홈 버블 번호", seq);
+        // console.log("홈 버블 번호", seq);
         setSeq(seq);
     }
 
@@ -90,14 +90,14 @@ export const Home = ()=>{
         }
     };
 
-    const handleMove = (tempSeq, docSubName) => {
-        navi("/approval/detail", {state:{seq:tempSeq, setlist:docSubName, list:"doc"}});
+    const handleMove = (tempSeq, docSubName, listName) => {
+        navi("/approval/detail", {state:{seq:tempSeq, setlist:docSubName, list:listName}});
     };
 
     // console.log("approvalData length:", approvalData.length);
     
     const handleDetail = (seq, doc_sub_name ) => {
-        console.log(seq);
+        // console.log(seq);
         navi("/approval/detail", {state:{seq:seq, setlist:doc_sub_name, list:'결재 대기'}});
     }
 
@@ -174,7 +174,7 @@ export const Home = ()=>{
                                                 list.emergency == "Y  " ?  <div className={styles.emergency_badge}>긴급</div> :"" 
                                             }
                                     </div>
-                                    <div className={styles.content_title} onClick={() => handleMove(list.temp_seq, list.doc_sub_name)}>
+                                    <div className={styles.content_title} onClick={() => handleMove(list.temp_seq, list.doc_sub_name, '기안 문서함')}>
                                         {
                                             list.title !== null ? list.title : list.doc_sub_name 
                                         }
@@ -232,7 +232,7 @@ export const Home = ()=>{
                                                     list.emergency == "Y  " ?  <div className={styles.emergency_badge}>긴급</div> :"" 
                                                 }
                                         </div>
-                                        <div className={styles.content_title} onClick={() => handleMove(list.temp_seq, list.doc_sub_name)}>
+                                        <div className={styles.content_title} onClick={() => handleMove(list.temp_seq, list.doc_sub_name, '참조/열람 대기')}>
                                         {
                                             list.title !== null ? list.title : list.doc_sub_name 
                                         }

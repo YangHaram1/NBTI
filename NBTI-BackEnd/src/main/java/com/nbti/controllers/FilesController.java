@@ -119,7 +119,7 @@ public class FilesController {
 		dto.setAddress(map.get("address"));
 		dto.setEmail(map.get("email"));
 		dto.setMember_call(map.get("member_call"));
-		System.out.println(dto.getAddress() +":"+ dto.getEmail() +":"+ dto.getMember_call() +":"+ file.getOriginalFilename());
+//		System.out.println(dto.getAddress() +":"+ dto.getEmail() +":"+ dto.getMember_call() +":"+ file.getOriginalFilename());
 		serv.mypageUpdate(dto, file);
 		return ResponseEntity.ok().build();
 	}
@@ -133,7 +133,7 @@ public class FilesController {
 	// 전자결재 파일 다운로드
 	@GetMapping("/downloadApproval")
 	public void downloadApproval(@RequestParam String oriname,@RequestParam String sysname, @RequestParam String temp_seq,HttpServletResponse response) throws Exception{
-		 System.out.println(oriname + " :" + sysname);
+//		 System.out.println(oriname + " :" + sysname);
 		    String realpath = RealpathConfig.realpath + "approval" + File.separator + temp_seq;
 		    File target = new File(realpath + "/" + sysname);
 

@@ -5,7 +5,7 @@ import { DocVacation } from "./DocVacation/DocVacation";
 import styles from './Write.module.css';
 import { host } from '../../../../../../config/config';
 import axios from 'axios';
-import { useApprovalLine, useDocLeave, useDocVacation, useReferLine } from '../../../../../../store/store';
+import { useApprovalLine, useDocLeave, useDocVacation, useEditorCheck, useReferLine } from '../../../../../../store/store';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SecondModal from '../SecondModal/SecondModal';
 import Swal from 'sweetalert2';
@@ -25,6 +25,7 @@ export const Write = (props)=>{
     const { approvalLine, resetApprovalLine } = useApprovalLine();
     const { docLeave } = useDocLeave();
     const { docVacation } = useDocVacation();
+    const {setEditorCheck} = useEditorCheck();
     const [refer, setRefer] = useState([]);
     const [fileInfo, setFileInfo] = useState([]);
     const [files, setFiles] = useState([]);
@@ -51,8 +52,18 @@ export const Write = (props)=>{
         };
     }, []);
 
+
+    useEffect(()=>{
+        // console.log('URL이 변경되었습니다:', location.pathname);
+        setFileInfo([]);
+        setFiles([]);
+        // console.log("파일이 날아갑니당");
+    },[location])
+      
+
     // 결재션 변경 창 열기
     const handleModal = () =>{
+        setEditorCheck(false);
         setIsSecondModalOpen(true);
         resetApprovalLine(); // 결재선 초기화
         // 모달 창 열기
@@ -60,6 +71,7 @@ export const Write = (props)=>{
 
     // 결재선 변경 창 닫기
     const closeSecondModal = () => {
+        setEditorCheck(true);
         setIsSecondModalOpen(false); // 두 번째 모달 닫기
       };
 
@@ -111,7 +123,7 @@ export const Write = (props)=>{
 
         // Swal 모달을 사용하여 긴급 문서 여부 확인
     const Sresult = await Swal.fire({
-        icon: 'qeustion',
+        icon: 'question',
         title: '전자결제',
         text: '긴급 문서로 하시겠습니까?',
         showCloseButton: true,
@@ -211,6 +223,7 @@ export const Write = (props)=>{
             });
             resetReferLine();
             resetApprovalLine();
+            setEditorCheck(false);
             navi("/approval");
         } catch (error) {
             console.error("문서 제출 실패:", error);
@@ -239,7 +252,7 @@ export const Write = (props)=>{
             // 확인 버튼을 클릭한 경우
             await Swal.fire({
                 icon: 'success',
-                title: '임시 저장이 완료 되었습니다., 임시 저장함으로 이동합니다.',
+                title: '임시 저장이 완료 되었습니다. 임시 저장함으로 이동합니다.',
             });
             result = true;
         } else if (Sresult.dismiss === Swal.DismissReason.cancel) {
@@ -303,25 +316,43 @@ export const Write = (props)=>{
      // 파일 첨부
      const handleFileChange  = (e)=>{
 
+        // 선택한 파일
         const selectedFiles = Array.from(e.target.files);
+        // 기존 있던 파일
         const currentFileNames = files.map(fileObj => fileObj.file.name);
         // const count = 0;
-        // console.log("파일 목록 보기", selectedFiles);
+        // console.log("파일 선택 목록 보기", selectedFiles);
+        // console.log("파일 기존 목록 보기", files);
+        // console.log("파일 최근 목록 보기", currentFileNames);
         const date = Date.now();
 
         // 중복 파일 체크 및 필터링
         const nonDuplicateFiles = selectedFiles.filter(file => !currentFileNames.includes(file.name));
-        
-        if (nonDuplicateFiles.length === 0) {
-            alert("이미 선택된 파일입니다.");
-            return;
-        }
+        const nonDuplicateCheck = files.filter(file=>!currentFileNames.includes(file.name));
 
-        const MAX_SIZE = 1024 * 1024 * 1024; // 1GB
+        // console.log("전체 배열 길이", nonDuplicateCheck);
+        if (nonDuplicateFiles.length === 0) {
+            Swal.fire(
+                { 
+                  icon: 'warning',
+                  title: '전자결제',
+                  text: '이미 선택된 파일입니다.'
+                }
+                );
+        }
+        // console.log("중복제거 목록 보기", nonDuplicateFiles);
+
+        const MAX_SIZE = 1024 * 1024 * 100; // 100MB
 
         const validFiles = nonDuplicateFiles.filter(file => {
             if (file.size > MAX_SIZE) {
-                alert(`파일 "${file.name}" 이(가) 1GB 용량 제한을 초과했습니다.`);
+                Swal.fire(
+                    { 
+                      icon: 'warning',
+                      title: '전자결제',
+                      text: '100MB 용량 제한을 초과했습니다.'
+                    }
+                    );
                 return false;
             }
             return true;
@@ -331,19 +362,26 @@ export const Write = (props)=>{
             return; // 유효한 파일이 없으면 종료
         }
 
-        const newFileInfo = selectedFiles.map(file => ({
+        const newFileInfo = validFiles.map(file => ({
             name: file.name,
             size: `${(file.size / 1024).toFixed(2)} KB`, // Size in KB
             id: file.name + date // Unique identifier
         }));
 
-        const newFile = selectedFiles.map(file => ({
+        const newFile = validFiles.map(file => ({
             file, // 원본 파일 객체
             id: file.name + date // 고유 식별자
         }));
 
         if (files.length + newFile.length > 5) {
-            alert("파일은 최대 5개까지 첨부할 수 있습니다.");
+            Swal.fire(
+                { 
+                  icon: 'warning',
+                  title: '전자결제',
+                  text: '파일은 최대 5개까지 첨부할 수 있습니다.'
+                }
+                );
+            // alert("파일은 최대 5개까지 첨부할 수 있습니다.");
             return;
         }
 
@@ -351,8 +389,8 @@ export const Write = (props)=>{
 
         setFileInfo(prev => {
             const updatedFileInfo = [...prev, ...newFileInfo];
-            console.log("업데이트된 파일 정보 배열:", updatedFileInfo);
-            console.log("setfiles데이터", files);
+            // console.log("업데이트된 파일 정보 배열:", updatedFileInfo);
+            // console.log("setfiles데이터", files);
             return updatedFileInfo;
         });
     }
@@ -396,8 +434,8 @@ export const Write = (props)=>{
     },[referLine])
 
     useEffect(()=>{
-        console.log("파일",files);
-        console.log("파일 정보",fileInfo);
+        // console.log("파일",files);
+        // console.log("파일 정보",fileInfo);
     },[files, fileInfo])
 
     return(
@@ -431,7 +469,7 @@ export const Write = (props)=>{
                             <div className={styles.file_list}>
                                 {fileInfo.map((file, index) => (
                                     <div key={index} className={styles.file_item}>
-                                        {file.name} ({file.size}) <button  onClick={() => handleFileDelete(file.id)}>X</button>
+                                        {file.name} ({file.size}) <button className={styles.filedeletebtn} onClick={() => handleFileDelete(file.id)}>X</button>
                                     </div>
                                 ))}
                             </div>

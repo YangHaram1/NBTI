@@ -15,7 +15,7 @@ export const DocVacation = ({setDocVacation, docVacation})=>{
     useEffect(()=>{
         axios.get(`${host}/vacationCategroy/${category}`)
         .then((resp)=>{
-            console.log(resp);
+            // console.log(resp);
             setCategoryName(resp.data);
         })
     },[docVacation])

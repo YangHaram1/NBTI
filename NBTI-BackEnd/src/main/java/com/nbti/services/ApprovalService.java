@@ -145,7 +145,7 @@ public class ApprovalService {
     		dddao.insert(ddto);    		
     	}else if(type == 3){
     		dvdto.setVacation_seq(temp_seq);
-    		System.out.println("임시저장 테스트"+dvdto.getVacation_category() +":"+dvdto.getVacation_seq()+":"+dvdto.getVacation_start());
+//    		System.out.println("임시저장 테스트"+dvdto.getVacation_category() +":"+dvdto.getVacation_seq()+":"+dvdto.getVacation_start());
     		dvdao.insert(dvdto);
     	}else if(type == 2) {
     		dldto.setLeave_seq(temp_seq);
@@ -168,7 +168,7 @@ public class ApprovalService {
 			}
 		}
 		else {
-			System.out.println("첨부파일 없음");
+//			System.out.println("첨부파일 없음");
 		}
 	}
 	

@@ -18,7 +18,6 @@ public class DocVacationController {
 	
 	@GetMapping("/{seq}")
 	public DocVacationDTO getContent(@PathVariable int seq) {
-		System.out.println();
 		DocVacationDTO dto = dvServ.getContent(seq);
 		return dto;
 		
