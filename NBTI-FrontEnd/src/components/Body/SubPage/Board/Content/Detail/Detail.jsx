@@ -262,9 +262,7 @@ export const Detail = () => {
   const handleLikekAdd = (seq, i) => {
     setIsLiked((prev) => ({ ...prev, [seq]: true })); // 상태를 true로 변환
 
-    axios.post(`${host}/likes/insert`, { reply_seq: seq }).then((resp) => {
-      // if (resp.data === 1) console.log("조아요 성공");
-    });
+    axios.post(`${host}/likes/insert`, { reply_seq: seq });
 
     setReply((prev) => {
       return prev.map((item, index) => {
@@ -281,8 +279,6 @@ export const Detail = () => {
     setIsLiked((prev) => ({ ...prev, [seq]: false }));
 
     axios.delete(`${host}/likes/delete/${seq}`).then((resp) => {
-      if (resp.data === 1) console.log("조아요 취소");
-
       setReply((prev) => {
         return prev.map((item, index) => {
           if (index === i) {

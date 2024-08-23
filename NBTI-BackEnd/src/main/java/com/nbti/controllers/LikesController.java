@@ -37,7 +37,6 @@ public class LikesController {
 		String member_id = (String)session.getAttribute("loginID");
 		dto.setMember_id(member_id);
 		
-		System.out.println("댓글 : " + dto.getReply_seq());
 		int result = lserv.insert(dto);
 		return ResponseEntity.ok(result);
 	}

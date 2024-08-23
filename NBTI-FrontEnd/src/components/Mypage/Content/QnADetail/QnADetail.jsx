@@ -177,7 +177,6 @@ export const QnADetail = () => {
   const handleBookmarkRemove = (seq) => {
     setIsBookmarked(!isBookmarked);
     axios.delete(`${host}/bookmark/delete/${seq}`).then((resp) => {
-      console.log("삭제", resp.data);
       if (resp.data > 0) {
         Swal.fire({
           icon: "error",
