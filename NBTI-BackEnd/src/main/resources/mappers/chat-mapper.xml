@@ -15,7 +15,7 @@
 	<select id="list" resultType="com.nbti.dto.ChatImgDTO">
 		select c.*,m.member_img
 		from chat c
-		join members m on c.member_id=m.id
+		left join members m on c.member_id= m.id
 		where c.group_seq=#{param} order by seq
 	</select>
 

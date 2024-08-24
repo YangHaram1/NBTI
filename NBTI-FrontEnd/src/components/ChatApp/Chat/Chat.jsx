@@ -164,7 +164,6 @@ const Chat = ({ setDisabled }) => {
       if (chatSeq !== 0) {
         axios.get(`${host}/chat?chatSeq=${chatSeq}`).then(resp => {//채팅목록 가저오기
           setChats(resp.data);
-          // console.log("채팅목록가저오기");
           if (resp.data.length > 0) //멤버 last_chat_seq 업데이트
             axios.patch(`${host}/group_member?group_seq=${chatSeq}&&last_chat_seq=${resp.data[resp.data.length - 1].seq}`).then((resp) => {
               ws.current.send("updateMember");
