@@ -38,7 +38,7 @@ public class ApprovalLineDAO {
 	// 임시번호에 따른 결재라인 수 출력 (현재는 3이 나와야 함.)
 	public int selectLineCount(Map<String, Object> map) {
 		int count = mybatis.selectOne("ApprovalLine.selectLineCount", map);
-//		System.out.println("결재라인 수 count : "+count);
+		System.out.println("결재라인 수 count : "+count);
 		return count;
 	}
 	
