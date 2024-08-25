@@ -74,7 +74,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  margin-left: 15px;
+  margin-left: 18px;
   transition-duration: 0.4s;
   color: #6b9080;
 }
@@ -100,7 +100,7 @@
   width: 40px;
   height: 40px;
   overflow: hidden;
-  margin-left: 15px;
+  margin-left: 20px;
 }
 .container .right .user_info .user_profile_img {
   width: 100%;
