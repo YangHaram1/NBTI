@@ -20,7 +20,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.nbti.dto.ChatDTO;
-import com.nbti.dto.ChatFileDTO;
+import com.nbti.dto.ChatImgDTO;
 import com.nbti.dto.Group_memberDTO;
 import com.nbti.services.ChatService;
 import com.nbti.services.Group_memberService;
@@ -78,7 +78,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 			if(listCheck) {
 				ChatDTO dto = new ChatDTO(0, sender, message.getPayload(), null, group_seq,0);
 				dto = chatService.insert(dto);
-				String json = gson.toJson(dto);
+				ChatImgDTO sendDTO =chatService.selectOne(dto.getSeq());
+				String json = gson.toJson(sendDTO);
 				broadcastMessage(json,list);
 				System.out.println(list.get(1).getMember_id());
 				System.out.println("메세지보냄");

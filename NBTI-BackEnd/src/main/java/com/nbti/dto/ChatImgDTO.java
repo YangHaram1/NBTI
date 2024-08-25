@@ -10,6 +10,7 @@ public class ChatImgDTO {
 	private int group_seq;
 	private int upload_seq;
 	private String member_img;
+	private String name;
 	public int getSeq() {
 		return seq;
 	}
@@ -52,8 +53,14 @@ public class ChatImgDTO {
 	public void setMember_img(String member_img) {
 		this.member_img = member_img;
 	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public ChatImgDTO(int seq, String member_id, String message, Timestamp write_date, int group_seq, int upload_seq,
-			String member_img) {
+			String member_img, String name) {
 		super();
 		this.seq = seq;
 		this.member_id = member_id;
@@ -62,10 +69,12 @@ public class ChatImgDTO {
 		this.group_seq = group_seq;
 		this.upload_seq = upload_seq;
 		this.member_img = member_img;
+		this.name = name;
 	}
 	public ChatImgDTO() {
 		super();
 	}
+	
 	
 	
 }
