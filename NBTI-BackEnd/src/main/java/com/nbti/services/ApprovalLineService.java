@@ -60,15 +60,15 @@ public class ApprovalLineService {
 		}
 		
 		
-//		System.out.println("문서 상태: " + approvalYN);
-//		System.out.println("총 순서: " + total_seq);
-//		System.out.println("현재 순서: " + order);
+		System.out.println("문서 상태: " + approvalYN);
+		System.out.println("총 순서: " + total_seq);
+		System.out.println("현재 순서: " + order);
 		
 		
 		// 문서 상태가 승인일 때, 
 		if(approvalYN.equals("p")) {
 			// 현재 내 순서가 최종 순서라면 문서상태 완료로 업데이트 후 문서번호 추가
-			if(total_seq == order) {
+			if(total_seq <= order) {
 				adao.updateDocState(seq, approvalYN);
 				adao.createApprovalSeq(seq, docHeader);
 				
@@ -127,8 +127,13 @@ public class ApprovalLineService {
 				
 			// 현재 내 순서가 최종 순서가 아니라면 다음 결재자 상태 업데이트	
 			}else if(total_seq > order) {
-				int updateOrder = (order+(int)1);
-//				System.out.println("order 값증가 및 업데이트 필요" +order +":"+ (updateOrder));
+				int updateOrder = 0;
+				if(total_seq == 2) {
+					updateOrder = (order+(int)2);
+				}else {
+					updateOrder = (order+(int)1);
+				}
+				System.out.println("order 값증가 및 업데이트 필요" +order +":"+ (updateOrder));
 				map.put("updateOrder",updateOrder);
 				aldao.updateNextApproval(map);
 			}
