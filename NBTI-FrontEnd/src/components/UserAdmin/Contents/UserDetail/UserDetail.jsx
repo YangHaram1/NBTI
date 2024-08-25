@@ -104,7 +104,7 @@ const UserDetail = () => {
                 navigate(`/useradmin/userlist`);
             })
             .catch(error => {
-                console.error('Error updating user:', error);
+               
                 alert('회원 정보 업데이트 중 오류가 발생했습니다.');
             });
     };
@@ -117,7 +117,7 @@ const UserDetail = () => {
                     navigate(`/useradmin/userlist`);
                 })
                 .catch(error => {
-                    console.error('Error deleting user:', error);
+                   
                     alert('회원 탈퇴 중 오류가 발생했습니다.');
                 });
         }
@@ -251,29 +251,14 @@ const UserDetail = () => {
                 <option value="M">남성</option>
                 <option value="F">여성</option>
             </select>
-            <select
-                name="ent_yn"
-                value={user.ent_yn}
-                onChange={handleChange}
-            >
-                <option value="N">재직</option>
-                <option value="Y">휴직</option>
-            </select>
-            {user.ent_yn === 'Y' && (
-                <input
-                    type="text"
-                    placeholder="휴직일"
-                    name="end_date"
-                    value={user.end_date}
-                    onChange={handleChange}
-                />
-            )}
+          
             <input
                 type="number"
                 placeholder="휴가 기간"
                 name="vacation_period"
                 value={user.vacation_period}
                 onChange={handleChange}
+                disabled
             />
             <div className={styles.groupBtn}>
                 <button type="button" onClick={handleSubmit}>정보 수정</button>

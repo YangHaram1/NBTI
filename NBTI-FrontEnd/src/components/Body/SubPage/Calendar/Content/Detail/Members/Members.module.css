@@ -37,8 +37,8 @@
 
 .nbti{
     font-weight: 600;
-    font-size: 1rem;
-    border-bottom: 2px solid #6B9080;
+    /* font-size: 1rem; */
+    border-bottom: 2px solid #6b90804d; width: inherit;
     cursor: pointer;
     display: flex;
     padding-bottom: 5px;
@@ -80,7 +80,7 @@
   .dept {
     color: black;
     display: flex;
-    font-size: 16px;
+    /* font-size: 16px; */
     font-weight: bold;
   }
   
@@ -91,7 +91,7 @@
     color: #6B9080;
     cursor: pointer;
     padding-left: 30px;
-    font-size: 14px;
+    /* font-size: 14px; */
     font-weight: bold;
   }
 
@@ -99,6 +99,7 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+    
   }
 
   .team:hover{
@@ -110,24 +111,31 @@
     overflow: auto;
     width: 100%; 
     flex-direction: column;
-    padding-left: 30px;
+    padding: 0 30px;
   }
   
   .member {
     display: flex;
     gap: 10px;
-    font-size: 14px;
+    /* font-size: 14px; */
     color: gray;
+    width: 100%;
   }
+  .member > input {
+    border: none;
+    /* background-color: #6B9080;  */
+  }
+  .div1{width: 10%;}
   .div2{
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
-    width: 200px;
+    /* gap: 10px; */
+    width: 70%;
   }
   .div2 > div:first-child{flex: 1;}
   .div2 > div:last-child{flex: 1;}
+  .div1{}
   .div1 img{
     width: 30px;
     height: 30px;

@@ -46,7 +46,7 @@ export const MyAttendance = () => {
             setCurrentClockIn(isClockInToday ? format(startDate, 'HH:mm:ss') : null);
             setCurrentClockOut(isClockOutToday ? format(endDate, 'HH:mm:ss') : null);
         } catch (err) {
-            console.error('출근 기록을 가져오는데 실패했습니다.', err.response ? err.response.data : err);
+           
         }
     }, [memberId, today]);
 
@@ -70,7 +70,7 @@ export const MyAttendance = () => {
             fetchWeeklyStats(); // 주간 통계 업데이트
             fetchYearlyStats(); // 연간 통계 업데이트
         } catch (err) {
-            console.error('출근 기록에 실패했습니다.', err.response ? err.response.data : err);
+           
             alert('출근 기록에 실패했습니다.');
         }
     };
@@ -93,7 +93,7 @@ export const MyAttendance = () => {
                 alert('퇴근 기록 저장 실패');
             }
         } catch (err) {
-            console.error('퇴근 기록에 실패했습니다.', err.response ? err.response.data : err);
+           
             alert('퇴근 기록에 실패했습니다.');
         }
     };
@@ -109,7 +109,7 @@ export const MyAttendance = () => {
                             <div className={styles.timeDisplay}>
                                 <p>출근 시간: {currentClockIn || '출근 기록 없음'}</p>
                                 {isLate && <span className={styles.comment}>지각</span>}
-                                {isAbsent && <p>오늘 출근하지 않아 결근 처리되었습니다.</p>}
+                                
                             </div>
                             <div className={styles.buttonsContainer}>
                                 <button

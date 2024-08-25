@@ -33,15 +33,15 @@ const Signup = () => {
     useEffect(() => {
         axios.get(`${host}/members/selectTeam`)
             .then(response => setTeams(response.data))
-            .catch(error => console.error('Error fetching teams:', error));
+  
 
         axios.get(`${host}/members/selectJob`)
             .then(response => setJobs(response.data))
-            .catch(error => console.error('Error fetching jobs:', error));
+     
 
         axios.get(`${host}/members/selectLevel`)
             .then(response => setLevels(response.data))
-            .catch(error => console.error('Error fetching levels:', error));
+            
     }, []);
 
     useEffect(() => {
@@ -140,7 +140,7 @@ const Signup = () => {
                 navi("/");
             })
             .catch(error => {
-                console.error('Error submitting form:', error);
+               
                 alert('회원가입 중 오류가 발생했습니다.');
             });
     };
@@ -258,30 +258,8 @@ const Signup = () => {
                 <option value="M">남성</option>
                 <option value="F">여성</option>
             </select>
-            <select
-                name="ent_yn"
-                value={formData.ent_yn}
-                onChange={handleChange}
-            >
-                <option value="N">재직</option>
-                <option value="Y">휴직</option>
-            </select>
-            {formData.ent_yn === 'Y' && (
-                <input
-                    type="text"
-                    placeholder="휴직일"
-                    name="end_date"
-                    value={formData.end_date}
-                    onChange={handleChange}
-                />
-            )}
-            <input
-                type="number"
-                placeholder="휴가 기간"
-                name="vacation_period"
-                value={formData.vacation_period}
-                onChange={handleChange}
-            />
+      
+            
             <button type="button" onClick={handleSubmit}>회원가입</button>
         </div>
     );

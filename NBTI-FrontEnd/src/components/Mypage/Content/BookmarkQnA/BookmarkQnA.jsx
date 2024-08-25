@@ -41,6 +41,8 @@ export const BookmarkQnA = () => {
     };
 
     axios.get(`${host}/board/bookmarkList`, { params }).then((resp) => {
+      console.log("갯수 : ", resp.data.list);
+
       setBoardList(resp.data.list); // 서버에서 list와 count 보내준 것 중 list만 담기
       setBoardType("문의");
 
@@ -110,9 +112,6 @@ export const BookmarkQnA = () => {
           <div>
             <p>작성일</p>
           </div>
-          {/* <div>
-            <p>조회수</p>
-          </div> */}
         </div>
         {boardList.map((item, index) => {
           const date = new Date(item.write_date);
@@ -139,15 +138,9 @@ export const BookmarkQnA = () => {
                   {item.title}
                 </p>
               </div>
-              {/* <div className={styles.writer}>
-                <p>{item.name}</p>
-              </div> */}
               <div className={styles.writeDate}>
                 <p>{currentDate}</p>
               </div>
-              {/* <div className={styles.viewCount}>
-                <p>{item.view_count}</p>
-              </div> */}
             </div>
           );
         })}

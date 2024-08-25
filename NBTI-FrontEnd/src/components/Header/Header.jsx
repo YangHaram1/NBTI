@@ -171,6 +171,8 @@ export const Header = () => {
             return "근무현황";
         } else if (path.startsWith("/useradmin")) {
             return "관리자";
+        } else if (path.startsWith("/mypage")) {
+            return "마이페이지";
         } else {
             return "오피스 홈"; // 기본 텍스트
         }

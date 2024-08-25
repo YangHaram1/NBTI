@@ -4,6 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import koLocale from '@fullcalendar/core/locales/ko';
 import useWeeklyStats from './useWeeklyStats'; // Adjust the path to your hook
+import styles from './WeeklyStats.module.css'; // Import the CSS module
 
 const formatTime = (date) => {
     const options = { hour: '2-digit', minute: '2-digit' };
@@ -83,7 +84,6 @@ const WeeklyStats = ({ memberId }) => {
 
     useEffect(() => {
         getWeekDataFromStats();
-        console.log("Events array:", events); // 콘솔에 events 배열을 출력하여 디버깅
     }, [getWeekDataFromStats]);
 
     const getWeekRange = (date) => {
@@ -101,13 +101,24 @@ const WeeklyStats = ({ memberId }) => {
     };
 
     return (
-        <div>
-            <h2>주간 통계</h2>
-            <div style={{ marginBottom: '15px' }}>
-                <p>지각 횟수: {stats.lateCount}</p>
-                <p>결근 횟수: {stats.absentCount}</p>
-                <p>조기 퇴근 횟수: {stats.earlyLeaveCount}</p>
-            </div>
+        <div className={styles.statsContainer}>
+        <h2>주간 출근 기록</h2>
+        
+                <ul>
+                    <li className={styles.statItem}>
+                        <span className={styles.statLabel}>지각</span>
+                        <span className={styles.statValue}>{stats.lateCount} 회</span>
+                    </li>
+                    <li className={styles.statItem}>
+                        <span className={styles.statLabel}>결근</span>
+                        <span className={styles.statValue}>{stats.absentCount} 회</span>
+                    </li>
+                    <li className={styles.statItem}>
+                        <span className={styles.statLabel}>조기 퇴근</span>
+                        <span className={styles.statValue}>{stats.earlyLeaveCount} 회</span>
+                    </li>
+                </ul>
+
             <FullCalendar
                 plugins={[dayGridPlugin, interactionPlugin]}
                 initialView="dayGridWeek"

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.nbti.dao.ChatDAO;
 import com.nbti.dto.ChatDTO;
-import com.nbti.dto.ChatFileDTO;
+import com.nbti.dto.ChatImgDTO;
 
 @Service
 public class ChatService {
@@ -24,11 +24,11 @@ public class ChatService {
 		 return dao.insert(dto);
 	}*/
 
-	public List<ChatDTO> getList(int group_seq)throws Exception {
+	public List<ChatImgDTO> getList(int group_seq)throws Exception {
 		return dao.list(group_seq);
 	}
 	
-	public List<ChatDTO> searchList(String content,int group_seq)throws Exception {
+	public List<ChatImgDTO> searchList(String content,int group_seq)throws Exception {
 		return dao.search(content,group_seq);
 	}
 	

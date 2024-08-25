@@ -50,11 +50,15 @@ public class AuthController {
 		MembersDTO dto = new MembersDTO();
 		dto.setPw(encryptedPassword);
 		dto.setId(maps.get("id"));
-
-		boolean result = mServ.login(dto);
-		if (!result) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("login Failed");
-		}
+		
+		String result = mServ.login(dto);
+	    if (result == null) {
+	        // 아이디 또는 비밀번호가 틀린 경우
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디 또는 비밀번호를 확인하세요.");
+	    } else if (result.equals("Y")) {
+	        // ent_yn이 'Y'인 경우
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("휴직 중인 계정입니다.");
+	    }
 
 		Cookie cookie = new Cookie("SESSIONID", dto.getId());
 //	    cookie.setPath("/");

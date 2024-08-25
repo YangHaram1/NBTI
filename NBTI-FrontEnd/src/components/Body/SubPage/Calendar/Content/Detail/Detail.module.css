@@ -7,6 +7,7 @@
     padding: 0 20px;
     border-radius: 10px;
     min-width: 700px;
+    height: 100%;
 }
 
 /* 내 캘린더 / 공유캘린더 */
@@ -218,8 +219,8 @@
     /* border: 2px solid #6B9080; */
 }
 .group_contents {display: flex; justify-content: space-evenly; padding-bottom: 15px;}
-.group_name {flex:3; }
-.group_title {flex:7; border: none;}
+/* .group_name {background-color: #4CAF50;} */
+.group_title {flex:7; border: none; background-color: none; border: 2px solid #b6b5b52f;border-radius: 5px; background-color: #a4c3b200;margin-left: 5px;}
 .groupBtn {display: flex; border: none; margin-top: 10px;}
 .groupBtn > button {flex: 1; padding: 5px; background-color: #6B9080;border: none; cursor: pointer; transition: all ease-in 0.2s; font-weight: bold;}
 .groupBtn > button:first-child{background-color: #6B9080;}
