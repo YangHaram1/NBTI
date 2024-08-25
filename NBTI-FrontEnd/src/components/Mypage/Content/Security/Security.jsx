@@ -5,6 +5,7 @@ import { host } from '../../../../config/config';
 import { useAuthStore } from '../../../../store/store';
 import { useNavigate } from 'react-router';
 import { format, parseISO } from 'date-fns';
+import Swal from 'sweetalert2';
 // import axios from 'axios';
 
 
@@ -51,7 +52,12 @@ export const Security = () => {
                 setShowNewPwBox(true);
                 setShowChangePwBox(false);
             }else{
-                alert("비밀번호가 옳바르지 않습니다.");
+                Swal.fire({
+                    icon:'warning',
+                    title:'비밀번호가 옳바르지 않습니다.',
+                    showConfirmButton: false,
+                    timer: 1500
+            })
             }
         })
     }
@@ -59,14 +65,24 @@ export const Security = () => {
     const handleChangeNewPw = () => {
         // 비밀번호 유효성 검사
         if (!isPasswordValid) {
-            alert('비밀번호는 영어 대소문자, 숫자, 특수문자 중 3종류 이상을 조합하여 최소 8자리로 설정해주세요.');
+            Swal.fire({
+                icon:'warning',
+                title:'비밀번호는 영어 대소문자, 숫자, 특수문자 중 3종류 이상을 조합하여 최소 8자리로 설정해주세요.',
+                showConfirmButton: false,
+                timer: 1500
+        })
             return;
         }
 
         axios.post(`${host}/members/changePw`, { pw: newPw })
             .then((resp) => {
                 if (resp.data) {
-                    alert("새로운 비밀번호로 다시 로그인 해주세요");
+                    Swal.fire({
+                        icon:'warning',
+                        title:'새로운 비밀번호로 다시 로그인 해주세요',
+                        showConfirmButton: false,
+                        timer: 1500
+                })
                     axios.delete(`${host}/auth`)
                         .then(() => {
                             sessionStorage.removeItem("loginID");
@@ -142,7 +158,7 @@ export const Security = () => {
             <div className={`${styles.new_pw_box} ${showNewPwBox ? styles.show : ''}`}>
                     <div className={styles.new_pw_title}>새로운 비밀번호를 입력해주세요</div>
                     <div className={styles.new_pw_content1}>비밀번호는 영어 대소문자, 숫자, 특수문자 중 3종류 이상을 조합하여 최소 8자리</div>
-                    <div className={styles.new_pw_content2}>이상의 길이로 구성해주세요 (유효성 검사 아직x)</div>
+                    <div className={styles.new_pw_content2}>이상의 길이로 구성해주세요</div>
                     <div className={styles.input}>
                         <input type='password' placeholder='새로운 비밀번호를 입력해주세요' onChange={handleNewPw} value={newPw}></input><br></br>
                     </div>

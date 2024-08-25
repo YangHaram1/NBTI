@@ -604,27 +604,27 @@ FROM (
         ROW_NUMBER() OVER (ORDER BY ap.temp_seq DESC) AS rown 
     FROM
         approval ap
-    JOIN
+     left outer JOIN
         doc_vacation dv ON ap.temp_seq = dv.vacation_seq
-    JOIN
+     left outer JOIN
         doc_sub dc ON ap.doc_sub_seq = dc.doc_form_seq
-    JOIN
+     left outer JOIN
         vacation_category vc ON dv.vacation_category = vc.VCATEGORY_SEQ
-    JOIN
+     left outer JOIN
         approval_doc_state ads ON ap.doc_state = ads.doc_state_code
-    JOIN
+     left outer JOIN
         members m ON ap.member_id = m.id
-    JOIN
+     left outer JOIN
         teams t ON m.team_code = t.team_code
-    JOIN
+    left outer  JOIN
         department d ON t.dept_code = d.dept_code
-    JOIN
+    left outer JOIN
         job j ON m.job_code = j.job_code
-    WHERE 
-        (#{team} IS NULL OR #{team} = '' OR t.team_code = #{team})
+        where dc.doc_form_seq=3
+         and (#{team} IS NULL OR #{team} = '' OR t.team_code = #{team})
 ) a
 WHERE a.rown BETWEEN #{start} AND #{end}
-ORDER BY a.seq DESC
+ORDER BY a.seq
 </select>
 
     <select id="getTotalRecordCount" resultType="int">

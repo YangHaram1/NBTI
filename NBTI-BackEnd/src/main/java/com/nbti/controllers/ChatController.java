@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nbti.dto.ChatDTO;
+import com.nbti.dto.ChatImgDTO;
 import com.nbti.dto.Group_memberDTO;
 import com.nbti.services.ChatService;
 import com.nbti.services.Group_memberService;
@@ -41,9 +42,9 @@ public class ChatController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<ChatDTO>> get(String search, @RequestParam(defaultValue = "0") int chatSeq)
+	public ResponseEntity<List<ChatImgDTO>> get(String search, @RequestParam(defaultValue = "0") int chatSeq)
 			throws Exception {
-		List<ChatDTO> list = new ArrayList<>();
+		List<ChatImgDTO> list = new ArrayList<>();
 		System.out.println(chatSeq);
 		if (search != null) {
 			list = cserv.searchList(search, chatSeq);

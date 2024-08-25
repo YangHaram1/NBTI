@@ -85,6 +85,7 @@ public class ApprovalDAO {
 	
 	// 결재완료 시 문서 번호 생성
 	public void createApprovalSeq(int temp_seq, String docHeader) {
+//		System.out.println("문서번호 생성");
 		Map<String, Object> map = new HashMap<>();
 		map.put("temp_seq", temp_seq);
 		map.put("docHeader", docHeader);

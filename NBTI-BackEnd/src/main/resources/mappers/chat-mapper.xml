@@ -12,9 +12,11 @@
 		</selectKey>
 	</insert>
 
-	<select id="list" resultType="com.nbti.dto.ChatDTO">
-		select *from chat where
-		group_seq=#{param} order by seq
+	<select id="list" resultType="com.nbti.dto.ChatImgDTO">
+		select c.*,m.member_img
+		from chat c
+		left join members m on c.member_id= m.id
+		where c.group_seq=#{param} order by seq
 	</select>
 
 	<select id="search" resultType="com.nbti.dto.ChatDTO">

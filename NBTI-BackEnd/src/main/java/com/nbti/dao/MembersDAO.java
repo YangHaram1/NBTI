@@ -17,12 +17,9 @@ public class MembersDAO {
 	@Autowired
 	private SqlSession mybatis;
 
-	public boolean login(MembersDTO dto) {
-		String result = mybatis.selectOne("Member.login", dto);
-		if (result != null) {
-			return true;
-		}
-		return false;
+	public String login(MembersDTO dto) {
+	    // 사용자 ID와 비밀번호, 그리고 ent_yn 상태를 확인
+	    return mybatis.selectOne("Member.login", dto);
 	}
 
 	public void updateUser(MembersDTO dto) {
