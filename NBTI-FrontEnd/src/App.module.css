@@ -1,15 +1,16 @@
 .unread {
-  position: fixed;
-  border: 1px solid black;
-  background-color: red;
-  color: white;
+  background-color: #ee7c69;
+  font-size: 15px;
   border-radius: 20px;
-  top: 5px;
-  right: 105px;
-  width: 35px;
+  color: #fff;
   display: flex;
   justify-content: center;
+  position: fixed;
+  right: 65px;
+  top: 5px;
+  width: 35px;
   z-index: 999;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.19), 0 2px 3px rgba(0, 0, 0, 0.23);
 }
 
 .chatapp {
@@ -22,13 +23,12 @@
   top: 100px;
   right: 100px;
   flex-direction: column;
-  box-shadow: 
-    0px 0px 15px 5px rgba(52, 213, 114, 0),   /* 부드러운 네온 글로우 */
-    0px 4px 10px rgba(0, 0, 0, 0.25),          /* 깊이 있는 그림자 */
-    -10px -10px 20px rgba(255, 255, 255, 0.1), /* 입체감 있는 그림자 (밝은 부분) */
-    5px 5px 15px rgba(0, 0, 0, 0.6)          /* 색상 대비 그림자 */
-    ;
-    border-radius: 20px;
+  box-shadow: 0px 0px 15px 5px rgba(52, 213, 114, 0),
+    /* 부드러운 네온 글로우 */ 0px 4px 10px rgba(0, 0, 0, 0.25),
+    /* 깊이 있는 그림자 */ -10px -10px 20px rgba(255, 255, 255, 0.1),
+    /* 입체감 있는 그림자 (밝은 부분) */ 5px 5px 15px rgba(0, 0, 0, 0.6)
+      /* 색상 대비 그림자 */;
+  border-radius: 20px;
 }
 
 .chatContainer {
@@ -39,11 +39,10 @@
   top: 100px;
   right: 100px;
   flex-direction: column;
-  box-shadow: 
-    0px 0px 15px 5px rgba(52, 213, 114, 0),   /* 부드러운 네온 글로우 */
-    0px 4px 10px rgba(0, 0, 0, 0.25),          /* 깊이 있는 그림자 */
-    -10px -10px 20px rgba(255, 255, 255, 0.1), /* 입체감 있는 그림자 (밝은 부분) */
-    5px 5px 15px rgba(0, 0, 0, 0.6)          /* 색상 대비 그림자 */
-    ;
-    border-radius: 20px;
+  box-shadow: 0px 0px 15px 5px rgba(52, 213, 114, 0),
+    /* 부드러운 네온 글로우 */ 0px 4px 10px rgba(0, 0, 0, 0.25),
+    /* 깊이 있는 그림자 */ -10px -10px 20px rgba(255, 255, 255, 0.1),
+    /* 입체감 있는 그림자 (밝은 부분) */ 5px 5px 15px rgba(0, 0, 0, 0.6)
+      /* 색상 대비 그림자 */;
+  border-radius: 20px;
 }
