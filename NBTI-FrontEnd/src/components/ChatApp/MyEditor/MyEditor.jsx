@@ -10,6 +10,7 @@ import { api } from '../../../config/config'
 import { host } from '../../../config/config'
 
 //import html2canvas from 'html2canvas';
+import { Swal } from 'sweetalert2';
 
 const MyEditor = ({ sidebarRef, editorRef }) => {
 
@@ -76,7 +77,7 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
 
         }}
         init={{
-          width:"auto",
+          width: "auto",
           height: "126",
           menubar: false,
           plugins: 'wordcount anchor  code', //image
@@ -117,16 +118,16 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
               onSetup: (e) => {
               },
               onAction: (e) => {
-               /* const sidebar = sidebarRef.current;
-                const container = dragRef.current;
-                if (sidebar && container) {
-                  const containerRect = container.getBoundingClientRect();
-                  const x = containerRect.left-1100;
-                  const y =  containerRect.top-200;
-                  sidebar.style.top = `${y}px`;
-                  sidebar.style.left = `${x}px`;
-                  console.log(`${y}:${x}`);
-                }*/
+                /* const sidebar = sidebarRef.current;
+                 const container = dragRef.current;
+                 if (sidebar && container) {
+                   const containerRect = container.getBoundingClientRect();
+                   const x = containerRect.left-1100;
+                   const y =  containerRect.top-200;
+                   sidebar.style.top = `${y}px`;
+                   sidebar.style.left = `${x}px`;
+                   console.log(`${y}:${x}`);
+                 }*/
                 setEmoticonDisplay();
 
               },
@@ -136,7 +137,16 @@ const MyEditor = ({ sidebarRef, editorRef }) => {
                 if (!event.shiftKey) {
                   event.preventDefault(); // 기본 Enter 키 동작을 막음
                   if (editorRef.current.getContent() !== '') {
-                    ws.current.send(editorRef.current.getContent());
+                    if (editorRef.current.getContent().length > 1500) {
+                      Swal.fire({
+                        icon: 'error',
+                        title: "채팅",
+                        text: '내용이 너무 깁니다.'
+                      })
+                    }else{
+                      ws.current.send(editorRef.current.getContent());
+                    }
+                 
                   }
                   editorRef.current.setContent('');
                   // alert("메세지보냄");
