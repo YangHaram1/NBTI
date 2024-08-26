@@ -169,6 +169,8 @@
   font-size: 13px;
   max-height: 100px;
   overflow-y: scroll;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .replyOutputWrap .replyOutput .likes {
