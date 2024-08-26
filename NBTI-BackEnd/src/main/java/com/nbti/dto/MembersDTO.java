@@ -10,6 +10,8 @@ public class MembersDTO {
 	private int vacation_period;
 	private String member_img;
 	private Timestamp pw_change_date;
+
+
 	public String getId() {
 		return id;
 	}

@@ -22,7 +22,9 @@ public class MembersDAO {
 	    return mybatis.selectOne("Member.login", dto);
 	}
 
-	public void updateUser(MembersDTO dto) {
+	public void updateUser(MembersDTO dto) throws Exception {
+		System.out.println(dto.getEnt_yn());
+		System.out.println(dto.getMember_level());
 		mybatis.update("Member.updateMember", dto);
 	}
 
@@ -39,7 +41,9 @@ public class MembersDAO {
 
 		return mybatis.selectOne("Member.mydata", id);
 	}
-
+	public List<MembersDTO> selectEmail(String email) {
+	    return mybatis.selectList("Member.selectEmail", email);
+	}
 	public void updateMyData(MembersDTO dto) {
 		mybatis.update("Member.updateMyData", dto);
 	}

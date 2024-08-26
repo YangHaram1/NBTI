@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -140,16 +141,31 @@ public class MembersController {
 		
 		return ResponseEntity.ok().build();
 	}
-	// 관리자 사용자 수정
-	 @PutMapping("/updateUser")
-	    public ResponseEntity<Void> updateUser(@RequestBody MembersDTO dto) {
-	        try {
-	            mServ.updateUser(dto);
-	            return ResponseEntity.ok().build();  // 성공적으로 처리된 경우 200 OK 응답 반환
-	        } catch (Exception e) {
-	            return ResponseEntity.notFound().build();  // 데이터가 존재하지 않는 경우 404 Not Found 응답 반환
-	        }
+	@PostMapping("/checkId")
+	public boolean checkId(@RequestBody Map<String, String> requestBody) {
+	    String id = requestBody.get("id");
+	    
+	    MembersDTO member = mServ.selectMyData(id);
+	  
+	    return member == null;
+	}
+	@PostMapping("/checkEmail")
+	public boolean checkEmail(@RequestBody Map<String, String> requestBody) {
+	    String email = requestBody.get("email");
+	    return mServ.checkEmail(email);
+	}
+	@PutMapping("/updateUser")
+	public ResponseEntity<String> updateUser(@RequestBody MembersDTO dto) throws Exception {
+		System.out.println(dto.getEnt_yn());
+		System.out.println(dto.getMember_level());
+	    try {
+	        mServ.updateUser(dto);
+	        return ResponseEntity.ok("회원 정보가 성공적으로 업데이트되었습니다."); // 응답 본문 설정
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 정보 업데이트 중 오류가 발생했습니다."); // 오류 메시지 설정
 	    }
+	}
 	// 관리자 회원 탈퇴
 	@DeleteMapping("/deleteUser/{id}")
 	public ResponseEntity<Void> deleteUser(@PathVariable("id") String id){
@@ -323,4 +339,10 @@ public class MembersController {
     	   }
            return list;
        }
+       
+   	@ExceptionHandler(Exception.class)
+   	public String exceptionHandler(Exception e) {
+   		e.printStackTrace();
+   		return "error";
+   	}
 }

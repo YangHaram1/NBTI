@@ -24,10 +24,14 @@ public class MembersService {
 	}
 
 	public MembersDTO selectMyData(String id) {
-
+		
 		return mdao.selectMyData(id);
+		
 	}
-
+	public boolean checkEmail(String email) {
+	    List<MembersDTO> members = mdao.selectEmail(email);
+	    return members.isEmpty();  // 이메일이 존재하지 않으면 true, 존재하면 false 반환
+	}
 	public void updateMyData(MembersDTO dto) {
 		mdao.updateMyData(dto);
 	}
@@ -50,10 +54,16 @@ public class MembersService {
 	}
 
 	// 관리자 사용자 수정
-	public void updateUser(MembersDTO dto) {
-		mdao.updateUser(dto);
+	public void updateUser(MembersDTO dto) throws Exception {
+	    try {
+	        // 예: 데이터베이스 업데이트 쿼리
+	        mdao.updateUser(dto);
+	        System.out.println("User updated successfully: " + dto);
+	    } catch (Exception e) {
+	        System.err.println("Error updating user: " + e.getMessage());
+	        throw e;  // 예외를 호출자에게 전달
+	    }
 	}
-
 	// 관리자 회원 탈퇴
 	public void deleteUser(String id) {
 		mdao.deleteUser(id);
