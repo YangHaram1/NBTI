@@ -323,7 +323,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                 const eventList = resp.data.map(event => {
                     let color = '';
                     let textColor = '';
-                    if(event.calendar_name === "내 캘린더" ){
+                    if(event.calendar_name === "내 캘린더" && event.member_id === loginID){
                         color='#BDE6F3';
                         textColor = "#2e2e2e";
                     }else{
