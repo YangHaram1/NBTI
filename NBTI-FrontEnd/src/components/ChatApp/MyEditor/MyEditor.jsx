@@ -8,9 +8,7 @@ import axios from 'axios';
 import { useCheckList } from '../../../store/store';
 import { api } from '../../../config/config'
 import { host } from '../../../config/config'
-
-//import html2canvas from 'html2canvas';
-import { Swal } from 'sweetalert2';
+import  Swal  from 'sweetalert2';
 
 const MyEditor = ({ sidebarRef, editorRef }) => {
 
