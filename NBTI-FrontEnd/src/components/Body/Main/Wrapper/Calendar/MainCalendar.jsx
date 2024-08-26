@@ -23,7 +23,7 @@ export const MainCalendar = () => {
             axios.get(`${host}/calendar`)
                 .then((resp) => {
                     const eventList = resp.data.map(event => {
-                        console.log("!!"+JSON.stringify(resp));
+                       
                         let color = '';
                         let textColor = '';
                         // // calendar_title_code에 따른 색상 설정
