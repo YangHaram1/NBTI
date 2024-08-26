@@ -84,45 +84,48 @@ AND start_date &lt; TRUNC(SYSDATE, 'IW') + 7;
     </select>
 
     <!-- Get Yearly Stats -->
-    <select id="getYearlyStats" parameterType="string" resultType="map">
-        SELECT
-            COUNT(CASE 
-                WHEN start_date >= TRUNC(SYSDATE, 'YYYY') 
-                     AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
-                     AND start_date &gt; TRUNC(start_date) + INTERVAL '09:00' HOUR TO MINUTE 
-                THEN 1 
-                ELSE NULL 
-            END) AS lateCount,
-            COUNT(CASE 
-                WHEN start_date >= TRUNC(SYSDATE, 'YYYY') 
-                     AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
-                     AND end_date IS NULL 
-                     AND TRUNC(start_date) = TRUNC(SYSDATE) 
-                THEN 1 
-                ELSE NULL 
-            END) AS absentCount,
-            COUNT(CASE 
-                WHEN start_date >= TRUNC(SYSDATE, 'YYYY') 
-                     AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
-                     AND end_date IS NOT NULL 
-                     AND end_date &lt; TRUNC(start_date) + INTERVAL '18:00' HOUR TO MINUTE 
-                THEN 1 
-                ELSE NULL 
-            END) AS earlyLeaveCount,
-            COUNT(DISTINCT TRUNC(start_date)) AS statsDay, -- 근무일 수 계산
-            NVL(SUM(
-                CASE
-                    WHEN end_date IS NOT NULL THEN
-                        (end_date - start_date) * 24 -- 총 근무 시간 계산
-                    ELSE
-                        0
-                END
-            ), 0) AS statsHours
-        FROM attendance
-        WHERE member_id = #{memberId}
-          AND start_date >= TRUNC(SYSDATE, 'YYYY')  
-          AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
-    </select>
+   <!-- Get Yearly Stats -->
+<select id="getYearlyStats" parameterType="string" resultType="map">
+    SELECT
+        COUNT(CASE 
+            WHEN start_date >= TRUNC(SYSDATE, 'YYYY') 
+                 AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
+                 AND start_date > TRUNC(start_date) + INTERVAL '09:00' HOUR TO MINUTE 
+            THEN 1 
+            ELSE NULL 
+        END) AS lateCount,
+        COUNT(CASE 
+            WHEN start_date >= TRUNC(SYSDATE, 'YYYY') 
+                 AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
+                 AND end_date IS NULL 
+                 AND TRUNC(start_date) = TRUNC(SYSDATE) 
+                 AND SYSDATE > TRUNC(start_date) + INTERVAL '18:00' HOUR TO MINUTE
+            THEN 1 
+            ELSE NULL 
+        END) AS absentCount,
+        COUNT(CASE 
+            WHEN start_date >= TRUNC(SYSDATE, 'YYYY') 
+                 AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
+                 AND end_date IS NOT NULL 
+                 AND end_date &lt; TRUNC(start_date) + INTERVAL '18:00' HOUR TO MINUTE 
+            THEN 1 
+            ELSE NULL 
+        END) AS earlyLeaveCount,
+        COUNT(DISTINCT TRUNC(start_date)) AS statsDay,
+        NVL(SUM(
+            CASE
+                WHEN end_date IS NOT NULL THEN
+                    (end_date - start_date) * 24
+                ELSE
+                    0
+            END
+        ), 0) AS statsHours
+    FROM attendance
+    WHERE member_id = #{memberId}
+      AND start_date >= TRUNC(SYSDATE, 'YYYY')  
+      AND start_date &lt; TRUNC(SYSDATE, 'YYYY') + INTERVAL '1' YEAR
+</select>
+
 <select id="getMonthlyRecords" parameterType="map" resultType="com.nbti.dto.AttendanceDTO">
     SELECT *  
     FROM attendance  
