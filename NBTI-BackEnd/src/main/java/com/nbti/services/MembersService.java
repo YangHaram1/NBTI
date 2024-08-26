@@ -40,7 +40,9 @@ public class MembersService {
 	// 회원가입
 	public void insert(MembersDTO dto) {
 		mdao.insert(dto);
-	}
+		// calendar_list 사용자 개인 캘린더 추가
+		mdao.insertCalendarList(dto.getId());
+	}	
 
 	// 사용자 조회
 	public List<Map<String, Object>> getMembers() {

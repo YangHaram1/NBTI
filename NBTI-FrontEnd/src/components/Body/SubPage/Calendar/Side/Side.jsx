@@ -11,7 +11,7 @@ import SweetAlert from '../../../../../function/SweetAlert';
 
 
 export const Side = ({ setAddOpen , setCalendarModalOpen, calendarModalOpen}) => {
-  const { calendarList, setCalendarSelectList, publicList, setPublicList } = useCalendarList();
+  const { calendarList, setCalendarSelectList, publicList, privateList, setPublicList, setPrivateList } = useCalendarList();
   const sharedCalendarCount = useRef(0); 
   const loginID = localStorage.getItem('loginID') || sessionStorage.getItem('loginID'); 
 
@@ -131,6 +131,7 @@ export const Side = ({ setAddOpen , setCalendarModalOpen, calendarModalOpen}) =>
             // 최종적으로 상태 업데이트
             sharedCalendarCount.current = publicList.length; // useRef를 사용하여 값 업데이트
             setPublicList(publicList);
+            setPrivateList(privateList[0]);
         })
         .catch((error) => {
             console.error("목록 출력 error :", error);
@@ -204,10 +205,13 @@ const handleDeleteSharedCalendar = (calendar_id) => {
                 <span><i className="fa-solid fa-circle"></i></span>
                 <span>전체 일정</span>
               </li>
-              <li onClick={myCalender}>
-                <span><i className="fa-solid fa-circle" style={{ color: '#61a5c2' }}></i></span>
-                <span>내 일정</span>
-              </li>
+                {console.log("privateList : " + privateList)}
+                <li> 
+                    <span>
+                        <i className="fa-solid fa-circle" style={{ color: '#61a5c2' }}></i>
+                    </span>
+                    <span onClick={()=>sharedCalendar(privateList.calendar_id)}>{privateList.calendar_name}</span> 
+                </li>
             </ul>
           </li>
         </ul>
