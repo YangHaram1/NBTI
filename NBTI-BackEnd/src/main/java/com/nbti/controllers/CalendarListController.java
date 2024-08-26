@@ -33,13 +33,13 @@ public class CalendarListController {
 	public ResponseEntity<List<CalendarListDTO>> list () throws Exception{
 		String member_id = (String) session.getAttribute("loginID");
     	List<CalendarListDTO> list = clserv.list(member_id);
-//    	for(CalendarListDTO l:list) {
+    	for(CalendarListDTO l:list) {
 //    		System.out.println("calendar id : " + l.getCalendar_id());
 //    		System.out.println("member id : " + l.getMember_id());
 //    		System.out.println("calendar name : " + l.getCalendar_name());
 //    		System.out.println("calendar type : " + l.getCalendar_type());
 //    		System.out.println("");
-//    	}
+    	}
     	return ResponseEntity.ok(list);
 	}
 	
