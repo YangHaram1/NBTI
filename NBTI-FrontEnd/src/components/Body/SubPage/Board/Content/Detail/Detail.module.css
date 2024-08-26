@@ -12,7 +12,7 @@
   height: 90px;
   padding: 20px 10px;
 }
-.content{
+.content {
   display: flex;
   max-height: 500px;
   overflow: auto;
@@ -261,6 +261,8 @@
 .replyOutputWrap .replyOutput .replyContent {
   max-height: 130px;
   overflow-y: scroll;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .replyOutputWrap .replyOutput .likes {
