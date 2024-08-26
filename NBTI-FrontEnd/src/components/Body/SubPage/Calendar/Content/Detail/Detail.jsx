@@ -16,7 +16,7 @@ import SweetAlert from '../../../../../../function/SweetAlert';
 
 export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModalOpen}) => {
     const loginID = localStorage.getItem('loginID') || sessionStorage.getItem('loginID'); //세션에 저장된 내 ID 
-    const { calendarList ,setCalendarList , calendarSelectList, setSharedCalendarName,membersList,setMembersList , publicList } = useCalendarList(); //주스탠드
+    const { calendarList ,setCalendarList , calendarSelectList, setSharedCalendarName,membersList,setMembersList , publicList, privateList } = useCalendarList(); //주스탠드
 
     // ===== 상태 =====
     const [modalOpen, setModalOpen] = useState(false); // 모달창 열기/닫기
@@ -70,23 +70,18 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
 
         // 캘린더 이름 선택하는 콤보박스
         if (name === 'calendar_id') {
-            if (value === '1') {
-                setInsert((prev) => ({
-                    ...prev,
-                    [name]: value,
-                    calendar_name: '내 캘린더',
-                }));
+            let cal = publicList.find(p => p.calendar_id === Number(value));
+
+            if (cal === undefined) {
+                cal = privateList;
             }
-            else {
-                let cal = publicList.find(p => p.calendar_id === Number(value));
-                // console.log("find : " + cal.calendar_id + ", " + cal.calendar_name);
-        
-                setInsert((prev) => ({
-                    ...prev,
-                    [name]: value,
-                    calendar_name: cal.calendar_name,
-                }));
-            }
+            // console.log("find : " + cal.calendar_id + ", " + cal.calendar_name);
+    
+            setInsert((prev) => ({
+                ...prev,
+                [name]: value,
+                calendar_name: cal.calendar_name,
+            }));
         }
         else {
             setInsert((prev) => ({
@@ -101,6 +96,8 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
         // 사용자가 입력한 시작 날짜, 시작 시간, 종료 날짜, 종료 시간, 제목 등 가져와서
         const { start_date, start_time, end_date, end_time, calendar_name, title, contents } = insert;
         
+        console.log('calendar name : ' + calendar_name);
+
         // 모두 입력되었는지 확인
         if (!start_date || !start_time || !end_date || !end_time || !calendar_name || !title ) {
             // alert('모든 필드를 입력!');
@@ -108,7 +105,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                 icon: "error",
                 title: "일정",
                 text: "모든 필드를 입력해주세요!",
-              });
+            });
             return;
         }
     
@@ -166,7 +163,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                 setEvents(prev => [
                     ...prev,
                     {
-                        color : calendar_name === 1 ? "#BDE6F3" : "#F88F5A" ,
+                        color : calendar_name === "내 캘린더" ? "#BDE6F3" : "#F88F5A" ,
                         // seq: seq,
                         title: title, //제목
                         start: startDate, //사작
@@ -271,7 +268,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                 icon: "error",
                 title: "수정",
                 text: "제목과 내용을 모두 입력해주세요.",
-              }); 
+            }); 
             return;
         }
 
@@ -326,7 +323,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                 const eventList = resp.data.map(event => {
                     let color = '';
                     let textColor = '';
-                    if(event.calendar_id === 1 ){
+                    if(event.calendar_name === "내 캘린더" ){
                         color='#BDE6F3';
                         textColor = "#2e2e2e";
                     }else{
@@ -480,7 +477,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                             {isEditing ? ( //수정하기
                                 <div className={styles.modalInner}>
                                     <div className={styles.detail}>
-                                        <p>{selectedEventSave.extendedProps.calendar_name == 1 ? '내 캘린더' : selectedEventSave.extendedProps.calendar_name}</p>
+                                        <p>{selectedEventSave.extendedProps.calendar_name}</p>
                                         <hr/>
                                         <p>작성자 : {selectedEventSave ? selectedEventSave.extendedProps.member_name : ""}</p>
                                         <p>제목 : <input type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} /></p>
@@ -496,8 +493,7 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                             ) : ( // 수정 전
                                 <div className={styles.modalInner}>
                                 <div className={styles.detail}>
-                                    <p>{selectedEventSave && selectedEventSave.extendedProps && selectedEventSave.extendedProps.calendar_name == 1
-                                        ? '내 캘린더' : (selectedEventSave ? selectedEventSave.extendedProps.calendar_name : "")}</p>
+                                    <p>{selectedEventSave && selectedEventSave.extendedProps && selectedEventSave.extendedProps.calendar_name}</p>
                                     <hr/>
                                     <p>작성자 : {selectedEventSave ? selectedEventSave.extendedProps.member_name : ""}</p>
                                     <p>제목 : {selectedEventSave ? selectedEventSave.title : ""}</p>
@@ -528,9 +524,10 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
                             <div className={styles.modalInner}>
                                 <div>
                                     <p>캘린더</p>
+                                    {console.log("calendar id : " + privateList.calendar_id + ", calendar name : " + privateList.calendar_name)}
                                     <select value={insert.calendar_id} name="calendar_id" onChange={handleChange}>
                                         <option value='0'>선택하세요</option>
-                                        <option value='1'>내 캘린더</option>
+                                        <option value={privateList.calendar_id}>{privateList.calendar_name}</option>
                                         {publicList.map((calendar, index) => (
                                             <option key={index} value={calendar.calendar_id}>{calendar.calendar_name}</option>
                                         ))}
