@@ -24,10 +24,14 @@ public class MembersService {
 	}
 
 	public MembersDTO selectMyData(String id) {
-
+		
 		return mdao.selectMyData(id);
+		
 	}
-
+	public boolean checkEmail(String email) {
+	    List<MembersDTO> members = mdao.selectEmail(email);
+	    return members.isEmpty();  // 이메일이 존재하지 않으면 true, 존재하면 false 반환
+	}
 	public void updateMyData(MembersDTO dto) {
 		mdao.updateMyData(dto);
 	}

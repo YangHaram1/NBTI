@@ -17,8 +17,10 @@
 	<select id="mydata" resultType="com.nbti.dto.MembersDTO">
 		select * from members where id =
 		#{id}
-	</select>
-
+	</select>	
+<select id="selectEmail" resultType="com.nbti.dto.MembersDTO">
+    SELECT * FROM members WHERE email = #{email}
+</select>
 	<update id="updateUser">
 		UPDATE members
 		SET address = #{address},

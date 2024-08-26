@@ -140,6 +140,19 @@ public class MembersController {
 		
 		return ResponseEntity.ok().build();
 	}
+	@PostMapping("/checkId")
+	public boolean checkId(@RequestBody Map<String, String> requestBody) {
+	    String id = requestBody.get("id");
+	    
+	    MembersDTO member = mServ.selectMyData(id);
+	  
+	    return member == null;
+	}
+	@PostMapping("/checkEmail")
+	public boolean checkEmail(@RequestBody Map<String, String> requestBody) {
+	    String email = requestBody.get("email");
+	    return mServ.checkEmail(email);
+	}
 	// 관리자 사용자 수정
 	 @PutMapping("/updateUser")
 	    public ResponseEntity<Void> updateUser(@RequestBody MembersDTO dto) {

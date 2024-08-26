@@ -39,7 +39,9 @@ public class MembersDAO {
 
 		return mybatis.selectOne("Member.mydata", id);
 	}
-
+	public List<MembersDTO> selectEmail(String email) {
+	    return mybatis.selectList("Member.selectEmail", email);
+	}
 	public void updateMyData(MembersDTO dto) {
 		mybatis.update("Member.updateMyData", dto);
 	}
