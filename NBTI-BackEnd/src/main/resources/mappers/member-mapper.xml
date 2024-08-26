@@ -18,20 +18,20 @@
 		select * from members where id =
 		#{id}
 	</select>	
-<select id="selectEmail" resultType="com.nbti.dto.MembersDTO">
-    SELECT * FROM members WHERE email = #{email}
-</select>
+	<select id="selectEmail" resultType="com.nbti.dto.MembersDTO">
+		select * from members where email = #{email}
+	</select>
 	<update id="updateUser">
-		UPDATE members
-		SET address = #{address},
-		member_call =
-		#{member_call},
-		email = #{email},
-		team_code = #{team_code},0
-		job_code =
-		#{job_code},
-		member_level = #{member_level}
-		WHERE id = #{id}
+   UPDATE members
+    SET address = #{address},
+        member_call = #{member_call},
+        email = #{email},
+        team_code = #{team_code},
+        job_code = #{job_code},
+        member_level = #{member_level},
+        ent_yn = #{ent_yn}
+        
+    WHERE id = #{id}
 	</update>
 
 	<update id="updateMyData">

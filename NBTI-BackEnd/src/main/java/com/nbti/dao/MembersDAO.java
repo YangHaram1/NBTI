@@ -22,7 +22,7 @@ public class MembersDAO {
 	    return mybatis.selectOne("Member.login", dto);
 	}
 
-	public void updateUser(MembersDTO dto) {
+	public void updateUser(MembersDTO dto) throws Exception {
 		mybatis.update("Member.updateMember", dto);
 	}
 
