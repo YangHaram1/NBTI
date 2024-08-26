@@ -23,17 +23,38 @@ export const MainCalendar = () => {
             axios.get(`${host}/calendar`)
                 .then((resp) => {
                     const eventList = resp.data.map(event => {
-
+                        console.log("!!"+JSON.stringify(resp));
                         let color = '';
                         let textColor = '';
-                        // calendar_title_code에 따른 색상 설정
-                        if(event.calendar_name == 1 ){
-                            color='#61a5c2';
+                        // // calendar_title_code에 따른 색상 설정
+                        // if(event.calendar_name === "내 캘린더" && event.member_id === loginID){
+                        //     color='#61a5c2';
+                        //     textColor = "#2e2e2e";
+                        // }else{
+                        //     color='#fb8500';
+                        //     textColor = "#2e2e2e";
+                        // }
+                        // 내 캘린더의 이벤트 처리
+                        if (event.calendar_name === "내 캘린더" && event.member_id === loginID) {
+                            color = '#BDE6F3';
                             textColor = "#2e2e2e";
-                        }else{
-                            color='#fb8500';
+                        } 
+                        // 공유 캘린더의 이벤트 처리
+                        else if (event.calendar_name !== "내 캘린더") {
+                            color = '#F88F5A';
                             textColor = "#2e2e2e";
-                        }
+                        }// 그 외 조건에 부합하지 않는 이벤트는 무시
+                    else {
+                        return  {
+                            seq: '',
+                            title: '',
+                            start: '',
+                            end: '',
+                            color : '',
+                            textColor:''
+                        }// 반환하지 않음 (undefined 대신 null을 명시적으로 사용)
+                    }
+                        
     
                         return {
                             seq: event.seq,
