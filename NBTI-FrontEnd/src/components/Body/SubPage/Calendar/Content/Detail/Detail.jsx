@@ -316,47 +316,128 @@ export const Detail = ({ setAddOpen, addOpen, calendarModalOpen, setCalendarModa
     };
 
     // 목록 출력
+    // useEffect(() => {
+    //     axios.get(`${host}/calendar`)
+    //         .then((resp) => {
+    //             // console.log("ddddd"+JSON.stringify(resp))
+    //             const eventList = resp.data.map(event => {
+    //                 let color = '';
+    //                 let textColor = '';
+
+    //                 if(event.calendar_name === "내 캘린더"){
+    //                     if (event.member_id != loginID) return;
+    //                     color='#BDE6F3';
+    //                     textColor = "#2e2e2e";
+    //                 }else{
+    //                     color='#F88F5A';
+    //                     textColor = "#2e2e2e";
+    //                 }
+
+    //                 return {
+    //                     seq: event.seq,
+    //                     title: event.title,
+    //                     start: event.start_date,
+    //                     end: event.end_date,
+    //                     calendar_id : event.calendar_id,
+    //                     extendedProps: {
+    //                         contents: event.contents,
+    //                         calendar_name :event.calendar_name,
+    //                         member_id : event.member_id,
+    //                     },
+    //                     color,
+    //                     textColor
+    //                 }
+    //             });
+
+    //             setEvents(eventList);
+    //             setCalendarList(eventList); //사이드 목록
+    //         })
+    //         .catch((error) => {
+    //             console.error('목록 출력 Error', error);
+    //         });
+    // }, [selectedEvent, insert, publicList]); // selectedItem이 변경될 때마다 호출
+    // useEffect(() => {
+    //     axios.get(`${host}/calendar`)
+    //         .then((resp) => {
+    //             const eventList = resp.data
+    //                 .filter(event => {
+    //                     // 내 캘린더의 이벤트만 필터링
+    //                     return event.calendar_name === "내 캘린더" && event.member_id === loginID;
+    //                 })
+    //                 .map(event => {
+    //                     let color = '#BDE6F3';
+    //                     let textColor = "#2e2e2e";
+    
+    //                     return {
+    //                         seq: event.seq,
+    //                         title: event.title,
+    //                         start: event.start_date,
+    //                         end: event.end_date,
+    //                         calendar_id: event.calendar_id,
+    //                         extendedProps: {
+    //                             contents: event.contents,
+    //                             calendar_name: event.calendar_name,
+    //                             member_id: event.member_id,
+    //                         },
+    //                         color,
+    //                         textColor
+    //                     };
+    //                 });
+    
+    //             setEvents(eventList);
+    //             setCalendarList(eventList); //사이드 목록
+    //         })
+    //         .catch((error) => {
+    //             console.error('목록 출력 Error', error);
+    //         });
+    // }, [selectedEvent, insert, publicList]);
     useEffect(() => {
         axios.get(`${host}/calendar`)
             .then((resp) => {
-                // console.log("ddddd"+JSON.stringify(resp))
                 const eventList = resp.data.map(event => {
                     let color = '';
                     let textColor = '';
-                    if(event.calendar_name === "내 캘린더" && event.member_id === loginID){
-                        color='#BDE6F3';
+                    
+                    // 내 캘린더의 이벤트 처리
+                    if (event.calendar_name === "내 캘린더" && event.member_id === loginID) {
+                        color = '#BDE6F3';
                         textColor = "#2e2e2e";
-                    }else{
-                        color='#F88F5A';
+                    } 
+                    // 공유 캘린더의 이벤트 처리
+                    else if (event.calendar_name !== "내 캘린더") {
+                        color = '#F88F5A';
                         textColor = "#2e2e2e";
+                    } 
+                    // 그 외 조건에 부합하지 않는 이벤트는 무시
+                    else {
+                        return null; // 반환하지 않음 (undefined 대신 null을 명시적으로 사용)
                     }
-
-
-
+    
                     return {
                         seq: event.seq,
                         title: event.title,
                         start: event.start_date,
                         end: event.end_date,
-                        calendar_id : event.calendar_id,
+                        calendar_id: event.calendar_id,
                         extendedProps: {
                             contents: event.contents,
-                            calendar_name :event.calendar_name,
-                            member_id : event.member_id,
+                            calendar_name: event.calendar_name,
+                            member_id: event.member_id,
                         },
                         color,
                         textColor
-                    }
-                });
-
+                    };
+                }).filter(event => event !== null); // null 값 필터링
+    
                 setEvents(eventList);
                 setCalendarList(eventList); //사이드 목록
             })
             .catch((error) => {
                 console.error('목록 출력 Error', error);
             });
-    }, [selectedEvent, insert, publicList]); // selectedItem이 변경될 때마다 호출
-
+    }, [selectedEvent, insert, publicList]);
+    
+    
     // 상세 내용 보기 
     const handleEventClick = (info) => {
         // console.log("info:" + JSON.stringify(info.event));
