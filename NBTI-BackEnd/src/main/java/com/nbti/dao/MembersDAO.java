@@ -23,6 +23,8 @@ public class MembersDAO {
 	}
 
 	public void updateUser(MembersDTO dto) throws Exception {
+		System.out.println(dto.getEnt_yn());
+		System.out.println(dto.getMember_level());
 		mybatis.update("Member.updateMember", dto);
 	}
 

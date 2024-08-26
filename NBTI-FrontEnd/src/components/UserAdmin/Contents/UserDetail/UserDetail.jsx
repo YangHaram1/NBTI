@@ -199,19 +199,7 @@ const UserDetail = () => {
                     </option>
                 ))}
             </select>
-            <select
-                name="member_level"
-                value={user.member_level}
-                onChange={handleChange}
-                required
-            >
-                <option value="">권한 선택</option>
-                {levels.map(level => (
-                    <option key={level.seq} value={level.seq}>
-                        {getLevelName(level)}
-                    </option>
-                ))}
-            </select>
+
             <input
                 type="text"
                 placeholder="전화번호"

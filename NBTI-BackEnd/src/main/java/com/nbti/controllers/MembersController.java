@@ -156,6 +156,8 @@ public class MembersController {
 	}
 	@PutMapping("/updateUser")
 	public ResponseEntity<String> updateUser(@RequestBody MembersDTO dto) throws Exception {
+		System.out.println(dto.getEnt_yn());
+		System.out.println(dto.getMember_level());
 	    try {
 	        mServ.updateUser(dto);
 	        return ResponseEntity.ok("회원 정보가 성공적으로 업데이트되었습니다."); // 응답 본문 설정
