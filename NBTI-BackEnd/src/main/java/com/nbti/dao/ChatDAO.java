@@ -23,6 +23,10 @@ public class ChatDAO {
 		return dto;
 	}
 	
+	public ChatImgDTO selectOne(int seq) throws Exception{
+		return mybatis.selectOne("Chat.selectOne",seq);
+	}
+	
 	public List<ChatImgDTO> list(int group_seq) throws Exception{
 		return mybatis.selectList("Chat.list",group_seq);
 	}

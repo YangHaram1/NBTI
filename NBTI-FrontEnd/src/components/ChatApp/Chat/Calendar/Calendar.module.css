@@ -11,3 +11,9 @@
     font-size: 10px !important;
     color: black;
 }
+.container fc-view-harness{
+    height: 350px;
+}
+.container fc{
+    height: 100% !important;
+}

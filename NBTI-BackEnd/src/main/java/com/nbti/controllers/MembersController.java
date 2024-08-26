@@ -137,6 +137,7 @@ public class MembersController {
 	    dto.setPw(encryptedPassword);
 
 		mServ.insert(dto);
+		
 		return ResponseEntity.ok().build();
 	}
 	// 관리자 사용자 수정

@@ -183,7 +183,7 @@ const Chat = ({ setDisabled }) => {
     }
     if (count < maxCount) {
       console.log("알림");
-      toast.info(`${item.member_id}님한테 메세지가 왔습니다`, {
+      toast.info(`${item.name}님한테 메세지가 왔습니다`, {
         position: "top-right", // 오른쪽 위에 표시
         autoClose: 5000, // 5초 후 자동으로 닫힘
         hideProgressBar: false, // 진행 바 숨기기: false로 설정하여 진행 바 표시
@@ -378,13 +378,12 @@ const Chat = ({ setDisabled }) => {
         let file = '';
         if (item.upload_seq !== 0) {
           const split = item.message.split('*');
-
           fileCheck = true;
           if (split[2] === '2') {
             file = `<p style="color: blue; cursor: pointer;">${split[0]}</p>`;
           }
           else if (split[2] === '1') {
-            file = `<p style="color: blue; cursor: pointer;"><img src=${host}/images/chat/${split[1]} alt=downloadImage"></img></p>`;
+            file = `<p style='color: blue; cursor: pointer;'><img src='${host}/images/chat/${split[1]}' alt=downloadImage></img></p>`;
           }
 
         }
@@ -410,7 +409,7 @@ const Chat = ({ setDisabled }) => {
                   !idCheck && (<div className={styles.avatar}><img src={(item.member_img === null) ? `${avatar}` : `${host}/images/avatar/${item.member_id}/${item.member_img}`} alt="" /></div>)
                 }
                 <div>
-                  <div className={idCheck ? styles.nameReverse : styles.name}>{item.member_id}</div>
+                  <div className={idCheck ? styles.nameReverse : styles.name}>{item.name}</div>
                   <div className={idCheck ? styles.contentReverse : styles.content}>
                     <div dangerouslySetInnerHTML={{ __html: (check ? temp : (fileCheck ? file : item.message)) }}
                       ref={el => {

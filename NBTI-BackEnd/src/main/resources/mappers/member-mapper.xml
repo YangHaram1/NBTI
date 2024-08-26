@@ -77,6 +77,7 @@
 		#{vacation_period}, SYSDATE
 		)
 	</insert>
+	
 	<delete id="deleteUser">
 		delete from members where id = #{id}
 	</delete>
@@ -289,6 +290,19 @@
 	<update id="updateVacation">
 		update members set vacation_period=${vacation} where id=#{id}
 	</update>
+	
+	<!--캘린더-->
+	<insert id="insertCalendarList" parameterType="map">
+		insert into calendar_list values(CALENDAR_ID.nextval, #{member_id}, '내 캘린더', 'private')
+	</insert>
+	
+	<insert id="insertCalendarMembers" parameterType="map">
+		insert into calendar_members values(CALENDAR_MEMBERS_SEQ.nextval, #{calendar_id}, #{member_id})
+	</insert>
+
+	<select id="selectCalendarId" resultType="int">
+		select max(calendar_id) from calendar_list
+	</select>
 
 </mapper>
 

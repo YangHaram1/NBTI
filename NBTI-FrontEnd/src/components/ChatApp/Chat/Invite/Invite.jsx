@@ -18,6 +18,7 @@ const Invite = ({ setInvite, chatCheck }) => {
 
     const handleNameSearch = (e) => {
         setNameSearch(e.target.value);
+        setAllInvited(false);
     }
     const handleCheck = (index) => {
         setIsChecked((prev) =>

@@ -24,6 +24,10 @@ public class ChatService {
 		 return dao.insert(dto);
 	}*/
 
+	public ChatImgDTO selectOne(int seq) throws Exception{
+		return dao.selectOne(seq);
+	}
+	
 	public List<ChatImgDTO> getList(int group_seq)throws Exception {
 		return dao.list(group_seq);
 	}
