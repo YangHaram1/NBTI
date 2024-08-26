@@ -143,7 +143,7 @@
 }
 
 .replyOutputWrap .replyOutput > div {
-  width: 90%;
+  width: 81%;
   display: flex;
   flex-direction: column;
 }
