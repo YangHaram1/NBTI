@@ -22,7 +22,9 @@ public class MembersDAO {
 	    return mybatis.selectOne("Member.login", dto);
 	}
 
-	public void updateUser(MembersDTO dto) {
+	public void updateUser(MembersDTO dto) throws Exception {
+		System.out.println(dto.getEnt_yn());
+		System.out.println(dto.getMember_level());
 		mybatis.update("Member.updateMember", dto);
 	}
 
@@ -39,7 +41,9 @@ public class MembersDAO {
 
 		return mybatis.selectOne("Member.mydata", id);
 	}
-
+	public List<MembersDTO> selectEmail(String email) {
+	    return mybatis.selectList("Member.selectEmail", email);
+	}
 	public void updateMyData(MembersDTO dto) {
 		mybatis.update("Member.updateMyData", dto);
 	}
@@ -58,6 +62,26 @@ public class MembersDAO {
 
 	public void insert(MembersDTO dto) {
 		mybatis.insert("Member.insert", dto);
+	}
+	
+	// calendar_list 개인 캘린더 추가
+	public void insertCalendarList(String memberId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("member_id", memberId);
+		
+//		System.out.println("insertCalendarList 1 : " + memberId);
+		 
+		// calendar_list 테이블에 memberId의 '내 캘린더' 추가 
+		mybatis.insert("Member.insertCalendarList", param);
+		
+		// 위에서 추가한 calendar_list의 seq 얻어오
+		int seq = mybatis.selectOne("Member.selectCalendarId");
+		param.put("calendar_id", seq);
+		
+//		System.out.println("insertCalendarList 2 : " + seq);
+		
+		// calendar_members 에 seq, memberId 를 포함한 값 추
+		mybatis.insert("Member.insertCalendarMembers", param);
 	}
 
 	public List<Map<String, Object>> getMembers() {
