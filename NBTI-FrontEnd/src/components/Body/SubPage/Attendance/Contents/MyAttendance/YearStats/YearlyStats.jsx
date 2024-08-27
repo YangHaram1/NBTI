@@ -22,7 +22,7 @@ const YearlyStats = ({
           <span className={styles.statValue}>{lateCount} 회</span>
         </li>
         <li className={styles.statItem}>
-          <span className={styles.statLabel}>결근</span>
+          <span className={styles.statLabel}>퇴근 미체크</span>
           <span className={styles.statValue}>{absentCount} 회</span>
         </li>
         <li className={styles.statItem}>
