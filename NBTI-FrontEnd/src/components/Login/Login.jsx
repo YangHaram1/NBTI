@@ -95,7 +95,7 @@ const Login = () => {
     return (
         <div className={styles.container}>
             <div className={styles.loginBox}>
-                <a href="https://3.39.251.78/">여기로 들어가서 서버 설정 해주세요</a>
+                <a href={`${host}/home`}>여기로 들어가서 서버 설정 해주세요</a>
                 <h2 className={styles.title}>Login</h2>
                 <input
                     type="text"
