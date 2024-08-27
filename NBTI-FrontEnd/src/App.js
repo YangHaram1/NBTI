@@ -46,8 +46,8 @@ function App() {
   //웹소켓 전체 관리
   useEffect(() => {
     if (loginID !== null && loginID !== 'error') {
-      const url = host.replace(/^https?:/, '')
-      websocketRef.current = new WebSocket(`ws:${url}/chatWebsocket`);
+      //const url = host.replace(/^https?:/, '')
+      websocketRef.current = new WebSocket(`${host}/chatWebsocket`);
     }
     if (websocketRef.current != null) {
       websocketRef.current.onopen = () => {
